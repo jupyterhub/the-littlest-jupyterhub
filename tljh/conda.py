@@ -26,7 +26,7 @@ def ensure_conda_env(prefix):
 
 def ensure_conda_packages(prefix, packages):
     """
-    Ensure packages are installed in the conda prefix
+    Ensure packages are installed in the conda prefix.
     """
     abspath = os.path.abspath(prefix)
     # Let subprocess errors propagate
@@ -41,7 +41,8 @@ def ensure_conda_packages(prefix, packages):
     # parse this outside of this kludge.
     filtered_output = '\n'.join([
         l for l in raw_output.split('\n')
-        if not l.startswith('{"fetch"')
+        # Sometimes the JSON messages start with a \00. The lstrip removes these.
+        if not l.lstrip().startswith('{"fetch"')
     ])
     output = json.loads(filtered_output)
     if 'success' in output and output['success'] == True:
