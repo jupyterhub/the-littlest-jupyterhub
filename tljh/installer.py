@@ -3,6 +3,7 @@ import os
 import tljh.systemd as systemd
 import tljh.conda as conda
 from tljh import user
+import secrets
 
 INSTALL_PREFIX = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
 HUB_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'hub')
@@ -12,15 +13,27 @@ HERE = os.path.abspath(os.path.dirname(__file__))
 
 
 def ensure_jupyterhub_service(prefix):
+    """
+    Ensure JupyterHub & CHP Services are set up properly
+    """
     with open(os.path.join(HERE, 'systemd-units', 'jupyterhub.service')) as f:
-        unit_template = f.read()
+        hub_unit_template = f.read()
 
-    unit = unit_template.format(
+    with open(os.path.join(HERE, 'systemd-units', 'configurable-http-proxy.service')) as f:
+        proxy_unit_template = f.read()
+
+    unit_params = dict(
         python_interpreter_path=sys.executable,
         jupyterhub_config_path=os.path.join(HERE, 'jupyterhub_config.py'),
         install_prefix=INSTALL_PREFIX
     )
-    systemd.install_unit('jupyterhub.service', unit)
+    systemd.install_unit('configurable-http-proxy.service', proxy_unit_template.format(**unit_params))
+    systemd.install_unit('jupyterhub.service', hub_unit_template.format(**unit_params))
+
+    # Set up proxy / hub secret oken if it is not already setup
+    if not os.path.exists('/etc/jupyterhub/configurable-http-proxy.secret'):
+        with open('/etc/jupyterhub/configurable-http-proxy.secret', 'w') as f:
+            f.write('CONFIGPROXY_AUTH_TOKEN=' + secrets.token_hex(32))
 
 
 def ensure_jupyterhub_package(prefix):
@@ -53,4 +66,5 @@ conda.ensure_conda_packages(USER_ENV_PREFIX, [
     'notebook==5.5.0'
 ])
 systemd.reload_daemon()
+systemd.start_service('configurable-http-proxy')
 systemd.start_service('jupyterhub')

@@ -24,6 +24,8 @@ class CustomSpawner(SystemdSpawner):
 
 c.JupyterHub.spawner_class = CustomSpawner
 
+c.ConfigurableHTTPProxy.should_start = False
+
 c.SystemdSpawner.extra_paths = [os.path.join(USER_ENV_PREFIX, 'bin')]
 c.SystemdSpawner.use_sudo = True
 

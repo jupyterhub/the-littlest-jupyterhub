@@ -1,0 +1,22 @@
+# Template file for Configurable HTTP Proxy systemd service
+# Uses simple string.format() for 'templating'
+[Unit]
+Wants=network-online.target
+
+[Service]
+User=root
+Restart=always
+# chp process should have no write access anywhere on disk
+ProtectHome=tmpfs
+ProtectSystem=strict
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+EnvironmentFile=/etc/jupyterhub/configurable-http-proxy.secret
+ExecStart={install_prefix}/hub/bin/configurable-http-proxy \
+            --ip 0.0.0.0 \
+            --port 80 \
+            --api-ip 127.0.0.1 \
+            --api-port 8001 \
+            --error-target http://127.0.0.1:8081/hub/error
