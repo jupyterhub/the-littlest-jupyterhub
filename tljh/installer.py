@@ -37,6 +37,8 @@ def ensure_jupyterhub_service(prefix):
         with open(proxy_secret_path, 'w') as f:
             f.write('CONFIGPROXY_AUTH_TOKEN=' + secrets.token_hex(32))
 
+    os.makedirs(os.path.join(INSTALL_PREFIX, 'hub', 'state'), mode=0o700, exist_ok=True)
+
 
 def ensure_jupyterhub_package(prefix):
     """
