@@ -22,19 +22,24 @@ default = {
         'allowed': [],
         'banned': [],
         'admin': []
+    },
+    'limits': {
+        'memory': '1G',
+        'cpu': None
     }
 }
 
 
 def apply_yaml_config(path, c):
     if not os.path.exists(path):
-        user_config = copy.deepcopy(default)
+        tljh_config = copy.deepcopy(default)
 
     with open(path) as f:
-        user_config = _merge_dictionaries(yaml.safe_load(f), default)
+        tljh_config = _merge_dictionaries(yaml.safe_load(f), default)
 
-    update_auth(c, user_config)
-    update_userlists(c, user_config)
+    update_auth(c, tljh_config)
+    update_userlists(c, tljh_config)
+    update_limits(c, tljh_config)
 
 
 def update_auth(c, config):
@@ -60,6 +65,16 @@ def update_userlists(c, config):
     c.Authenticator.whitelist = set(users['allowed'])
     c.Authenticator.blacklist = set(users['banned'])
     c.Authenticator.admin_users = set(users['admin'])
+
+
+def update_limits(c, config):
+    """
+    Set user server limits
+    """
+    limits = config['limits']
+
+    c.SystemdSpawner.mem_limit = limits['memory']
+    c.SystemdSpawner.cpu_limit = limits['cpu']
 
 
 def _merge_dictionaries(a, b, path=None, update=True):
