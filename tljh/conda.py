@@ -30,13 +30,14 @@ def ensure_conda_env(prefix):
 
 def ensure_conda_packages(prefix, packages):
     """
-    Ensure packages are installed in the conda prefix.
+    Ensure packages (from conda-forge) are installed in the conda prefix.
     """
     abspath = os.path.abspath(prefix)
     # Let subprocess errors propagate
     # FIXME: raise different exception when using
     raw_output = subprocess.check_output(CONDA_EXECUTABLE + [
         'install',
+        '-c', 'conda-forge',  # Make customizable if we ever need to
         '--json',
         '--prefix', abspath
     ] + packages).decode()
