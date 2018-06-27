@@ -1,0 +1,12 @@
+name: TheLittlestJupyterHub
+version: 0.1
+
+channels:
+    - http://repo.continuum.io/pkgs/free/
+    - https://conda.anaconda.org/conda-forge
+
+specs:
+    - python 3.6
+    - conda
+
+post_install: post-install.bash
