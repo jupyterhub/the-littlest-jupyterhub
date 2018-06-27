@@ -19,6 +19,8 @@ class CustomSpawner(SystemdSpawner):
         user.ensure_user_group(self.user.name, 'jupyterhub-users')
         if self.user.admin:
             user.ensure_user_group(self.user.name, 'jupyterhub-admins')
+        else:
+            user.remove_user_group(self.user.name, 'jupyterhub-admins')
         return super().start()
 
 
