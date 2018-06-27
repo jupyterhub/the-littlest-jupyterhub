@@ -14,6 +14,8 @@ PrivateDevices=yes
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
 EnvironmentFile={install_prefix}/configurable-http-proxy.secret
+# Set PATH so env can find correct node
+Environment=PATH=$PATH:{install_prefix}/hub/bin
 ExecStart={install_prefix}/hub/bin/configurable-http-proxy \
             --ip 0.0.0.0 \
             --port 80 \
