@@ -47,3 +47,16 @@ def ensure_conda_packages(prefix, packages):
     output = json.loads(filtered_output)
     if 'success' in output and output['success'] == True:
         return
+
+
+def ensure_pip_packages(prefix, packages):
+    """
+    Ensure pip packages are installed in the given conda prefix.
+    """
+    abspath = os.path.abspath(prefix)
+    pip_executable = [os.path.join(abspath, 'bin', 'python'), '-m', 'pip']
+
+    subprocess.run(pip_executable + [
+        'install',
+        '--no-cache-dir',
+    ] + packages)

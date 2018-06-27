@@ -51,3 +51,18 @@ def test_ensure_packages(prefix):
         '-c',
         'import numpy'
     ])
+
+
+def test_ensure_pip_packages(prefix):
+    """
+    Test installing pip packages in conda environment
+    """
+    conda.ensure_conda_env(prefix)
+    conda.ensure_conda_packages(prefix, ['pip'])
+    conda.ensure_pip_packages(prefix, ['numpy'])
+    # Throws an error if this fails
+    subprocess.check_call([
+        os.path.join(prefix, 'bin', 'python'),
+        '-c',
+        'import numpy'
+    ])
