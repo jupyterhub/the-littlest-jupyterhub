@@ -61,7 +61,7 @@ def ensure_pip_packages(prefix, packages):
     abspath = os.path.abspath(prefix)
     pip_executable = [os.path.join(abspath, 'bin', 'python'), '-m', 'pip']
 
-    subprocess.run(pip_executable + [
+    subprocess.check_output(pip_executable + [
         'install',
         '--no-cache-dir',
     ] + packages)
