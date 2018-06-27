@@ -13,7 +13,7 @@ PrivateTmp=yes
 PrivateDevices=yes
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
-EnvironmentFile=/etc/jupyterhub/configurable-http-proxy.secret
+EnvironmentFile={install_prefix}/configurable-http-proxy.secret
 ExecStart={install_prefix}/hub/bin/configurable-http-proxy \
             --ip 0.0.0.0 \
             --port 80 \

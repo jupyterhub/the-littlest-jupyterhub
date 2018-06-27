@@ -29,4 +29,4 @@ c.JupyterHub.port = 80
 
 c.SystemdSpawner.extra_paths = [os.path.join(USER_ENV_PREFIX, 'bin')]
 
-configurer.apply_yaml_config('/etc/jupyterhub/jupyterhub.yaml', c)
+configurer.apply_yaml_config(os.path.join(INSTALL_PREFIX, 'jupyterhub.yaml'), c)
