@@ -45,10 +45,11 @@ def ensure_conda_packages(prefix, packages):
     # parse this outside of this kludge.
     filtered_output = '\n'.join([
         l for l in raw_output.split('\n')
-        # Sometimes the JSON messages start with a \00. The lstrip removes these.
-        if not l.lstrip().startswith('{"fetch"')
+        # Sometimes the JSON messages start with a \x00. The lstrip removes these.
+        # conda messages seem to randomly throw \x00 in places for no reason
+        if not l.lstrip('\x00').startswith('{"fetch"')
     ])
-    output = json.loads(filtered_output)
+    output = json.loads(filtered_output.lstrip('\x00'))
     if 'success' in output and output['success'] == True:
         return
 
