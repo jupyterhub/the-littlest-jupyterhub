@@ -31,11 +31,11 @@ default = {
 
 
 def apply_yaml_config(path, c):
-    if not os.path.exists(path):
+    if os.path.exists(path):
+        with open(path) as f:
+            tljh_config = _merge_dictionaries(yaml.safe_load(f), default)
+    else:
         tljh_config = copy.deepcopy(default)
-
-    with open(path) as f:
-        tljh_config = _merge_dictionaries(yaml.safe_load(f), default)
 
     update_auth(c, tljh_config)
     update_userlists(c, tljh_config)
