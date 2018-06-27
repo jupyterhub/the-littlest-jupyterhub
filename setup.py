@@ -11,6 +11,6 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'escapism==1.*'
+        'pyyaml==4.*'
     ]
 )
