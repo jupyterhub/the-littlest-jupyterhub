@@ -23,10 +23,8 @@ def install_unit(name, unit, path='/etc/systemd/system'):
     """
     Install unit wih given name
     """
-    subprocess.run([
-        'tee',
-        os.path.join(path, name)
-    ], input=unit.encode('utf-8'), check=True)
+    with open(os.path.join(path, name), 'w') as f:
+        f.write(unit)
 
 
 def uninstall_unit(name, path='/etc/systemd/system'):
