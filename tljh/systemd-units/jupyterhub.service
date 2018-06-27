@@ -7,6 +7,7 @@ Wants=network-online.target
 [Service]
 User=root
 Restart=always
+Environment=TLJH_INSTALL_PREFIX={install_prefix}
 StateDirectory=jupyterhub
 WorkingDirectory=/var/lib/jupyterhub
 ExecStart={python_interpreter_path} -m jupyterhub.app -f {jupyterhub_config_path}
