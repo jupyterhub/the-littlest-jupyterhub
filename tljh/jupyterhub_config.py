@@ -25,6 +25,7 @@ class CustomSpawner(SystemdSpawner):
 c.JupyterHub.spawner_class = CustomSpawner
 
 c.ConfigurableHTTPProxy.should_start = False
+c.JupyterHub.port = 80
 
 c.SystemdSpawner.extra_paths = [os.path.join(USER_ENV_PREFIX, 'bin')]
 
