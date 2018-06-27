@@ -27,6 +27,5 @@ c.JupyterHub.spawner_class = CustomSpawner
 c.ConfigurableHTTPProxy.should_start = False
 
 c.SystemdSpawner.extra_paths = [os.path.join(USER_ENV_PREFIX, 'bin')]
-c.SystemdSpawner.use_sudo = True
 
 configurer.apply_yaml_config('/etc/jupyterhub/jupyterhub.yaml', c)

@@ -1,7 +1,7 @@
 """
 User management for tljh.
 
-Supports user creation, deletion & sudo
+Supports minimal user & group management
 """
 import pwd
 import grp
@@ -22,7 +22,6 @@ def ensure_user(username):
         pass
 
     subprocess.check_call([
-        'sudo',
         'adduser',
         '--disabled-password',
         '--force-badname',
@@ -42,7 +41,6 @@ def remove_user(username):
         return
 
     subprocess.check_call([
-        'sudo',
         'deluser',
         '--quiet',
         username
@@ -61,7 +59,6 @@ def ensure_group(groupname):
         pass
 
     subprocess.check_call([
-        'sudo',
         'addgroup',
         '--quiet',
         groupname
@@ -79,7 +76,6 @@ def remove_group(groupname):
         return
 
     subprocess.check_call([
-        'sudo',
         'delgroup',
         '--quiet',
         groupname
@@ -97,7 +93,6 @@ def ensure_user_group(username, groupname):
         return
 
     subprocess.check_call([
-        'sudo',
         'usermod',
         '--append',
         '--groups',
@@ -115,7 +110,6 @@ def remove_user_group(username, groupname):
         return
 
     subprocess.check_call([
-        'sudo',
         'deluser',
         '--quiet',
         username,
