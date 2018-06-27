@@ -14,15 +14,13 @@ starts.
 from tljh import conda
 import os
 
+INSTALL_PREFIX = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
+USER_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'user')
+
 c.JupyterHub.spawner_class = 'systemdspawner.SystemdSpawner'
 c.JupyterHub.authenticator_class = 'dummyauthenticator.DummyAuthenticator'
 
-here = os.getcwd()
-
-user_environment_prefix = os.path.join(here, 'user-environment')
-
-conda.ensure_conda_env(user_environment_prefix)
-conda.ensure_conda_packages(user_environment_prefix, ['notebook', 'jupyterhub'])
-
-c.SystemdSpawner.extra_paths = [os.path.join(user_environment_prefix, 'bin')]
+c.SystemdSpawner.extra_paths = [os.path.join(USER_ENV_PREFIX, 'bin')]
 c.SystemdSpawner.use_sudo = True
+
+c.SystemdSpawner.dynamic_users = True
