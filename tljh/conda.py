@@ -4,6 +4,10 @@ Wrap conda commandline program
 import os
 import subprocess
 import json
+import sys
+
+# Use sys.executable to call conda to avoid needing to fudge PATH
+CONDA_EXECUTABLE = [sys.executable, '-m', 'conda']
 
 
 def ensure_conda_env(prefix):
@@ -13,7 +17,7 @@ def ensure_conda_env(prefix):
     abspath = os.path.abspath(prefix)
     try:
         output = json.loads(
-            subprocess.check_output(['conda', 'create', '--json', '--prefix', abspath]).decode()
+            subprocess.check_output(CONDA_EXECUTABLE + ['create', '--json', '--prefix', abspath]).decode()
         )
     except subprocess.CalledProcessError as e:
         output = json.loads(e.output.decode())
@@ -31,8 +35,8 @@ def ensure_conda_packages(prefix, packages):
     abspath = os.path.abspath(prefix)
     # Let subprocess errors propagate
     # FIXME: raise different exception when using
-    raw_output = subprocess.check_output([
-        'conda', 'install',
+    raw_output = subprocess.check_output(CONDA_EXECUTABLE + [
+        'install',
         '--json',
         '--prefix', abspath
     ] + packages).decode()
