@@ -1,0 +1,12 @@
+# Template file for JupyterHub systemd service
+# Runs both JupyterHub and ConfigurableHTTPProxy
+# Uses simple string.format() for 'templating'
+[Unit]
+Wants=network-online.target
+
+[Service]
+User=root
+Restart=always
+StateDirectory=jupyterhub
+WorkingDirectory=/var/lib/jupyterhub
+ExecStart={python_interpreter_path} -m jupyterhub.app -f {jupyterhub_config_path}
