@@ -5,6 +5,10 @@ channels:
     - http://repo.continuum.io/pkgs/free/
     - https://conda.anaconda.org/conda-forge
 
+conda_default_channels:
+    - http://repo.continuum.io/pkgs/free/
+    - https://conda.anaconda.org/conda-forge
+
 specs:
     - python 3.6
     - conda
