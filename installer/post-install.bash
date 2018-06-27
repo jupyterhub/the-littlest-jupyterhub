@@ -5,6 +5,6 @@ set -euo pipefail
 
 export PATH=${PREFIX}/bin:$PATH
 
-pip install --no-cache-dir -e /home/yuvipanda/code/littlest-jupyterhub
+pip install --no-cache-dir git+https://github.com/yuvipanda/the-littlest-jupyterhub.git
 
 python3 -m tljh.installer
