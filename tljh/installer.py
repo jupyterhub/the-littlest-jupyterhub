@@ -67,7 +67,9 @@ with open('/etc/sudoers.d/jupyterhub-admins', 'w') as f:
 conda.ensure_conda_env(USER_ENV_PREFIX)
 conda.ensure_conda_packages(USER_ENV_PREFIX, [
     'jupyterhub==0.9.0',
-    'notebook==5.5.0'
+    'notebook==5.5.0',
+    'jupyterlab==0.32.1',
+    'conda==4.5.4'
 ])
 systemd.reload_daemon()
 systemd.start_service('configurable-http-proxy')
