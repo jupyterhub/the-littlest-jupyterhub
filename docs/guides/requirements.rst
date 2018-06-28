@@ -29,11 +29,12 @@ Memory (RAM)
 
 RAM is often the biggest limiting factor to the question 'how many users can use this JupyterHub
 at the same time?'. If you want to support ``N`` maximum concurrent active users
-each able to use up to ``X`` GB of RAM, you will need.
+each able to use up to ``X`` GB of RAM, you will need:
 
 .. math::
 
-    ($N \times X) + 128MB
+    Server RAM = ($N \times X) + 128MB
 
 The 128MB buffer is for system services (including JupyterHub itself).
-You can further reduce this number with overprovisioning if required.
+This will guarantee that your server will not run out of RAM as long
+as you have no more than ``N`` active users.

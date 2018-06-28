@@ -13,6 +13,9 @@ version = ''
 # The full version, including alpha/beta/rc tags
 release = 'v0.1'
 
+# Enable MathJax for Math
+extensions = ['sphinx.ext.mathjax']
+
 # The master toctree document.
 master_doc = 'index'
 
