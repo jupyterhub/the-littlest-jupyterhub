@@ -1,7 +1,8 @@
 # Template file for Configurable HTTP Proxy systemd service
 # Uses simple string.format() for 'templating'
 [Unit]
-Wants=network-online.target
+# Wait for network stack to be fully up before starting CHP
+After=network.target
 
 [Service]
 User=root

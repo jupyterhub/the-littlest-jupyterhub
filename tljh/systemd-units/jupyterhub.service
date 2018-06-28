@@ -1,7 +1,9 @@
 # Template file for JupyterHub systemd service
 # Uses simple string.format() for 'templating'
 [Unit]
-Wants=configurable-http-proxy.service
+# CHP must have successfully started *before* we launch JupyterHub
+Requires=configurable-http-proxy.service
+After=configurable-http-proxy.service
 
 [Service]
 User=root
