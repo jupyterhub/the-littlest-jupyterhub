@@ -21,3 +21,4 @@ makes you nervous, check out the [other installation methods](install.md) we sup
 
 - [Server requirements](requirements.md)
 - [Installation](install.md)
+- [Administrative Access](admin.md)

@@ -10,6 +10,9 @@ curl https://raw.githubusercontent.com/yuvipanda/the-littlest-jupyterhub/master/
 This takes 2-5 minutes to run. When completed, you can access your new JupyterHub
 at the public IP of your server!
 
+You should probably add yourself as an [admin user](admin.md)
+after installation.
+
 ## Slightly less quick installation
 
 If you can read `bash` and are nervous about the previous installation method,
