@@ -25,7 +25,7 @@ function install_miniconda {
         exit 1
     fi
 
-    bash ${INSTALLER_PATH} -b -p ${CONDA_DIR}
+    bash ${INSTALLER_PATH} -u -b -p ${CONDA_DIR}
 
     # Allow easy direct installs from conda forge
     ${CONDA_DIR}/bin/conda config --system --add channels conda-forge
