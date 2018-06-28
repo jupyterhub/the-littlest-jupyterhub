@@ -3,13 +3,37 @@
 Server Requirements
 ===================
 
-The Littlest JupyterHub (TLJH) can run on servers that meet at least he following criteria:
+Operating System
+----------------
 
+We recommend using Ubuntu 18.04 as the base operating system for your server.
+Ubuntu 16.04 should also work, but is not officially supported. other Linux
+distributions and operating systems are also not officially supported.
 
-#. Ubuntu Linux Operating System (minimum version supported 18.04)
-#. Full root access
-#. Access to the internet
-#. At least 512MB of RAM
+Root access
+-----------
 
-While TLJH will run on machines that meet these requirements, you should also
-consider how much resources your individual users need before acquiring a server.
+Full ``root`` access to this server is required. This might be via ``sudo``
+(recommended) or by direct access to ``root`` (not recommended!)
+
+External IP
+-----------
+
+An external IP allows users on the internet to reach your JupyterHub. Most
+VPS / Cloud providers give you a public IP address along with your server. If
+you are hosting on a physical machine somewhere, talk to your system administrators
+about how to get HTTP traffic from the world into your server.
+
+Memory (RAM)
+------------
+
+RAM is often the biggest limiting factor to the question 'how many users can use this JupyterHub
+at the same time?'. If you want to support ``N`` maximum concurrent active users
+each able to use up to ``X`` GB of RAM, you will need.
+
+.. math::
+
+    ($N \times X) + 128MB
+
+The 128MB buffer is for system services (including JupyterHub itself).
+You can further reduce this number with overprovisioning if required.
