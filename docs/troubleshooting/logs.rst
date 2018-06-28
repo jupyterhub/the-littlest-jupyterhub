@@ -28,7 +28,7 @@ logs is a great first step.
 
    sudo journalctl -u jupyterhub
 
-This command displays logs from JupyterHub itself. See :ref:`journactl_tips`
+This command displays logs from JupyterHub itself. See :ref:`journalctl_tips`
 for tips on navigating the logs.
 
 Configurable HTTP Proxy Logs
@@ -42,7 +42,7 @@ but things do go wrong sometimes!
 
    sudo journalctl -u configurable-http-proxy
 
-This command displays logs from Configurable HTTP Proxy. See :ref:`journactl_tips`
+This command displays logs from Configurable HTTP Proxy. See :ref:`journalctl_tips`
 for tips on navigating the logs.
 
 User Server Logs
@@ -56,10 +56,11 @@ problems after that.
 
    sudo journalctl -u jupyter-<name-of-user>
 
-This command displays logs from the given user's notebook server. See :ref:`journactl_tips`
+This command displays logs from the given user's notebook server. See :ref:`journalctl_tips`
 for tips on navigating the logs.
 
 .. _journalctl_tips:
+
 journalctl tips
 ---------------
 
