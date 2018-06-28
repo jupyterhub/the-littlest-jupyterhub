@@ -19,9 +19,25 @@ at the public IP of your server!
 If this installation method (``curl <arbitrary-url> | sudo bash -``)
 makes you nervous, check out the :ref:`other installation methods <installation>` we support!
 
-.. toctree::
-   :maxdepth: 1
+Tutorials
+=========
 
-   requirements
-   install
-   admin
+Tutorials guide you through accomplishing specific goals. Great place to get
+started!
+
+.. toctree::
+   :titlesonly:
+
+   tutorials/quickstart
+
+Guides
+======
+
+Guides provide in-depth explanations of specific topics.
+
+.. toctree::
+   :titlesonly:
+
+   guides/requirements
+   guides/install
+   guides/admin
