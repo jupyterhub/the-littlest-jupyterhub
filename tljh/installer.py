@@ -78,7 +78,7 @@ with open('/etc/sudoers.d/jupyterhub-admins', 'w') as f:
     # `sudo -E` should preserve the $PATH we set. This allows
     # admins in jupyter terminals to do `sudo -E pip install <package>`,
     # `pip` is in the $PATH we set in jupyterhub_config.py to include the user conda env.
-    f.write('Defaults exempt_group = jupyterhub-admins')
+    f.write('Defaults exempt_group = jupyterhub-admins\n')
 
 conda.ensure_conda_env(USER_ENV_PREFIX)
 conda.ensure_conda_packages(USER_ENV_PREFIX, [
