@@ -29,6 +29,7 @@ def ensure_jupyterhub_service(prefix):
     )
     systemd.install_unit('configurable-http-proxy.service', proxy_unit_template.format(**unit_params))
     systemd.install_unit('jupyterhub.service', hub_unit_template.format(**unit_params))
+    systemd.reload_daemon()
 
     # Set up proxy / hub secret oken if it is not already setup
     # FIXME: Check umask here properly
@@ -36,8 +37,14 @@ def ensure_jupyterhub_service(prefix):
     if not os.path.exists(proxy_secret_path):
         with open(proxy_secret_path, 'w') as f:
             f.write('CONFIGPROXY_AUTH_TOKEN=' + secrets.token_hex(32))
+        # If we are changing CONFIGPROXY_AUTH_TOKEN, restart configurable-http-proxy!
+        systemd.restart_service('configurable-http-proxy')
 
     os.makedirs(os.path.join(INSTALL_PREFIX, 'hub', 'state'), mode=0o700, exist_ok=True)
+    # Start CHP if it has already not been started
+    systemd.start_service('configurable-http-proxy')
+    # If JupyterHub is running, we want to restart it.
+    systemd.restart_service('jupyterhub')
 
 
 def ensure_jupyterhub_package(prefix):
@@ -71,6 +78,3 @@ conda.ensure_conda_packages(USER_ENV_PREFIX, [
     'jupyterlab==0.32.1',
     'conda==4.5.4'
 ])
-systemd.reload_daemon()
-systemd.start_service('configurable-http-proxy')
-systemd.restart_service('jupyterhub')
