@@ -20,5 +20,5 @@ ExecStart={install_prefix}/hub/bin/configurable-http-proxy \
             --ip 0.0.0.0 \
             --port 80 \
             --api-ip 127.0.0.1 \
-            --api-port 8001 \
-            --error-target http://127.0.0.1:8081/hub/error
+            --api-port 15002 \
+            --error-target http://127.0.0.1:15001/hub/error

@@ -24,8 +24,13 @@ class CustomSpawner(SystemdSpawner):
 
 c.JupyterHub.spawner_class = CustomSpawner
 
-c.ConfigurableHTTPProxy.should_start = False
 c.JupyterHub.port = 80
+
+# Use a high port so users can try this on machines with a JupyterHub already present
+c.JupyterHub.hub_port = 15001
+
+c.ConfigurableHTTPProxy.should_start = False
+c.ConfigurableHTTPProxy.api_url = 'http://127.0.0.1:15002'
 
 c.SystemdSpawner.extra_paths = [os.path.join(USER_ENV_PREFIX, 'bin')]
 
