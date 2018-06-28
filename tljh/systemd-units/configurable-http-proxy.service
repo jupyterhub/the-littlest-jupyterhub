@@ -23,3 +23,7 @@ ExecStart={install_prefix}/hub/bin/configurable-http-proxy \
             --api-ip 127.0.0.1 \
             --api-port 15002 \
             --error-target http://127.0.0.1:15001/hub/error
+
+[Install]
+# Start service when system boots
+WantedBy=multi-user.target

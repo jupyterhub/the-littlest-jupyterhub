@@ -57,3 +57,16 @@ def restart_service(name):
         'restart',
         name
     ], check=True)
+
+
+def enable_service(name):
+    """
+    Enable a service with given name.
+
+    This most likely makes the service start on bootup
+    """
+    subprocess.run([
+        'systemctl',
+        'enable',
+        name
+    ], check=True)

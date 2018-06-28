@@ -46,6 +46,10 @@ def ensure_jupyterhub_service(prefix):
     # If JupyterHub is running, we want to restart it.
     systemd.restart_service('jupyterhub')
 
+    # Mark JupyterHub & CHP to start at boot ime
+    systemd.enable_service('jupyterhub')
+    systemd.enable_service('configurable-http-proxy')
+
 
 def ensure_jupyterhub_package(prefix):
     """

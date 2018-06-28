@@ -20,3 +20,7 @@ ProtectKernelModules=yes
 EnvironmentFile={install_prefix}/configurable-http-proxy.secret
 Environment=TLJH_INSTALL_PREFIX={install_prefix}
 ExecStart={python_interpreter_path} -m jupyterhub.app -f {jupyterhub_config_path}
+
+[Install]
+# Start service when system boots
+WantedBy=multi-user.target
