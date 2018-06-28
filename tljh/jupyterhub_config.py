@@ -33,5 +33,6 @@ c.ConfigurableHTTPProxy.should_start = False
 c.ConfigurableHTTPProxy.api_url = 'http://127.0.0.1:15002'
 
 c.SystemdSpawner.extra_paths = [os.path.join(USER_ENV_PREFIX, 'bin')]
+c.SystemdSpawner.default_shell = '/bin/bash'
 
 configurer.apply_yaml_config(os.path.join(INSTALL_PREFIX, 'config.yaml'), c)
