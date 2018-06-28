@@ -7,7 +7,7 @@ Goal
 ----
 
 By the end of this tutorial, you should have a JupyterHub with some admin
-users and user environment with packages you want installed. This is 80% of what
+users and a user environment with packages you want installed. This is 80% of what
 most users need, so is a great place to start
 
 Pre-requisites
@@ -71,9 +71,12 @@ let the changes take effect.
 
    This should not disrupt any active users on your JupyterHub.
 
-   If the user you made admin is already logged in, you might have to restart your
+4. If the user you made admin is already logged in, you might have to restart your
    notebook server via the Control Panel page accessed from top right of your web
    interface for your new superpowers to take effect.
+
+   .. image:: ../images/control_panel_button.png
+      :alt: Control Panel button on top right of Notebook interface
 
 4. Open a terminal in your notebook server (New -> Terminal) & check if sudo works.
 
@@ -109,4 +112,6 @@ with ``sudo -E``.
 
       sudo -E pip install there
 
-The packages ``numpy`` and ``there`` are now available to all users in JupyterHub!
+The packages ``numpy`` and ``there`` are now available to all users in JupyterHub.
+If a user already had a python notebook running, they have to restart their notebook's
+kernel to make the new libraries available.
