@@ -41,3 +41,14 @@ Guides provide in-depth explanations of specific topics.
    guides/requirements
    guides/install
    guides/admin
+
+Troubleshooting
+===============
+
+In time, all systems have issues that need to be debugged. Troubleshooting
+guides help you find what is broken & hopefully fix it.
+
+.. toctree::
+   :titlesonly:
+
+   troubleshooting/logs
