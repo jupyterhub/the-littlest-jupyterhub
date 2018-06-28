@@ -46,3 +46,14 @@ def start_service(name):
         'start',
         name
     ], check=True)
+
+
+def restart_service(name):
+    """
+    Restart service with given name.
+    """
+    subprocess.run([
+        'systemctl',
+        'restart',
+        name
+    ], check=True)

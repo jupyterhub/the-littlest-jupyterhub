@@ -73,4 +73,4 @@ conda.ensure_conda_packages(USER_ENV_PREFIX, [
 ])
 systemd.reload_daemon()
 systemd.start_service('configurable-http-proxy')
-systemd.start_service('jupyterhub')
+systemd.restart_service('jupyterhub')
