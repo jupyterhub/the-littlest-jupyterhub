@@ -98,7 +98,9 @@ let the changes take effect.
 
 Congratulations, you are now an admin user in JupyterHub! Most administrative
 actions can now be performed from inside the Terminal in Jupyter Notebooks,
-without requiring SSH usage. See :ref:`admin_access` for more information.
+without requiring SSH usage.
+
+See :ref:`admin_access` for more information.
 
 Step 3: Install conda / pip packages for all users
 --------------------------------------------------
@@ -109,11 +111,11 @@ available to all users. Admin users can install packages in this environment
 with ``sudo -E``.
 
 1. As an admin user, open a terminal in your notebook server
-2. Install ``numpy`` from `conda-forge <https://conda-forge.org/>`_.
+2. Install `gdal <https://anaconda.org/conda-forge/gdal>`_ from `conda-forge <https://conda-forge.org/>`_.
 
    .. code-block:: bash
 
-      sudo -E conda install -c conda-forge numpy
+      sudo -E conda install -c conda-forge gdal
 
    The ``sudo -E`` is very important!
 
@@ -121,8 +123,10 @@ with ``sudo -E``.
 
    .. code-block:: bash
 
-      sudo -E pip install there
+      sudo -E pip install numpy
 
-The packages ``numpy`` and ``there`` are now available to all users in JupyterHub.
+The packages ``gdal`` and ``numpy`` are now available to all users in JupyterHub.
 If a user already had a python notebook running, they have to restart their notebook's
 kernel to make the new libraries available.
+
+See :ref:`user_environment` for more information.

@@ -41,6 +41,7 @@ Guides provide in-depth explanations of specific topics.
    guides/requirements
    guides/install
    guides/admin
+   guides/user-environment
 
 Troubleshooting
 ===============
