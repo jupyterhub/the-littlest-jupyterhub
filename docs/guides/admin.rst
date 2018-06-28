@@ -1,3 +1,5 @@
+.. _admin_access:
+
 Administrative Access
 ---------------------
 

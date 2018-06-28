@@ -31,6 +31,9 @@ This takes about 1-3 minutes to finish. When completed, you can visit the
 public IP of your server to use your JupyterHub! You can log in with any username
 and password combination.
 
+If this method of installing software makes you nervous, see :ref:`installation`
+for other advanced installation methods.
+
 Step 2: Add admin user
 ----------------------
 
@@ -78,7 +81,15 @@ let the changes take effect.
    .. image:: ../images/control_panel_button.png
       :alt: Control Panel button on top right of Notebook interface
 
-4. Open a terminal in your notebook server (New -> Terminal) & check if sudo works.
+4. Open a terminal in your notebook server (New -> Terminal). Jupyter Notebook
+   has a fullly functional web terminal that can be used for most of the administration
+   of TLJH.
+
+   .. image:: ../images/new_terminal_button.png
+      :alt: New Terminal button under New menu
+
+5. In the terminal, check if we can perform actions as ``root``, using the ``sudo``
+   command.
 
    .. code-block:: console
 
@@ -87,7 +98,7 @@ let the changes take effect.
 
 Congratulations, you are now an admin user in JupyterHub! Most administrative
 actions can now be performed from inside the Terminal in Jupyter Notebooks,
-without requiring SSH usage.
+without requiring SSH usage. See :ref:`admin_access` for more information.
 
 Step 3: Install conda / pip packages for all users
 --------------------------------------------------
