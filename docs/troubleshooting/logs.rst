@@ -10,6 +10,12 @@ before things went bad, and can help us understand the problem so we can fix it.
 TLJH collects logs from JupyterHub, Configurable HTTP Proxy & from each individual
 user's notebook server. All the logs are accessible via `journalctl <https://www.freedesktop.org/software/systemd/man/journalctl.html>`_.
 
+.. warning::
+
+   If you are providing a snippet from the logs to someone else to help debug
+   a problem you might have, be careful to redact any private information (such
+   as usernames) from the snippet first!
+
 JupyterHub Logs
 ---------------
 
@@ -17,12 +23,6 @@ JupyterHub is responsible for user authentication, & starting / stopping user
 notebook servers. When there is a general systemic issue with JupyterHub (rather
 than a specific issue with a particular user's notebook), looking at the JupyterHub
 logs is a great first step.
-
-.. warning::
-
-   If you are providing a snippet from the logs to someone else to help debug
-   a problem you might have, be careful to redact any private information (such
-   as usernames) from the snippet first!
 
 .. code-block:: bash
 
