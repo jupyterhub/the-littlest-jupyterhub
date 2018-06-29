@@ -24,7 +24,7 @@ jobs:
       - save_cache:
           paths:
             - /opt/conda
-          key: v1-dependencies-{{ checksum "setup.py" }}-{{ checksum "dev-requirements.txt" }}
+          key: v1-dependencies-miniconda3-4.5.4-{{ checksum "setup.py" }}-{{ checksum "dev-requirements.txt" }}
 
       - run:
           name: run tests
