@@ -26,20 +26,25 @@ default = {
     'limits': {
         'memory': '1G',
         'cpu': None
+    },
+    'userEnvironment': {
+        'defaultApp': 'classic'
     }
+
 }
 
 
 def apply_yaml_config(path, c):
     if os.path.exists(path):
         with open(path) as f:
-            tljh_config = _merge_dictionaries(yaml.safe_load(f), default)
+            tljh_config = _merge_dictionaries(default, yaml.safe_load(f))
     else:
         tljh_config = copy.deepcopy(default)
 
     update_auth(c, tljh_config)
     update_userlists(c, tljh_config)
     update_limits(c, tljh_config)
+    update_user_environment(c, tljh_config)
 
 
 def update_auth(c, config):
@@ -75,6 +80,19 @@ def update_limits(c, config):
 
     c.SystemdSpawner.mem_limit = limits['memory']
     c.SystemdSpawner.cpu_limit = limits['cpu']
+
+
+def update_user_environment(c, config):
+    """
+    Set user environment configuration
+    """
+    user_env = config['userEnvironment']
+
+    # Set default application users are launched into
+    if user_env['defaultApp'] == 'jupyterlab':
+        c.Spawner.default_url = '/lab'
+    elif user_env['defaultApp'] == 'nteract':
+        c.Spawner.default_url = '/nteract'
 
 
 def _merge_dictionaries(a, b, path=None, update=True):
