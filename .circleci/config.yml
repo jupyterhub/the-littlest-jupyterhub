@@ -71,7 +71,12 @@ jobs:
               --name=tljh-systemd-ci \
               tljh-systemd
       - run:
-          name: run installer
+          name: run tljh installer
           command: |
             docker cp . tljh-systemd-ci:/srv/src
             docker exec -it tljh-systemd-ci bash /srv/src/installer/install.bash
+
+      - run:
+          name: check jupyterhub is up
+          command: |
+            docker exec -it tljh-systemd-ci curl -L --fail http://localhost
