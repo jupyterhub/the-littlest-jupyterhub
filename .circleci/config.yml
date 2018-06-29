@@ -58,15 +58,20 @@ jobs:
             apt-get install --yes docker-ce
 
       - run:
-          name: build CI image
+          name: build systemd image
           command: |
               docker build -t tljh-systemd .
 
       - run:
-          name: start docker image
+          name: start systemd image
           command: |
             docker run \
               --privileged \
               --detach \
-              --name=tljh-dev \
+              --name=tljh-systemd-ci \
               tljh-systemd
+      - run:
+          name: run installer
+          command: |
+            docker cp . tljh-systemd-ci:/srv/src
+            docker exec -it tljh-systemd-ci bash /srv/src/installer/install.bash
