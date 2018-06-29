@@ -22,7 +22,7 @@ the notebook server to give you the classic notebook interface.
 
 If you change ``/tree`` to ``/lab``, you will get the JupyterLab interface.
 
-If you change ``/tree`` to ``/nteract``, you will get he nteract interface.
+If you change ``/tree`` to ``/nteract``, you will get the nteract interface.
 
 You can play around with them and see what fits your use cases best.
 
