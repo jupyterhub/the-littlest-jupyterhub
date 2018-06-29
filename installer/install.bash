@@ -13,7 +13,7 @@ function install_miniconda {
     URL="https://repo.continuum.io/miniconda/Miniconda3-${CONDA_VERSION}-Linux-x86_64.sh"
     INSTALLER_PATH=/tmp/miniconda-installer.sh
 
-    wget $URL -O ${INSTALLER_PATH}
+    curl -o ${INSTALLER_PATH} ${URL}
     chmod +x ${INSTALLER_PATH}
 
     # Only MD5 checksums are available for miniconda

@@ -53,3 +53,14 @@ guides help you find what is broken & hopefully fix it.
    :titlesonly:
 
    troubleshooting/logs
+
+Contributing
+============
+
+Whatever you think your skillsets are, your contributions to TLJH are highly
+appreciated.
+
+.. toctree::
+   :titlesonly:
+
+   contributing/dev-setup
