@@ -54,11 +54,13 @@ jobs:
                 stable"
 
             apt-get update
+
             apt-get install docker-ce
-        - run:
-            name: build CI image
-            command: |
-               docker build -t tljh-systemd .
+
+      - run:
+          name: build CI image
+          command: |
+              docker build -t tljh-systemd .
 
       - run:
           name: start docker image
