@@ -10,6 +10,13 @@ TLJH_INSTALL_PIP_FLAGS=${TLJH_INSTALL_PIP_FLAGS:---no-cache-dir}
 function install_miniconda {
     CONDA_DIR=${1}
     CONDA_VERSION=4.5.4
+    if [ -e ${CONDA_DIR}/bin/conda ]; then
+        if [ "$(${CONDA_DIR}/bin/conda -V)" == "conda ${CONDA_VERSION}" ]; then
+            # The given ${CONDA_DIR} already has a conda with given version
+            return
+        fi
+    fi
+
     URL="https://repo.continuum.io/miniconda/Miniconda3-${CONDA_VERSION}-Linux-x86_64.sh"
     INSTALLER_PATH=/tmp/miniconda-installer.sh
 
