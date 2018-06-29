@@ -42,6 +42,7 @@ Guides provide in-depth explanations of specific topics.
    guides/install
    guides/admin
    guides/user-environment
+   guides/notebook-interfaces
 
 Troubleshooting
 ===============

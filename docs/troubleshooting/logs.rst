@@ -16,6 +16,8 @@ user's notebook server. All the logs are accessible via `journalctl <https://www
    a problem you might have, be careful to redact any private information (such
    as usernames) from the snippet first!
 
+.. _troubleshoot_logs_jupyterhub:
+
 JupyterHub Logs
 ---------------
 
