@@ -20,7 +20,7 @@ The easiest & safest way to develop & test TLJH is with `Docker <https://www.doc
 
    .. code-block:: bash
 
-      docker run \
+      sudo docker run \
         --privileged \
         --detach \
         --name=tljh-dev \
@@ -32,14 +32,14 @@ The easiest & safest way to develop & test TLJH is with `Docker <https://www.doc
 
    .. code-block:: bash
 
-      docker exec -it tljh-dev /bin/bash
+      sudo docker exec -it tljh-dev /bin/bash
 
 #. Run the installer! The container image is already set up to default to a
    ``dev`` install, so it'll install from your local repo rather than from github.
 
-   .. code-block:: bash
+   .. code-block:: console
 
-      bash /srv/src/installer/install.bash
+      # bash /srv/src/installer/install.bash
 
    The primary hub environment will also be in your PATH already for convenience.
 
