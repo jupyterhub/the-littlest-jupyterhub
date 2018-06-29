@@ -55,7 +55,7 @@ jobs:
 
             apt-get update
 
-            apt-get install docker-ce
+            apt-get install --yes docker-ce
 
       - run:
           name: build CI image
