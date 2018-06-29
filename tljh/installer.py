@@ -82,8 +82,15 @@ with open('/etc/sudoers.d/jupyterhub-admins', 'w') as f:
 
 conda.ensure_conda_env(USER_ENV_PREFIX)
 conda.ensure_conda_packages(USER_ENV_PREFIX, [
+    # Conda's latest version is on conda much more so than on PyPI.
+    'conda==4.5.4'
+])
+
+conda.ensure_pip_packages(USER_ENV_PREFIX, [
+    # JupyterHub + notebook package are base requirements for user environment
     'jupyterhub==0.9.0',
     'notebook==5.5.0',
+    # Install additional notebook frontends!
     'jupyterlab==0.32.1',
-    'conda==4.5.4'
+    'nteract-on-jupyter==1.8.1'
 ])
