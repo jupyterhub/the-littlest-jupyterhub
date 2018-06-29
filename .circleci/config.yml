@@ -27,6 +27,23 @@ jobs:
           key: v1-dependencies-miniconda3-4.5.4-{{ checksum "setup.py" }}-{{ checksum "dev-requirements.txt" }}
 
       - run:
-          name: run tests
+          name: run unit tests
           command: |
             py.test tests/
+
+        # Run full installer test
+      - setup_remote_docker
+
+      - run:
+          name: build docker image
+          command: |
+            docker build -t tljh-systemd .
+
+      - run:
+          name: start docker image
+          command: |
+            docker run \
+              --privileged \
+              --detach \
+              --name=tljh-dev \
+              tljh-systemd
