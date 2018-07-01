@@ -72,33 +72,13 @@ let the changes take effect.
 
       sudo systemctl restart jupyterhub
 
+   If the command succeeds, it will output nothing.
+
    This should not disrupt any active users on your JupyterHub.
-
-4. If the user you made admin is already logged in, you might have to restart your
-   notebook server via the Control Panel page accessed from top right of your web
-   interface for your new superpowers to take effect.
-
-   .. image:: ../images/control_panel_button.png
-      :alt: Control Panel button on top right of Notebook interface
-
-4. Open a terminal in your notebook server (New -> Terminal). Jupyter Notebook
-   has a fullly functional web terminal that can be used for most of the administration
-   of TLJH.
-
-   .. image:: ../images/new_terminal_button.png
-      :alt: New Terminal button under New menu
-
-5. In the terminal, check if we can perform actions as ``root``, using the ``sudo``
-   command.
-
-   .. code-block:: console
-
-     $ sudo -E id
-       uid=0(root) gid=0(root) groups=0(root)
 
 Congratulations, you are now an admin user in JupyterHub! Most administrative
 actions can now be performed from inside the Terminal in Jupyter Notebooks,
-without requiring SSH usage.
+without requiring SSH usage. We'll investigate how to do that in the next step.
 
 See :ref:`admin_access` for more information.
 
@@ -110,8 +90,18 @@ in the JupyterHub. Libraries installed in this environment are immediately
 available to all users. Admin users can install packages in this environment
 with ``sudo -E``.
 
-1. As an admin user, open a terminal in your notebook server
-2. Install `gdal <https://anaconda.org/conda-forge/gdal>`_ from `conda-forge <https://conda-forge.org/>`_.
+#. If you were already logged in to the web interface as the admin user, you
+   might need to restart your server for your new powers to take effect.
+
+   .. image:: ../images/control_panel_button.png
+      :alt: Control Panel button on top right of Notebook interface
+
+#. Log in as an admin user and open a Terminal in your Jupyter Notebook.
+
+   .. image:: ../images/new_terminal_button.png
+      :alt: New Terminal button under New menu
+
+#. Install `gdal <https://anaconda.org/conda-forge/gdal>`_ from `conda-forge <https://conda-forge.org/>`_.
 
    .. code-block:: bash
 
@@ -119,13 +109,13 @@ with ``sudo -E``.
 
    The ``sudo -E`` is very important!
 
-3. Install ``there`` with ``pip``
+#. Install ``there`` with ``pip``
 
    .. code-block:: bash
 
-      sudo -E pip install numpy
+      sudo -E pip install there
 
-The packages ``gdal`` and ``numpy`` are now available to all users in JupyterHub.
+The packages ``gdal`` and ``there`` are now available to all users in JupyterHub.
 If a user already had a python notebook running, they have to restart their notebook's
 kernel to make the new libraries available.
 
