@@ -45,7 +45,7 @@ TLJH is configured with a ``config.yaml`` files, written in `YAML <https://yaml.
 We will modify ``config.yaml`` to list admin users, and then restart JupyterHub to
 let the changes take effect.
 
-1. Open the ``config.yaml`` file for editing.
+1. Create a ``config.yaml`` file in the correct location & open it for editing.
 
    .. code-block:: bash
 
