@@ -99,12 +99,14 @@ def pip_install(prefix, packages, editable=False):
 def main():
     install_prefix = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
     hub_prefix = os.path.join(install_prefix, 'hub')
+    miniconda_version = '4.5.4'
+    miniconda_installer_md5 = "a946ea1d0c4a642ddf0c3a26a18bb16d"
 
     print('Checking if TLJH is already installed...')
     if not check_miniconda_version(hub_prefix, miniconda_version):
         initial_setup = True
         print('Downloading & setting up hub environment...')
-        with download_miniconda_installer('4.5.4', "a946ea1d0c4a642ddf0c3a26a18bb16d") as installer_path:
+        with download_miniconda_installer(miniconda_version, miniconda_installer_md5) as installer_path:
             install_miniconda(installer_path, hub_prefix)
         print('Hub environment set up!')
     else:
