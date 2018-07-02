@@ -47,28 +47,28 @@ def check_miniconda_version(prefix, version):
 
 
 @contextlib.contextmanager
-def download_miniconda_installer(version):
-    md5sums = {
-        '4.5.4': "a946ea1d0c4a642ddf0c3a26a18bb16d"
-    }
+def download_miniconda_installer(version, md5sum):
+    """
+    Context manager to download miniconda installer of given version.
 
-    if version not in md5sums:
-        raise ValueError(
-            'minicondaversion {} not supported. Supported version:'.format(
-                version, ' '.join(md5sums.keys())
-            ))
-
+    This should be used as a contextmanager. It downloads miniconda installer
+    of given version, verifies the md5sum & provides path to it to the `with`
+    block to run.
+    """
     with tempfile.NamedTemporaryFile() as f:
         installer_url = "https://repo.continuum.io/miniconda/Miniconda3-{}-Linux-x86_64.sh".format(version)
         urllib.request.urlretrieve(installer_url, f.name)
 
-        if md5_file(f.name) != md5sums[version]:
+        if md5_file(f.name) != md5sum:
             raise Exception('md5 hash mismatch! Downloaded file corrupted')
 
         yield f.name
 
 
 def install_miniconda(installer_path, prefix):
+    """
+    Install miniconda with installer at installer_path under prefix
+    """
     subprocess.check_output([
         '/bin/bash',
         installer_path,
@@ -78,6 +78,14 @@ def install_miniconda(installer_path, prefix):
 
 
 def pip_install(prefix, packages, editable=False):
+    """
+    Install pip packages in the conda environment under prefix.
+
+    Packages are upgraded if possible.
+
+    Set editable=True to add '--editable' to the pip install commandline.
+    Very useful when doing active development
+    """
     flags = '--no-cache-dir --upgrade'
     if editable:
         flags += '--editable'
@@ -91,13 +99,12 @@ def pip_install(prefix, packages, editable=False):
 def main():
     install_prefix = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
     hub_prefix = os.path.join(install_prefix, 'hub')
-    miniconda_version = '4.5.4'
 
     print('Checking if TLJH is already installed...')
     if not check_miniconda_version(hub_prefix, miniconda_version):
         initial_setup = True
         print('Downloading & setting up hub environment...')
-        with download_miniconda_installer(miniconda_version) as installer_path:
+        with download_miniconda_installer('4.5.4', "a946ea1d0c4a642ddf0c3a26a18bb16d") as installer_path:
             install_miniconda(installer_path, hub_prefix)
         print('Hub environment set up!')
     else:
@@ -120,6 +127,7 @@ def main():
         '-m',
         'tljh.installer'
     )
+
 
 if __name__ == '__main__':
     main()
