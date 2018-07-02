@@ -14,8 +14,7 @@ HERE = os.path.abspath(os.path.dirname(__file__))
 
 def ensure_jupyterhub_service(prefix):
     """
-    Ensure JupyterHub & CHP Services are set up properly
-    """
+    Ensure JupyterHub & CHP Services are set up properly """
     with open(os.path.join(HERE, 'systemd-units', 'jupyterhub.service')) as f:
         hub_unit_template = f.read()
 
@@ -66,31 +65,42 @@ def ensure_jupyterhub_package(prefix):
     ])
 
 
-ensure_jupyterhub_package(HUB_ENV_PREFIX)
-ensure_jupyterhub_service(HUB_ENV_PREFIX)
+def main():
+    print("Setting up JupyterHub...")
+    ensure_jupyterhub_package(HUB_ENV_PREFIX)
+    ensure_jupyterhub_service(HUB_ENV_PREFIX)
 
-user.ensure_group('jupyterhub-admins')
-user.ensure_group('jupyterhub-users')
+    print("Setting up system user groups...")
+    user.ensure_group('jupyterhub-admins')
+    user.ensure_group('jupyterhub-users')
 
-with open('/etc/sudoers.d/jupyterhub-admins', 'w') as f:
-    # JupyterHub admins should have full passwordless sudo access
-    f.write('%jupyterhub-admins ALL = (ALL) NOPASSWD: ALL\n')
-    # `sudo -E` should preserve the $PATH we set. This allows
-    # admins in jupyter terminals to do `sudo -E pip install <package>`,
-    # `pip` is in the $PATH we set in jupyterhub_config.py to include the user conda env.
-    f.write('Defaults exempt_group = jupyterhub-admins\n')
+    print("Grainting passwordless sudo to JupyterHub admins...")
+    with open('/etc/sudoers.d/jupyterhub-admins', 'w') as f:
+        # JupyterHub admins should have full passwordless sudo access
+        f.write('%jupyterhub-admins ALL = (ALL) NOPASSWD: ALL\n')
+        # `sudo -E` should preserve the $PATH we set. This allows
+        # admins in jupyter terminals to do `sudo -E pip install <package>`,
+        # `pip` is in the $PATH we set in jupyterhub_config.py to include the user conda env.
+        f.write('Defaults exempt_group = jupyterhub-admins\n')
 
-conda.ensure_conda_env(USER_ENV_PREFIX)
-conda.ensure_conda_packages(USER_ENV_PREFIX, [
-    # Conda's latest version is on conda much more so than on PyPI.
-    'conda==4.5.4'
-])
+    print("Setting up user environment...")
+    conda.ensure_conda_env(USER_ENV_PREFIX)
+    conda.ensure_conda_packages(USER_ENV_PREFIX, [
+        # Conda's latest version is on conda much more so than on PyPI.
+        'conda==4.5.4'
+    ])
 
-conda.ensure_pip_packages(USER_ENV_PREFIX, [
-    # JupyterHub + notebook package are base requirements for user environment
-    'jupyterhub==0.9.0',
-    'notebook==5.5.0',
-    # Install additional notebook frontends!
-    'jupyterlab==0.32.1',
-    'nteract-on-jupyter==1.8.1'
-])
+    conda.ensure_pip_packages(USER_ENV_PREFIX, [
+        # JupyterHub + notebook package are base requirements for user environment
+        'jupyterhub==0.9.0',
+        'notebook==5.5.0',
+        # Install additional notebook frontends!
+        'jupyterlab==0.32.1',
+        'nteract-on-jupyter==1.8.1'
+    ])
+
+    print("Done!")
+
+
+if __name__ == '__main__':
+    main()

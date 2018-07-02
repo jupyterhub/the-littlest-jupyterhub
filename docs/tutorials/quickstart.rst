@@ -25,7 +25,7 @@ Step 1: Install the Littlest JupyterHub (TLJH)
 
 .. code-block:: bash
 
-   curl https://raw.githubusercontent.com/yuvipanda/the-littlest-jupyterhub/master/installer/install.bash | sudo bash -
+   curl https://raw.githubusercontent.com/yuvipanda/the-littlest-jupyterhub/master/bootstrap/bootstrap.py | sudo python3 -
 
 This takes about 1-3 minutes to finish. When completed, you can visit the
 public IP of your server to use your JupyterHub! You can log in with any username

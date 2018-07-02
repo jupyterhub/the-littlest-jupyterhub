@@ -11,10 +11,10 @@ On a fresh Ubuntu 18.04 server, you can install The Littlest JupyterHub with:
 
 .. code-block:: bash
 
-   curl https://raw.githubusercontent.com/yuvipanda/the-littlest-jupyterhub/master/installer/install.bash | sudo bash -
+   curl https://raw.githubusercontent.com/yuvipanda/the-littlest-jupyterhub/master/bootstrap/bootstrap.py | sudo python3 -
 
 This takes 2-5 minutes to run. When completed, you can access your new JupyterHub
-at the public IP of your server!
+at the public IP of your server! Read the :ref:`tutorial_quickstart` next.
 
 If this installation method (``curl <arbitrary-url> | sudo bash -``)
 makes you nervous, check out the :ref:`other installation methods <installation>` we support!

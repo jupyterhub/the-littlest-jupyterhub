@@ -34,13 +34,13 @@ The easiest & safest way to develop & test TLJH is with `Docker <https://www.doc
 
       sudo docker exec -it tljh-dev /bin/bash
 
-#. Run the installer from inside the container (see step above): 
-   The container image is already set up to default to a ``dev`` install, so 
+#. Run the bootstrapper from inside the container (see step above):
+   The container image is already set up to default to a ``dev`` install, so
    it'll install from your local repo rather than from github.
 
    .. code-block:: console
 
-      bash /srv/src/installer/install.bash
+      python3 /srv/src/bootstrap/bootstrap.py
 
    The primary hub environment will also be in your PATH already for convenience.
 
@@ -51,8 +51,8 @@ The easiest & safest way to develop & test TLJH is with `Docker <https://www.doc
 #. Make some changes to the repository. You can test easily depending on what
    you changed.
 
-   * If you changed the ``installer/install.bash`` script or any of its dependencies,
-     you can test it by running ``bash /srv/src/installer/install.bash``.
+   * If you changed the ``bootstrap/bootstrap.py`` script or any of its dependencies,
+     you can test it by running ``python3 /srv/src/bootstrap/bootstrap.py``.
 
    * If you changed the ``tljh/installer.py`` code (or any of its dependencies),
      you can test it by running ``python3 -m tljh.installer``.
