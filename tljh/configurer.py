@@ -15,7 +15,7 @@ import yaml
 # User provided config is merged into this
 default = {
     'auth': {
-        'type': 'dummy',
+        'type': 'firstuse',
         'dummy': {}
     },
     'users': {
@@ -60,6 +60,8 @@ def update_auth(c, config):
         if password is not None:
             c.DummyAuthenticator.password = password
         return
+    elif auth['type'] == 'firstuse':
+        c.JupyterHub.authenticator_class = 'firstuseauthenticator.FirstUseAuthenticator'
 
 
 def update_userlists(c, config):
