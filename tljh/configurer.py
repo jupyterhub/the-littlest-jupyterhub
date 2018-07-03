@@ -16,7 +16,10 @@ import yaml
 default = {
     'auth': {
         'type': 'firstuse',
-        'dummy': {}
+        'dummy': {},
+        'firstuse': {
+            'createUsers': False
+        }
     },
     'users': {
         'allowed': [],
@@ -62,6 +65,7 @@ def update_auth(c, config):
         return
     elif auth['type'] == 'firstuse':
         c.JupyterHub.authenticator_class = 'firstuseauthenticator.FirstUseAuthenticator'
+        c.FirstUseAuthenticator.create_users = auth['firstuse']['createUsers']
 
 
 def update_userlists(c, config):
