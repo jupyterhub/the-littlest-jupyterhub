@@ -4,6 +4,8 @@ import tljh.systemd as systemd
 import tljh.conda as conda
 from tljh import user
 import secrets
+import argparse
+from ruamel.yaml import YAML
 
 INSTALL_PREFIX = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
 HUB_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'hub')
@@ -11,10 +13,13 @@ USER_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'user')
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
+rt_yaml = YAML()
+
 
 def ensure_jupyterhub_service(prefix):
     """
-    Ensure JupyterHub & CHP Services are set up properly """
+    Ensure JupyterHub & CHP Services are set up properly
+    """
     with open(os.path.join(HERE, 'systemd-units', 'jupyterhub.service')) as f:
         hub_unit_template = f.read()
 
@@ -62,16 +67,14 @@ def ensure_jupyterhub_package(prefix):
     conda.ensure_pip_packages(prefix, [
         'jupyterhub-dummyauthenticator==0.3.1',
         'jupyterhub-systemdspawner==0.9.12',
-        'jupyterhub-firstuseauthenticator==0.9'
+        'jupyterhub-firstuseauthenticator==0.10'
     ])
 
 
-def main():
-    print("Setting up JupyterHub...")
-    ensure_jupyterhub_package(HUB_ENV_PREFIX)
-    ensure_jupyterhub_service(HUB_ENV_PREFIX)
-
-    print("Setting up system user groups...")
+def ensure_usergroups():
+    """
+    Sets up user groups & sudo rules
+    """
     user.ensure_group('jupyterhub-admins')
     user.ensure_group('jupyterhub-users')
 
@@ -84,6 +87,11 @@ def main():
         # `pip` is in the $PATH we set in jupyterhub_config.py to include the user conda env.
         f.write('Defaults exempt_group = jupyterhub-admins\n')
 
+
+def ensure_user_environment():
+    """
+    Set up user conda environment with required packages
+    """
     print("Setting up user environment...")
     conda.ensure_conda_env(USER_ENV_PREFIX)
     conda.ensure_conda_packages(USER_ENV_PREFIX, [
@@ -99,6 +107,47 @@ def main():
         'jupyterlab==0.32.1',
         'nteract-on-jupyter==1.8.1'
     ])
+
+
+def ensure_admins(admins):
+    """
+    Setup given list of users as admins.
+    """
+    if not admins:
+        return
+    print("Setting up admin users")
+    config_path = os.path.join(INSTALL_PREFIX, 'config.yaml')
+    if os.path.exists(config_path):
+        with open(config_path, 'r') as f:
+            config = rt_yaml.load(f)
+    else:
+        config = {}
+
+    config['users'] = config.get('users', {})
+    config['users']['admin'] = list(admins)
+
+    with open(config_path, 'w+') as f:
+        rt_yaml.dump(config, f)
+
+
+def main():
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument(
+        '--admin',
+        nargs='*',
+        help='List of usernames set to be admin'
+    )
+
+    args = argparser.parse_args()
+
+    ensure_admins(args.admin)
+
+    ensure_usergroups()
+    ensure_user_environment()
+
+    print("Setting up JupyterHub...")
+    ensure_jupyterhub_package(HUB_ENV_PREFIX)
+    ensure_jupyterhub_service(HUB_ENV_PREFIX)
 
     print("Done!")
 

@@ -17,6 +17,7 @@ import urllib.request
 import contextlib
 import hashlib
 import tempfile
+import sys
 
 
 def md5_file(fname):
@@ -118,16 +119,22 @@ def main():
     else:
         print('Upgrading TLJH installer...')
 
-    pip_install(hub_prefix, [
-        os.environ.get('TLJH_BOOTSTRAP_PIP_SPEC', 'git+https://github.com/yuvipanda/the-littlest-jupyterhub.git')
-    ], editable=os.environ.get('TLJH_BOOTSTRAP_DEV', 'no') == 'yes')
+    is_dev = os.environ.get('TLJH_BOOTSTRAP_DEV', 'no') == 'yes'
+    tljh_repo_path = os.environ.get(
+        'TLJH_BOOTSTRAP_PIP_SPEC',
+        'git+https://github.com/yuvipanda/the-littlest-jupyterhub.git'
+    )
+
+    pip_install(hub_prefix, [tljh_repo_path], editable=is_dev)
 
     print('Starting TLJH installer...')
-    os.execl(
+    os.execv(
         os.path.join(hub_prefix, 'bin', 'python3'),
-        os.path.join(hub_prefix, 'bin', 'python3'),
-        '-m',
-        'tljh.installer'
+        [
+            os.path.join(hub_prefix, 'bin', 'python3'),
+            '-m',
+            'tljh.installer',
+        ] + sys.argv[1:]
     )
 
 

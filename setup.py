@@ -11,6 +11,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'pyyaml==3.*'
+        'pyyaml==3.*',
+        'ruamel.yaml==0.15.*'
     ]
 )
