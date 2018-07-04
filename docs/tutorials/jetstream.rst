@@ -97,8 +97,8 @@ Let's create the server on which we can run JupyterHub.
 #. Click the **Launch Instance** button on the bottom right. This should turn it
    into a spinner, and your server is getting created!
 
-   .. image:: ../images/providers/jetstream/add-deployment-script-dialog.png
-      :alt: Dialog box allowing you to add a new script.
+   .. image:: ../images/providers/jetstream/launching-spinner.png
+      :alt: Launch button turns into a spinner
 
 #. You'll now be shown a dashboard with all your servers and their states. The
    server you just launched will progress through various stages of set up,
