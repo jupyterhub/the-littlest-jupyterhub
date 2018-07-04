@@ -29,6 +29,7 @@ started!
    :titlesonly:
 
    tutorials/digitalocean
+   tutorials/jetstream
 
 Guides
 ======
