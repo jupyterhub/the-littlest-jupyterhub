@@ -57,7 +57,7 @@ def ensure_group(groupname):
 
 def remove_group(groupname):
     """
-    Remove user from system if exists
+    Remove group from system if exists
     """
     try:
         grp.getgrnam(groupname)
@@ -83,11 +83,10 @@ def ensure_user_group(username, groupname):
         return
 
     subprocess.check_call([
-        'usermod',
-        '--append',
-        '--groups',
-        groupname,
-        username
+        'gpasswd',
+        '--add',
+        username,
+        groupname
     ])
 
 
@@ -100,8 +99,8 @@ def remove_user_group(username, groupname):
         return
 
     subprocess.check_call([
-        'deluser',
-        '--quiet',
+        'gpasswd',
+        '--delete',
         username,
         groupname
     ])
