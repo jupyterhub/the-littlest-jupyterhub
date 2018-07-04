@@ -1,6 +1,3 @@
-from recommonmark.parser import CommonMarkParser
-from recommonmark.transform import AutoStructify
-
 # Support markdown too
 source_suffix = ['.rst']
 
