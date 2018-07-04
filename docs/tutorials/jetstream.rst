@@ -1,6 +1,6 @@
 .. _tutorial_quickstart_jetstream:
 
-Tutorial: JupyterHub on JetStream
+Tutorial: JupyterHub on Jetstream
 =================================
 
 Goal
@@ -8,12 +8,12 @@ Goal
 
 By the end of this tutorial, you should have a JupyterHub with some admin
 users and a user environment with packages you want installed running on
-`JetStream <https://jetstream-cloud.org/>`_.
+`Jetstream <https://jetstream-cloud.org/>`_.
 
-Pre-requisites
---------------
+Prerequisites
+-------------
 
-#. A JetStream account with an allocation.
+#. A Jetstream account with an XSEDE allocation; for more information, `go to the Jetstream Allocations help page <http://wiki.jetstream-cloud.org/Jetstream+Allocations>`__.
 #. Some familiarity with the command line.
 
 Step 1: Installing The Littlest JupyterHub
@@ -21,7 +21,7 @@ Step 1: Installing The Littlest JupyterHub
 
 Let's create the server on which we can run JupyterHub.
 
-#. Log in to `JetStream <https://jetstream-cloud.org/>`_.. You need an allocation
+#. Log in to `the Jetstream portal <https://use.jetstream-cloud.org/>`_. You need an allocation
    to launch instances.
 
 #. Select the **Launch New Instance** option to get going.
@@ -51,7 +51,7 @@ Let's create the server on which we can run JupyterHub.
       :alt: Launch an Instance / Basic Options dialog box
 
    #. Give your server a descriptive **Instance Name**.
-   #. Select an appropriate **Instance Size**.
+   #. Select an appropriate **Instance Size**. We suggest m1.medium or larger.
    #. If you have multiple allocations, make sure you are 'charging' this server
       to the correct allocation.
 
@@ -72,7 +72,7 @@ Let's create the server on which we can run JupyterHub.
 
 #. Under **Input Type**, select **Raw Text**. This should make a text box titled
    **Raw Text** visible on the right side of the dialog box.
-   Copy the text below, and paste it into the **Raw Text** textbox. Replace
+   Copy the text below, and paste it into the **Raw Text** text box. Replace
    ``<admin-user-name>`` with the name of the first **admin user** for this
    JupyterHub. This admin user can log in after the JupyterHub is set up, and
    can configure it to their needs. Remember the username!
@@ -123,8 +123,8 @@ Let's create the server on which we can run JupyterHub.
 
 #. Congratulations, you have a running working JupyterHub!
 
-Step 2: Addding more users
---------------------------
+Step 2: Adding more users
+-------------------------
 
 Most administration & configuration of the JupyterHub can be done from the
 web UI directly. Let's add a few users who can log in!
@@ -163,6 +163,9 @@ web UI directly. Let's add a few users who can log in!
    to the JupyterHub! When they log in for the first time, they can set their
    password - and use it to log in again in the future.
 
+   **Note**: These users will be added as UNIX users on the underlying
+   Jetstream instance, too, and admin users will have ``sudo`` privileges.
+
 Congratulations, you now have a multi user JupyterHub that you can add arbitrary
 users to!
 
@@ -179,22 +182,22 @@ with ``sudo -E``.
    .. image:: ../images/notebook/new-terminal-button.png
       :alt: New Terminal button under New menu
 
-#. Install `gdal <https://anaconda.org/conda-forge/gdal>`_ from `conda-forge <https://conda-forge.org/>`_.
+#. For example, try installing `gdal <https://anaconda.org/conda-forge/gdal>`_ from `conda-forge <https://conda-forge.org/>`_.
 
    .. code-block:: bash
 
-      sudo -E conda install -c conda-forge gdal
+      sudo -E conda install -y -c conda-forge gdal
 
    The ``sudo -E`` is very important!
 
-#. Install ``there`` with ``pip``
+#. Alternatively, try installing `there <https://pypi.org/project/there/>`_ with ``pip``.
 
    .. code-block:: bash
 
       sudo -E pip install there
 
 The packages ``gdal`` and ``there`` are now available to all users in JupyterHub.
-If a user already had a python notebook running, they have to restart their notebook's
+If a user already had a python notebook running, they need to restart their notebook's
 kernel to make the new libraries available.
 
 See :ref:`user_environment` for more information.
