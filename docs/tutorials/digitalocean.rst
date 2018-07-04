@@ -28,7 +28,7 @@ Let's create the server on which we can run JupyterHub.
 #. Click the **Create** button on the top right, and select **Droplets** from
    the dropdown menu. DigitalOcean calls servers **droplets**.
 
-   .. image:: images/digitalocean/create-menu.png
+   .. image:: ../images/providers/digitalocean/create-menu.png
       :alt: Dropdown menu on clicking 'create' in top right corner
 
    This takes you to a page titled **Create Droplets** that lets you configure
@@ -36,7 +36,7 @@ Let's create the server on which we can run JupyterHub.
 
 #. Under **Choose an image**, select **18.04 x64** under **Ubuntu**.
 
-   .. image:: images/digitalocean/select-image.png
+   .. image:: ../images/providers/digitalocean/select-image.png
       :alt: Select 18.04 x64 image under Ubuntu
 
 #. Under **Choose a size**, select the size of the server you want. The default
@@ -45,7 +45,7 @@ Let's create the server on which we can run JupyterHub.
 
 #. Scroll down to **Select additional options**, and select **User data**.
 
-   .. image:: images/digitalocean/additional-options.png
+   .. image:: ../images/providers/digitalocean/additional-options.png
       :alt: Turn on User Data in additional options
 
    This opens up a textbox where you can enter a script that will be run
@@ -67,19 +67,19 @@ Let's create the server on which we can run JupyterHub.
 #. Under the **Finalize and create** section, enter a ``hostname`` that descriptively
    identifies this server for you.
 
-   .. image:: images/digitalocean/hostname.png
+   .. image:: ../images/providers/digitalocean/hostname.png
       :alt: Select suitable hostname for your server
 
 #. Click the **Create** button! You will be taken to a different screen,
    where you can see progress of your server being created.
 
-   .. image:: images/digitalocean/server-create-wait.png
+   .. image:: ../images/providers/digitalocean/server-create-wait.png
       :alt: Server being created
 
 #. In a few seconds your server will be created, and you can see the **public IP**
    used to access it.
 
-   .. image:: images/digitalocean/server-create-done.png
+   .. image:: ../images/providers/digitalocean/server-create-done.png
       :alt: Server finished creating, public IP available
 
 #. The Littlest JupyterHub is now installing in the background on your new server.
@@ -91,7 +91,7 @@ Let's create the server on which we can run JupyterHub.
 
 #. When the installation is complete, it should give you a JupyterHub login page.
 
-   .. image:: images/first-login.png
+   .. image:: ../images/first-login.png
       :alt: JupyterHub log-in page
 
 #. Login using the **admin user name** you used in step 6, and a password. Use a
@@ -114,7 +114,7 @@ web UI directly. Let's add a few users who can log in!
 
 #. In the control panel, open the **Admin** link in the top left.
 
-   .. image:: ../images/admin-button.png
+   .. image:: ../images/admin/admin-access-button.png
       :alt: Admin button in control panel, top left
 
    This opens up the JupyterHub admin page, where you can add / delete users,
@@ -153,7 +153,7 @@ with ``sudo -E``.
 
 #. Log in as an admin user and open a Terminal in your Jupyter Notebook.
 
-   .. image:: ../images/new_terminal_button.png
+   .. image:: ../images/notebook/new-terminal-button.png
       :alt: New Terminal button under New menu
 
 #. Install `gdal <https://anaconda.org/conda-forge/gdal>`_ from `conda-forge <https://conda-forge.org/>`_.

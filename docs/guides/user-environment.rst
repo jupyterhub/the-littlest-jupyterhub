@@ -19,7 +19,7 @@ almost 145,000 packages in it right now, so a lot of what you need is going to b
 
 1. Log in as an admin user and open a Terminal in your Jupyter Notebook.
 
-   .. image:: ../images/new_terminal_button.png
+   .. image:: ../images/notebook/new-terminal-button.png
       :alt: New Terminal button under New menu
 
    If you already have a terminal open as an admin user, that should work too!
@@ -53,7 +53,7 @@ a community maintained repository of  conda packages.
 
 1. Log in as an admin user and open a Terminal in your Jupyter Notebook.
 
-   .. image:: ../images/new_terminal_button.png
+   .. image:: ../images/notebook/new-terminal-button.png
       :alt: New Terminal button under New menu
 
    If you already have a terminal open as an admin user, that should work too!
@@ -89,7 +89,7 @@ make sure to look in the version of Ubuntu you are using!
 
 1. Log in as an admin user and open a Terminal in your Jupyter Notebook.
 
-   .. image:: ../images/new_terminal_button.png
+   .. image:: ../images/notebook/new-terminal-button.png
       :alt: New Terminal button under New menu
 
    If you already have a terminal open as an admin user, that should work too!

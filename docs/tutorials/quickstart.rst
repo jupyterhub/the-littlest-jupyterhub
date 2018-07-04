@@ -87,18 +87,11 @@ Step 3: Install conda / pip packages for all users
 
 The **User Environment** is a conda environment that is shared by all users
 in the JupyterHub. Libraries installed in this environment are immediately
-available to all users. Admin users can install packages in this environment
-with ``sudo -E``.
-
-#. If you were already logged in to the web interface as the admin user, you
-   might need to restart your server for your new powers to take effect.
-
-   .. image:: ../images/control-panel-button.png
-      :alt: Control Panel button on top right of Notebook interface
+available to all users.
 
 #. Log in as an admin user and open a Terminal in your Jupyter Notebook.
 
-   .. image:: ../images/new_terminal_button.png
+   .. image:: ../images/notebook/new-terminal-button.png
       :alt: New Terminal button under New menu
 
 #. Install `gdal <https://anaconda.org/conda-forge/gdal>`_ from `conda-forge <https://conda-forge.org/>`_.
