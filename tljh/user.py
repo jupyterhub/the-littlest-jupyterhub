@@ -22,10 +22,7 @@ def ensure_user(username):
         pass
 
     subprocess.check_call([
-        'adduser',
-        '--disabled-password',
-        '--force-badname',
-        '--quiet',
+        'useradd',
         username
     ])
 
@@ -51,16 +48,9 @@ def ensure_group(groupname):
     """
     Ensure given group exists
     """
-    try:
-        grp.getgrnam(groupname)
-        # Group exists, nothing to do!
-        return
-    except KeyError:
-        pass
-
     subprocess.check_call([
-        'addgroup',
-        '--quiet',
+        'groupadd',
+        '--force',
         groupname
     ])
 
