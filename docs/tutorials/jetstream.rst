@@ -13,7 +13,8 @@ users and a user environment with packages you want installed running on
 Prerequisites
 -------------
 
-#. A Jetstream account with an XSEDE allocation; for more information, `go to the Jetstream Allocations help page <http://wiki.jetstream-cloud.org/Jetstream+Allocations>`__.
+#. A Jetstream account with an XSEDE allocation; for more information,
+   go to the `Jetstream Allocations help page <http://wiki.jetstream-cloud.org/Jetstream+Allocations>`_.
 #. Some familiarity with the command line.
 
 Step 1: Installing The Littlest JupyterHub
