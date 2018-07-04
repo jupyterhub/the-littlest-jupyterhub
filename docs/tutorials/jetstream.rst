@@ -165,6 +165,8 @@ web UI directly. Let's add a few users who can log in!
 
    **Note**: These users will be added as UNIX users on the underlying
    Jetstream instance, too, and admin users will have ``sudo`` privileges.
+   (The user will be created the first time the user's server is started,
+   e.g. upon first login.)
 
 Congratulations, you now have a multi user JupyterHub that you can add arbitrary
 users to!
