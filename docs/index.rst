@@ -28,7 +28,7 @@ started!
 .. toctree::
    :titlesonly:
 
-   tutorials/quickstart
+   tutorials/digitalocean
 
 Guides
 ======

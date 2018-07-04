@@ -93,7 +93,7 @@ with ``sudo -E``.
 #. If you were already logged in to the web interface as the admin user, you
    might need to restart your server for your new powers to take effect.
 
-   .. image:: ../images/control_panel_button.png
+   .. image:: ../images/control-panel-button.png
       :alt: Control Panel button on top right of Notebook interface
 
 #. Log in as an admin user and open a Terminal in your Jupyter Notebook.
