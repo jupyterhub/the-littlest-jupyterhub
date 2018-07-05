@@ -30,6 +30,7 @@ started!
 
    tutorials/digitalocean
    tutorials/jetstream
+   tutorials/google
 
 Guides
 ======
