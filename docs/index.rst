@@ -28,6 +28,7 @@ started!
 .. toctree::
    :titlesonly:
 
+   tutorials/quickstart
    tutorials/digitalocean
    tutorials/jetstream
    tutorials/google
