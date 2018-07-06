@@ -7,9 +7,9 @@ In The Littlest JupyterHub, we try to allow users to do as many administrative
 tasks as possible within JupyterHub itself. Admin users can:
 
 1. Have full root access with passwordless ``sudo``
-2. Install systemwide packages with ``apt``
-3. Install ``conda`` / ``pip`` packages for all JupyterHub
-4. Change amount of RAM / CPU available to each user and more!
+2. Install system-wide packages with ``apt``
+3. Install ``conda`` / ``pip`` packages for all JupyterHub users
+4. Change the amount of RAM / CPU available to each user, and more!
 
 By default, there are no admin users. You should add some after installation.
 
@@ -17,7 +17,8 @@ Adding admin users
 ==================
 
 Admin users are specified in the `YAML <https://en.wikipedia.org/wiki/YAML>`_
-config file at ``/opt/tljh/config.yaml``.
+config file at ``/opt/tljh/config.yaml``. This file is created upon installing
+tljh.
 
 1. Open the ``config.yaml`` file for editing.
 

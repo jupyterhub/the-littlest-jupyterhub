@@ -7,7 +7,7 @@ Looking at Logs
 They contain a forensic record of what individual pieces of software were doing
 before things went bad, and can help us understand the problem so we can fix it.
 
-TLJH collects logs from JupyterHub, Configurable HTTP Proxy & from each individual
+TLJH collects logs from JupyterHub, Configurable HTTP Proxy, & from each individual
 user's notebook server. All the logs are accessible via `journalctl <https://www.freedesktop.org/software/systemd/man/journalctl.html>`_.
 
 .. warning::
@@ -58,8 +58,9 @@ problems after that.
 
    sudo journalctl -u jupyter-<name-of-user>
 
-This command displays logs from the given user's notebook server. See :ref:`journalctl_tips`
-for tips on navigating the logs.
+This command displays logs from the given user's notebook server. You can get a
+list of all users from the "users" button at the top-right of the Admin page.
+See :ref:`journalctl_tips` for tips on navigating the logs.
 
 .. _journalctl_tips:
 

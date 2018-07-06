@@ -15,7 +15,7 @@ The quick way to install The Littlest JupyterHub (tljh) is:
 This takes 2-5 minutes to run. When completed, you can access your new JupyterHub
 at the public IP of your server!
 
-You should probably add yourself as an `admin user <admin.md>`_
+You should probably add yourself as an `admin user <admin.rst>`_
 after installation.
 
 Slightly less quick installation

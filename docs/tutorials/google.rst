@@ -82,6 +82,9 @@ Let's create the server on which we can run JupyterHub.
    .. image:: ../images/providers/google/machine-type-advanced.png
       :alt: Select a customized VM size
 
+   For more guidance on the different options available to you, as well as
+   pricing considerations on Google Cloud, see the `GCP Choosing a VM Guide <https://cloud.google.com/compute/docs/instances/creating-instance-with-custom-machine-type?hl=en_US>`_.
+   
 #. Under **Boot Disk**, click the **Change** button. This lets us change the
    operating system and the size of your disk.
 
@@ -183,82 +186,11 @@ Let's create the server on which we can run JupyterHub.
 #. Congratulations, you have a running working JupyterHub!
 
 Step 2: Adding more users
--------------------------
+--------------------------
 
-Most administration & configuration of the JupyterHub can be done from the
-web UI directly. Let's add a few users who can log in!
-
-#. Open the **Control Panel** by clicking the control panel button on the top
-   right of your JupyterHub.
-
-   .. image:: ../images/control-panel-button.png
-      :alt: Control panel button in notebook, top right
-
-#. In the control panel, open the **Admin** link in the top left.
-
-   .. image:: ../images/admin/admin-access-button.png
-      :alt: Admin button in control panel, top left
-
-   This opens up the JupyterHub admin page, where you can add / delete users,
-   start / stop peoples' servers and see who is online.
-
-#. Click the **Add Users** button.
-
-   .. image:: ../images/admin/add-users-button.png
-      :alt: Add Users button in the admin page
-
-   A **Add Users** dialog box opens up.
-
-#. Type the names of users you want to add to this JupyterHub in the dialog box,
-   one per line.
-
-   .. image:: ../images/admin/add-users-dialog.png
-      :alt: Adding users with add users dialog
-
-   You can tick the **Admin** checkbox if you want to give admin rights to all
-   these users too.
-
-#. Click the **Add Users** button in the dialog box. Your users are now added
-   to the JupyterHub! When they log in for the first time, they can set their
-   password - and use it to log in again in the future.
-
-   **Note**: These users will be added as UNIX users on the underlying
-   Jetstream instance, too, and admin users will have ``sudo`` privileges.
-   (The user will be created the first time the user's server is started,
-   e.g. upon first login.)
-
-Congratulations, you now have a multi user JupyterHub that you can add arbitrary
-users to!
+.. include:: add_users.txt
 
 Step 3: Install conda / pip packages for all users
 --------------------------------------------------
 
-The **User Environment** is a conda environment that is shared by all users
-in the JupyterHub. Libraries installed in this environment are immediately
-available to all users. Admin users can install packages in this environment
-with ``sudo -E``.
-
-#. Log in as an admin user and open a Terminal in your Jupyter Notebook.
-
-   .. image:: ../images/notebook/new-terminal-button.png
-      :alt: New Terminal button under New menu
-
-#. For example, try installing `gdal <https://anaconda.org/conda-forge/gdal>`_ from `conda-forge <https://conda-forge.org/>`_.
-
-   .. code-block:: bash
-
-      sudo -E conda install -y -c conda-forge gdal
-
-   The ``sudo -E`` is very important!
-
-#. Alternatively, try installing `there <https://pypi.org/project/there/>`_ with ``pip``.
-
-   .. code-block:: bash
-
-      sudo -E pip install there
-
-The packages ``gdal`` and ``there`` are now available to all users in JupyterHub.
-If a user already had a python notebook running, they need to restart their notebook's
-kernel to make the new libraries available.
-
-See :ref:`user_environment` for more information.
+.. include:: add_packages.txt
