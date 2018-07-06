@@ -82,6 +82,9 @@ Let's create the server on which we can run JupyterHub.
    .. image:: ../images/providers/google/machine-type-advanced.png
       :alt: Select a customized VM size
 
+   For more guidance on the different options available to you, as well as
+   pricing considerations on Google Cloud, see the `GCP Choosing a VM Guide <https://cloud.google.com/compute/docs/instances/creating-instance-with-custom-machine-type?hl=en_US>`_.
+   
 #. Under **Boot Disk**, click the **Change** button. This lets us change the
    operating system and the size of your disk.
 

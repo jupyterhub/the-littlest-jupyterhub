@@ -10,7 +10,7 @@ interfaces you can use:
 1. `JupyterLab <http://jupyterlab.readthedocs.io/en/stable/>`_
 2. `nteract <https://nteract.io/>`_
 
-Both these interfaces are also shipped with TLJH by default. You can try them
+Both these interfaces are also shipped with tljh by default. You can try them
 temporarily, or set them to be the default interface whenever you login.
 
 Trying alternate interface tempoarily
@@ -20,13 +20,12 @@ When you log in & start your server, by default the URL in your browser
 will be something like ``/user/<username>/tree``. The ``/tree`` is what tells
 the notebook server to give you the classic notebook interface.
 
-If you change ``/tree`` to ``/lab``, you will get the JupyterLab interface.
-
-If you change ``/tree`` to ``/nteract``, you will get the nteract interface.
+* **For the JupyterLab interface**: change ``/tree`` to ``/lab``.
+* **For the nteract interface**: change ``/tree`` to ``/nteract``
 
 You can play around with them and see what fits your use cases best.
 
-Changing default notebook interface
+Changing the default user interface
 -----------------------------------
 
 You can change the default interface users get when they log in by modifying
