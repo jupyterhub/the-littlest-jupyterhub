@@ -84,7 +84,7 @@ Let's create the server on which we can run JupyterHub.
 
    For more guidance on the different options available to you, as well as
    pricing considerations on Google Cloud, see the `GCP Choosing a VM Guide <https://cloud.google.com/compute/docs/instances/creating-instance-with-custom-machine-type?hl=en_US>`_.
-   
+
 #. Under **Boot Disk**, click the **Change** button. This lets us change the
    operating system and the size of your disk.
 
@@ -173,6 +173,12 @@ Let's create the server on which we can run JupyterHub.
 #. Check if the installation is complete by copying the **External IP**
    of your server, and trying to access it with a browser. This will fail until
    the installation is complete, so be patient.
+
+   .. note::
+
+      `tljh` does not yet support HTTPS. If you click on the "External IP" link
+      in the Google Cloud console, it will automatically use HTTPS and the page will
+      not load. Make sure that you copy the External IP address and paste it using http.
 
 #. When the installation is complete, it should give you a JupyterHub login page.
 
