@@ -1,23 +1,24 @@
 .. _tutorial_quickstart_digitalocean:
 
+=====================================
 Tutorial: JupyterHub on Digital Ocean
-========================================
+=====================================
 
 Goal
-----
+====
 
 By the end of this tutorial, you should have a JupyterHub with some admin
 users and a user environment with packages you want installed running on
 `DigitalOcean <https://digitalocean.com>`_.
 
 Pre-requisites
---------------
+==============
 
 #. A DigitalOcean account with a payment method attached.
 #. Some familiarity with the command line.
 
 Step 1: Installing The Littlest JupyterHub
-------------------------------------------
+==========================================
 
 Let's create the server on which we can run JupyterHub.
 
@@ -101,11 +102,11 @@ Let's create the server on which we can run JupyterHub.
 #. Congratulations, you have a running working JupyterHub!
 
 Step 2: Adding more users
---------------------------
+==========================
 
 .. include:: add_users.txt
 
 Step 3: Install conda / pip packages for all users
---------------------------------------------------
+==================================================
 
 .. include:: add_packages.txt

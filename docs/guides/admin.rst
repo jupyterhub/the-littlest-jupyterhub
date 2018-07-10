@@ -1,7 +1,8 @@
 .. _admin_access:
 
+=====================
 Administrative Access
----------------------
+=====================
 
 In The Littlest JupyterHub, we try to allow users to do as many administrative
 tasks as possible within JupyterHub itself. Admin users can:

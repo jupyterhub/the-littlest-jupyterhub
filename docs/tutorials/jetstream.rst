@@ -1,24 +1,25 @@
 .. _tutorial_quickstart_jetstream:
 
+=================================
 Tutorial: JupyterHub on Jetstream
 =================================
 
 Goal
-----
+====
 
 By the end of this tutorial, you should have a JupyterHub with some admin
 users and a user environment with packages you want installed running on
 `Jetstream <https://jetstream-cloud.org/>`_.
 
 Prerequisites
--------------
+=============
 
 #. A Jetstream account with an XSEDE allocation; for more information,
    go to the `Jetstream Allocations help page <http://wiki.jetstream-cloud.org/Jetstream+Allocations>`_.
 #. Some familiarity with the command line.
 
 Step 1: Installing The Littlest JupyterHub
-------------------------------------------
+==========================================
 
 Let's create the server on which we can run JupyterHub.
 
@@ -125,11 +126,11 @@ Let's create the server on which we can run JupyterHub.
 #. Congratulations, you have a running working JupyterHub!
 
 Step 2: Adding more users
---------------------------
+==========================
 
 .. include:: add_users.txt
 
 Step 3: Install conda / pip packages for all users
---------------------------------------------------
+==================================================
 
 .. include:: add_packages.txt

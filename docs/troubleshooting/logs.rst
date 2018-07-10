@@ -1,5 +1,6 @@
 .. _troubleshoot_logs:
 
+===============
 Looking at Logs
 ===============
 
@@ -19,7 +20,7 @@ user's notebook server. All the logs are accessible via `journalctl <https://www
 .. _troubleshoot_logs_jupyterhub:
 
 JupyterHub Logs
----------------
+===============
 
 JupyterHub is responsible for user authentication, & starting / stopping user
 notebook servers. When there is a general systemic issue with JupyterHub (rather
@@ -34,7 +35,7 @@ This command displays logs from JupyterHub itself. See :ref:`journalctl_tips`
 for tips on navigating the logs.
 
 Configurable HTTP Proxy Logs
-----------------------------
+============================
 
 Configurable HTTP Proxy redirects traffic to JupyterHub / user notebook servers
 as necessary & handles HTTPS. It usually is the least problematic of the components,
@@ -48,7 +49,7 @@ This command displays logs from Configurable HTTP Proxy. See :ref:`journalctl_ti
 for tips on navigating the logs.
 
 User Server Logs
-----------------
+================
 
 Each user gets their own notebook server, and this server also produces logs.
 Looking at these can be useful when a user can launch their server but run into
@@ -65,7 +66,7 @@ See :ref:`journalctl_tips` for tips on navigating the logs.
 .. _journalctl_tips:
 
 journalctl tips
----------------
+===============
 
 ``journalctl`` has a lot of options to make your life as an administrator
 easier. Here are some very basic tips on effective ``journalctl`` usage.

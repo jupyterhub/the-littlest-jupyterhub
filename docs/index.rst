@@ -1,5 +1,6 @@
+=======================
 The Littlest JupyterHub
------------------------
+=======================
 
 A simple `JupyterHub <https://github.com/jupyterhub/jupyterhub>`_ distribution for
 a small (0-50) number of users on a single server.

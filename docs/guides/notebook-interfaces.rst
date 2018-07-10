@@ -1,5 +1,6 @@
 .. _notebook_interfaces:
 
+==================================================
 Notebook Interfaces (Classic, JupyterLab, nteract)
 ==================================================
 
@@ -14,7 +15,7 @@ Both these interfaces are also shipped with tljh by default. You can try them
 temporarily, or set them to be the default interface whenever you login.
 
 Trying alternate interface tempoarily
--------------------------------------
+=====================================
 
 When you log in & start your server, by default the URL in your browser
 will be something like ``/user/<username>/tree``. The ``/tree`` is what tells
@@ -26,7 +27,7 @@ the notebook server to give you the classic notebook interface.
 You can play around with them and see what fits your use cases best.
 
 Changing the default user interface
------------------------------------
+===================================
 
 You can change the default interface users get when they log in by modifying
 ``config.yaml`` as an admin user.

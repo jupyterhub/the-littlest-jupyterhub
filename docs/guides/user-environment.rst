@@ -1,5 +1,6 @@
 .. _user_environment:
 
+============================
 Customizing user environment
 ============================
 
@@ -11,7 +12,7 @@ easily.
 .. _user_environment_pip:
 
 Installing pip packages
------------------------
+=======================
 
 `pip <https://pypi.org/project/pip/>`_ is the recomended tool for installing packages
 in Python from the `Python Packaging Index (PyPI) <https://pypi.org/>`_. PyPI has
@@ -41,7 +42,7 @@ almost 145,000 packages in it right now, so a lot of what you need is going to b
 .. _user_environment_conda:
 
 Installing conda packages
--------------------------
+=========================
 
 Conda lets you install new languages (such as new versions of python, node, R, etc)
 as well as packages in those languages. For lots of scientific software, installing
@@ -75,7 +76,7 @@ a community maintained repository of  conda packages.
 .. _user_environment_apt:
 
 Installing apt packages
------------------------
+=======================
 
 `apt <https://help.ubuntu.com/lts/serverguide/apt.html.en>`_ is the official package
 manager for the `Ubuntu Linux distribution <https://www.ubuntu.com/>`_. You can install
@@ -112,7 +113,7 @@ make sure to look in the version of Ubuntu you are using!
 
 
 User environment location
--------------------------
+=========================
 
 The user environment is a conda enviornment set up in ``/opt/tljh/user``, with
 a Python3 kernel as the default. It is readable by all users, but writeable only
@@ -120,7 +121,7 @@ by users who have root access. This makes it possible for JupyterHub admins (who
 root access with ``sudo``) to install software in the user environment easily.
 
 Accessing user environment outside JupyterHub
----------------------------------------------
+=============================================
 
 We add ``/opt/tljh/user/bin`` to the ``$PATH`` environment variable for all JupyterHub
 users, so everything installed in the user environment is available to them automatically.

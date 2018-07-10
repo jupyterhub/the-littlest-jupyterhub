@@ -1,10 +1,11 @@
 .. _installation:
 
+============
 Installation
 ============
 
 Quick Installation
-------------------
+==================
 
 The quick way to install The Littlest JupyterHub (tljh) is:
 
@@ -19,7 +20,7 @@ You should probably add yourself as an `admin user <admin.rst>`_
 after installation.
 
 Slightly less quick installation
---------------------------------
+================================
 
 If you can read ``python3`` and are nervous about the previous installation method,
 you can inspect the installer script before running it.

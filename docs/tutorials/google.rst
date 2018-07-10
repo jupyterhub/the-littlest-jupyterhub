@@ -1,22 +1,23 @@
 .. _tutorial_quickstart_google:
 
+====================================
 Tutorial: JupyterHub on Google Cloud
 ====================================
 
 Goal
-----
+====
 
 By the end of this tutorial, you should have a JupyterHub with some admin
 users and a user environment with packages you want installed running on
 `Google Cloud <https://cloud.google.com/>`_.
 
 Prerequisites
--------------
+=============
 
 #. A Google Cloud account. You might use the free credits for trying it out!
 
 Step 1: Installing The Littlest JupyterHub
-------------------------------------------
+==========================================
 
 Let's create the server on which we can run JupyterHub.
 
@@ -84,7 +85,7 @@ Let's create the server on which we can run JupyterHub.
 
    For more guidance on the different options available to you, as well as
    pricing considerations on Google Cloud, see the `GCP Choosing a VM Guide <https://cloud.google.com/compute/docs/instances/creating-instance-with-custom-machine-type?hl=en_US>`_.
-   
+
 #. Under **Boot Disk**, click the **Change** button. This lets us change the
    operating system and the size of your disk.
 
@@ -186,11 +187,11 @@ Let's create the server on which we can run JupyterHub.
 #. Congratulations, you have a running working JupyterHub!
 
 Step 2: Adding more users
---------------------------
+==========================
 
 .. include:: add_users.txt
 
 Step 3: Install conda / pip packages for all users
---------------------------------------------------
+==================================================
 
 .. include:: add_packages.txt
