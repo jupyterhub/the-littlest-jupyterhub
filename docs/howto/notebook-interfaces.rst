@@ -1,8 +1,8 @@
 .. _notebook_interfaces:
 
-==================================================
-Notebook Interfaces (Classic, JupyterLab, nteract)
-==================================================
+===========================================
+Change default Notebook Interface for users
+===========================================
 
 By default, logging into TLJH puts you in the classic Jupyter Notebook interface
 we all know and love. However, there are at least two other popular notebook
