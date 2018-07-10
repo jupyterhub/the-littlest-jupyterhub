@@ -1,3 +1,4 @@
+=======================
 The Littlest JupyterHub
 =======================
 
@@ -8,15 +9,24 @@ The Littlest JupyterHub
 .. image:: https://badges.gitter.im/jupyterhub/jupyterhub.svg
    :target: https://gitter.im/jupyterhub/jupyterhub
 
-A simple JupyterHub distribution for 1-50 users on a single server.
+**The Littlest JupyterHub** (TLJH) distribution helps you provide Jupyter Notebooks
+to 1-50 users on a single server.
 
-This project is currently in pre-alpha state & extremely prone to breaking!
+Administrators who do not consider themselves 'system administrators' but would
+like to provide hosted Jupyter Notebooks for their students / users are the
+primary audience. All users get the same environment, and administrators can
+install libraries into this environment without any specialized knowledge.
+It provides all users with the same environment, and administrators can install
+libraries into this environment easily without any specialized knowledge.
 
 See `this blog post <http://words.yuvi.in/post/the-littlest-jupyterhub/>`_ for
 more information.
 
-Quick Start
------------
+This project is currently in pre-alpha state & extremely prone to breaking!
 
-Install The Littlest JupyterHub (TLJH) in under 10 minutes by following the
-`quickstart tutorial <http://the-littlest-jupyterhub.readthedocs.io/en/latest/tutorials/quickstart.html>`_.
+Tutorials
+=========
+
+We have tutorials to help you set up The Littlest JupyterHub (TLJH) on any of the
+popular providers (Google, Digital Ocean, Jetstream, etc) or on your own server.
+They should take less than ten minutes to get you to a working JupyterHub!
