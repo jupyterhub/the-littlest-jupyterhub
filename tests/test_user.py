@@ -25,7 +25,7 @@ def test_ensure_user():
         # This raises exception if user doesn't exist
         ent = pwd.getpwnam(username)
         # Home directory must also exist
-        assert os.path.exists(ent.pw_shell)
+        assert os.path.exists(ent.pw_dir)
         # Run ensure_user again, should be a noop
         user.ensure_user(username)
         # User still exists, after our second ensure_user call
