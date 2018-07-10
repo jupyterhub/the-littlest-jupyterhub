@@ -17,6 +17,7 @@ started!
    tutorials/digitalocean
    tutorials/jetstream
    tutorials/google
+   tutorials/custom
 
 Guides
 ======
