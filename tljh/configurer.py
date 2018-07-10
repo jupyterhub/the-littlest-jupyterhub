@@ -106,7 +106,7 @@ def _merge_dictionaries(a, b, path=None, update=True):
     """
     Merge two dictionaries recursively.
 
-    From https://stackoverflow.com/a/25270947
+    From https://stackoverflow.com/a/7205107
     """
     if path is None:
         path = []
@@ -116,14 +116,6 @@ def _merge_dictionaries(a, b, path=None, update=True):
                 _merge_dictionaries(a[key], b[key], path + [str(key)])
             elif a[key] == b[key]:
                 pass  # same leaf value
-            elif isinstance(a[key], list) and isinstance(b[key], list):
-                for idx, val in enumerate(b[key]):
-                    a[key][idx] = _merge_dictionaries(
-                        a[key][idx],
-                        b[key][idx],
-                        path + [str(key), str(idx)],
-                        update=update
-                    )
             elif update:
                 a[key] = b[key]
             else:
