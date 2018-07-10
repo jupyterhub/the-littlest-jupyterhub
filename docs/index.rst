@@ -52,4 +52,5 @@ to people contributing in various ways.
 .. toctree::
    :titlesonly:
 
+   contributing/docs
    contributing/dev-setup
