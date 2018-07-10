@@ -19,6 +19,16 @@ started!
    tutorials/google
    tutorials/custom
 
+How-To Guides
+=============
+
+How-To guides answer the question 'How do I...?' for a lot of topics.
+
+.. toctree::
+   :titlesonly:
+
+   howto/user-environment
+
 Guides
 ======
 
@@ -30,7 +40,6 @@ Guides provide in-depth explanations of specific topics.
    guides/requirements
    guides/install
    guides/admin
-   guides/user-environment
    guides/notebook-interfaces
 
 Troubleshooting

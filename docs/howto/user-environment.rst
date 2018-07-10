@@ -1,8 +1,8 @@
 .. _user_environment:
 
-============================
-Customizing user environment
-============================
+==================================
+Install conda, pip or apt packages
+==================================
 
 :abbr:`TLJH (The Littlest JupyterHub)` starts all users in the same `conda <https://conda.io/docs/>`_
 environment. Packages / libraries installed in this environment are available
