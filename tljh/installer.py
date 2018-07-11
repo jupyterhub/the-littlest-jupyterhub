@@ -141,8 +141,9 @@ def ensure_jupyterhub_running(times=4):
 
     for i in range(4):
         try:
-            print('Waiting for JupyterHub to come up ({}/{} tries)'.format(i, times))
+            print('Waiting for JupyterHub to come up ({}/{} tries)'.format(i + 1, times))
             urlopen('http://127.0.0.1')
+            return
         except URLError as e:
             if isinstance(e.reason, ConnectionRefusedError):
                 # Hub isn't up yet, sleep & loop
