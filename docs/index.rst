@@ -28,6 +28,7 @@ How-To guides answer the question 'How do I...?' for a lot of topics.
    :titlesonly:
 
    howto/user-environment
+   howto/notebook-interfaces
 
 Guides
 ======
@@ -40,7 +41,6 @@ Guides provide in-depth explanations of specific topics.
    guides/requirements
    guides/install
    guides/admin
-   guides/notebook-interfaces
 
 Troubleshooting
 ===============
