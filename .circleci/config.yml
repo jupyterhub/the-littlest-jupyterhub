@@ -70,7 +70,7 @@ jobs:
       - run:
           name: run tljh installer
           command: |
-              python3 .circleci/integration-test.py cp . /srv/src
+              python3 .circleci/integration-test.py copy . /srv/src
               python3 .circleci/integration-test.py run 'python3 /srv/src/bootstrap/bootstrap.py'
 
       - run:
