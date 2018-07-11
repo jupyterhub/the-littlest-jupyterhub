@@ -175,6 +175,12 @@ Let's create the server on which we can run JupyterHub.
    of your server, and trying to access it with a browser. This will fail until
    the installation is complete, so be patient.
 
+   .. note::
+
+      `tljh` does not yet support HTTPS. If you click on the "External IP" link
+      in the Google Cloud console, it will automatically use HTTPS and the page will
+      not load. Make sure that you copy the External IP address and paste it using http.
+
 #. When the installation is complete, it should give you a JupyterHub login page.
 
    .. image:: ../images/first-login.png

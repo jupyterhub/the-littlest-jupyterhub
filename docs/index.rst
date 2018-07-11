@@ -58,7 +58,8 @@ guides help you find what is broken & hopefully fix it.
    :titlesonly:
 
    troubleshooting/logs
-
+   troubleshooting/faq
+   
 Contributing
 ============
 
