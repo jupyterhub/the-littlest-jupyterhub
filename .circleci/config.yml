@@ -63,3 +63,11 @@ jobs:
           name: check jupyterhub is up
           command: |
               python3 .circleci/integration-test.py run 'curl -L --fail http://127.0.0.1'
+
+
+workflows:
+    version: 2
+    build_and_test:
+        jobs:
+            - unit-test
+            - integration-test
