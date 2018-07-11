@@ -1,8 +1,8 @@
 .. _tutorial_quickstart_google:
 
-====================================
-Tutorial: JupyterHub on Google Cloud
-====================================
+==========================
+Installing on Google Cloud
+==========================
 
 Goal
 ====

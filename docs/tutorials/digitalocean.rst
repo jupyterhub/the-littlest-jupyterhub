@@ -1,8 +1,8 @@
 .. _tutorial_quickstart_digitalocean:
 
-=====================================
-Tutorial: JupyterHub on Digital Ocean
-=====================================
+===========================
+Installing on Digital Ocean
+===========================
 
 Goal
 ====
@@ -15,7 +15,6 @@ Pre-requisites
 ==============
 
 #. A DigitalOcean account with a payment method attached.
-#. Some familiarity with the command line.
 
 Step 1: Installing The Littlest JupyterHub
 ==========================================

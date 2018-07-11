@@ -1,8 +1,8 @@
-.. _tutorial_quickstart_custom:
+.. _tutorials/custom:
 
-=======================================
-Tutorial: JupyterHub on your own server
-=======================================
+=============================
+Installing on your own server
+=============================
 
 Goal
 ====

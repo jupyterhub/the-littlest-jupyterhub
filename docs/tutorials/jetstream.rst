@@ -1,8 +1,8 @@
 .. _tutorial_quickstart_jetstream:
 
-=================================
-Tutorial: JupyterHub on Jetstream
-=================================
+=======================
+Installing on Jetstream
+=======================
 
 Goal
 ====
@@ -15,8 +15,7 @@ Prerequisites
 =============
 
 #. A Jetstream account with an XSEDE allocation; for more information,
-   go to the `Jetstream Allocations help page <http://wiki.jetstream-cloud.org/Jetstream+Allocations>`_.
-#. Some familiarity with the command line.
+   see the `Jetstream Allocations help page <http://wiki.jetstream-cloud.org/Jetstream+Allocations>`_.
 
 Step 1: Installing The Littlest JupyterHub
 ==========================================
