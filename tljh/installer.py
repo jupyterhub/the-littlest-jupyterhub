@@ -98,7 +98,7 @@ def ensure_user_environment():
     conda.ensure_conda_env(USER_ENV_PREFIX)
     conda.ensure_conda_packages(USER_ENV_PREFIX, [
         # Conda's latest version is on conda much more so than on PyPI.
-        'conda==4.5.4'
+        'conda==4.5.8'
     ])
 
     conda.ensure_pip_packages(USER_ENV_PREFIX, [
