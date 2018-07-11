@@ -35,12 +35,16 @@ Installation
 The Littlest JupyterHub (TLJH) can run on any server that is running at least
 Ubuntu 18.04. We have a bunch of tutorials to get you started!
 
-- `Tutorial for installing TLJH on your own server that is already running.
-  <http://the-littlest-jupyterhub.readthedocs.io/en/latest/tutorials/custom.html>`_
-- Tutorials for creating a new server & setting up TLJH on it in various
-  cloud providers:
+- Tutorials to create a new server from scratch on a cloud provider & run TLJH
+  on it. These are **recommended** if you do not have much experience setting up
+  servers.
 
   - `Digital Ocean <http://the-littlest-jupyterhub.readthedocs.io/en/latest/tutorials/digitalocean.html>`_
   - `Google Cloud <http://the-littlest-jupyterhub.readthedocs.io/en/latest/tutorials/google.html>`_
   - `Jetstream <http://the-littlest-jupyterhub.readthedocs.io/en/latest/tutorials/jetstream.html>`_
-  - ... more, if you add them! :)
+  - ... your favorite provider here, if you can contribute!
+
+- `Tutorial to install TLJH on an already running server you have root access to
+  <http://the-littlest-jupyterhub.readthedocs.io/en/latest/tutorials/custom.html>`_.
+  You should use this if your cloud provider does not already have a direct tutorial,
+  or if you have experience setting up servers.
