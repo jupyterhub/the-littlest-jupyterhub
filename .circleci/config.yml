@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: continuumio/miniconda3:4.5.4
+      - image: jupyterhub/tljh-circleci-base-image:6fe5372
 
     working_directory: ~/repo
 
@@ -33,29 +33,6 @@ jobs:
 
         # Run full installer test
       - setup_remote_docker
-
-      - run:
-          #FIXME: Bake this into the base image
-          name: install docker
-          command: |
-            apt-get update
-
-            apt-get install --yes \
-                 apt-transport-https \
-                 ca-certificates \
-                 curl \
-                 gnupg2 \
-                 software-properties-common
-
-            curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
-            add-apt-repository \
-                "deb [arch=amd64] https://download.docker.com/linux/debian \
-                $(lsb_release -cs) \
-                stable"
-
-            apt-get update
-
-            apt-get install --yes docker-ce
 
       - run:
           name: build systemd image
