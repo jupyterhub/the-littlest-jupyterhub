@@ -26,20 +26,6 @@ Ubuntu 18.04. We have a bunch of tutorials to get you started.
   You should use this if your cloud provider does not already have a direct tutorial,
   or if you have experience setting up servers.
 
-Tutorials
-=========
-
-Tutorials guide you through accomplishing specific goals. Great place to get
-started!
-
-.. toctree::
-   :titlesonly:
-
-   tutorials/digitalocean
-   tutorials/jetstream
-   tutorials/google
-   tutorials/custom
-
 How-To Guides
 =============
 
