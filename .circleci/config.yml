@@ -60,23 +60,21 @@ jobs:
       - run:
           name: build systemd image
           command: |
-              docker build -t tljh-systemd .
+              python3 .circleci/integration-test.py build-image
 
       - run:
           name: start systemd image
           command: |
-            docker run \
-              --privileged \
-              --detach \
-              --name=tljh-systemd-ci \
-              tljh-systemd
+              python3 .circleci/integration-test.py start-container
+
       - run:
           name: run tljh installer
           command: |
-            docker cp . tljh-systemd-ci:/srv/src
-            docker exec -it tljh-systemd-ci python3 /srv/src/bootstrap/bootstrap.py
+              python3 .circleci/integration-test.py cp . /srv/src
+              python3 .circleci/integration-test.py run 'python3 /srv/src/bootstrap/bootstrap.py'
 
       - run:
           name: check jupyterhub is up
           command: |
-            docker exec -it tljh-systemd-ci curl -L --fail http://localhost
+              python3 .circleci/integration-test.py run 'journalctl -u jupyterhub'
+              python3 .circleci/integration-test.py run 'curl -L --fail http://localhost'
