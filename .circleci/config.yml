@@ -1,69 +1,68 @@
 version: 2
 jobs:
-  unit-test:
-    docker:
-      - image: continuumio/miniconda3:4.5.4
+    unit-test:
+        docker:
+            - image: continuumio/miniconda3:4.5.4
 
-    working_directory: ~/repo
+        working_directory: ~/repo
 
-    steps:
-      - checkout
+        steps:
+            - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-miniconda3-4.5.4-{{ checksum "setup.py" }}-{{ checksum "dev-requirements.txt" }}
-          - v1-dependencies-miniconda3-4.5.4-
+            # Download and cache dependencies
+            - restore_cache:
+                keys:
+                    - v1-dependencies-miniconda3-4.5.4-{{ checksum "setup.py" }}-{{ checksum "dev-requirements.txt" }}
+                    - v1-dependencies-miniconda3-4.5.4-
 
-      - run:
-          name: install dependencies
-          command: |
-            pip install -r dev-requirements.txt
-            pip install -e .
+            - run:
+                name: install dependencies
+                command: |
+                    pip install -r dev-requirements.txt
+                    pip install -e .
 
-      - save_cache:
-          paths:
-            - /opt/conda
-          key: v1-dependencies-miniconda3-4.5.4-{{ checksum "setup.py" }}-{{ checksum "dev-requirements.txt" }}
+            - save_cache:
+                paths:
+                    - /opt/conda
+                key: v1-dependencies-miniconda3-4.5.4-{{ checksum "setup.py" }}-{{ checksum "dev-requirements.txt" }}
 
-      - run:
-          name: run unit tests
-          command: |
-            py.test tests/
+            - run:
+                name: run unit tests
+                command: |
+                    py.test tests/
 
-  integration-test:
-    docker:
-      - image: docker:18.05.0-ce-git
-        # Run full installer test
-    steps:
-      - run:
-          name: setup python3
-          command: |
-              apk add --no-cache python3
+    integration-test:
+        docker:
+            - image: docker:18.05.0-ce-git
 
-      - setup_remote_docker
+        steps:
+            - run:
+                name: setup python3
+                command: |
+                    apk add --no-cache python3
 
-      - run:
-          name: build systemd image
-          command: |
-              python3 .circleci/integration-test.py build-image
+            - setup_remote_docker
 
-      - run:
-          name: start systemd image
-          command: |
-              python3 .circleci/integration-test.py start-container
+            - run:
+                name: build systemd image
+                command: |
+                    python3 .circleci/integration-test.py build-image
 
-      - run:
-          name: run tljh installer
-          command: |
-              python3 .circleci/integration-test.py copy . /srv/src
-              python3 .circleci/integration-test.py run 'python3 /srv/src/bootstrap/bootstrap.py'
+            - run:
+                name: start systemd image
+                command: |
+                    python3 .circleci/integration-test.py start-container
 
-      - run:
-          name: check jupyterhub is up
-          command: |
-              python3 .circleci/integration-test.py run 'curl -L --fail http://127.0.0.1'
+            - run:
+                name: run tljh installer
+                command: |
+                    python3 .circleci/integration-test.py copy . /srv/src
+                    python3 .circleci/integration-test.py run 'python3 /srv/src/bootstrap/bootstrap.py'
 
+            - run:
+                name: check jupyterhub is up
+                command: |
+                    python3 .circleci/integration-test.py run 'curl -L --fail http://127.0.0.1'
 
 workflows:
     version: 2
