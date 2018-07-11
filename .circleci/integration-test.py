@@ -71,7 +71,7 @@ def copy_to_container(container_name, src_path, dest_path):
     """
     subprocess.check_call([
         'docker', 'cp',
-        src_path, f'{container_name}:{dest_path}''
+        src_path, f'{container_name}:{dest_path}'
     ])
 
 
