@@ -41,6 +41,7 @@ jobs:
                 command: |
                     apk add --no-cache python3
 
+            - checkout
             - setup_remote_docker
 
             - run:
