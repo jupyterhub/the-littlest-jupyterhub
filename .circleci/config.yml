@@ -64,7 +64,7 @@ jobs:
                 name: print systemd status + logs
                 command: |
                     python3 .circleci/integration-test.py run 'journalctl --no-pager'
-                    python3 .circleci/integration-test.py run 'systemctl status jupyterhub configurable-http-proxy'
+                    python3 .circleci/integration-test.py run 'systemctl --no-pager status jupyterhub configurable-http-proxy'
 
             - run:
                 name: check jupyterhub is up
