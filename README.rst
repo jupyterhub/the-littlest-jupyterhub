@@ -48,3 +48,19 @@ Ubuntu 18.04. We have a bunch of tutorials to get you started!
   <http://the-littlest-jupyterhub.readthedocs.io/en/latest/tutorials/custom.html>`_.
   You should use this if your cloud provider does not already have a direct tutorial,
   or if you have experience setting up servers.
+
+Documentation
+=============
+
+Our latest documenation is at: https://the-littlest-jupyterhub.readthedocs.io
+
+We place a high importance on consistency, readability and completeness of
+documentation. If a feature is not documented, it does not exist. If a behavior
+is not documented, it is a bug! We try to treat our documentation like we treat
+our code: we aim to improve it as often as possible.
+
+If something is confusing to you in the documentation, it is a bug. We would be
+happy if you could `file an issue
+<https://github.com/yuvipanda/the-littlest-jupyterhub/issues>`_ about it - or
+even better, `contribute a documentation fix
+<http://the-littlest-jupyterhub.readthedocs.io/en/latest/contributing/docs.html>`_!
