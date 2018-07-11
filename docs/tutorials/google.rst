@@ -171,9 +171,12 @@ Let's create the server on which we can run JupyterHub.
 #. The Littlest JupyterHub is now installing in the background on your new server.
    It takes around 5-10 minutes for this installation to complete.
 
-#. Check if the installation is complete by copying the **External IP**
-   of your server, and trying to access it with a browser. This will fail until
-   the installation is complete, so be patient.
+#. Check if the installation is complete by **copying** the **External IP**
+   of your server, and trying to access it with a browser. Do **not click** on the
+   IP - this will open the link with HTTPS, and will not work.
+
+   Accessing the JupyterHub will also fail until the installation is complete,
+   so be patient.
 
 #. When the installation is complete, it should give you a JupyterHub login page.
 
