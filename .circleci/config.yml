@@ -72,7 +72,7 @@ jobs:
 
 workflows:
     version: 2
-    build_and_test:
+    all-tests:
         jobs:
             - unit-test
             - integration-test
