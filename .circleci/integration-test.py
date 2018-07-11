@@ -25,7 +25,7 @@ def run_systemd_image(image_name, container_name):
     subprocess.check_call([
         'docker', 'run',
         '--privileged',
-        '-v /sys/fs/cgroup:/sys/fs/cgroup',
+        '--mount', 'type=bind,source=/sys/fs/cgroup,target=/sys/fs/cgroup',
         '--detach',
         '--name', container_name,
         image_name
