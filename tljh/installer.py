@@ -2,9 +2,11 @@ import sys
 import os
 import tljh.systemd as systemd
 import tljh.conda as conda
+from urllib.request import urlopen, URLError
 from tljh import user
 import secrets
 import argparse
+import time
 from ruamel.yaml import YAML
 
 INSTALL_PREFIX = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
@@ -130,6 +132,28 @@ def ensure_admins(admins):
         rt_yaml.dump(config, f)
 
 
+def ensure_jupyterhub_running(times=4):
+    """
+    Ensure that JupyterHub is up and running
+
+    Loops given number of times, waiting a second each.
+    """
+
+    for i in range(4):
+        try:
+            print('Waiting for JupyterHub to come up ({}/{} tries)'.format(i, times))
+            urlopen('http://127.0.0.1')
+        except URLError as e:
+            if isinstance(e.reason, ConnectionRefusedError):
+                # Hub isn't up yet, sleep & loop
+                time.sleep(1)
+                continue
+            # Everything else should immediately abort
+            raise
+
+    raise Exception("Installation failed: JupyterHub did not start in {}s".format(times))
+
+
 def main():
     argparser = argparse.ArgumentParser()
     argparser.add_argument(
@@ -148,6 +172,7 @@ def main():
     print("Setting up JupyterHub...")
     ensure_jupyterhub_package(HUB_ENV_PREFIX)
     ensure_jupyterhub_service(HUB_ENV_PREFIX)
+    ensure_jupyterhub_running()
 
     print("Done!")
 
