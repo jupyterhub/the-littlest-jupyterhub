@@ -29,7 +29,12 @@ jobs:
             - run:
                 name: run unit tests
                 command: |
-                    py.test tests/
+                    py.test --cov=tljh tests/
+
+            - run:
+                name: upload code coverage stats
+                command: |
+                    codecov
 
     integration-test:
         docker:
