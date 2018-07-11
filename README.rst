@@ -22,11 +22,25 @@ libraries into this environment easily without any specialized knowledge.
 See `this blog post <http://words.yuvi.in/post/the-littlest-jupyterhub/>`_ for
 more information.
 
-This project is currently in pre-alpha state & extremely prone to breaking!
+Development Status
+==================
 
-Tutorials
-=========
+This project is currently in **pre-alpha**, and things will break all the time.
+However, feedback at this time is extremely valuble, so you should still try
+it out!
 
-We have tutorials to help you set up The Littlest JupyterHub (TLJH) on any of the
-popular providers (Google, Digital Ocean, Jetstream, etc) or on your own server.
-They should take less than ten minutes to get you to a working JupyterHub!
+Installation
+============
+
+The Littlest JupyterHub (TLJH) can run on any server that is running at least
+Ubuntu 18.04. We have a bunch of tutorials to get you started!
+
+- `Tutorial for installing TLJH on your own server that is already running.
+  <http://the-littlest-jupyterhub.readthedocs.io/en/latest/tutorials/custom.html>`_
+- Tutorials for creating a new server & setting up TLJH on it in various
+  cloud providers:
+
+  - `Digital Ocean <http://the-littlest-jupyterhub.readthedocs.io/en/latest/tutorials/digitalocean.html>`_
+  - `Google Cloud <http://the-littlest-jupyterhub.readthedocs.io/en/latest/tutorials/google.html>`_
+  - `Jetstream <http://the-littlest-jupyterhub.readthedocs.io/en/latest/tutorials/jetstream.html>`_
+  - ... more, if you add them! :)
