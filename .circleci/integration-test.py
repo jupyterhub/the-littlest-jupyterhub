@@ -14,16 +14,11 @@ def build_systemd_image(image_name, source_path):
     ])
 
 
-def run_systemd_image(image_name, container_name, external_port, source_path):
+def run_systemd_image(image_name, container_name):
     """
     Run docker image with systemd
 
     Image named image_name should be built with build_systemd_image.
-
-    source_path is mounted to /srv/src in the container, so all changes to the
-    source are reflected in the host.
-
-    Port 80 inside the container is made available to the host at external_port.
 
     Container named container_name will be started.
     """
@@ -32,8 +27,6 @@ def run_systemd_image(image_name, container_name, external_port, source_path):
         '--privileged',
         '--detach',
         '--name', container_name,
-        '--publish', f'{external_port}:80',
-        '--mount', f'type=bind,source={source_path},target=/srv/src',
         image_name
     ])
 
@@ -99,7 +92,7 @@ def main():
     if args.action == 'build-image':
         build_systemd_image(image_name, source_path)
     elif args.action == 'start-container':
-        run_systemd_image(image_name, container_name, 12000, source_path)
+        run_systemd_image(image_name, container_name)
     elif args.action == 'stop-container':
         remove_systemd_container(container_name)
     elif args.action == 'run':
