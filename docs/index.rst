@@ -39,7 +39,6 @@ Guides provide in-depth explanations of specific topics.
    :titlesonly:
 
    guides/requirements
-   guides/install
    guides/admin
 
 Troubleshooting
