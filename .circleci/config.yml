@@ -76,5 +76,4 @@ jobs:
       - run:
           name: check jupyterhub is up
           command: |
-              python3 .circleci/integration-test.py run 'journalctl -u jupyterhub'
-              python3 .circleci/integration-test.py run 'curl -L --fail http://localhost'
+              python3 .circleci/integration-test.py run 'curl -L --fail http://127.0.0.1'
