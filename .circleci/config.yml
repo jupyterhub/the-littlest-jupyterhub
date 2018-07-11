@@ -61,6 +61,11 @@ jobs:
                     python3 .circleci/integration-test.py run 'python3 /srv/src/bootstrap/bootstrap.py'
 
             - run:
+                name: output all system logs, to help debugging
+                command: |
+                    python3 .circleci/integration-test.py run 'journalctl --no-pager'
+
+            - run:
                 name: check jupyterhub is up
                 command: |
                     python3 .circleci/integration-test.py run 'curl -L --fail http://127.0.0.1'
