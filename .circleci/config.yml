@@ -1,8 +1,8 @@
 version: 2
 jobs:
-  build:
+  unit-test:
     docker:
-      - image: jupyterhub/tljh-circleci-base-image:6fe5372
+      - image: continuumio/miniconda3:4.5.4
 
     working_directory: ~/repo
 
@@ -31,7 +31,16 @@ jobs:
           command: |
             py.test tests/
 
+  integration-test:
+    docker:
+      - image: docker:18.05.0-ce-git
         # Run full installer test
+    steps:
+      - run:
+          name: setup python3
+          command: |
+              apk add --no-cache python3
+
       - setup_remote_docker
 
       - run:
