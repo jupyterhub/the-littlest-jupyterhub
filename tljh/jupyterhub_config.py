@@ -8,19 +8,22 @@ from tljh import user, configurer
 INSTALL_PREFIX = os.environ.get('TLJH_INSTALL_PREFIX')
 USER_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'user')
 
+
 class CustomSpawner(SystemdSpawner):
     def start(self):
         """
         Perform system user activities before starting server
         """
         # FIXME: Move this elsewhere? Into the Authenticator?
-        user.ensure_user(self.user.name)
-        user.ensure_user_group(self.user.name, 'jupyterhub-users')
+        system_username = 'jupyter-' + self.user.name
+        user.ensure_user(system_username)
+        user.ensure_user_group(system_username, 'jupyterhub-users')
         if self.user.admin:
-            user.ensure_user_group(self.user.name, 'jupyterhub-admins')
+            user.ensure_user_group(system_username, 'jupyterhub-admins')
         else:
-            user.remove_user_group(self.user.name, 'jupyterhub-admins')
+            user.remove_user_group(system_username, 'jupyterhub-admins')
         return super().start()
+
 
 c.JupyterHub.spawner_class = CustomSpawner
 

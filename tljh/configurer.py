@@ -49,6 +49,7 @@ def apply_yaml_config(path, c):
     update_userlists(c, tljh_config)
     update_limits(c, tljh_config)
     update_user_environment(c, tljh_config)
+    update_user_account_config(c, tljh_config)
 
 
 def update_auth(c, config):
@@ -100,6 +101,10 @@ def update_user_environment(c, config):
         c.Spawner.default_url = '/lab'
     elif user_env['defaultApp'] == 'nteract':
         c.Spawner.default_url = '/nteract'
+
+
+def update_user_account_config(c, config):
+    c.SystemdSpawner.username_template = 'jupyter-{USERNAME}'
 
 
 def _merge_dictionaries(a, b, path=None, update=True):
