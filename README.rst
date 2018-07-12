@@ -28,6 +28,7 @@ Development Status
 ==================
 
 This project is currently in **pre-alpha**, and things will break all the time.
+There is no supported upgrade pathway, and security issues most likely exist.
 However, feedback at this time is extremely valuble, so you should still try
 it out!
 

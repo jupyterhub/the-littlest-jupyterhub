@@ -5,6 +5,14 @@ The Littlest JupyterHub
 A simple `JupyterHub <https://github.com/jupyterhub/jupyterhub>`_ distribution for
 a small (0-50) number of users on a single server.
 
+Development Status
+==================
+
+This project is currently in **pre-alpha**, and things will break all the time.
+There is no supported upgrade pathway, and security issues most likely exist.
+However, feedback at this time is extremely valuble, so you should still try
+it out!
+
 Installation
 ============
 
@@ -37,16 +45,18 @@ How-To guides answer the question 'How do I...?' for a lot of topics.
    howto/user-environment
    howto/notebook-interfaces
 
-Guides
-======
+Topic Guides
+============
 
-Guides provide in-depth explanations of specific topics.
+Topic guides provide in-depth explanations of specific topics.
 
 .. toctree::
    :titlesonly:
 
    guides/requirements
    guides/admin
+   topic/security
+
 
 Troubleshooting
 ===============
