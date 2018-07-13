@@ -18,5 +18,5 @@ matches the IP you are trying to access. If you have a domain name pointing to t
 IP address, you might have to change it to point to the new correct IP.
 
 You can prevent External IP changes by `reserving the static IP
-<https://cloud.google.com/compute/docs/ip-addresses/reserve-static-external-ip-address>`_
+<https://cloud.google.com/compute/docs/ip-addresses/reserve-static-external-ip-address#promote_ephemeral_ip>`_
 your server is using.
