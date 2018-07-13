@@ -145,16 +145,16 @@ def ensure_jupyterhub_running(times=4):
             print('Waiting for JupyterHub to come up ({}/{} tries)'.format(i + 1, times))
             urlopen('http://127.0.0.1')
             return
-        except URLError as e:
-            if isinstance(e.reason, ConnectionRefusedError):
-                # Hub isn't up yet, sleep & loop
+        except HTTPError as h:
+            if h.code in [404, 503]:
+                # May be transient
                 time.sleep(1)
                 continue
             # Everything else should immediately abort
             raise
-        except HTTPError as h:
-            if h.code in [404, 503]:
-                # May be transient
+        except URLError as e:
+            if isinstance(e.reason, ConnectionRefusedError):
+                # Hub isn't up yet, sleep & loop
                 time.sleep(1)
                 continue
             # Everything else should immediately abort
