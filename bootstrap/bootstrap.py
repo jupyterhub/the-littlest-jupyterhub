@@ -87,7 +87,7 @@ def pip_install(prefix, packages, editable=False):
     Set editable=True to add '--editable' to the pip install commandline.
     Very useful when doing active development
     """
-    flags = ['--no-cache-dir', '--upgrade']
+    flags = ['--upgrade']
     if editable:
         flags.append('--editable')
     subprocess.check_output([
