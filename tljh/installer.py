@@ -139,7 +139,7 @@ def ensure_jupyterhub_running(times=4):
     Loops given number of times, waiting a second each.
     """
 
-    for i in range(4):
+    for i in range(times):
         try:
             print('Waiting for JupyterHub to come up ({}/{} tries)'.format(i + 1, times))
             urlopen('http://127.0.0.1')
