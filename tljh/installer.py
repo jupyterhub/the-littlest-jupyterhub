@@ -2,6 +2,7 @@ import sys
 import os
 import tljh.systemd as systemd
 import tljh.conda as conda
+from urllib.error import HTTPError
 from urllib.request import urlopen, URLError
 from tljh import user
 import secrets
@@ -139,7 +140,7 @@ def ensure_jupyterhub_running(times=4):
     Loops given number of times, waiting a second each.
     """
 
-    for i in range(4):
+    for i in range(times):
         try:
             print('Waiting for JupyterHub to come up ({}/{} tries)'.format(i + 1, times))
             urlopen('http://127.0.0.1')
@@ -147,6 +148,13 @@ def ensure_jupyterhub_running(times=4):
         except URLError as e:
             if isinstance(e.reason, ConnectionRefusedError):
                 # Hub isn't up yet, sleep & loop
+                time.sleep(1)
+                continue
+            # Everything else should immediately abort
+            raise
+        except HTTPError as h:
+            if h.code == 404:
+                # May be transient
                 time.sleep(1)
                 continue
             # Everything else should immediately abort
