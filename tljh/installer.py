@@ -153,7 +153,7 @@ def ensure_jupyterhub_running(times=4):
             # Everything else should immediately abort
             raise
         except HTTPError as h:
-            if h.code == 404:
+            if h.code in [404, 503]:
                 # May be transient
                 time.sleep(1)
                 continue
