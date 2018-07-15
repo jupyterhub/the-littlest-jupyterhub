@@ -7,10 +7,6 @@ be called many times per lifetime of a jupyterhub.
 Traitlets that modify the startup of JupyterHub should not be here.
 FIXME: A strong feeling that JSON Schema should be involved somehow.
 """
-import copy
-import os
-import yaml
-
 # Default configuration for tljh
 # User provided config is merged into this
 default = {
@@ -18,7 +14,7 @@ default = {
         'type': 'firstuse',
         'dummy': {},
         'firstuse': {
-            'createUsers': False
+            'create_users': False
         }
     },
     'users': {
@@ -30,20 +26,18 @@ default = {
         'memory': '1G',
         'cpu': None
     },
-    'userEnvironment': {
-        'defaultApp': 'classic'
+    'user_environment': {
+        'default_app': 'classic'
     }
 
 }
 
 
-def apply_yaml_config(path, c):
-    if os.path.exists(path):
-        with open(path) as f:
-            # FIXME: Figure out correct order of merging here
-            tljh_config = _merge_dictionaries(dict(default), yaml.safe_load(f))
-    else:
-        tljh_config = copy.deepcopy(default)
+def apply_config(config_overrides, c):
+    """
+    Merge config_overrides with config defaults & apply to JupyterHub config c
+    """
+    tljh_config = _merge_dictionaries(dict(default), config_overrides)
 
     update_auth(c, tljh_config)
     update_userlists(c, tljh_config)
@@ -52,21 +46,33 @@ def apply_yaml_config(path, c):
     update_user_account_config(c, tljh_config)
 
 
+def set_if_not_none(parent, key, value):
+    """
+    Set attribute 'key' on parent if value is not None
+    """
+    if value is not None:
+        setattr(parent, key, value)
+
+
 def update_auth(c, config):
     """
     Set auth related configuration from YAML config file
+
+    Use auth.type to determine authenticator to use. All parameters
+    in the config under auth.{auth.type} will be passed straight to the
+    authenticators themselves.
     """
     auth = config.get('auth')
 
     if auth['type'] == 'dummy':
         c.JupyterHub.authenticator_class = 'dummyauthenticator.DummyAuthenticator'
-        password = auth['dummy'].get('password')
-        if password is not None:
-            c.DummyAuthenticator.password = password
-        return
+        authenticator_parent = c.DummyAuthenticator
     elif auth['type'] == 'firstuse':
         c.JupyterHub.authenticator_class = 'firstuseauthenticator.FirstUseAuthenticator'
-        c.FirstUseAuthenticator.create_users = auth['firstuse']['createUsers']
+        authenticator_parent = c.FirstUseAuthenticator
+
+    for k, v in auth[auth['type']].items():
+        set_if_not_none(authenticator_parent, k, v)
 
 
 def update_userlists(c, config):
@@ -94,12 +100,12 @@ def update_user_environment(c, config):
     """
     Set user environment configuration
     """
-    user_env = config['userEnvironment']
+    user_env = config['user_environment']
 
     # Set default application users are launched into
-    if user_env['defaultApp'] == 'jupyterlab':
+    if user_env['default_app'] == 'jupyterlab':
         c.Spawner.default_url = '/lab'
-    elif user_env['defaultApp'] == 'nteract':
+    elif user_env['default_app'] == 'nteract':
         c.Spawner.default_url = '/nteract'
 
 
