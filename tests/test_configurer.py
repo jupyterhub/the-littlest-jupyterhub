@@ -125,3 +125,21 @@ def test_auth_firstuse():
     })
     assert c.JupyterHub.authenticator_class == 'firstuseauthenticator.FirstUseAuthenticator'
     assert c.FirstUseAuthenticator.create_users
+
+
+def test_auth_github():
+    """
+    Test using GitHub authenticator, which is not explicitly special cased.
+    """
+    c = apply_mock_config({
+        'auth': {
+            'type': 'oauthenticator.github.GitHubOAuthenticator',
+            'GitHubOAuthenticator': {
+                'client_id': 'something',
+                'client_secret': 'something-else'
+            }
+        }
+    })
+    assert c.JupyterHub.authenticator_class == 'oauthenticator.github.GitHubOAuthenticator'
+    assert c.GitHubOAuthenticator.client_id == 'something'
+    assert c.GitHubOAuthenticator.client_secret == 'something-else'

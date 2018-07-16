@@ -70,13 +70,22 @@ def update_auth(c, config):
         'firstuse': 'firstuseauthenticator.FirstUseAuthenticator'
     }
 
-    authenticator_classname = authenticator_class_map[auth['type']]
-    c.JupyterHub.authenticator_class = authenticator_classname
+    if auth['type'] in authenticator_class_map:
+        authenticator_class = authenticator_class_map[auth['type']]
+        authenticator_configname = auth['type']
+    else:
+        # FIXME: Make sure this is something importable.
+        # FIXME: SECURITY: Class must inherit from Authenticator, to prevent us being
+        # used to set arbitrary properties on arbitrary types of objects!
+        authenticator_class = auth['type']
+        # When specifying fully qualified name, use classname as key for config
+        authenticator_configname = authenticator_class.split('.')[-1]
+    c.JupyterHub.authenticator_class = authenticator_class
     # Use just class name when setting config. If authenticator is dummyauthenticator.DummyAuthenticator,
     # its config will be set under c.DummyAuthenticator
-    authenticator_parent = getattr(c, authenticator_classname.split('.')[-1])
+    authenticator_parent = getattr(c, authenticator_class.split('.')[-1])
 
-    for k, v in auth[auth['type']].items():
+    for k, v in auth.get(authenticator_configname, {}).items():
         set_if_not_none(authenticator_parent, k, v)
 
 
