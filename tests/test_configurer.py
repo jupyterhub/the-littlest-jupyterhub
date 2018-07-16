@@ -101,8 +101,8 @@ def test_auth_dummy():
     """
     c = apply_mock_config({
         'auth': {
-            'type': 'dummy',
-            'dummy': {
+            'type': 'dummyauthenticator.DummyAuthenticator',
+            'DummyAuthenticator': {
                 'password': 'test'
             }
         }
@@ -117,8 +117,8 @@ def test_auth_firstuse():
     """
     c = apply_mock_config({
         'auth': {
-            'type': 'firstuse',
-            'firstuse': {
+            'type': 'firstuseauthenticator.FirstUseAuthenticator',
+            'FirstUseAuthenticator': {
                 'create_users': True
             }
         }
@@ -129,7 +129,7 @@ def test_auth_firstuse():
 
 def test_auth_github():
     """
-    Test using GitHub authenticator, which is not explicitly special cased.
+    Test using GitHub authenticator
     """
     c = apply_mock_config({
         'auth': {

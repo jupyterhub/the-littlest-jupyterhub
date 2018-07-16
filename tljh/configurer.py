@@ -11,9 +11,8 @@ FIXME: A strong feeling that JSON Schema should be involved somehow.
 # User provided config is merged into this
 default = {
     'auth': {
-        'type': 'firstuse',
-        'dummy': {},
-        'firstuse': {
+        'type': 'firstuseauthenticator.FirstUseAuthenticator',
+        'FirstUseAuthenticator': {
             'create_users': False
         }
     },
@@ -64,22 +63,12 @@ def update_auth(c, config):
     """
     auth = config.get('auth')
 
-    # Map value of 'auth.type' in config to a fully qualified name
-    authenticator_class_map = {
-        'dummy': 'dummyauthenticator.DummyAuthenticator',
-        'firstuse': 'firstuseauthenticator.FirstUseAuthenticator'
-    }
-
-    if auth['type'] in authenticator_class_map:
-        authenticator_class = authenticator_class_map[auth['type']]
-        authenticator_configname = auth['type']
-    else:
-        # FIXME: Make sure this is something importable.
-        # FIXME: SECURITY: Class must inherit from Authenticator, to prevent us being
-        # used to set arbitrary properties on arbitrary types of objects!
-        authenticator_class = auth['type']
-        # When specifying fully qualified name, use classname as key for config
-        authenticator_configname = authenticator_class.split('.')[-1]
+    # FIXME: Make sure this is something importable.
+    # FIXME: SECURITY: Class must inherit from Authenticator, to prevent us being
+    # used to set arbitrary properties on arbitrary types of objects!
+    authenticator_class = auth['type']
+    # When specifying fully qualified name, use classname as key for config
+    authenticator_configname = authenticator_class.split('.')[-1]
     c.JupyterHub.authenticator_class = authenticator_class
     # Use just class name when setting config. If authenticator is dummyauthenticator.DummyAuthenticator,
     # its config will be set under c.DummyAuthenticator
