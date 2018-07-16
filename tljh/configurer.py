@@ -64,12 +64,17 @@ def update_auth(c, config):
     """
     auth = config.get('auth')
 
-    if auth['type'] == 'dummy':
-        c.JupyterHub.authenticator_class = 'dummyauthenticator.DummyAuthenticator'
-        authenticator_parent = c.DummyAuthenticator
-    elif auth['type'] == 'firstuse':
-        c.JupyterHub.authenticator_class = 'firstuseauthenticator.FirstUseAuthenticator'
-        authenticator_parent = c.FirstUseAuthenticator
+    # Map value of 'auth.type' in config to a fully qualified name
+    authenticator_class_map = {
+        'dummy': 'dummyauthenticator.DummyAuthenticator',
+        'firstuse': 'firstuseauthenticator.FirstUseAuthenticator'
+    }
+
+    authenticator_classname = authenticator_class_map[auth['type']]
+    c.JupyterHub.authenticator_class = authenticator_classname
+    # Use just class name when setting config. If authenticator is dummyauthenticator.DummyAuthenticator,
+    # its config will be set under c.DummyAuthenticator
+    authenticator_parent = getattr(c, authenticator_classname.split('.')[-1])
 
     for k, v in auth[auth['type']].items():
         set_if_not_none(authenticator_parent, k, v)
