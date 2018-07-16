@@ -62,12 +62,15 @@ def ensure_jupyterhub_package(prefix):
     """
     Install JupyterHub into our conda environment if needed.
 
-    Conda constructor does not play well with conda-forge, so we can ship this
-    with constructor
+    We install all python packages from PyPI as much as possible in the
+    hub environment. A lot of spawners & authenticators do not have conda-forge
+    packages, but do have pip packages. Keeping all python packages in the
+    hub environment be installed with pip prevents accidental mixing of python
+    and conda packages!
     """
-    # FIXME: Use fully deterministic package lists here
-    conda.ensure_conda_packages(prefix, ['jupyterhub==0.9.0'])
+    conda.ensure_conda_packages(prefix, ['configurable-http-proxy==3.1.0'])
     conda.ensure_pip_packages(prefix, [
+        'jupyterhub==0.9.0',
         'jupyterhub-dummyauthenticator==0.3.1',
         'jupyterhub-systemdspawner==0.11',
         'jupyterhub-firstuseauthenticator==0.10'
