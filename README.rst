@@ -55,7 +55,7 @@ Ubuntu 18.04. We have a bunch of tutorials to get you started!
 Documentation
 =============
 
-Our latest documenation is at: https://the-littlest-jupyterhub.readthedocs.io
+Our latest documentation is at: https://the-littlest-jupyterhub.readthedocs.io
 
 We place a high importance on consistency, readability and completeness of
 documentation. If a feature is not documented, it does not exist. If a behavior
