@@ -2,10 +2,10 @@
 The Littlest JupyterHub
 =======================
 
-.. image:: https://circleci.com/gh/yuvipanda/the-littlest-jupyterhub.svg?style=shield
-   :target: https://circleci.com/gh/yuvipanda/the-littlest-jupyterhub
-.. image:: https://codecov.io/gh/yuvipanda/the-littlest-jupyterhub/branch/master/graph/badge.svg
-  :target: https://codecov.io/gh/yuvipanda/the-littlest-jupyterhub
+.. image:: https://circleci.com/gh/jupyterhub/the-littlest-jupyterhub.svg?style=shield
+   :target: https://circleci.com/gh/jupyterhub/the-littlest-jupyterhub
+.. image:: https://codecov.io/gh/jupyterhub/the-littlest-jupyterhub/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/jupyterhub/the-littlest-jupyterhub
 .. image:: https://media.readthedocs.org/static/projects/badges/passing-flat.svg
    :target: https://the-littlest-jupyterhub.readthedocs.io
 .. image:: https://badges.gitter.im/jupyterhub/jupyterhub.svg
