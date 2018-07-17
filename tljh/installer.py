@@ -40,10 +40,10 @@ def ensure_jupyterhub_service(prefix):
     systemd.reload_daemon()
 
     # Set up proxy / hub secret oken if it is not already setup
-    # FIXME: Check umask here properly
     proxy_secret_path = os.path.join(INSTALL_PREFIX, 'configurable-http-proxy.secret')
     if not os.path.exists(proxy_secret_path):
         with open(proxy_secret_path, 'w') as f:
+            os.fchmod(f.fileno(), 0o700)
             f.write('CONFIGPROXY_AUTH_TOKEN=' + secrets.token_hex(32))
         # If we are changing CONFIGPROXY_AUTH_TOKEN, restart configurable-http-proxy!
         systemd.restart_service('configurable-http-proxy')
