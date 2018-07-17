@@ -111,11 +111,23 @@ def remove_user_group(username, groupname):
 
 def _ensure_group_owner(gid, path, *, isdir):
     """Ensure a file or directory is owned by a group"""
-    st = os.stat(path)
+
+    # check and update owner group
+    st = os.lstat(path)
     if st.st_gid != gid:
         # ensure owned by gid
-        os.chown(path, st.st_uid, gid)
-    correct_mode = current_mode = os.stat(path).st_mode
+        os.chown(path, st.st_uid, gid, follow_symlinks=False)
+
+    # check and update permissions
+    if os.chmod not in os.supports_follow_symlinks:
+        follow_symlinks = True
+        if os.path.islink(path):
+            # can't chmod symlinks on e.g. linux
+            return
+    else:
+        follow_symlinks = False
+
+    correct_mode = current_mode = os.lstat(path).st_mode
     if isdir:
         # setgid bit on directories so new files have the right group
         # all directories should have srwX permissions
@@ -129,7 +141,7 @@ def _ensure_group_owner(gid, path, *, isdir):
 
     # if mode is not correct, change it
     if correct_mode != current_mode:
-        os.chmod(path, correct_mode)
+        os.chmod(path, correct_mode, follow_symlinks=follow_symlinks)
 
 
 def ensure_group_permissions(groupname, path):
