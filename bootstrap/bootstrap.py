@@ -103,6 +103,14 @@ def main():
     miniconda_version = '4.5.4'
     miniconda_installer_md5 = "a946ea1d0c4a642ddf0c3a26a18bb16d"
 
+
+    if not os.path.isdir(install_prefix):
+        print("Creating TLJH directory %s" % install_prefix)
+        os.makedirs(install_prefix, mode=0o771)
+    # set acl on install directory so that new files
+    # inherit group-writable permissions
+    subprocess.check_call(["setfacl", "-d", "-m", "g::rwX", install_prefix])
+
     print('Checking if TLJH is already installed...')
     if not check_miniconda_version(hub_prefix, miniconda_version):
         initial_setup = True

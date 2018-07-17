@@ -149,13 +149,10 @@ def ensure_group_permissions(groupname, path):
 
     - all files are owned by groupname
     - setgid bit so new files are owned by groupname by default
-    - setfacl so new files are group-writable by default
     """
 
     gid = grp.getgrnam(groupname).gr_gid
     _ensure_group_owner(gid, path, isdir=True)
-    # setfacl on the root so new files are group-writable
-    subprocess.check_call(["setfacl", "-d", "-m", "g::rwX", path])
     # recursively check permissions to make sure it's in the initial right state
     for root, dirs, files in os.walk(path):
         for d in dirs:
