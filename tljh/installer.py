@@ -12,7 +12,8 @@ from ruamel.yaml import YAML
 
 INSTALL_PREFIX = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
 HUB_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'hub')
-USER_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'user')
+# users and hub in the same env:
+USER_ENV_PREFIX = HUB_ENV_PREFIX
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
@@ -95,6 +96,13 @@ def ensure_usergroups():
         # `pip` is in the $PATH we set in jupyterhub_config.py to include the user conda env.
         f.write('Defaults exempt_group = jupyterhub-admins\n')
 
+    print(
+        "Granting write permission for {} to JupyterHub admins".format(
+            HUB_ENV_PREFIX
+        )
+    )
+    user.ensure_group_permissions("jupyterhub-admins", INSTALL_PREFIX)
+
 
 def ensure_user_environment():
     """
@@ -102,15 +110,13 @@ def ensure_user_environment():
     """
     print("Setting up user environment...")
     conda.ensure_conda_env(USER_ENV_PREFIX)
-    user.ensure_group_permissions("jupyterhub-admins", USER_ENV_PREFIX)
     conda.ensure_conda_packages(USER_ENV_PREFIX, [
         # Conda's latest version is on conda much more so than on PyPI.
         'conda==4.5.8'
     ])
 
     conda.ensure_pip_packages(USER_ENV_PREFIX, [
-        # JupyterHub + notebook package are base requirements for user environment
-        'jupyterhub==0.9.0',
+        # notebook package for users
         'notebook==5.5.0',
         # Install additional notebook frontends!
         'jupyterlab==0.32.1',
