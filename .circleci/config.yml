@@ -72,9 +72,14 @@ jobs:
                     python3 .circleci/integration-test.py run 'systemctl --no-pager status jupyterhub configurable-http-proxy'
 
             - run:
-                name: check jupyterhub is up
+                name: install integration test requirements
                 command: |
-                    python3 .circleci/integration-test.py run 'curl -L --fail http://127.0.0.1'
+                    python3 .circleci/integration-test.py run 'python3 -m pip install -r /srv/src/integration-tests/requirements.txt'
+
+            - run:
+                name: run integration tests
+                command: |
+                    python3 .circleci/integration-test.py run 'python3 -m pytest -v /srv/src/integration-tests'
 
 workflows:
     version: 2
