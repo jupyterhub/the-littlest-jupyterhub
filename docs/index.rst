@@ -30,7 +30,7 @@ Ubuntu 18.04. We have a bunch of tutorials to get you started.
      tutorials/jetstream
      tutorials/google
 
-- :ref:`tutorial/custom`.
+- :ref:`tutorials/custom`.
   You should use this if your cloud provider does not already have a direct tutorial,
   or if you have experience setting up servers.
 
