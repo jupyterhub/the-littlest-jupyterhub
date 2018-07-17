@@ -15,6 +15,8 @@ HUB_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'hub')
 # users and hub in the same env:
 USER_ENV_PREFIX = HUB_ENV_PREFIX
 
+STATE_DIR = os.path.join(HUB_ENV_PREFIX, 'state')
+
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 rt_yaml = YAML()
@@ -39,8 +41,10 @@ def ensure_jupyterhub_service(prefix):
     systemd.install_unit('jupyterhub.service', hub_unit_template.format(**unit_params))
     systemd.reload_daemon()
 
+    os.makedirs(STATE_DIR, mode=0o700, exist_ok=True)
+
     # Set up proxy / hub secret oken if it is not already setup
-    proxy_secret_path = os.path.join(INSTALL_PREFIX, 'configurable-http-proxy.secret')
+    proxy_secret_path = os.path.join(STATE_DIR, 'configurable-http-proxy.secret')
     if not os.path.exists(proxy_secret_path):
         with open(proxy_secret_path, 'w') as f:
             os.fchmod(f.fileno(), 0o700)
@@ -48,7 +52,6 @@ def ensure_jupyterhub_service(prefix):
         # If we are changing CONFIGPROXY_AUTH_TOKEN, restart configurable-http-proxy!
         systemd.restart_service('configurable-http-proxy')
 
-    os.makedirs(os.path.join(INSTALL_PREFIX, 'hub', 'state'), mode=0o700, exist_ok=True)
     # Start CHP if it has already not been started
     systemd.start_service('configurable-http-proxy')
     # If JupyterHub is running, we want to restart it.
