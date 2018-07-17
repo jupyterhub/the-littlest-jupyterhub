@@ -3,7 +3,7 @@ FROM ubuntu:18.04
 
 RUN apt-get update --yes
 
-RUN apt-get install --yes systemd curl git
+RUN apt-get install --yes systemd curl git acl
 
 # Kill all the things we don't need
 RUN find /etc/systemd/system \
