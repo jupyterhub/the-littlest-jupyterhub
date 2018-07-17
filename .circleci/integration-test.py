@@ -87,8 +87,9 @@ def main():
 
     image_name = 'tljh-systemd'
     container_name = 'tljh-ci-run'
-
-    source_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    source_path = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), os.pardir, 'integration-tests')
+    )
 
     if args.action == 'build-image':
         build_systemd_image(image_name, source_path)
