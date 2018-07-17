@@ -11,11 +11,11 @@ import time
 from ruamel.yaml import YAML
 
 INSTALL_PREFIX = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
-HUB_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'hub')
+HUB_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'env')
 # users and hub in the same env:
 USER_ENV_PREFIX = HUB_ENV_PREFIX
 
-STATE_DIR = os.path.join(HUB_ENV_PREFIX, 'state')
+STATE_DIR = os.path.join(INSTALL_PREFIX, 'state')
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
@@ -104,7 +104,7 @@ def ensure_usergroups():
             HUB_ENV_PREFIX
         )
     )
-    user.ensure_group_permissions("jupyterhub-admins", INSTALL_PREFIX)
+    user.ensure_group_permissions("jupyterhub-admins", HUB_ENV_PREFIX)
 
 
 def ensure_user_environment():
