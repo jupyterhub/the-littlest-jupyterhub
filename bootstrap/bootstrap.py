@@ -11,6 +11,7 @@ Constraints:
   - Be compatible with Python 3.4 (since we support Ubuntu 16.04)
   - Use stdlib modules only
 """
+from distutils.version import LooseVersion as V
 import os
 import subprocess
 import urllib.request
@@ -38,13 +39,15 @@ def check_miniconda_version(prefix, version):
     Return true if a miniconda install with version exists at prefix
     """
     try:
-        return subprocess.check_output([
+        installed_version = subprocess.check_output([
             os.path.join(prefix, 'bin', 'conda'),
             '-V'
-        ]).decode().strip() == 'conda {}'.format(version)
+        ]).decode().strip().split()[1]
     except (subprocess.CalledProcessError, FileNotFoundError):
         # Conda doesn't exist, or wrong version
         return False
+    else:
+        return V(installed_version) >= V(version)
 
 
 @contextlib.contextmanager
