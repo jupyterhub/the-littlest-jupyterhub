@@ -113,7 +113,9 @@ def ensure_user_environment(user_requirements_txt_file):
         'notebook==5.5.0',
         # Install additional notebook frontends!
         'jupyterlab==0.32.1',
-        'nteract-on-jupyter==1.8.1'
+        'nteract-on-jupyter==1.8.1',
+        # nbgitpuller for easily pulling in Git repositories
+        'nbgitpuller==0.6.1'
     ])
 
     if user_requirements_txt_file:
