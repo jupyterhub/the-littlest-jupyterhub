@@ -66,3 +66,19 @@ def ensure_pip_packages(prefix, packages):
         'install',
         '--no-cache-dir',
     ] + packages)
+
+
+def ensure_pip_requirements(prefix, requirements_path):
+    """
+    Ensure pip packages from given requirements_path are installed in given conda prefix.
+
+    requirements_path can be a file or a URL.
+    """
+    abspath = os.path.abspath(prefix)
+    pip_executable = [os.path.join(abspath, 'bin', 'python'), '-m', 'pip']
+
+    subprocess.check_output(pip_executable + [
+        'install',
+        '-r',
+        requirements_path
+    ])
