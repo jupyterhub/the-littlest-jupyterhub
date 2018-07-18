@@ -6,7 +6,6 @@ import os
 import pwd
 import subprocess
 import sys
-import tempfile
 
 import pytest
 
@@ -68,13 +67,19 @@ def permissions_test(group, path, *, readable=None, writable=None, dirs_only=Fal
             if os.path.islink(path):
                 # skip links
                 continue
+            st = os.lstat(path)
+            stat_str = '{perm:04o} {user} {group}'.format(
+                perm=st.st_mode,
+                user=pwd.getpwuid(st.st_uid).pw_name,
+                group=grp.getgrgid(st.st_gid).gr_name,
+            )
 
             # check if the path should be writable
             if writable is not None:
                 if access(path, os.W_OK) != writable:
                     failures.append(
-                        "{} should {}be writable by {}".format(
-                            path, "" if writable else "not ", group
+                        "{} {} should {}be writable by {}".format(
+                            stat_str, path, "" if writable else "not ", group
                         )
                     )
 
@@ -82,8 +87,8 @@ def permissions_test(group, path, *, readable=None, writable=None, dirs_only=Fal
             if readable is not None:
                 if access(path, os.R_OK) != readable:
                     failures.append(
-                        "{} should {}be readable by {}".format(
-                            path, "" if readable else "not ", group
+                        "{} {} should {}be readable by {}".format(
+                            stat_str, path, "" if readable else "not ", group
                         )
                     )
     # verify that we actually tested some files
@@ -91,6 +96,8 @@ def permissions_test(group, path, *, readable=None, writable=None, dirs_only=Fal
     assert total_tested > 0, "No files to test in %r" % path
     # raise a nice summary of the failures:
     if failures:
+        if len(failures) > 50:
+            failures = failures[:32] + ['...%i total' % len(failures)]
         assert False, "\n".join(failures)
 
 
