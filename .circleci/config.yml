@@ -37,17 +37,15 @@ jobs:
                     codecov
 
     integration-test:
-        docker:
-            - image: docker:18.05.0-ce-git
+        machine: true
 
         steps:
             - run:
                 name: setup python3
                 command: |
-                    apk add --no-cache python3
+                    sudo apt-get -y install python3
 
             - checkout
-            - setup_remote_docker
 
             - run:
                 name: build systemd image
