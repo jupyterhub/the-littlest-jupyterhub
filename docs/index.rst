@@ -56,6 +56,7 @@ Topic guides provide in-depth explanations of specific topics.
    guides/requirements
    guides/admin
    topic/security
+   topic/customizing-installer
 
 
 Troubleshooting

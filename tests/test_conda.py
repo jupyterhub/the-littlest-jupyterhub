@@ -66,3 +66,21 @@ def test_ensure_pip_packages(prefix):
         '-c',
         'import numpy'
     ])
+
+
+def test_ensure_pip_requirements(prefix):
+    """
+    Test installing pip packages with requirements.txt in conda environment
+    """
+    conda.ensure_conda_env(prefix)
+    conda.ensure_conda_packages(prefix, ['pip'])
+    with tempfile.NamedTemporaryFile() as f:
+        # Sample small package to test
+        f.write('there'.encode())
+        f.flush()
+        conda.ensure_pip_requirements(prefix, f.name)
+    subprocess.check_call([
+        os.path.join(prefix, 'bin', 'python'),
+        '-c',
+        'import there'
+    ])

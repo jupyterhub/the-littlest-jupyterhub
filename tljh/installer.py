@@ -96,7 +96,7 @@ def ensure_usergroups():
         f.write('Defaults exempt_group = jupyterhub-admins\n')
 
 
-def ensure_user_environment():
+def ensure_user_environment(user_requirements_txt_file):
     """
     Set up user conda environment with required packages
     """
@@ -115,6 +115,10 @@ def ensure_user_environment():
         'jupyterlab==0.32.1',
         'nteract-on-jupyter==1.8.1'
     ])
+
+    if user_requirements_txt_file:
+        # FIXME: This currently fails hard, should fail soft and not abort installer
+        conda.ensure_pip_requirements(USER_ENV_PREFIX, user_requirements_txt_file)
 
 
 def ensure_admins(admins):
@@ -175,13 +179,17 @@ def main():
         nargs='*',
         help='List of usernames set to be admin'
     )
+    argparser.add_argument(
+        '--user-requirements-txt-url',
+        help='URL to a requirements.txt file that should be installed in the user enviornment'
+    )
 
     args = argparser.parse_args()
 
     ensure_admins(args.admin)
 
     ensure_usergroups()
-    ensure_user_environment()
+    ensure_user_environment(args.user_requirements_txt_url)
 
     print("Setting up JupyterHub...")
     ensure_jupyterhub_package(HUB_ENV_PREFIX)
