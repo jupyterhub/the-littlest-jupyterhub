@@ -39,8 +39,7 @@ jobs:
     integration-test:
         machine: true
         environment:
-            cmd: "python3 .circleci/integration-test.py"
-            PATH: "$HOME/conda/bin:$PATH"
+            cmd: "/opt/conda/bin/python3 .circleci/integration-test.py"
         steps:
             # Download and cache dependencies
             - restore_cache:
@@ -51,13 +50,13 @@ jobs:
                 name: setup python3.6
                 command: |
                     if [[ ! -d "$HOME/conda" ]]; then
-                        curl -L https://repo.continuum.io/miniconda/Miniconda3-4.5.4-Linux-x86_64.sh > miniconda.sh
-                        bash miniconda.sh -b -p $HOME/conda
+                        curl -L https://repo.continuum.io/miniconda/Miniconda3-4.5.4-Linux-x86_64.sh > /tmp/miniconda.sh
+                        sudo bash /tmp/miniconda.sh -b -p /opt/conda
                     fi
 
             - save_cache:
                 paths:
-                    - $HOME/conda
+                    - /opt/conda
                 key: v1-integration-miniconda3-4.5.4
 
             - checkout
@@ -65,7 +64,7 @@ jobs:
             - run:
                 name: build systemd image
                 command: |
-                     $cmd build-image
+                    $cmd build-image
 
             - run:
                 name: start systemd image
