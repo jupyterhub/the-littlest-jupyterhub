@@ -94,7 +94,6 @@ def permissions_test(group, path, *, readable=None, writable=None, dirs_only=Fal
         assert False, "\n".join(failures)
 
 
-@pytest.mark.parametrize("group, writable", [(ADMIN_GROUP, True), (USER_GROUP, False)])
 def test_admin_writable(group, writable):
     permissions_test(ADMIN_GROUP, sys.prefix, writable=True, dirs_only=True)
 
