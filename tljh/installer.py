@@ -13,8 +13,7 @@ from ruamel.yaml import YAML
 INSTALL_PREFIX = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
 HUB_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'hub')
 USER_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'user')
-
-STATE_DIR = os.path.join(HUB_ENV_PREFIX, 'state')
+STATE_DIR = os.path.join(INSTALL_PREFIX, 'state')
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
