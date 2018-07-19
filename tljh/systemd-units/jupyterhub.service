@@ -10,14 +10,14 @@ User=root
 Restart=always
 # jupyterhub process should have no access to home directories
 ProtectHome=tmpfs
-WorkingDirectory={install_prefix}/hub/state
+WorkingDirectory={install_prefix}/state
 # Protect bits that are normally shared across the system
 PrivateTmp=yes
 PrivateDevices=yes
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
 # Source CONFIGPROXY_AUTH_TOKEN from here!
-EnvironmentFile={install_prefix}/configurable-http-proxy.secret
+EnvironmentFile={install_prefix}/state/configurable-http-proxy.secret
 Environment=TLJH_INSTALL_PREFIX={install_prefix}
 ExecStart={python_interpreter_path} -m jupyterhub.app -f {jupyterhub_config_path}
 
