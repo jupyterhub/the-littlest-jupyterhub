@@ -70,7 +70,7 @@ def ensure_jupyterhub_package(prefix):
     """
     conda.ensure_conda_packages(prefix, ['configurable-http-proxy==3.1.0'])
     conda.ensure_pip_packages(prefix, [
-        'jupyterhub==0.9.0',
+        'jupyterhub==0.9.1',
         'jupyterhub-dummyauthenticator==0.3.1',
         'jupyterhub-systemdspawner==0.11',
         'jupyterhub-firstuseauthenticator==0.10',
@@ -109,8 +109,8 @@ def ensure_user_environment(user_requirements_txt_file):
 
     conda.ensure_pip_packages(USER_ENV_PREFIX, [
         # JupyterHub + notebook package are base requirements for user environment
-        'jupyterhub==0.9.0',
-        'notebook==5.5.0',
+        'jupyterhub==0.9.1',
+        'notebook==5.6.0',
         # Install additional notebook frontends!
         'jupyterlab==0.32.1',
         'nteract-on-jupyter==1.8.1',
