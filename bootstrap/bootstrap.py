@@ -76,6 +76,13 @@ def install_miniconda(installer_path, prefix):
         '-u', '-b',
         '-p', prefix
     ], stderr=subprocess.STDOUT)
+    # fix permissions on initial install
+    # a few files have the wrong ownership and permissions initially
+    # when the installer is run as root
+    subprocess.check_call(
+        ["chown", "-R", "{}:{}".format(os.getuid(), os.getgid()), prefix]
+    )
+    subprocess.check_call(["chmod", "-R", "o-w", prefix])
 
 
 def pip_install(prefix, packages, editable=False):
