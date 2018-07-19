@@ -11,6 +11,7 @@ Constraints:
   - Be compatible with Python 3.4 (since we support Ubuntu 16.04)
   - Use stdlib modules only
 """
+from distutils.version import LooseVersion as V
 import os
 import subprocess
 import urllib.request
@@ -38,13 +39,15 @@ def check_miniconda_version(prefix, version):
     Return true if a miniconda install with version exists at prefix
     """
     try:
-        return subprocess.check_output([
+        installed_version = subprocess.check_output([
             os.path.join(prefix, 'bin', 'conda'),
             '-V'
-        ]).decode().strip() == 'conda {}'.format(version)
+        ]).decode().strip().split()[1]
     except (subprocess.CalledProcessError, FileNotFoundError):
         # Conda doesn't exist, or wrong version
         return False
+    else:
+        return V(installed_version) >= V(version)
 
 
 @contextlib.contextmanager
@@ -99,16 +102,24 @@ def pip_install(prefix, packages, editable=False):
 
 def main():
     install_prefix = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
-    hub_prefix = os.path.join(install_prefix, 'hub')
+    env_prefix = os.path.join(install_prefix, 'env')
     miniconda_version = '4.5.4'
     miniconda_installer_md5 = "a946ea1d0c4a642ddf0c3a26a18bb16d"
 
+
+    if not os.path.isdir(install_prefix):
+        print("Creating TLJH directory %s" % install_prefix)
+        os.makedirs(install_prefix, mode=0o755)
+    # set acl on install directory so that new files
+    # inherit group-writable permissions
+    subprocess.check_call(["setfacl", "-d", "-m", "g::rwX", install_prefix])
+
     print('Checking if TLJH is already installed...')
-    if not check_miniconda_version(hub_prefix, miniconda_version):
+    if not check_miniconda_version(env_prefix, miniconda_version):
         initial_setup = True
         print('Downloading & setting up hub environment...')
         with download_miniconda_installer(miniconda_version, miniconda_installer_md5) as installer_path:
-            install_miniconda(installer_path, hub_prefix)
+            install_miniconda(installer_path, env_prefix)
         print('Hub environment set up!')
     else:
         initial_setup = False
@@ -125,13 +136,13 @@ def main():
         'git+https://github.com/yuvipanda/the-littlest-jupyterhub.git'
     )
 
-    pip_install(hub_prefix, [tljh_repo_path], editable=is_dev)
+    pip_install(env_prefix, [tljh_repo_path], editable=is_dev)
 
     print('Starting TLJH installer...')
     os.execv(
-        os.path.join(hub_prefix, 'bin', 'python3'),
+        os.path.join(env_prefix, 'bin', 'python3'),
         [
-            os.path.join(hub_prefix, 'bin', 'python3'),
+            os.path.join(env_prefix, 'bin', 'python3'),
             '-m',
             'tljh.installer',
         ] + sys.argv[1:]

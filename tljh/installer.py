@@ -11,8 +11,11 @@ import time
 from ruamel.yaml import YAML
 
 INSTALL_PREFIX = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
-HUB_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'hub')
-USER_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'user')
+HUB_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'env')
+# users and hub in the same env:
+USER_ENV_PREFIX = HUB_ENV_PREFIX
+
+STATE_DIR = os.path.join(INSTALL_PREFIX, 'state')
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
@@ -38,16 +41,17 @@ def ensure_jupyterhub_service(prefix):
     systemd.install_unit('jupyterhub.service', hub_unit_template.format(**unit_params))
     systemd.reload_daemon()
 
+    os.makedirs(STATE_DIR, mode=0o700, exist_ok=True)
+
     # Set up proxy / hub secret oken if it is not already setup
-    # FIXME: Check umask here properly
-    proxy_secret_path = os.path.join(INSTALL_PREFIX, 'configurable-http-proxy.secret')
+    proxy_secret_path = os.path.join(STATE_DIR, 'configurable-http-proxy.secret')
     if not os.path.exists(proxy_secret_path):
         with open(proxy_secret_path, 'w') as f:
+            os.fchmod(f.fileno(), 0o700)
             f.write('CONFIGPROXY_AUTH_TOKEN=' + secrets.token_hex(32))
         # If we are changing CONFIGPROXY_AUTH_TOKEN, restart configurable-http-proxy!
         systemd.restart_service('configurable-http-proxy')
 
-    os.makedirs(os.path.join(INSTALL_PREFIX, 'hub', 'state'), mode=0o700, exist_ok=True)
     # Start CHP if it has already not been started
     systemd.start_service('configurable-http-proxy')
     # If JupyterHub is running, we want to restart it.
@@ -95,6 +99,13 @@ def ensure_usergroups():
         # `pip` is in the $PATH we set in jupyterhub_config.py to include the user conda env.
         f.write('Defaults exempt_group = jupyterhub-admins\n')
 
+    print(
+        "Granting write permission for {} to JupyterHub admins".format(
+            HUB_ENV_PREFIX
+        )
+    )
+    user.ensure_group_permissions("jupyterhub-admins", HUB_ENV_PREFIX)
+
 
 def ensure_user_environment(user_requirements_txt_file):
     """
@@ -108,8 +119,7 @@ def ensure_user_environment(user_requirements_txt_file):
     ])
 
     conda.ensure_pip_packages(USER_ENV_PREFIX, [
-        # JupyterHub + notebook package are base requirements for user environment
-        'jupyterhub==0.9.0',
+        # notebook package for users
         'notebook==5.5.0',
         # Install additional notebook frontends!
         'jupyterlab==0.32.1',

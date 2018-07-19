@@ -3,8 +3,10 @@ User management for tljh.
 
 Supports minimal user & group management
 """
+import os
 import pwd
 import grp
+import stat
 import subprocess
 
 
@@ -105,3 +107,57 @@ def remove_user_group(username, groupname):
         username,
         groupname
     ])
+
+
+def _ensure_group_owner(gid, path, *, isdir):
+    """Ensure a file or directory is owned by a group"""
+
+    # check and update owner group
+    st = os.lstat(path)
+    if st.st_gid != gid:
+        # ensure owned by gid
+        os.chown(path, st.st_uid, gid, follow_symlinks=False)
+
+    # check and update permissions
+    if os.chmod not in os.supports_follow_symlinks:
+        follow_symlinks = True
+        if os.path.islink(path):
+            # can't chmod symlinks on e.g. linux
+            return
+    else:
+        follow_symlinks = False
+
+    correct_mode = current_mode = os.lstat(path).st_mode
+    if isdir:
+        # setgid bit on directories so new files have the right group
+        # all directories should have srwX permissions
+        correct_mode |= stat.S_ISGID | stat.S_IRWXG
+    else:
+        # group read-write
+        correct_mode |= stat.S_IRGRP | stat.S_IWGRP
+        # add group-executable if user-executable
+        if current_mode & stat.S_IXUSR:
+            correct_mode |= stat.S_IXGRP
+
+    # if mode is not correct, change it
+    if correct_mode != current_mode:
+        os.chmod(path, correct_mode, follow_symlinks=follow_symlinks)
+
+
+def ensure_group_permissions(groupname, path):
+    """Ensure a directory has permissions to be administered by a group
+
+    - all files are owned by groupname
+    - setgid bit so new files are owned by groupname by default
+    """
+
+    gid = grp.getgrnam(groupname).gr_gid
+    _ensure_group_owner(gid, path, isdir=True)
+    # recursively check permissions to make sure it's in the initial right state
+    for root, dirs, files in os.walk(path):
+        for d in dirs:
+            d = os.path.join(root, d)
+            _ensure_group_owner(gid, d, isdir=True)
+        for f in files:
+            f = os.path.join(root, f)
+            _ensure_group_owner(gid, f, isdir=False)

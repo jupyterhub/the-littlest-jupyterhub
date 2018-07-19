@@ -3,7 +3,7 @@ FROM ubuntu:18.04
 
 RUN apt-get update --yes
 
-RUN apt-get install --yes systemd curl git
+RUN apt-get install --yes systemd curl git acl
 
 # Kill all the things we don't need
 RUN find /etc/systemd/system \
@@ -23,6 +23,6 @@ STOPSIGNAL SIGRTMIN+3
 # Set up image to be useful out of the box for development & CI
 ENV TLJH_BOOTSTRAP_DEV=yes
 ENV TLJH_BOOTSTRAP_PIP_SPEC=/srv/src
-ENV PATH=/opt/tljh/hub/bin:${PATH}
+ENV PATH=/opt/tljh/env/bin:${PATH}
 
 CMD ["/bin/bash", "-c", "exec /sbin/init --log-target=journal 3>&1"]

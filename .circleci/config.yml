@@ -37,49 +37,61 @@ jobs:
                     codecov
 
     integration-test:
-        docker:
-            - image: docker:18.05.0-ce-git
-
+        machine: true
+        environment:
+            cmd: "/opt/conda/bin/python3 .circleci/integration-test.py"
         steps:
+            # Download and cache dependencies
+            - restore_cache:
+                keys:
+                    - v1-integration-miniconda3-4.5.4
+
             - run:
-                name: setup python3
+                name: setup python3.6
                 command: |
-                    apk add --no-cache python3
+                    if [[ ! -d "$HOME/conda" ]]; then
+                        curl -L https://repo.continuum.io/miniconda/Miniconda3-4.5.4-Linux-x86_64.sh > /tmp/miniconda.sh
+                        sudo bash /tmp/miniconda.sh -b -p /opt/conda
+                    fi
+
+            - save_cache:
+                paths:
+                    - /opt/conda
+                key: v1-integration-miniconda3-4.5.4
 
             - checkout
-            - setup_remote_docker
 
             - run:
                 name: build systemd image
                 command: |
-                    python3 .circleci/integration-test.py build-image
+                    $cmd build-image
 
             - run:
                 name: start systemd image
                 command: |
-                    python3 .circleci/integration-test.py start-container
+                    $cmd start-container
 
             - run:
                 name: run tljh installer
                 command: |
-                    python3 .circleci/integration-test.py copy . /srv/src
-                    python3 .circleci/integration-test.py run 'python3 /srv/src/bootstrap/bootstrap.py'
+                    $cmd copy . /srv/src
+                    $cmd run 'python3 /srv/src/bootstrap/bootstrap.py'
 
             - run:
                 name: print systemd status + logs
                 command: |
-                    python3 .circleci/integration-test.py run 'journalctl --no-pager'
-                    python3 .circleci/integration-test.py run 'systemctl --no-pager status jupyterhub configurable-http-proxy'
+                    $cmd run 'journalctl --no-pager'
+                    $cmd run 'systemctl --no-pager status jupyterhub configurable-http-proxy'
 
             - run:
                 name: install integration test requirements
                 command: |
-                    python3 .circleci/integration-test.py run 'python3 -m pip install -r /srv/src/integration-tests/requirements.txt'
+                    $cmd run 'python3 -m pip install -r /srv/src/integration-tests/requirements.txt'
 
             - run:
                 name: run integration tests
                 command: |
-                    python3 .circleci/integration-test.py run 'python3 -m pytest -v /srv/src/integration-tests'
+                    $cmd run 'python3 -m pytest -v /srv/src/integration-tests'
 
 workflows:
     version: 2
