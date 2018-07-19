@@ -40,7 +40,7 @@ def ensure_jupyterhub_service(prefix):
 
     # Set up proxy / hub secret oken if it is not already setup
     # FIXME: Check umask here properly
-    proxy_secret_path = os.path.join(INSTALL_PREFIX, 'configurable-http-proxy.secret')
+    proxy_secret_path = os.path.join(HUB_ENV_PREFIX, 'state', 'configurable-http-proxy.secret')
     if not os.path.exists(proxy_secret_path):
         with open(proxy_secret_path, 'w') as f:
             f.write('CONFIGPROXY_AUTH_TOKEN=' + secrets.token_hex(32))
