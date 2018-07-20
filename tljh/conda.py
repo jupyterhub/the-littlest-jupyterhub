@@ -77,25 +77,6 @@ def install_miniconda(installer_path, prefix):
     subprocess.check_call(["chmod", "-R", "o-w", prefix])
 
 
-def ensure_conda_env(prefix):
-    """
-    Ensure a conda environment in the prefix
-    """
-    conda_executable = [os.path.join(prefix, 'bin', 'python'), '-m', 'conda']
-    abspath = os.path.abspath(prefix)
-    try:
-        output = json.loads(
-            subprocess.check_output(conda_executable + ['create', '--json', '--prefix', abspath]).decode()
-        )
-    except subprocess.CalledProcessError as e:
-        output = json.loads(e.output.decode())
-        if 'error' in output and output['error'] == f'CondaValueError: prefix already exists: {abspath}':
-            return
-        raise
-    if 'success' in output and output['success'] == True:
-        return
-
-
 def ensure_conda_packages(prefix, packages):
     """
     Ensure packages (from conda-forge) are installed in the conda prefix.
