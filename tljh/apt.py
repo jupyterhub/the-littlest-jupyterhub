@@ -11,6 +11,9 @@ def trust_gpg_key(key):
 
     key is a GPG public key (bytes) that can be passed to apt-key add via stdin.
     """
+    # If gpg2 doesn't exist, install it.
+    if not os.path.exists('/usr/bin/gpg2'):
+        install_packages(['gnupg2'])
     subprocess.run(['apt-key', 'add', '-'], input=key, check=True)
 
 

@@ -28,8 +28,7 @@ def main():
         print('Setting up hub environment')
         initial_setup = True
         subprocess.check_output(['apt-get', 'update', '--yes'])
-        # gnupg2 is needed for nodesource to work
-        subprocess.check_output(['apt-get', 'install', '--yes', 'python3', 'python3-venv', 'gnupg2'])
+        subprocess.check_output(['apt-get', 'install', '--yes', 'python3', 'python3-venv'])
         os.makedirs(hub_prefix, exist_ok=True)
         subprocess.check_output(['python3', '-m', 'venv', hub_prefix])
 
