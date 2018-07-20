@@ -7,7 +7,7 @@ is executed as:
 
 .. code-block:: bash
 
-    curl https://raw.githubusercontent.com/yuvipanda/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
+    curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
      | sudo python3 - \
        <parameters>
 
@@ -24,7 +24,7 @@ would do:
 
 .. code-block:: bash
 
-    curl https://raw.githubusercontent.com/yuvipanda/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
+    curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
      | sudo python3 - \
        --admin admin-user1 --admin admin-user2
 
@@ -41,7 +41,7 @@ in your new hub, you would run:
 
 .. code-block:: bash
 
-    curl https://raw.githubusercontent.com/yuvipanda/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
+    curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
      | sudo python3 - \
        --user-requirements-txt-url https://raw.githubusercontent.com/data-8/materials-sp18/master/requirements.txt
 
