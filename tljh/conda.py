@@ -8,6 +8,7 @@ import hashlib
 import contextlib
 import tempfile
 import urllib.request
+from distutils.version import LooseVersion as V
 
 
 def md5_file(fname):
@@ -28,12 +29,13 @@ def check_miniconda_version(prefix, version):
     Return true if a miniconda install with version exists at prefix
     """
     try:
-        return subprocess.check_output([
+        installed_version = subprocess.check_output([
             os.path.join(prefix, 'bin', 'conda'),
             '-V'
-        ]).decode().strip() == 'conda {}'.format(version)
+        ]).decode().strip().split()[1]
+        return V(installed_version) >= V(version)
     except (subprocess.CalledProcessError, FileNotFoundError):
-        # Conda doesn't exist, or wrong version
+        # Conda doesn't exist
         return False
 
 
