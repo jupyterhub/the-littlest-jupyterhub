@@ -132,7 +132,7 @@ def main():
     is_dev = os.environ.get('TLJH_BOOTSTRAP_DEV', 'no') == 'yes'
     tljh_repo_path = os.environ.get(
         'TLJH_BOOTSTRAP_PIP_SPEC',
-        'git+https://github.com/yuvipanda/the-littlest-jupyterhub.git'
+        'git+https://github.com/jupyterhub/the-littlest-jupyterhub.git'
     )
 
     pip_install(hub_prefix, [tljh_repo_path], editable=is_dev)

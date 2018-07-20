@@ -63,5 +63,5 @@ HTTPS
 =====
 
 The Littlest JupyterHub does not currently support HTTPS. Follow `this issue
-<https://github.com/yuvipanda/the-littlest-jupyterhub/issues/29>`_ for progress
+<https://github.com/jupyterhub/the-littlest-jupyterhub/issues/29>`_ for progress
 on HTTPS support.

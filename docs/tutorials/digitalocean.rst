@@ -60,7 +60,7 @@ Let's create the server on which we can run JupyterHub.
    .. code-block:: bash
 
     #!/bin/bash
-    curl https://raw.githubusercontent.com/yuvipanda/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
+    curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
      | sudo python3 - \
        --admin <admin-user-name>
 

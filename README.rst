@@ -64,6 +64,6 @@ our code: we aim to improve it as often as possible.
 
 If something is confusing to you in the documentation, it is a bug. We would be
 happy if you could `file an issue
-<https://github.com/yuvipanda/the-littlest-jupyterhub/issues>`_ about it - or
+<https://github.com/jupyterhub/the-littlest-jupyterhub/issues>`_ about it - or
 even better, `contribute a documentation fix
 <http://the-littlest-jupyterhub.readthedocs.io/en/latest/contributing/docs.html>`_!
