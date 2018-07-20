@@ -4,20 +4,86 @@ Wrap conda commandline program
 import os
 import subprocess
 import json
-import sys
+import hashlib
+import contextlib
+import tempfile
+import urllib.request
 
-# Use sys.executable to call conda to avoid needing to fudge PATH
-CONDA_EXECUTABLE = [sys.executable, '-m', 'conda']
+
+def md5_file(fname):
+    """
+    Return md5 of a given filename
+
+    Copied from https://stackoverflow.com/a/3431838
+    """
+    hash_md5 = hashlib.md5()
+    with open(fname, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+    return hash_md5.hexdigest()
+
+
+def check_miniconda_version(prefix, version):
+    """
+    Return true if a miniconda install with version exists at prefix
+    """
+    try:
+        return subprocess.check_output([
+            os.path.join(prefix, 'bin', 'conda'),
+            '-V'
+        ]).decode().strip() == 'conda {}'.format(version)
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        # Conda doesn't exist, or wrong version
+        return False
+
+
+@contextlib.contextmanager
+def download_miniconda_installer(version, md5sum):
+    """
+    Context manager to download miniconda installer of given version.
+
+    This should be used as a contextmanager. It downloads miniconda installer
+    of given version, verifies the md5sum & provides path to it to the `with`
+    block to run.
+    """
+    with tempfile.NamedTemporaryFile() as f:
+        installer_url = "https://repo.continuum.io/miniconda/Miniconda3-{}-Linux-x86_64.sh".format(version)
+        urllib.request.urlretrieve(installer_url, f.name)
+
+        if md5_file(f.name) != md5sum:
+            raise Exception('md5 hash mismatch! Downloaded file corrupted')
+
+        yield f.name
+
+
+def install_miniconda(installer_path, prefix):
+    """
+    Install miniconda with installer at installer_path under prefix
+    """
+    subprocess.check_output([
+        '/bin/bash',
+        installer_path,
+        '-u', '-b',
+        '-p', prefix
+    ], stderr=subprocess.STDOUT)
+    # fix permissions on initial install
+    # a few files have the wrong ownership and permissions initially
+    # when the installer is run as root
+    subprocess.check_call(
+        ["chown", "-R", "{}:{}".format(os.getuid(), os.getgid()), prefix]
+    )
+    subprocess.check_call(["chmod", "-R", "o-w", prefix])
 
 
 def ensure_conda_env(prefix):
     """
     Ensure a conda environment in the prefix
     """
+    conda_executable = [os.path.join(prefix, 'bin', 'python'), '-m', 'conda']
     abspath = os.path.abspath(prefix)
     try:
         output = json.loads(
-            subprocess.check_output(CONDA_EXECUTABLE + ['create', '--json', '--prefix', abspath]).decode()
+            subprocess.check_output(conda_executable + ['create', '--json', '--prefix', abspath]).decode()
         )
     except subprocess.CalledProcessError as e:
         output = json.loads(e.output.decode())
@@ -32,10 +98,11 @@ def ensure_conda_packages(prefix, packages):
     """
     Ensure packages (from conda-forge) are installed in the conda prefix.
     """
+    conda_executable = [os.path.join(prefix, 'bin', 'python'), '-m', 'conda']
     abspath = os.path.abspath(prefix)
     # Let subprocess errors propagate
     # FIXME: raise different exception when using
-    raw_output = subprocess.check_output(CONDA_EXECUTABLE + [
+    raw_output = subprocess.check_output(conda_executable + [
         'install',
         '-c', 'conda-forge',  # Make customizable if we ever need to
         '--json',
