@@ -19,8 +19,8 @@ jobs:
             # Download and cache dependencies
             - restore_cache:
                 keys:
-                    - v1-dependencies-miniconda3-4.5.4-{{ checksum "setup.py" }}-{{ checksum "dev-requirements.txt" }}
-                    - v1-dependencies-miniconda3-4.5.4-
+                    - v1-dependencies-py3.6-{{ checksum "setup.py" }}-{{ checksum "dev-requirements.txt" }}
+                    - v1-dependencies-py3.6-
 
             - run:
                 name: install dependencies
@@ -30,8 +30,8 @@ jobs:
 
             - save_cache:
                 paths:
-                    - /opt/conda
-                key: v1-dependencies-miniconda3-4.5.4-{{ checksum "setup.py" }}-{{ checksum "dev-requirements.txt" }}
+                    - /usr/local/lib/python3.6
+                key: v1-dependencies-py3.6-{{ checksum "setup.py" }}-{{ checksum "dev-requirements.txt" }}
 
             - run:
                 name: run unit tests
