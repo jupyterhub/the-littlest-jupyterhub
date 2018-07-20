@@ -2,7 +2,7 @@ version: 2
 jobs:
     unit-test:
         docker:
-            - image: continuumio/miniconda3:4.5.4
+            - image: ubuntu:18.04
 
         working_directory: ~/repo
 
