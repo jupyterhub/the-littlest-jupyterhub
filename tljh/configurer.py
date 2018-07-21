@@ -7,6 +7,13 @@ be called many times per lifetime of a jupyterhub.
 Traitlets that modify the startup of JupyterHub should not be here.
 FIXME: A strong feeling that JSON Schema should be involved somehow.
 """
+
+import os
+import yaml
+
+INSTALL_PREFIX = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
+CONFIG_FILE = os.path.join(INSTALL_PREFIX, 'config.yaml')
+
 # Default configuration for tljh
 # User provided config is merged into this
 default = {
@@ -30,6 +37,19 @@ default = {
     }
 
 }
+
+
+def load_config(config_file=CONFIG_FILE):
+    """Load the current config as a dictionary
+
+    merges overrides from config.yaml with default config
+    """
+    if os.path.exists(config_file):
+        with open(config_file) as f:
+            config_overrides = yaml.safe_load(f)
+    else:
+        config_overrides = {}
+    return _merge_dictionaries(dict(default), config_overrides)
 
 
 def apply_config(config_overrides, c):
