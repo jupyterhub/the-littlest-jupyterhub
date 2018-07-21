@@ -29,8 +29,6 @@ class CustomSpawner(SystemdSpawner):
 
 c.JupyterHub.spawner_class = CustomSpawner
 
-c.JupyterHub.port = 80
-
 # Use a high port so users can try this on machines with a JupyterHub already present
 c.JupyterHub.hub_port = 15001
 

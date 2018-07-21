@@ -26,16 +26,30 @@ default = {
     'users': {
         'allowed': [],
         'banned': [],
-        'admin': []
+        'admin': [],
     },
     'limits': {
         'memory': '1G',
-        'cpu': None
+        'cpu': None,
+    },
+    'http': {
+        'port': 80,
+    },
+    'https': {
+        'enabled': False,
+        'port': 443,
+        'tls': {
+            'cert': '',
+            'key': '',
+        },
+        'letsencrypt': {
+            'email': '',
+            'domains': [],
+        },
     },
     'user_environment': {
-        'default_app': 'classic'
-    }
-
+        'default_app': 'classic',
+    },
 }
 
 
