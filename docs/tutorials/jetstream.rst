@@ -53,6 +53,10 @@ Let's create the server on which we can run JupyterHub.
 
    #. Give your server a descriptive **Instance Name**.
    #. Select an appropriate **Instance Size**. We suggest m1.medium or larger.
+
+      Check out our guide on How To :ref:`howto/resource-estimation` to help pick
+      how much Memory, CPU & disk space your server needs.
+
    #. If you have multiple allocations, make sure you are 'charging' this server
       to the correct allocation.
 

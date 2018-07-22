@@ -44,6 +44,7 @@ How-To guides answer the question 'How do I...?' for a lot of topics.
 
    howto/user-environment
    howto/notebook-interfaces
+   howto/resource-estimation
 
 Topic Guides
 ============

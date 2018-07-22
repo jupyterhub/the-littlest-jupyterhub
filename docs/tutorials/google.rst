@@ -83,8 +83,8 @@ Let's create the server on which we can run JupyterHub.
    .. image:: ../images/providers/google/machine-type-advanced.png
       :alt: Select a customized VM size
 
-   For more guidance on the different options available to you, as well as
-   pricing considerations on Google Cloud, see the `GCP Choosing a VM Guide <https://cloud.google.com/compute/docs/instances/creating-instance-with-custom-machine-type?hl=en_US>`_.
+   Check out our guide on How To :ref:`howto/resource-estimation` to help pick
+   how much Memory / CPU your server needs.
 
 #. Under **Boot Disk**, click the **Change** button. This lets us change the
    operating system and the size of your disk.
@@ -109,8 +109,8 @@ Let's create the server on which we can run JupyterHub.
    to a hard drive. **SSD persistent disk** gives you a faster but more expensive
    disk, similar to an SSD.
 
-   In Google Cloud, the higher your disk **size** the faster your disk is. The
-   default (10GB) is pretty low, so you might want to increase it.
+   Check out our guide on How To :ref:`howto/resource-estimation` to help pick
+   how much Disk space your server needs.
 
 #. Click the **Select** button to dismiss the Boot disk popup and go back to the
    Create an instance screen.
