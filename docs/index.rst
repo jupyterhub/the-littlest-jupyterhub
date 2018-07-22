@@ -54,7 +54,7 @@ Topic guides provide in-depth explanations of specific topics.
 .. toctree::
    :titlesonly:
 
-   guides/requirements
+   topic/requirements
    guides/admin
    topic/security
    topic/customizing-installer
