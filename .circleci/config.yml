@@ -2,29 +2,36 @@ version: 2
 jobs:
     unit-test:
         docker:
-            - image: continuumio/miniconda3:4.5.4
+            # Match target OS of TLJH
+            - image: ubuntu:18.04
 
         working_directory: ~/repo
 
         steps:
             - checkout
 
+            # Setup Python
+            - run:
+                name: install python
+                command: |
+                    apt-get update --yes && apt-get install --yes python3 python3-pip
+
             # Download and cache dependencies
             - restore_cache:
                 keys:
-                    - v1-dependencies-miniconda3-4.5.4-{{ checksum "setup.py" }}-{{ checksum "dev-requirements.txt" }}
-                    - v1-dependencies-miniconda3-4.5.4-
+                    - v1-dependencies-py3.6-{{ checksum "setup.py" }}-{{ checksum "dev-requirements.txt" }}
+                    - v1-dependencies-py3.6-
 
             - run:
                 name: install dependencies
                 command: |
-                    pip install -r dev-requirements.txt
-                    pip install -e .
+                    pip3 install -r dev-requirements.txt
+                    pip3 install -e .
 
             - save_cache:
                 paths:
-                    - /opt/conda
-                key: v1-dependencies-miniconda3-4.5.4-{{ checksum "setup.py" }}-{{ checksum "dev-requirements.txt" }}
+                    - /usr/local/lib/python3.6
+                key: v1-dependencies-py3.6-{{ checksum "setup.py" }}-{{ checksum "dev-requirements.txt" }}
 
             - run:
                 name: run unit tests

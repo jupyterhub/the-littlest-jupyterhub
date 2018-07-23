@@ -11,131 +11,44 @@ Constraints:
   - Be compatible with Python 3.4 (since we support Ubuntu 16.04)
   - Use stdlib modules only
 """
-from distutils.version import LooseVersion as V
 import os
 import subprocess
-import urllib.request
-import contextlib
-import hashlib
-import tempfile
 import sys
-
-
-def md5_file(fname):
-    """
-    Return md5 of a given filename
-
-    Copied from https://stackoverflow.com/a/3431838
-    """
-    hash_md5 = hashlib.md5()
-    with open(fname, "rb") as f:
-        for chunk in iter(lambda: f.read(4096), b""):
-            hash_md5.update(chunk)
-    return hash_md5.hexdigest()
-
-
-def check_miniconda_version(prefix, version):
-    """
-    Return true if a miniconda install with version exists at prefix
-    """
-    try:
-        installed_version = subprocess.check_output([
-            os.path.join(prefix, 'bin', 'conda'),
-            '-V'
-        ]).decode().strip().split()[1]
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        # Conda doesn't exist, or wrong version
-        return False
-    else:
-        return V(installed_version) >= V(version)
-
-
-@contextlib.contextmanager
-def download_miniconda_installer(version, md5sum):
-    """
-    Context manager to download miniconda installer of given version.
-
-    This should be used as a contextmanager. It downloads miniconda installer
-    of given version, verifies the md5sum & provides path to it to the `with`
-    block to run.
-    """
-    with tempfile.NamedTemporaryFile() as f:
-        installer_url = "https://repo.continuum.io/miniconda/Miniconda3-{}-Linux-x86_64.sh".format(version)
-        urllib.request.urlretrieve(installer_url, f.name)
-
-        if md5_file(f.name) != md5sum:
-            raise Exception('md5 hash mismatch! Downloaded file corrupted')
-
-        yield f.name
-
-
-def install_miniconda(installer_path, prefix):
-    """
-    Install miniconda with installer at installer_path under prefix
-    """
-    subprocess.check_output([
-        '/bin/bash',
-        installer_path,
-        '-u', '-b',
-        '-p', prefix
-    ], stderr=subprocess.STDOUT)
-    # fix permissions on initial install
-    # a few files have the wrong ownership and permissions initially
-    # when the installer is run as root
-    subprocess.check_call(
-        ["chown", "-R", "{}:{}".format(os.getuid(), os.getgid()), prefix]
-    )
-    subprocess.check_call(["chmod", "-R", "o-w", prefix])
-
-
-def pip_install(prefix, packages, editable=False):
-    """
-    Install pip packages in the conda environment under prefix.
-
-    Packages are upgraded if possible.
-
-    Set editable=True to add '--editable' to the pip install commandline.
-    Very useful when doing active development
-    """
-    flags = ['--upgrade']
-    if editable:
-        flags.append('--editable')
-    subprocess.check_output([
-        os.path.join(prefix, 'bin', 'python3'),
-        '-m', 'pip',
-        'install',
-    ] + flags + packages)
 
 
 def main():
     install_prefix = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
     hub_prefix = os.path.join(install_prefix, 'hub')
-    miniconda_version = '4.5.4'
-    miniconda_installer_md5 = "a946ea1d0c4a642ddf0c3a26a18bb16d"
 
     print('Checking if TLJH is already installed...')
-    if not check_miniconda_version(hub_prefix, miniconda_version):
-        initial_setup = True
-        print('Downloading & setting up hub environment...')
-        with download_miniconda_installer(miniconda_version, miniconda_installer_md5) as installer_path:
-            install_miniconda(installer_path, hub_prefix)
-        print('Hub environment set up!')
-    else:
+    if os.path.exists(os.path.join(hub_prefix, 'bin', 'python3')):
+        print('TLJH already installed, upgrading...')
         initial_setup = False
-        print('TLJH is already installed, will try to upgrade')
+    else:
+        print('Setting up hub environment')
+        initial_setup = True
+        subprocess.check_output(['apt-get', 'update', '--yes'])
+        subprocess.check_output(['apt-get', 'install', '--yes', 'python3', 'python3-venv'])
+        os.makedirs(hub_prefix, exist_ok=True)
+        subprocess.check_output(['python3', '-m', 'venv', hub_prefix])
 
     if initial_setup:
         print('Setting up TLJH installer...')
     else:
         print('Upgrading TLJH installer...')
 
-    is_dev = os.environ.get('TLJH_BOOTSTRAP_DEV', 'no') == 'yes'
+    pip_flags = ['--upgrade']
+    if os.environ.get('TLJH_BOOTSTRAP_DEV', 'no') == 'yes':
+        pip_flags.append('--editable')
     tljh_repo_path = os.environ.get(
         'TLJH_BOOTSTRAP_PIP_SPEC',
         'git+https://github.com/jupyterhub/the-littlest-jupyterhub.git'
     )
 
-    pip_install(hub_prefix, [tljh_repo_path], editable=is_dev)
+    subprocess.check_output([
+        os.path.join(hub_prefix, 'bin', 'pip'),
+        'install'
+    ] + pip_flags + [tljh_repo_path])
 
     print('Starting TLJH installer...')
     os.execv(
