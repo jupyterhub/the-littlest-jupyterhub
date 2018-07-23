@@ -112,6 +112,9 @@ def ensure_jupyterhub_service(prefix):
     """
     Ensure JupyterHub Services are set up properly
     """
+
+    os.makedirs(STATE_DIR, mode=0o700, exist_ok=True)
+
     with open(os.path.join(HERE, 'systemd-units', 'jupyterhub.service')) as f:
         hub_unit_template = f.read()
 
@@ -132,8 +135,6 @@ def ensure_jupyterhub_service(prefix):
     systemd.install_unit('jupyterhub.service', hub_unit_template.format(**unit_params))
     systemd.install_unit('traefik.service', traefik_unit_template.format(**unit_params))
     systemd.reload_daemon()
-
-    os.makedirs(STATE_DIR, mode=0o700, exist_ok=True)
 
     # Set up proxy / hub secret oken if it is not already setup
     proxy_secret_path = os.path.join(STATE_DIR, 'configurable-http-proxy.secret')
