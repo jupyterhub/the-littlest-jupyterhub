@@ -54,6 +54,7 @@ How-To guides answer the question 'How do I...?' for a lot of topics.
    :titlesonly:
 
    howto/user-environment
+   howto/admin-users
    howto/notebook-interfaces
    howto/resource-estimation
 
@@ -74,7 +75,6 @@ Topic guides provide in-depth explanations of specific topics.
    :titlesonly:
 
    topic/requirements
-   guides/admin
    topic/security
    topic/customizing-installer
    topic/tljh-config
