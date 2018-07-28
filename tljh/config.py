@@ -1,0 +1,150 @@
+"""
+Commandline interface for setting config items in config.yaml.
+
+Used as:
+
+tljh-config set firstlevel.second_level something
+
+tljh-config show
+
+tljh-config show firstlevel
+
+tljh-config show firstlevel.second_level
+"""
+import sys
+import argparse
+from ruamel.yaml import YAML
+from copy import deepcopy
+from tljh import systemd
+
+
+yaml = YAML(typ='rt')
+
+
+def set_item_in_config(config, property_path, value):
+    """
+    Set key at property_path to value in config & return new config.
+
+    config is not mutated.
+
+    propert_path is a series of dot separated values. Any part of the path
+    that does not exist is created. 
+    """
+    path_components = property_path.split('.')
+
+    # Mutate a copy of the config, not config itself
+    cur_part = config_copy = deepcopy(config)
+    for i in range(len(path_components)):
+        cur_path = path_components[i]
+        if i == len(path_components) - 1:
+            # Final component
+            cur_part[cur_path] = value
+        else:
+            # If we are asked to create new non-leaf nodes, we will always make them dicts
+            # This means setting is *destructive* - will replace whatever is down there!
+            if cur_path not in cur_part or not isinstance(cur_part[cur_path], dict):
+                cur_part[cur_path] = {}
+            cur_part = cur_part[cur_path]
+
+    return config_copy
+
+
+def show_config(config_path):
+    """
+    Pretty print config from given config_path
+    """
+    try:
+        with open(config_path) as f:
+            config = yaml.load(f)
+    except FileNotFoundError:
+        config = {}
+    
+    yaml.dump(config, sys.stdout)
+
+
+def set_config_value(config_path, key_path, value):
+    """
+    Set key at key_path in config_path to value
+    """
+    # FIXME: Have a file lock here
+    # FIXME: Validate schema here
+    try:
+        with open(config_path) as f:
+            config = yaml.load(f)
+    except FileNotFoundError:
+        config = {}
+
+    config = set_item_in_config(config, key_path, value)
+
+    with open(config_path, 'w') as f:
+        yaml.dump(config, f)
+
+
+
+def reload_component(component):
+    """
+    Reload a TLJH component.
+
+    component can be 'hub' or 'proxy'.
+    """
+    if component == 'hub':
+        systemd.restart_service('jupyterhub')
+        # FIXME: Verify hub is back up?
+        print('Hub reload with new configuration complete')
+    elif component == 'proxy':
+        systemd.restart_service('configurable-http-proxy')
+        print('Proxy reload with new configuration complete')
+
+
+def main():
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument(
+        '--config-path',
+        default='/opt/tljh/config.yaml',
+        help='Path to TLJH config.yaml file'
+    )
+    subparsers = argparser.add_subparsers(dest='action')
+
+    show_parser = subparsers.add_parser(
+        'show',
+        help='Show current configuration'
+    )
+
+    set_parser = subparsers.add_parser(
+        'set',
+        help='Set a configuration property'
+    )
+    set_parser.add_argument(
+        'key_path',
+        help='Dot separated path to configuration key to set'
+    )
+    set_parser.add_argument(
+        'value',
+        help='Value ot set the configuration key to'
+    )
+
+    reload_parser = subparsers.add_parser(
+        'reload',
+        help='Reload a component to apply configuration change'
+    )
+    reload_parser.add_argument(
+        'component',
+        choices=('hub', 'proxy'),
+        help='Which component to reload',
+        default='hub',
+        nargs='?'
+    )
+
+    args = argparser.parse_args()
+
+    if args.action == 'show':
+        show_config(args.config_path)
+    elif args.action == 'set':
+        set_config_value(args.config_path, args.key_path, args.value)
+    elif args.action == 'reload':
+        reload_config(args.component)
+    
+if __name__ == '__main__':
+    main()
+
+

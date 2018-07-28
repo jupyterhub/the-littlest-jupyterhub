@@ -13,5 +13,10 @@ setup(
     install_requires=[
         'pyyaml==3.*',
         'ruamel.yaml==0.15.*'
-    ]
+    ],
+    entry_points={
+        'console_scripts': [
+            'tljh-config = tljh.config:main'
+        ]
+    }
 )
