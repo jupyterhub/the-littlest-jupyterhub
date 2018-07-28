@@ -4,6 +4,7 @@ Test configuration commandline tools
 from tljh import config
 from contextlib import redirect_stdout
 import io
+import pytest
 import tempfile
 
 
@@ -80,6 +81,32 @@ def test_add_to_config_multiple():
     assert new_conf == {
         'a': {'b': {'c': ['d', 'e']}}
     }
+
+
+def test_remove_from_config():
+    conf = {}
+
+    new_conf = config.add_item_to_config(conf, 'a.b.c', 'd')
+    new_conf = config.add_item_to_config(new_conf, 'a.b.c', 'e')
+    assert new_conf == {
+        'a': {'b': {'c': ['d', 'e']}}
+    }
+
+    new_conf = config.remove_item_from_config(new_conf, 'a.b.c', 'e')
+    assert new_conf == {
+        'a': {'b': {'c': ['d']}}
+    }
+
+def test_remove_from_config_error():
+    with pytest.raises(ValueError):
+        config.remove_item_from_config({}, 'a.b.c', 'e')
+
+    with pytest.raises(ValueError):
+        config.remove_item_from_config({'a': 'b'}, 'a.b', 'e')
+
+    with pytest.raises(ValueError):
+        config.remove_item_from_config({'a': ['b']}, 'a', 'e')
+
 
 def test_show_config():
     """

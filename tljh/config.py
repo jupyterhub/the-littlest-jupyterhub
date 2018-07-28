@@ -60,7 +60,6 @@ def add_item_to_config(config, property_path, value):
     for i, cur_path in enumerate(path_components):
         if i == len(path_components) - 1:
             # Final component, it must be a list and we append to it
-            print('l', cur_path, cur_part)
             if cur_path not in cur_part or not isinstance(cur_part[cur_path], list):
                 cur_part[cur_path] = []
             cur_part = cur_part[cur_path]
@@ -69,9 +68,30 @@ def add_item_to_config(config, property_path, value):
         else:
             # If we are asked to create new non-leaf nodes, we will always make them dicts
             # This means setting is *destructive* - will replace whatever is down there!
-            print('p', cur_path, cur_part)
             if cur_path not in cur_part or not isinstance(cur_part[cur_path], dict):
                 cur_part[cur_path] = {}
+            cur_part = cur_part[cur_path]
+
+    return config_copy
+
+def remove_item_from_config(config, property_path, value):
+    """
+    Add an item to a list in config.
+    """
+    path_components = property_path.split('.')
+
+    # Mutate a copy of the config, not config itself
+    cur_part = config_copy = deepcopy(config)
+    for i, cur_path in enumerate(path_components):
+        if i == len(path_components) - 1:
+            # Final component, it must be a list and we append to it
+            if cur_path not in cur_part or not isinstance(cur_part[cur_path], list):
+                raise ValueError(f'{property_path} is not a list')
+            cur_part = cur_part[cur_path]
+            cur_part.remove(value)
+        else:
+            if cur_path not in cur_part or not isinstance(cur_part[cur_path], dict):
+                raise ValueError(f'{property_path} does not exist in config!')
             cur_part = cur_part[cur_path]
 
     return config_copy
@@ -173,11 +193,24 @@ def main():
     )
     add_item_parser.add_argument(
         'key_path',
-        help='Dot separated path to configuration key to set'
+        help='Dot separated path to configuration key to add value to'
     )
     add_item_parser.add_argument(
         'value',
-        help='Value ot set the configuration key to'
+        help='Value to add to the configuration key'
+    )
+
+    remove_item_parser = subparsers.add_parser(
+        'remove-item',
+        help='Remove a value from a list for a configuration property'
+    )
+    remove_item_parser.add_argument(
+        'key_path',
+        help='Dot separated path to configuration key to remove value from'
+    )
+    remove_item_parser.add_argument(
+        'value',
+        help='Value to remove from key_path'
     )
 
     reload_parser = subparsers.add_parser(
@@ -199,6 +232,8 @@ def main():
     elif args.action == 'set':
         set_config_value(args.config_path, args.key_path, args.value)
     elif args.action == 'add-item':
+        add_config_value(args.config_path, args.key_path, args.value)
+    elif args.action == 'remove-item':
         add_config_value(args.config_path, args.key_path, args.value)
     elif args.action == 'reload':
         reload_component(args.component)
