@@ -142,7 +142,7 @@ def main():
     elif args.action == 'set':
         set_config_value(args.config_path, args.key_path, args.value)
     elif args.action == 'reload':
-        reload_config(args.component)
+        reload_component(args.component)
     
 if __name__ == '__main__':
     main()
