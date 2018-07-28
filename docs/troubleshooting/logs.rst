@@ -1,4 +1,4 @@
-.. _troubleshoot_logs:
+.. _troubleshooting/logs:
 
 ===============
 Looking at Logs
