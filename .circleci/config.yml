@@ -77,6 +77,13 @@ jobs:
                     python3 .circleci/integration-test.py copy . /srv/src
                     python3 .circleci/integration-test.py run 'python3 /srv/src/bootstrap/bootstrap.py'
 
+
+            - run:
+                name: switch to dummyauthenticator
+                command: |
+                    python3 .circleci/integration-test.py run '/opt/tljh/hub/bin/tljh-config set auth.type dummyauthenticator.DummyAuthenticator'
+                    python3 .circleci/integration-test.py run '/opt/tljh/hub/bin/tljh-config reload'
+
             - run:
                 name: print systemd status + logs
                 command: |

@@ -54,8 +54,17 @@ How-To guides answer the question 'How do I...?' for a lot of topics.
    :titlesonly:
 
    howto/user-environment
+   howto/admin-users
    howto/notebook-interfaces
    howto/resource-estimation
+
+We have a special set of How-To Guides on using various forms of authentication
+with your JupyterHub.
+
+.. toctree::
+   :titlesonly:
+
+   howto/auth/dummy
 
 Topic Guides
 ============
@@ -66,9 +75,9 @@ Topic guides provide in-depth explanations of specific topics.
    :titlesonly:
 
    topic/requirements
-   guides/admin
    topic/security
    topic/customizing-installer
+   topic/tljh-config
 
 
 Troubleshooting

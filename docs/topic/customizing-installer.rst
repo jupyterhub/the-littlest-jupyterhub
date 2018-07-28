@@ -13,6 +13,8 @@ is executed as:
 
 This page documents the various options you can pass as commandline parameters to the installer.
 
+.. _topic/customizing-installer/admin:
+
 Adding admin users
 ===================
 
