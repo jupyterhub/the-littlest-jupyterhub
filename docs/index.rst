@@ -77,6 +77,7 @@ Topic guides provide in-depth explanations of specific topics.
    guides/admin
    topic/security
    topic/customizing-installer
+   topic/tljh-config
 
 
 Troubleshooting

@@ -18,14 +18,14 @@ Enabling the authenticator
 
 .. code-block:: bash
    
-   tljh-config set auth.DummyAuthenticator.password <password>
+   sudo -E tljh-config set auth.DummyAuthenticator.password <password>
 
    Remember to replace ``<password>`` with the password you choose.
 
 2. Enable the authenticator and reload config to apply configuration:
 
-   tljh-config set auth.type dummyauthenticator.DummyAuthenticator
-   tljh-config reload
+   sudo -E tljh-config set auth.type dummyauthenticator.DummyAuthenticator
+   sudo -E tljh-config reload
 
 Users who are currently logged in will continue to be logged in. When they 
 log out and try to log back in, they will be asked to provide a username and
