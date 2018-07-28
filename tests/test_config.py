@@ -51,6 +51,36 @@ def test_set_overwrite():
     assert new_conf == {'a': 'hi'}
 
 
+def test_add_to_config_one_level():
+    conf = {}
+
+    new_conf = config.add_item_to_config(conf, 'a.b', 'c')
+    assert new_conf == {
+        'a': {'b': ['c']}
+    }
+
+
+def test_add_to_config_zero_level():
+    conf = {}
+
+    new_conf = config.add_item_to_config(conf, 'a', 'b')
+    assert new_conf == {
+        'a': ['b']
+    }
+
+def test_add_to_config_multiple():
+    conf = {}
+
+    new_conf = config.add_item_to_config(conf, 'a.b.c', 'd')
+    assert new_conf == {
+        'a': {'b': {'c': ['d']}}
+    }
+
+    new_conf = config.add_item_to_config(new_conf, 'a.b.c', 'e')
+    assert new_conf == {
+        'a': {'b': {'c': ['d', 'e']}}
+    }
+
 def test_show_config():
     """
     Test stdout output when showing config

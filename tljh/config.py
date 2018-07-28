@@ -27,14 +27,14 @@ def set_item_in_config(config, property_path, value):
 
     config is not mutated.
 
-    propert_path is a series of dot separated values. Any part of the path
+    property_path is a series of dot separated values. Any part of the path
     that does not exist is created. 
     """
     path_components = property_path.split('.')
 
     # Mutate a copy of the config, not config itself
     cur_part = config_copy = deepcopy(config)
-    for i in range(len(path_components)):
+    for i, cur_path in enumerate(path_components):
         cur_path = path_components[i]
         if i == len(path_components) - 1:
             # Final component
@@ -42,6 +42,34 @@ def set_item_in_config(config, property_path, value):
         else:
             # If we are asked to create new non-leaf nodes, we will always make them dicts
             # This means setting is *destructive* - will replace whatever is down there!
+            if cur_path not in cur_part or not isinstance(cur_part[cur_path], dict):
+                cur_part[cur_path] = {}
+            cur_part = cur_part[cur_path]
+
+    return config_copy
+
+
+def add_item_to_config(config, property_path, value):
+    """
+    Add an item to a list in config.
+    """
+    path_components = property_path.split('.')
+
+    # Mutate a copy of the config, not config itself
+    cur_part = config_copy = deepcopy(config)
+    for i, cur_path in enumerate(path_components):
+        if i == len(path_components) - 1:
+            # Final component, it must be a list and we append to it
+            print('l', cur_path, cur_part)
+            if cur_path not in cur_part or not isinstance(cur_part[cur_path], list):
+                cur_part[cur_path] = []
+            cur_part = cur_part[cur_path]
+
+            cur_part.append(value)
+        else:
+            # If we are asked to create new non-leaf nodes, we will always make them dicts
+            # This means setting is *destructive* - will replace whatever is down there!
+            print('p', cur_path, cur_part)
             if cur_path not in cur_part or not isinstance(cur_part[cur_path], dict):
                 cur_part[cur_path] = {}
             cur_part = cur_part[cur_path]
@@ -80,6 +108,22 @@ def set_config_value(config_path, key_path, value):
         yaml.dump(config, f)
 
 
+def add_config_value(config_path, key_path, value):
+    """
+    Add value to list at key_path
+    """
+    # FIXME: Have a file lock here
+    # FIXME: Validate schema here
+    try:
+        with open(config_path) as f:
+            config = yaml.load(f)
+    except FileNotFoundError:
+        config = {}
+
+    config = add_item_to_config(config, key_path, value)
+
+    with open(config_path, 'w') as f:
+        yaml.dump(config, f)
 
 def reload_component(component):
     """
@@ -123,6 +167,19 @@ def main():
         help='Value ot set the configuration key to'
     )
 
+    add_item_parser = subparsers.add_parser(
+        'add-item',
+        help='Add a value to a list for a configuration property'
+    )
+    add_item_parser.add_argument(
+        'key_path',
+        help='Dot separated path to configuration key to set'
+    )
+    add_item_parser.add_argument(
+        'value',
+        help='Value ot set the configuration key to'
+    )
+
     reload_parser = subparsers.add_parser(
         'reload',
         help='Reload a component to apply configuration change'
@@ -141,10 +198,10 @@ def main():
         show_config(args.config_path)
     elif args.action == 'set':
         set_config_value(args.config_path, args.key_path, args.value)
+    elif args.action == 'add-item':
+        add_config_value(args.config_path, args.key_path, args.value)
     elif args.action == 'reload':
         reload_component(args.component)
     
 if __name__ == '__main__':
     main()
-
-
