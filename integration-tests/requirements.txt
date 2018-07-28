@@ -1,2 +1,3 @@
 pytest
-requests
+pytest-asyncio
+git+https://github.com/yuvipanda/hubtraf.git
