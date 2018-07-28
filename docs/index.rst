@@ -8,10 +8,11 @@ a small (0-50) number of users on a single server.
 Development Status
 ==================
 
-This project is currently in **pre-alpha**, and things will break all the time.
-There is no supported upgrade pathway, and security issues most likely exist.
-However, feedback at this time is extremely valuble, so you should still try
-it out!
+This project is currently in **alpha** state. Most things work, but we might
+still make breaking changes that have no clear upgrade pathway. Important
+security features (such as HTTPS) are still being implemented. We are targetting
+a v0.1 release sometime in mid-August 2018. Follow `this milestone <https://github.com/jupyterhub/the-littlest-jupyterhub/milestone/1>`_
+to see progress towards the release!
 
 Installation
 ============
