@@ -36,3 +36,14 @@ html_theme = 'alabaster'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+# Custom Alabaster theme options
+html_theme_options = {
+    'description': 'A simple JupyterHub distribution for 1-100 users',
+    'github_user': 'jupyterhub',
+    'github_repo': 'the-littlest-jupyterhub',
+    'github_button': 'true',
+    'extra_nav_links': {
+        'Documentation confusing? File an issue!': 'https://github.com/jupyterhub/the-littlest-jupyterhub/issues'
+    }
+}
