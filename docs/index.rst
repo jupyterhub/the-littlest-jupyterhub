@@ -78,6 +78,7 @@ Topic guides provide in-depth explanations of specific topics.
    topic/security
    topic/customizing-installer
    topic/tljh-config
+   topic/authenticator-configuration
 
 
 Troubleshooting
