@@ -14,28 +14,45 @@ Constraints:
 import os
 import subprocess
 import sys
+import logging
+
 
 
 def main():
     install_prefix = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
     hub_prefix = os.path.join(install_prefix, 'hub')
 
-    print('Checking if TLJH is already installed...')
+    # Set up logging to print to a file and to stderr
+    logger = logging.getLogger(__name__)
+
+    os.makedirs(install_prefix, exist_ok=True)
+    file_logger = logging.FileHandler(os.path.join(install_prefix, 'bootstrap.log'))
+    file_logger.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
+    logger.addHandler(file_logger)
+
+    stderr_logger = logging.StreamHandler()
+    stderr_logger.setFormatter(logging.Formatter('%(message)s'))
+    logger.addHandler(stderr_logger)
+    logger.setLevel(logging.INFO)
+
+    logger.info('Checking if TLJH is already installed...')
     if os.path.exists(os.path.join(hub_prefix, 'bin', 'python3')):
-        print('TLJH already installed, upgrading...')
+        logger.info('TLJH already installed, upgrading...')
         initial_setup = False
     else:
-        print('Setting up hub environment')
+        logger.info('Setting up hub environment')
         initial_setup = True
-        subprocess.check_output(['apt-get', 'update', '--yes'])
-        subprocess.check_output(['apt-get', 'install', '--yes', 'python3', 'python3-venv'])
+        subprocess.check_output(['apt-get', 'update', '--yes'], stderr=subprocess.STDOUT)
+        subprocess.check_output(['apt-get', 'install', '--yes', 'python3', 'python3-venv'], stderr=subprocess.STDOUT)
+        logger.info('Installed python & virtual environment')
         os.makedirs(hub_prefix, exist_ok=True)
-        subprocess.check_output(['python3', '-m', 'venv', hub_prefix])
+        subprocess.check_output(['python3', '-m', 'venv', hub_prefix], stderr=subprocess.STDOUT)
+        logger.info('Set up hub virtual environment')
 
     if initial_setup:
-        print('Setting up TLJH installer...')
+        logger.info('Setting up TLJH installer...')
     else:
-        print('Upgrading TLJH installer...')
+        logger.info('Upgrading TLJH installer...')
 
     pip_flags = ['--upgrade']
     if os.environ.get('TLJH_BOOTSTRAP_DEV', 'no') == 'yes':
@@ -48,9 +65,10 @@ def main():
     subprocess.check_output([
         os.path.join(hub_prefix, 'bin', 'pip'),
         'install'
-    ] + pip_flags + [tljh_repo_path])
+    ] + pip_flags + [tljh_repo_path], stderr=subprocess.STDOUT)
+    logger.info('Setup tljh package')
 
-    print('Starting TLJH installer...')
+    logger.info('Starting TLJH installer...')
     os.execv(
         os.path.join(hub_prefix, 'bin', 'python3'),
         [
