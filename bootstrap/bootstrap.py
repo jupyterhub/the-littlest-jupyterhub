@@ -26,7 +26,7 @@ def main():
     logger = logging.getLogger(__name__)
 
     os.makedirs(install_prefix, exist_ok=True)
-    file_logger = logging.FileHandler(os.path.join(install_prefix, 'bootstrap.log'))
+    file_logger = logging.FileHandler(os.path.join(install_prefix, 'installer.log'))
     file_logger.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
     logger.addHandler(file_logger)
 
