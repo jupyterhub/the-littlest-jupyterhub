@@ -24,6 +24,7 @@ rt_yaml = YAML()
 # Set up logging to print to a file and to stderr
 logger = logging.getLogger(__name__)
 
+os.makedirs(INSTALL_PREFIX, exist_ok=True)
 file_logger = logging.FileHandler(os.path.join(INSTALL_PREFIX, 'installer.log'))
 file_logger.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
 logger.addHandler(file_logger)
