@@ -32,7 +32,7 @@ def check_miniconda_version(prefix, version):
         installed_version = subprocess.check_output([
             os.path.join(prefix, 'bin', 'conda'),
             '-V'
-        ]).decode().strip().split()[1]
+        ], stderr=subprocess.STDOUT).decode().strip().split()[1]
         return V(installed_version) >= V(version)
     except (subprocess.CalledProcessError, FileNotFoundError):
         # Conda doesn't exist
@@ -90,7 +90,7 @@ def ensure_conda_packages(prefix, packages):
         '-c', 'conda-forge',  # Make customizable if we ever need to
         '--json',
         '--prefix', abspath
-    ] + packages).decode()
+    ] + packages, stderr=subprocess.STDOUT).decode()
     # `conda install` outputs JSON lines for fetch updates,
     # and a undelimited output at the end. There is no reasonable way to
     # parse this outside of this kludge.
@@ -115,7 +115,7 @@ def ensure_pip_packages(prefix, packages):
     subprocess.check_output(pip_executable + [
         'install',
         '--no-cache-dir',
-    ] + packages)
+    ] + packages, stderr=subprocess.STDOUT)
 
 
 def ensure_pip_requirements(prefix, requirements_path):
@@ -131,4 +131,4 @@ def ensure_pip_requirements(prefix, requirements_path):
         'install',
         '-r',
         requirements_path
-    ])
+    ], stderr=subprocess.STDOUT)

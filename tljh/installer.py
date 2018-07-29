@@ -4,6 +4,7 @@ import secrets
 import subprocess
 import sys
 import time
+import logging
 from urllib.error import HTTPError
 from urllib.request import urlopen, URLError
 
@@ -19,6 +20,19 @@ STATE_DIR = os.path.join(INSTALL_PREFIX, 'state')
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 rt_yaml = YAML()
+
+# Set up logging to print to a file and to stderr
+logger = logging.getLogger(__name__)
+
+os.makedirs(INSTALL_PREFIX, exist_ok=True)
+file_logger = logging.FileHandler(os.path.join(INSTALL_PREFIX, 'installer.log'))
+file_logger.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
+logger.addHandler(file_logger)
+
+stderr_logger = logging.StreamHandler()
+stderr_logger.setFormatter(logging.Formatter('%(message)s'))
+logger.addHandler(stderr_logger)
+logger.setLevel(logging.INFO)
 
 
 def ensure_node():
@@ -89,9 +103,9 @@ def ensure_chp_package(prefix):
     Ensure CHP is installed
     """
     if not os.path.exists(os.path.join(prefix, 'node_modules', '.bin', 'configurable-http-proxy')):
-        subprocess.check_call([
+        subprocess.check_output([
             'npm', 'install', 'configurable-http-proxy@3.1.0'
-        ], cwd=prefix)
+        ], cwd=prefix, stderr=subprocess.STDOUT)
 
 
 def ensure_jupyterhub_service(prefix):
@@ -160,7 +174,7 @@ def ensure_usergroups():
     user.ensure_group('jupyterhub-admins')
     user.ensure_group('jupyterhub-users')
 
-    print("Granting passwordless sudo to JupyterHub admins...")
+    logger.info("Granting passwordless sudo to JupyterHub admins...")
     with open('/etc/sudoers.d/jupyterhub-admins', 'w') as f:
         # JupyterHub admins should have full passwordless sudo access
         f.write('%jupyterhub-admins ALL = (ALL) NOPASSWD: ALL\n')
@@ -174,12 +188,12 @@ def ensure_user_environment(user_requirements_txt_file):
     """
     Set up user conda environment with required packages
     """
-    print("Setting up user environment...")
+    logger.info("Setting up user environment...")
     miniconda_version = '4.5.4'
     miniconda_installer_md5 = "a946ea1d0c4a642ddf0c3a26a18bb16d"
 
     if not conda.check_miniconda_version(USER_ENV_PREFIX, miniconda_version):
-        print('Downloading & setting up user environment...')
+        logger.info('Downloading & setting up user environment...')
         with conda.download_miniconda_installer(miniconda_version, miniconda_installer_md5) as installer_path:
             conda.install_miniconda(installer_path, USER_ENV_PREFIX)
 
@@ -210,7 +224,7 @@ def ensure_admins(admins):
     """
     if not admins:
         return
-    print("Setting up admin users")
+    logger.info("Setting up admin users")
     config_path = os.path.join(INSTALL_PREFIX, 'config.yaml')
     if os.path.exists(config_path):
         with open(config_path, 'r') as f:
@@ -234,7 +248,7 @@ def ensure_jupyterhub_running(times=4):
 
     for i in range(times):
         try:
-            print('Waiting for JupyterHub to come up ({}/{} tries)'.format(i + 1, times))
+            logger.info('Waiting for JupyterHub to come up ({}/{} tries)'.format(i + 1, times))
             urlopen('http://127.0.0.1')
             return
         except HTTPError as h:
@@ -269,19 +283,21 @@ def main():
 
     args = argparser.parse_args()
 
+
+
     ensure_admins(args.admin)
 
     ensure_usergroups()
     ensure_user_environment(args.user_requirements_txt_url)
 
-    print("Setting up JupyterHub...")
+    logger.info("Setting up JupyterHub...")
     ensure_node()
     ensure_jupyterhub_package(HUB_ENV_PREFIX)
     ensure_chp_package(HUB_ENV_PREFIX)
     ensure_jupyterhub_service(HUB_ENV_PREFIX)
     ensure_jupyterhub_running()
 
-    print("Done!")
+    logger.info("Done!")
 
 
 if __name__ == '__main__':

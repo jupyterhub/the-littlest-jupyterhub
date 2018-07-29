@@ -10,12 +10,22 @@ before things went bad, and can help us understand the problem so we can fix it.
 
 TLJH collects logs from JupyterHub, Configurable HTTP Proxy, & from each individual
 user's notebook server. All the logs are accessible via `journalctl <https://www.freedesktop.org/software/systemd/man/journalctl.html>`_.
+The installer also writes logs to disk, to help with cases where the
+installer did not succeed.
 
 .. warning::
 
    If you are providing a snippet from the logs to someone else to help debug
    a problem you might have, be careful to redact any private information (such
    as usernames) from the snippet first!
+
+.. _troubleshooting/logs#installer:
+
+Installer Logs
+==============
+
+The JupyterHub installer writes log messages to ``/opt/tljh/installer.log``.
+This is very useful if the installation fails for any reason.
 
 .. _troubleshoot_logs_jupyterhub:
 
