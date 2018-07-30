@@ -37,10 +37,12 @@ html_theme = 'alabaster'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+# Configure the sidebar to be how we want it to be
+# We don't have 'navigation' here, since it is very cluttered
+# and seems to be hard to control.
 html_sidebars = {
     '**': [
         'about.html',
-        'navigation.html',
         'relations.html',
         'searchbox.html',
         'donate.html',
@@ -48,12 +50,13 @@ html_sidebars = {
 }
 # Custom Alabaster theme options
 html_theme_options = {
-    'description': 'A simple JupyterHub distribution for 1-100 users',
+    'description': """
+    A simple JupyterHub distribution for 1-100 users
+    <br /> <br />
+    <strong>Documentation confusing?</strong> <a href="https://github.com/jupyterhub/the-littlest-jupyterhub/issues">File an issue!</a>
+    """,
     'github_user': 'jupyterhub',
     'github_repo': 'the-littlest-jupyterhub',
     'github_button': True,
     'github_banner': True,
-    'extra_nav_links': {
-        'Documentation confusing? File an issue!': 'https://github.com/jupyterhub/the-littlest-jupyterhub/issues'
-    }
 }
