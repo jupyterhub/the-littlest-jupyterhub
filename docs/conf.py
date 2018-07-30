@@ -37,12 +37,22 @@ html_theme = 'alabaster'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+html_sidebars = {
+    '**': [
+        'about.html',
+        'navigation.html',
+        'relations.html',
+        'searchbox.html',
+        'donate.html',
+    ]
+}
 # Custom Alabaster theme options
 html_theme_options = {
     'description': 'A simple JupyterHub distribution for 1-100 users',
     'github_user': 'jupyterhub',
     'github_repo': 'the-littlest-jupyterhub',
-    'github_button': 'true',
+    'github_button': True,
+    'github_banner': True,
     'extra_nav_links': {
         'Documentation confusing? File an issue!': 'https://github.com/jupyterhub/the-littlest-jupyterhub/issues'
     }
