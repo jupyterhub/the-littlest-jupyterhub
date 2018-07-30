@@ -35,6 +35,9 @@ Ubuntu 18.04. We have a bunch of tutorials to get you started.
   You should use this if your cloud provider does not already have a direct tutorial,
   or if you have experience setting up servers.
 
+Once you are ready to run your server for real,
+it's a good idea to proceed directly to :doc:`howto/https`.
+
 Tutorials
 =========
 
@@ -53,6 +56,7 @@ How-To guides answer the question 'How do I...?' for a lot of topics.
 .. toctree::
    :titlesonly:
 
+   howto/https
    howto/user-environment
    howto/admin-users
    howto/notebook-interfaces
