@@ -10,7 +10,14 @@ logLevel = "INFO"
 [accessLog]
 format = "json"
 [accessLog.filters]
-status = ["500-999"]
+statusCodes = ["500-999"]
+
+[accessLog.fields.headers]
+[accessLog.fields.headers.names]
+Authorization = "redact"
+Cookie = "redact"
+Set-Cookie = "redact"
+X-Xsrftoken = "redact"
 
 [respondingTimeouts]
 idleTimeout = "10m0s"
