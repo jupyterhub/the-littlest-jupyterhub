@@ -10,7 +10,7 @@ from urllib.request import urlopen, URLError
 
 from ruamel.yaml import YAML
 
-from tljh import conda, systemd, user, apt
+from tljh import conda, systemd, traefik, user, apt
 
 INSTALL_PREFIX = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
 HUB_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'hub')
@@ -110,24 +110,31 @@ def ensure_chp_package(prefix):
 
 def ensure_jupyterhub_service(prefix):
     """
-    Ensure JupyterHub & CHP Services are set up properly
+    Ensure JupyterHub Services are set up properly
     """
+
+    os.makedirs(STATE_DIR, mode=0o700, exist_ok=True)
+
     with open(os.path.join(HERE, 'systemd-units', 'jupyterhub.service')) as f:
         hub_unit_template = f.read()
 
     with open(os.path.join(HERE, 'systemd-units', 'configurable-http-proxy.service')) as f:
         proxy_unit_template = f.read()
 
+    with open(os.path.join(HERE, 'systemd-units', 'traefik.service')) as f:
+        traefik_unit_template = f.read()
+
+    traefik.ensure_traefik_config(STATE_DIR)
+
     unit_params = dict(
         python_interpreter_path=sys.executable,
         jupyterhub_config_path=os.path.join(HERE, 'jupyterhub_config.py'),
-        install_prefix=INSTALL_PREFIX
+        install_prefix=INSTALL_PREFIX,
     )
     systemd.install_unit('configurable-http-proxy.service', proxy_unit_template.format(**unit_params))
     systemd.install_unit('jupyterhub.service', hub_unit_template.format(**unit_params))
+    systemd.install_unit('traefik.service', traefik_unit_template.format(**unit_params))
     systemd.reload_daemon()
-
-    os.makedirs(STATE_DIR, mode=0o700, exist_ok=True)
 
     # Set up proxy / hub secret oken if it is not already setup
     proxy_secret_path = os.path.join(STATE_DIR, 'configurable-http-proxy.secret')
@@ -141,10 +148,12 @@ def ensure_jupyterhub_service(prefix):
     systemd.start_service('configurable-http-proxy')
     # If JupyterHub is running, we want to restart it.
     systemd.restart_service('jupyterhub')
+    systemd.restart_service('traefik')
 
-    # Mark JupyterHub & CHP to start at boot ime
+    # Mark JupyterHub & CHP to start at boot time
     systemd.enable_service('jupyterhub')
     systemd.enable_service('configurable-http-proxy')
+    systemd.enable_service('traefik')
 
 
 def ensure_jupyterhub_package(prefix):
@@ -165,6 +174,7 @@ def ensure_jupyterhub_package(prefix):
         'jupyterhub-ldapauthenticator==1.2.2',
         'oauthenticator==0.7.3',
     ])
+    traefik.ensure_traefik_binary(prefix)
 
 
 def ensure_usergroups():
@@ -252,7 +262,7 @@ def ensure_jupyterhub_running(times=4):
             urlopen('http://127.0.0.1')
             return
         except HTTPError as h:
-            if h.code in [404, 503]:
+            if h.code in [404, 502, 503]:
                 # May be transient
                 time.sleep(1)
                 continue

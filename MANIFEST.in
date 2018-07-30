@@ -1,1 +1,2 @@
 include tljh/systemd-units/*
+include tljh/*.tpl

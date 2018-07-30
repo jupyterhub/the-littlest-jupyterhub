@@ -12,11 +12,12 @@ setup(
     include_package_data=True,
     install_requires=[
         'pyyaml==3.*',
-        'ruamel.yaml==0.15.*'
+        'ruamel.yaml==0.15.*',
+        'jinja2',
     ],
     entry_points={
         'console_scripts': [
-            'tljh-config = tljh.config:main'
-        ]
-    }
+            'tljh-config = tljh.config:main',
+        ],
+    },
 )
