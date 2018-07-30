@@ -262,7 +262,7 @@ def ensure_jupyterhub_running(times=4):
             urlopen('http://127.0.0.1')
             return
         except HTTPError as h:
-            if h.code in [404, 503]:
+            if h.code in [404, 502, 503]:
                 # May be transient
                 time.sleep(1)
                 continue
