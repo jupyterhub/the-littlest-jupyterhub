@@ -77,3 +77,8 @@ def ensure_traefik_config(state_dir):
     with open(os.path.join(state_dir, "traefik.toml"), "w") as f:
         os.fchmod(f.fileno(), 0o744)
         f.write(new_toml)
+
+    # ensure acme.json exists and is private
+    with open(os.path.join(state_dir, "acme.json"), "a") as f:
+        os.fchmod(f.fileno(), 0o600)
+
