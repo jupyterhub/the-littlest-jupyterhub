@@ -11,8 +11,7 @@ FIXME: A strong feeling that JSON Schema should be involved somehow.
 import os
 import yaml
 
-INSTALL_PREFIX = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
-CONFIG_FILE = os.path.join(INSTALL_PREFIX, 'config.yaml')
+from tljh.config import CONFIG_FILE
 
 # Default configuration for tljh
 # User provided config is merged into this

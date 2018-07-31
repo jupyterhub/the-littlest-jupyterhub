@@ -1,14 +1,14 @@
 """
 JupyterHub config for the littlest jupyterhub.
 """
+import copy
 import os
+
+import yaml
+
 from systemdspawner import SystemdSpawner
 from tljh import user, configurer
-import yaml
-import copy
-
-INSTALL_PREFIX = os.environ.get('TLJH_INSTALL_PREFIX')
-USER_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'user')
+from tljh.config import INSTALL_PREFIX, USER_ENV_PREFIX
 
 
 class CustomSpawner(SystemdSpawner):
