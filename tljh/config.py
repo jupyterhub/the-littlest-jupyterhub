@@ -12,11 +12,14 @@ tljh-config show firstlevel
 tljh-config show firstlevel.second_level
 """
 
-import os
-import sys
 import argparse
-from ruamel.yaml import YAML
 from copy import deepcopy
+import os
+import re
+import sys
+
+from ruamel.yaml import YAML
+yaml = YAML(typ='rt')
 
 
 INSTALL_PREFIX = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
@@ -24,9 +27,6 @@ HUB_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'hub')
 USER_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'user')
 STATE_DIR = os.path.join(INSTALL_PREFIX, 'state')
 CONFIG_FILE = os.path.join(INSTALL_PREFIX, 'config.yaml')
-
-
-yaml = YAML(typ='rt')
 
 
 def set_item_in_config(config, property_path, value):
@@ -82,6 +82,7 @@ def add_item_to_config(config, property_path, value):
 
     return config_copy
 
+
 def remove_item_from_config(config, property_path, value):
     """
     Add an item to a list in config.
@@ -114,7 +115,7 @@ def show_config(config_path):
             config = yaml.load(f)
     except FileNotFoundError:
         config = {}
-    
+
     yaml.dump(config, sys.stdout)
 
 
@@ -153,6 +154,25 @@ def add_config_value(config_path, key_path, value):
     with open(config_path, 'w') as f:
         yaml.dump(config, f)
 
+
+def remove_config_value(config_path, key_path, value):
+    """
+    Remove value from list at key_path
+    """
+    # FIXME: Have a file lock here
+    # FIXME: Validate schema here
+    try:
+        with open(config_path) as f:
+            config = yaml.load(f)
+    except FileNotFoundError:
+        config = {}
+
+    config = remove_item_from_config(config, key_path, value)
+
+    with open(config_path, 'w') as f:
+        yaml.dump(config, f)
+
+
 def reload_component(component):
     """
     Reload a TLJH component.
@@ -172,11 +192,31 @@ def reload_component(component):
         print('Proxy reload with new configuration complete')
 
 
-def main():
+def parse_value(value_str):
+    """Parse a value string"""
+    if value_str is None:
+        return value_str
+    if re.match(r'^\d+$', value_str):
+        return int(value_str)
+    elif re.match(r'^\d+\.\d*$', value_str):
+        return float(value_str)
+    elif value_str.lower() == 'true':
+        return True
+    elif value_str.lower() == 'false':
+        return False
+    else:
+        # it's a string
+        return value_str
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+
     argparser = argparse.ArgumentParser()
     argparser.add_argument(
         '--config-path',
-        default='/opt/tljh/config.yaml',
+        default=CONFIG_FILE,
         help='Path to TLJH config.yaml file'
     )
     subparsers = argparser.add_subparsers(dest='action')
@@ -237,19 +277,21 @@ def main():
         nargs='?'
     )
 
-    args = argparser.parse_args()
+    args = argparser.parse_args(argv)
 
     if args.action == 'show':
         show_config(args.config_path)
     elif args.action == 'set':
-        set_config_value(args.config_path, args.key_path, args.value)
+        set_config_value(args.config_path, args.key_path, parse_value(args.value))
     elif args.action == 'add-item':
-        add_config_value(args.config_path, args.key_path, args.value)
+        add_config_value(args.config_path, args.key_path, parse_value(args.value))
     elif args.action == 'remove-item':
-        add_config_value(args.config_path, args.key_path, args.value)
+        remove_config_value(args.config_path, args.key_path, parse_value(args.value))
     elif args.action == 'reload':
         reload_component(args.component)
-    
+    else:
+        argparser.print_help()
+
 
 if __name__ == '__main__':
     main()

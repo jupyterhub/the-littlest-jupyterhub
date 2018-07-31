@@ -1,11 +1,30 @@
 """
 Test configuration commandline tools
 """
-from tljh import config
-from contextlib import redirect_stdout
-import io
-import pytest
+
+from importlib import reload
+import os
 import tempfile
+from unittest import mock
+
+import pytest
+
+from tljh import config, configurer
+
+
+@pytest.fixture
+def tljh_dir(tmpdir):
+    """Fixture for setting up a temporary tljh dir"""
+    tljh_dir = str(tmpdir.join("tljh").mkdir())
+    with mock.patch.dict(
+        os.environ,
+        {"TLJH_INSTALL_PREFIX": tljh_dir}
+    ):
+        reload(config)
+        reload(configurer)
+        assert config.INSTALL_PREFIX == tljh_dir
+        os.makedirs(config.STATE_DIR)
+        yield tljh_dir
 
 
 def test_set_no_mutate():
@@ -15,11 +34,13 @@ def test_set_no_mutate():
     assert new_conf['a']['b'] == 'c'
     assert conf == {}
 
+
 def test_set_one_level():
     conf = {}
 
     new_conf = config.set_item_in_config(conf, 'a', 'b')
     assert new_conf['a'] == 'b'
+
 
 def test_set_multi_level():
     conf = {}
@@ -31,6 +52,7 @@ def test_set_multi_level():
         'a': {'b': 'c', 'd': 'e'},
         'f': 'g'
     }
+
 
 def test_set_overwrite():
     """
@@ -97,6 +119,7 @@ def test_remove_from_config():
         'a': {'b': {'c': ['d']}}
     }
 
+
 def test_remove_from_config_error():
     with pytest.raises(ValueError):
         config.remove_item_from_config({}, 'a.b.c', 'e')
@@ -108,7 +131,79 @@ def test_remove_from_config_error():
         config.remove_item_from_config({'a': ['b']}, 'a', 'e')
 
 
-def test_show_config():
+def test_reload_hub():
+    with mock.patch('tljh.systemd.restart_service') as restart_service:
+        config.reload_component('hub')
+    assert restart_service.called_with('jupyterhub')
+
+
+def test_reload_proxy(tljh_dir):
+    with mock.patch('tljh.systemd.restart_service') as restart_service:
+        config.reload_component('proxy')
+    assert restart_service.called_with('configurable-http-proxy')
+    assert restart_service.called_with('traefik')
+    assert os.path.exists(os.path.join(config.STATE_DIR, 'traefik.toml'))
+
+
+def test_cli_no_command(capsys):
+    config.main([])
+    captured = capsys.readouterr()
+    assert "usage:" in captured.out
+    assert "positional arguments:" in captured.out
+
+
+@pytest.mark.parametrize(
+    "arg, value",
+    [
+        ("true", True),
+        ("FALSE", False),
+    ],
+)
+def test_cli_set_bool(tljh_dir, arg, value):
+    config.main(["set", "https.enabled", arg])
+    cfg = configurer.load_config()
+    assert cfg['https']['enabled'] == value
+
+
+def test_cli_set_int(tljh_dir):
+    config.main(["set", "https.port", "123"])
+    cfg = configurer.load_config()
+    assert cfg['https']['port'] == 123
+
+
+def test_cli_add_float(tljh_dir):
+    config.main(["add-item", "foo.bar", "1.25"])
+    cfg = configurer.load_config()
+    assert cfg['foo']['bar'] == [1.25]
+
+
+def test_cli_remove_int(tljh_dir):
+    config.main(["add-item", "foo.bar", "1"])
+    config.main(["add-item", "foo.bar", "2"])
+    cfg = configurer.load_config()
+    assert cfg['foo']['bar'] == [1, 2]
+    config.main(["remove-item", "foo.bar", "1"])
+    cfg = configurer.load_config()
+    assert cfg['foo']['bar'] == [2]
+
+
+@pytest.mark.parametrize(
+    "value, expected",
+    [
+        ("1", 1),
+        ("1.25", 1.25),
+        ("x", "x"),
+        ("1x", "1x"),
+        ("1.2x", "1.2x"),
+        (None, None),
+        ("", ""),
+    ],
+)
+def test_parse_value(value, expected):
+    assert config.parse_value(value) == expected
+
+
+def test_show_config(capsys):
     """
     Test stdout output when showing config
     """
@@ -120,16 +215,9 @@ a:
   - 1
     """.strip()
 
-
     with tempfile.NamedTemporaryFile() as tmp:
         tmp.write(conf.encode())
         tmp.flush()
-
-        out = io.StringIO()
-        with redirect_stdout(out):
-            config.show_config(tmp.name)
-
-    assert out.getvalue().strip() == conf
-
-
-
+        config.show_config(tmp.name)
+    out = capsys.readouterr().out
+    assert out.strip() == conf
