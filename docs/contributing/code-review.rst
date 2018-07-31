@@ -24,7 +24,9 @@ it is a bug.
 
 Do not worry about having perfect documentation! Documentation improves over
 time. The requirement is to have documentation before merging a pull request,
-not to have *perfect* documentation before merging a pull request.
+not to have *perfect* documentation before merging a pull request. If you
+are new and not sure how to add documentation, other contributors will
+be happy to guide you.
 
 See :ref:`contributing/docs` for guidelines on writing documentation.
 
@@ -42,3 +44,6 @@ integration tests provide more value for effort than unit tests do. Unit
 tests are easier to write & faster to run, so if the code being changed
 feels exhaustively unit-testable, write unit tests too. When in doubt,
 add more tests.
+
+If you are unsure what kind of tests to add for your pull request, other
+contributors to the repo will be happy to help guide you!
