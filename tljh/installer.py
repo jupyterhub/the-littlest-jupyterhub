@@ -11,11 +11,7 @@ from urllib.request import urlopen, URLError
 from ruamel.yaml import YAML
 
 from tljh import conda, systemd, traefik, user, apt
-
-INSTALL_PREFIX = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
-HUB_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'hub')
-USER_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'user')
-STATE_DIR = os.path.join(INSTALL_PREFIX, 'state')
+from tljh.config import INSTALL_PREFIX, HUB_ENV_PREFIX, USER_ENV_PREFIX, STATE_DIR
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 

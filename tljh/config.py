@@ -11,11 +11,19 @@ tljh-config show firstlevel
 
 tljh-config show firstlevel.second_level
 """
+
+import os
 import sys
 import argparse
 from ruamel.yaml import YAML
 from copy import deepcopy
-from tljh import systemd
+
+
+INSTALL_PREFIX = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
+HUB_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'hub')
+USER_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'user')
+STATE_DIR = os.path.join(INSTALL_PREFIX, 'state')
+CONFIG_FILE = os.path.join(INSTALL_PREFIX, 'config.yaml')
 
 
 yaml = YAML(typ='rt')
@@ -28,7 +36,7 @@ def set_item_in_config(config, property_path, value):
     config is not mutated.
 
     property_path is a series of dot separated values. Any part of the path
-    that does not exist is created. 
+    that does not exist is created.
     """
     path_components = property_path.split('.')
 
@@ -151,11 +159,14 @@ def reload_component(component):
 
     component can be 'hub' or 'proxy'.
     """
+    # import here to avoid circular imports
+    from tljh import systemd, traefik
     if component == 'hub':
         systemd.restart_service('jupyterhub')
         # FIXME: Verify hub is back up?
         print('Hub reload with new configuration complete')
     elif component == 'proxy':
+        traefik.ensure_traefik_config(STATE_DIR)
         systemd.restart_service('configurable-http-proxy')
         systemd.restart_service('traefik')
         print('Proxy reload with new configuration complete')
