@@ -32,33 +32,23 @@ Changing the default user interface
 You can change the default interface users get when they log in by modifying
 ``config.yaml`` as an admin user.
 
-#. Open the ``config.yaml`` file.
-
-   .. code-block:: bash
-
-      sudo nano /opt/tljh/config.yaml
-
-#. To launch **JupyterLab** when users log in, add the following snippet to the config
+#. To launch **JupyterLab** when users log in, run the following in an admin console:
 
    .. code-block:: yaml
 
-      userEnvironment:
-        defaultApp: jupyterlab
+      sudo -E tljh-config set user_environment.default_app jupyterlab
 
-#. Alternatively, to launch **nteract** when users log in, add the following snippet to the config
+#. Alternatively, to launch **nteract** when users log in, run the following in the admin console:
 
    .. code-block:: yaml
 
-      userEnvironment:
-        defaultApp: nteract
-
-#. Save and exit the editor. With ``nano``, you can do this by pressing ``Ctrl-X``.
+      sudo -E tljh-config set user_environment.default_app nteract
 
 #. Apply the changes by restarting JupyterHub. This should not disrupt current users.
 
    .. code-block:: yaml
 
-      sudo systemctl restart jupyterhub
+      sudo -E tljh-config reload
 
    If this causes problems, check the :ref:`troubleshoot_logs_jupyterhub` for clues
    on what went wrong.
