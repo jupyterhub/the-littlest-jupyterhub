@@ -10,7 +10,7 @@ information about the security model of The Littlest JupyterHub.
 System user accounts
 ====================
 
-Each JupyterHub user gets their own unix user account created when they
+Each JupyterHub user gets their own Unix user account created when they
 first start their server. This protects users from each other, gives them a
 home directory at a well known location, and allows sharing based on file system
 permissions.
@@ -38,8 +38,8 @@ command on the terminal. No password required.
 
 This is a **lot** of power, and they can do pretty much anything they want to
 the server - look at other people's work, modify it, break the server in cool &
-funky ways, etc. This also means if an admin's credentials are compromised (
-easy to guess password, password re-use, etc) the entire JupyterHub is compromised.
+funky ways, etc. This also means **if an admin's credentials are compromised (
+easy to guess password, password re-use, etc) the entire JupyterHub is compromised.**
 
 Off-boarding users securely
 ===========================
@@ -47,7 +47,13 @@ Off-boarding users securely
 When you delete users from the JupyterHub admin console, their unix user accounts
 are **not** removed. This means they might continue to have access to the server
 even after you remove them from JupyterHub. Admins should manually remove the user
-from the server & archive their home directories as needed. If the user removed
+from the server & archive their home directories as needed. For example, the
+following command deletes the user ``yuvi``.
+
+.. code-block::
+   userdel yuvi
+
+If the user removed
 from the server is an admin, extra care must be taken since they could have
 modified the system earlier to continue giving them access.
 
@@ -62,6 +68,5 @@ feature of systemd.
 HTTPS
 =====
 
-The Littlest JupyterHub does not currently support HTTPS. Follow `this issue
-<https://github.com/jupyterhub/the-littlest-jupyterhub/issues/29>`_ for progress
-on HTTPS support.
+Any internet-facing JupyterHub should use HTTPS to secure its traffic. For
+information on how to use HTTPS with your JupyterHub, see :ref:`_howto/https`.

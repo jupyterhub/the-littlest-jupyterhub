@@ -24,6 +24,12 @@ example.
 Configuring the authenticator
 =============================
 
+Some authenticators have unique configuration options. This section covers a
+few common ones.
+
+LDAPAuthenticator
+^^^^^^^^^^^^^^^^^
+
 LDAPAuthenticator's `documentation <https://github.com/jupyterhub/ldapauthenticator#required-configuration>`_
 lists the various configuration options you can set for LDAPAuthenticator. You can set them
 in TLJH with the following pattern:
@@ -36,7 +42,7 @@ When the documentation asks you to set ``LDAPAuthenticator.server_address`` to s
 value, you can do that with the following command:
 
 .. code-block:: bash
-   
+
    sudo -E tljh-config set auth.LDAPAuthenticator.server_address = 'my-ldap-server'
 
 Most authenticators require you set multiple configuration options before you can
@@ -45,7 +51,9 @@ enable them. Read the authenticator's documentation carefully for more informati
 Enabling the authenticator
 ==========================
 
-Once you have configured the authenticator as you want, it should be enabled. 
+Once you have configured the authenticator as you want, you should then
+enable it. We'll use the LDAPAuthenticator as an example, though the process
+is similar for the other authenticators.
 
 .. code-block:: bash
 
@@ -70,4 +78,3 @@ Once enabled, you need to reload JupyterHub for the config to take effect.
 Try logging in a separate incognito window to check if your configuration works. This
 lets you preserve your terminal in case there were errors. If there are
 errors, :ref:`troubleshooting/logs` should help you debug them.
-

@@ -5,7 +5,7 @@ Configuring TLJH with ``tljh-config``
 =====================================
 
 ``tljh-config`` is the commandline program used to make configuration
-changes to TLJH. 
+changes to TLJH.
 
 Running ``tljh-config``
 ======================`
@@ -75,7 +75,7 @@ restarted and loaded with the new configuration.
 Advanced: ``config.yaml``
 =========================
 
-``tljh-config`` is a simple program that modifies the contents of the 
-``config.yaml`` file located at ``/opt/tljh/config.yaml``. ``tljh-config`` 
+``tljh-config`` is a simple program that modifies the contents of the
+``config.yaml`` file located at ``/opt/tljh/config.yaml``. ``tljh-config``
 is the recommended method of editing / viewing configuration since editing
 YAML by hand in a terminal text editor is a large source of errors.
