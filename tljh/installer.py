@@ -275,6 +275,22 @@ def ensure_jupyterhub_running(times=4):
     raise Exception("Installation failed: JupyterHub did not start in {}s".format(times))
 
 
+def ensure_symlinks(prefix):
+    """
+    Ensure we symlink appropriate things into /usr/local/bin
+
+    We add the user conda environment to PATH for notebook terminals,
+    but not the hub venv. This means tljh-config is not actually accessible.
+
+    We symlink to /usr/local/bin to 'fix' this. /usr/local/bin is the appropriate
+    place, and works with sudo -E
+    """
+    tljh_config_src = os.path.join(prefix, 'bin', 'tljh-config')
+    tljh_config_dest = '/usr/local/bin/tljh-config'
+    if not os.is_symlink(tljh_config_dest):
+        os.symlink(tljh_config_src, tljh_config_dest)
+
+
 def main():
     argparser = argparse.ArgumentParser()
     argparser.add_argument(
@@ -302,6 +318,7 @@ def main():
     ensure_chp_package(HUB_ENV_PREFIX)
     ensure_jupyterhub_service(HUB_ENV_PREFIX)
     ensure_jupyterhub_running()
+    ensure_symlinks(HUB_ENV_PREFIX)
 
     logger.info("Done!")
 
