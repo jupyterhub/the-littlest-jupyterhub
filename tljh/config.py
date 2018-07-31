@@ -17,7 +17,6 @@ import sys
 import argparse
 from ruamel.yaml import YAML
 from copy import deepcopy
-from tljh import systemd, traefik
 
 
 INSTALL_PREFIX = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
@@ -160,6 +159,8 @@ def reload_component(component):
 
     component can be 'hub' or 'proxy'.
     """
+    # import here to avoid circular imports
+    from tljh import systemd, traefik
     if component == 'hub':
         systemd.restart_service('jupyterhub')
         # FIXME: Verify hub is back up?
