@@ -287,7 +287,9 @@ def ensure_symlinks(prefix):
     """
     tljh_config_src = os.path.join(prefix, 'bin', 'tljh-config')
     tljh_config_dest = '/usr/local/bin/tljh-config'
-    if not os.is_symlink(tljh_config_dest):
+    if not os.path.exists(tljh_config_dest):
+        # If this exists, we leave it alone. Do *not* remove it,
+        # since we are running as root and it could be anything!
         os.symlink(tljh_config_src, tljh_config_dest)
 
 
