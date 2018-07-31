@@ -15,7 +15,7 @@ import sys
 import argparse
 from ruamel.yaml import YAML
 from copy import deepcopy
-from tljh import systemd
+from tljh import systemd, traefik
 
 
 yaml = YAML(typ='rt')
@@ -156,6 +156,8 @@ def reload_component(component):
         # FIXME: Verify hub is back up?
         print('Hub reload with new configuration complete')
     elif component == 'proxy':
+        # FIXME: How to set path here?
+        traefik.ensure_traefik_config('/opt/tljh/hub/state')
         systemd.restart_service('configurable-http-proxy')
         systemd.restart_service('traefik')
         print('Proxy reload with new configuration complete')
