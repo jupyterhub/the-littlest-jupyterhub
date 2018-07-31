@@ -204,3 +204,9 @@ def test_pip_upgrade(group, allowed):
             [python, "-m", "pip", "install", "--upgrade", "testpath"],
             preexec_fn=partial(setgroup, group),
         )
+
+def test_symlinks():
+    """
+    Test we symlink tljh-config to /usr/local/bin
+    """
+    assert os.path.exists('/usr/local/bin/tljh-config')
