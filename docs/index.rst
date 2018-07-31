@@ -116,4 +116,5 @@ to people contributing in various ways.
    :titlesonly:
 
    contributing/docs
+   contributing/code-review
    contributing/dev-setup

@@ -1,3 +1,5 @@
+.. _contributing/docs:
+
 =====================
 Writing documentation
 =====================
