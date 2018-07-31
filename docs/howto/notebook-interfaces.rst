@@ -42,15 +42,15 @@ You can change the default interface users get when they log in by modifying
 
    .. code-block:: yaml
 
-      userEnvironment:
-        defaultApp: jupyterlab
+      user_environment:
+        default_app: jupyterlab
 
 #. Alternatively, to launch **nteract** when users log in, add the following snippet to the config
 
    .. code-block:: yaml
 
-      userEnvironment:
-        defaultApp: nteract
+      user_environment:
+        default_app: nteract
 
 #. Save and exit the editor. With ``nano``, you can do this by pressing ``Ctrl-X``.
 
