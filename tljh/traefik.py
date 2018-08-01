@@ -3,7 +3,7 @@ import hashlib
 import os
 from urllib.request import urlretrieve
 
-from jinja2 import Environment, Template
+from jinja2 import Template
 
 from tljh.configurer import load_config
 
