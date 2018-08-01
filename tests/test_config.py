@@ -2,7 +2,6 @@
 Test configuration commandline tools
 """
 
-from importlib import reload
 import os
 import tempfile
 from unittest import mock
@@ -10,21 +9,6 @@ from unittest import mock
 import pytest
 
 from tljh import config, configurer
-
-
-@pytest.fixture
-def tljh_dir(tmpdir):
-    """Fixture for setting up a temporary tljh dir"""
-    tljh_dir = str(tmpdir.join("tljh").mkdir())
-    with mock.patch.dict(
-        os.environ,
-        {"TLJH_INSTALL_PREFIX": tljh_dir}
-    ):
-        reload(config)
-        reload(configurer)
-        assert config.INSTALL_PREFIX == tljh_dir
-        os.makedirs(config.STATE_DIR)
-        yield tljh_dir
 
 
 def test_set_no_mutate():
