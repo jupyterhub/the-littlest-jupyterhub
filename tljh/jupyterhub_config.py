@@ -50,6 +50,6 @@ configurer.apply_config(config_overrides, c)
 
 # Load arbitrary .py config files if they exist.
 # This is our escape hatch
-extra_configs = sorted(glob(os.path.join(INSTALL_PREFIX, 'config.d', '*.py')))
+extra_configs = sorted(glob(os.path.join(INSTALL_PREFIX, 'jupyterhub_config.d', '*.py')))
 for ec in extra_configs:
     load_subconfig(ec)
