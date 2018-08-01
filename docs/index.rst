@@ -83,6 +83,7 @@ Topic guides provide in-depth explanations of specific topics.
    topic/installer-actions
    topic/tljh-config
    topic/authenticator-configuration
+   topic/escape-hatch
 
 
 Troubleshooting
