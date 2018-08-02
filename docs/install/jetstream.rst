@@ -1,4 +1,4 @@
-.. _tutorial_quickstart_jetstream:
+.. _install/jetstream:
 
 =======================
 Installing on Jetstream
