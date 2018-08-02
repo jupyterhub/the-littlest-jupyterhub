@@ -62,7 +62,7 @@ How-To guides answer the question 'How do I...?' for a lot of topics.
    howto/resource-estimation
 
 Authentication
-^^^^^^^^^^^^^^
+--------------
 
 We have a special set of How-To Guides on using various forms of authentication
 with your JupyterHub. For more information on Authentication, see
