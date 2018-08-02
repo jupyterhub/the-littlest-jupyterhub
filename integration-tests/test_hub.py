@@ -10,6 +10,10 @@ import grp
 import sys
 
 
+# Use sudo to invoke it, since this is how users invoke it.
+# This catches issues with PATH
+TLJH_CONFIG_PATH = ['sudo', '-E', 'tljh-config']
+
 def test_hub_up():
     r = requests.get('http://127.0.0.1')
     r.raise_for_status()
@@ -45,10 +49,9 @@ async def test_user_admin_add():
     hub_url = 'http://localhost'
     username = secrets.token_hex(8)
 
-    tljh_config_path = [sys.executable, '-m', 'tljh.config']
 
-    assert 0 == await (await asyncio.create_subprocess_exec(*tljh_config_path, 'add-item', 'users.admin', username)).wait()
-    assert 0 == await (await asyncio.create_subprocess_exec(*tljh_config_path, 'reload')).wait()
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'add-item', 'users.admin', username)).wait()
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
 
     # FIXME: wait for reload to finish & hub to come up
     # Should be part of tljh-config reload
@@ -76,10 +79,8 @@ async def test_user_admin_remove():
     hub_url = 'http://localhost'
     username = secrets.token_hex(8)
 
-    tljh_config_path = [sys.executable, '-m', 'tljh.config']
-
-    assert 0 == await (await asyncio.create_subprocess_exec(*tljh_config_path, 'add-item', 'users.admin', username)).wait()
-    assert 0 == await (await asyncio.create_subprocess_exec(*tljh_config_path, 'reload')).wait()
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'add-item', 'users.admin', username)).wait()
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
 
     # FIXME: wait for reload to finish & hub to come up
     # Should be part of tljh-config reload
@@ -95,8 +96,8 @@ async def test_user_admin_remove():
             assert f'jupyter-{username}' in grp.getgrnam('jupyterhub-admins').gr_mem
 
 
-            assert 0 == await (await asyncio.create_subprocess_exec(*tljh_config_path, 'remove-item', 'users.admin', username)).wait()
-            assert 0 == await (await asyncio.create_subprocess_exec(*tljh_config_path, 'reload')).wait()
+            assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'remove-item', 'users.admin', username)).wait()
+            assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
             await asyncio.sleep(1)
 
             await u.stop_server()

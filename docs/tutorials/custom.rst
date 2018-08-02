@@ -32,10 +32,15 @@ Step 1: Installing The Littlest JupyterHub
 
    .. code-block:: bash
 
-    #!/bin/bash
-    curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
-     | sudo python3 - \
+      #!/bin/bash
+      curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
+        | sudo python3 - \
        --admin <admin-user-name>
+
+   .. note:
+
+      See :ref:`topic/installer-actions` if you want to understand exactly what the installer is doing.
+      :ref:`topic/customizing-installer` documents other options that can be passed to the installer.
 
 #. Press ``Enter`` to start the installation process. This will take 5-10 minutes,
    and will say 'Done!' when the installation process is complete.
