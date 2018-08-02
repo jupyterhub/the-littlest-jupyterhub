@@ -72,7 +72,6 @@ with your JupyterHub. For more information on Authentication, see
    :titlesonly:
 
    howto/auth/dummy
-   howto/auth/ldap
 
 Topic Guides
 ============
