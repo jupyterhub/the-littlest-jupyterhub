@@ -3,8 +3,8 @@ JupyterHub config for the littlest jupyterhub.
 """
 import copy
 import os
-
 import yaml
+from glob import glob
 
 from systemdspawner import SystemdSpawner
 from tljh import user, configurer
@@ -47,3 +47,9 @@ if os.path.exists(config_overrides_path):
 else:
     config_overrides = {}
 configurer.apply_config(config_overrides, c)
+
+# Load arbitrary .py config files if they exist.
+# This is our escape hatch
+extra_configs = sorted(glob(os.path.join(INSTALL_PREFIX, 'jupyterhub_config.d', '*.py')))
+for ec in extra_configs:
+    load_subconfig(ec)
