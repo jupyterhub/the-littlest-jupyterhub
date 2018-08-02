@@ -48,14 +48,14 @@ When you delete users from the JupyterHub admin console, their unix user account
 are **not** removed. This means they might continue to have access to the server
 even after you remove them from JupyterHub. Admins should manually remove the user
 from the server & archive their home directories as needed. For example, the
-following command deletes the user ``yuvi``.
+following command deletes the unix user associated with the JupyterHub user ``yuvipanda``.
 
 .. code-block::
-   userdel yuvi
+   sudo userdel jupyter-yuvipanda
 
-If the user removed
-from the server is an admin, extra care must be taken since they could have
-modified the system earlier to continue giving them access.
+If the user removed from the server is an admin, extra care must be taken
+since they could have modified the system earlier to continue giving them
+access.
 
 Per-user ``/tmp``
 =================
