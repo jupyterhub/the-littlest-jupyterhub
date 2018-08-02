@@ -80,6 +80,7 @@ Topic guides provide in-depth explanations of specific topics.
    topic/requirements
    topic/security
    topic/customizing-installer
+   topic/installer-actions
    topic/tljh-config
    topic/authenticator-configuration
 

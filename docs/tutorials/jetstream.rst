@@ -84,10 +84,15 @@ Let's create the server on which we can run JupyterHub.
 
    .. code-block:: bash
 
-    #!/bin/bash
-    curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
-     | sudo python3 - \
-       --admin <admin-user-name>
+      #!/bin/bash
+      curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
+        | sudo python3 - \
+          --admin <admin-user-name>
+
+   .. note::
+
+      See :ref:`topic/installer-actions` if you want to understand exactly what the installer is doing.
+      :ref:`topic/customizing-installer` documents other options that can be passed to the installer.
 
 #. Under **Execution Strategy Type**, select **Run script on first boot**.
 

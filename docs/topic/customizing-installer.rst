@@ -1,3 +1,5 @@
+.. _topic/customizing-installer:
+
 =========================
 Customizing the Installer
 =========================
