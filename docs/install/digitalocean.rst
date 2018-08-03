@@ -1,4 +1,4 @@
-.. _tutorial_quickstart_digitalocean:
+.. _insatll/digitalocean:
 
 ===========================
 Installing on Digital Ocean

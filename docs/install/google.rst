@@ -1,4 +1,4 @@
-.. _tutorial_quickstart_google:
+.. _install/google:
 
 ==========================
 Installing on Google Cloud

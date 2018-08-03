@@ -1,4 +1,4 @@
-.. _tutorials/custom:
+.. _install/custom:
 
 =============================
 Installing on your own server

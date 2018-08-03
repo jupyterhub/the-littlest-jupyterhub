@@ -26,11 +26,11 @@ Ubuntu 18.04. We have a bunch of tutorials to get you started.
   .. toctree::
      :titlesonly:
 
-     tutorials/digitalocean
-     tutorials/jetstream
-     tutorials/google
+     install/digitalocean
+     install/jetstream
+     install/google
 
-- :ref:`tutorials/custom`.
+- :ref:`install/custom`.
   You should use this if your cloud provider does not already have a direct tutorial,
   or if you have experience setting up servers.
 
