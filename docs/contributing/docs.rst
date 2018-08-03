@@ -85,6 +85,11 @@ The documentation is organized into several categories:
   not what you explain. It can be helpful to refer back to what you've done and
   explain afterwards.
 
+  **Installation Tutorials** are a special subcategory of tutorials that
+  teach the user how to install TLJH in various cloud providers / bare metal
+  systems. These should cross-link a lot to other parts of the documentation,
+  avoid forcing the user to learn to SSH if possible & have lots of screenshots.
+
 * **Topic guides** aim to explain a concept or subject at a
   fairly high level.
 
