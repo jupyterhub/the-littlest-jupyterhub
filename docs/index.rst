@@ -58,6 +58,7 @@ How-To guides answer the question 'How do I...?' for a lot of topics.
    howto/https
    howto/user-environment
    howto/admin-users
+   howto/share-data
    howto/notebook-interfaces
    howto/resource-estimation
 
