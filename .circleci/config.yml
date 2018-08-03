@@ -101,9 +101,52 @@ jobs:
                 command: |
                     python3 .circleci/integration-test.py run 'python3 -m pytest -v /srv/src/integration-tests'
 
+    documentation:
+        docker:
+            # Match target OS of TLJH
+            - image: ubuntu:18.04
+
+        working_directory: ~/repo
+
+        steps:
+            - checkout
+
+            # Setup Python
+            - run:
+                name: install python
+                command: |
+                    apt-get update --yes && apt-get install --yes python3 python3-venv git
+
+            # Download and cache dependencies
+            - restore_cache:
+                key: v1-dependencies-py3.6-sphinx
+
+            - run:
+                name: Setup venv
+                command: |
+                    python3 -m venv /srv/venv
+                    echo 'export PATH=/srv/venv/bin:$PATH' >> $BASH_ENV
+
+            - run:
+                name: install dependencies
+                command: |
+                    pip install sphinx
+
+            - save_cache:
+                paths:
+                    - /srv/venv/
+                key: v1-dependencies-py3.6-sphinx
+
+            - run:
+                name: build documentation
+                command: |
+                    cd docs
+                    make html
+
 workflows:
     version: 2
     all-tests:
         jobs:
             - unit-test
             - integration-test
+            - documentation
