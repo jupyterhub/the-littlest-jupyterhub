@@ -88,6 +88,10 @@ def test_manual_ssl_config(tljh_dir):
         "https": {
             "address": ":443",
             "backend": "jupyterhub",
-            "tls": {"key": "/path/to/ssl.key", "cert": "/path/to/ssl.cert"},
+            "tls": {
+                "certificates": [
+                    {"certFile": "/path/to/ssl.cert", "keyFile": "/path/to/ssl.key"}
+                ]
+            },
         },
     }
