@@ -7,12 +7,12 @@ Distributing materials to users with nbgitpuller
 Goal
 ====
 
-A very common educational need when using JupyterHub for education is to easily
+A very common need when using JupyterHub is to easily
 distribute study materials / lab notebooks to students.
 
 Students should be able to:
 
-1. Easily get latest version of materials, including any updates the instructor
+1. Easily get the latest version of materials, including any updates the instructor
    has made to materials the student already has a copy of.
 2. Be confident they won't lose any of their work. If an instructor has modified
    something the student has also modified, the student's modification should
@@ -109,3 +109,9 @@ Step 2: Users click on the nbgitpuller link
 
 This workflow lets users land directly in the notebook you specified
 without having to understand much about git or the JupyterHub interface.
+
+Advanced: hand-crafting an nbgitpuller link
+===========================================
+
+For information on hand-crafting an ``nbgitpuller`` link, see
+`the nbgitpuller README <https://github.com/jupyterhub/nbgitpuller#constructing-the-nbgitpuller-url>`_.

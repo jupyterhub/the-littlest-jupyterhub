@@ -3,13 +3,13 @@ The Littlest JupyterHub
 =======================
 
 A simple `JupyterHub <https://github.com/jupyterhub/jupyterhub>`_ distribution for
-a small (0-50) number of users on a single server.
+a small (0-100) number of users on a single server.
 
 Development Status
 ==================
 
 This project is currently in **alpha** state. Most things work, but we might
-still make breaking changes that have no clear upgrade pathway. We are targetting
+still make breaking changes that have no clear upgrade pathway. We are targeting
 a v0.1 release sometime in mid-August 2018. Follow `this milestone <https://github.com/jupyterhub/the-littlest-jupyterhub/milestone/1>`_
 to see progress towards the release!
 
@@ -61,8 +61,12 @@ How-To guides answer the question 'How do I...?' for a lot of topics.
    howto/notebook-interfaces
    howto/resource-estimation
 
+Authentication
+--------------
+
 We have a special set of How-To Guides on using various forms of authentication
-with your JupyterHub.
+with your JupyterHub. For more information on Authentication, see
+:ref:`topic/authenticator-configuration`
 
 .. toctree::
    :titlesonly:
