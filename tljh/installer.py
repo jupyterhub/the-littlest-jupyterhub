@@ -216,7 +216,9 @@ def ensure_user_environment(user_requirements_txt_file):
         'jupyterlab==0.32.1',
         'nteract-on-jupyter==1.8.1',
         # nbgitpuller for easily pulling in Git repositories
-        'nbgitpuller==0.6.1'
+        'nbgitpuller==0.6.1',
+        # nbresuse to show people how much RAM they are using
+        'nbresuse==0.3.0'
     ])
 
     if user_requirements_txt_file:
