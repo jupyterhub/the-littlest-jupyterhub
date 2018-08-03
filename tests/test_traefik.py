@@ -11,7 +11,8 @@ def test_download_traefik(tmpdir):
     traefik_bin = tmpdir.mkdir("bin").join("traefik")
     traefik.ensure_traefik_binary(str(tmpdir))
     assert traefik_bin.exists()
-    assert traefik_bin.stat().mode == 0o755
+    # ignore higher-order permission bits, only verify ugo permissions
+    assert (traefik_bin.stat().mode & 0o777) == 0o755
 
 
 def test_default_config(tmpdir, tljh_dir):
