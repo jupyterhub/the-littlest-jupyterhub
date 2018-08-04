@@ -121,8 +121,8 @@ def test_serverextensions():
         'jupyterlab 0.32.1',
         'nbgitpuller 0.6.1',
         'nteract_on_jupyter 1.8.1',
-        'nbresuse'
+        'nbresuse '
     ]
 
     for e in extensions:
-        assert '{} ^[[32mOK^[[0m' in e.stderr.decode()
+        assert '{} \x1b[32mOK\x1b[0m'.format(e) in proc.stderr.decode()
