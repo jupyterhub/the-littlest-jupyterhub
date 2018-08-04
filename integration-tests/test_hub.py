@@ -113,7 +113,7 @@ def test_serverextensions():
     Validate serverextensions we want are installed
     """
     proc = subprocess.run([
-        '/opt/tljh/user/bin/jupyter-serverextensions',
+        '/opt/tljh/user/bin/jupyter-serverextension',
         'list', '--sys-prefix'
     ], stderr=subprocess.PIPE)
 
