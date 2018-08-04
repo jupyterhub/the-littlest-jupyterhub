@@ -115,7 +115,7 @@ def test_serverextensions():
     proc = subprocess.run([
         '/opt/tljh/user/bin/jupyter-serverextensions',
         'list', '--sys-prefix'
-    ], capture_output=True, universal_newlines=True)
+    ], stderr=subprocess.PIPE)
 
     extensions = [
         'jupyterlab 0.32.1',
@@ -125,4 +125,4 @@ def test_serverextensions():
     ]
 
     for e in extensions:
-        assert '{} ^[[32mOK^[[0m' in e.stderr
+        assert '{} ^[[32mOK^[[0m' in e.stderr.decode()
