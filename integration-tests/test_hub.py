@@ -2,6 +2,7 @@ import requests
 from hubtraf.user import User
 from hubtraf.auth.dummy import login_dummy
 import secrets
+import subprocess
 import pytest
 from functools import partial
 import asyncio
@@ -105,3 +106,23 @@ async def test_user_admin_remove():
 
             # Assert that the user does *not* have admin rights
             assert f'jupyter-{username}' in grp.getgrnam('jupyterhub-admins').gr_mem
+
+
+def test_serverextensions():
+    """
+    Validate serverextensions we want are installed
+    """
+    proc = subprocess.run([
+        '/opt/tljh/user/bin/jupyter-serverextensions',
+        'list', '--sys-prefix'
+    ], capture_output=True, universal_newlines=True)
+
+    extensions = [
+        'jupyterlab 0.32.1',
+        'nbgitpuller 0.6.1',
+        'nteract_on_jupyter 1.8.1',
+        'nbresuse'
+    ]
+
+    for e in extensions:
+        assert '{} ^[[32mOK^[[0m' in e.stderr
