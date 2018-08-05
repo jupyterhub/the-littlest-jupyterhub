@@ -40,16 +40,14 @@ Maximum memory allowed per user
 
 Depending on what kinda work your users are doing, they will use different amounts
 of memory. The easiest way to determine this is to run through a typical user
-workflow yourself, and measure how much memory is used.
+workflow yourself, and measure how much memory is used. You can use :ref:`howto/nbresuse`
+to determine how much memory your user is using.
 
-For example, you can begin running a Jupyter Notebook session on your JupyterHub, then open a
-terminal on the JupyterHub and use ``top`` to track how much memory you use
-as you go through the material. A good rule of thumb is to take the maximum amount of memory you used during
+A good rule of thumb is to take the maximum amount of memory you used during
 your session, and add 20-40% headroom for users to 'play around'. This is the
 maximum amount of memory that should be given to each user.
 
-If users use *more* than this alloted amount of memory, their kernel will restart (and all
-their progress in the current session will be lost).
+If users use *more* than this alloted amount of memory, their notebook kernel will restart.
 
 CPU
 ===
