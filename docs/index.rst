@@ -61,6 +61,7 @@ How-To guides answer the question 'How do I...?' for a lot of topics.
    howto/share-data
    howto/notebook-interfaces
    howto/resource-estimation
+   howto/nbresuse
 
 Authentication
 --------------

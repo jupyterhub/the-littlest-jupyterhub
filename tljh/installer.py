@@ -203,6 +203,11 @@ def ensure_user_environment(user_requirements_txt_file):
         with conda.download_miniconda_installer(miniconda_version, miniconda_installer_md5) as installer_path:
             conda.install_miniconda(installer_path, USER_ENV_PREFIX)
 
+    # nbresuse needs psutil, which requires gcc
+    apt.install_packages([
+        'gcc'
+    ])
+
     conda.ensure_conda_packages(USER_ENV_PREFIX, [
         # Conda's latest version is on conda much more so than on PyPI.
         'conda==4.5.8'
@@ -216,7 +221,9 @@ def ensure_user_environment(user_requirements_txt_file):
         'jupyterlab==0.32.1',
         'nteract-on-jupyter==1.8.1',
         # nbgitpuller for easily pulling in Git repositories
-        'nbgitpuller==0.6.1'
+        'nbgitpuller==0.6.1',
+        # nbresuse to show people how much RAM they are using
+        'nbresuse==0.3.0'
     ])
 
     if user_requirements_txt_file:
