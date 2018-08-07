@@ -68,6 +68,7 @@ with your JupyterHub.
    :titlesonly:
 
    howto/auth/dummy
+   howto/auth/github
 
 Topic Guides
 ============
