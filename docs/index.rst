@@ -33,33 +33,31 @@ Ubuntu 18.04. We have a bunch of tutorials to get you started.
      install/custom-server
 
 Once you are ready to run your server for real,
-it's a good idea to proceed directly to :doc:`howto/https`.
-
-Tutorials
-=========
-
-Tutorials guide you step-by-step through accomplishing a specific task.
-
-.. toctree::
-   :titlesonly:
-
-   tutorials/nbgitpuller.rst
+it's a good idea to proceed directly to :doc:`howto/admin/https`.
 
 How-To Guides
 =============
 
 How-To guides answer the question 'How do I...?' for a lot of topics.
 
+Content and Data
+----------------
+
 .. toctree::
    :titlesonly:
 
-   howto/https
-   howto/user-environment
-   howto/admin-users
-   howto/share-data
-   howto/notebook-interfaces
-   howto/resource-estimation
-   howto/nbresuse
+   howto/content/nbgitpuller
+   howto/content/add-data
+   howto/content/share-data
+
+The user environment
+--------------------
+
+.. toctree::
+   :titlesonly:
+
+   howto/envt/user-environment
+   howto/envt/notebook-interfaces
 
 Authentication
 --------------
@@ -73,6 +71,18 @@ with your JupyterHub. For more information on Authentication, see
 
    howto/auth/dummy
    howto/auth/github
+   howto/auth/firstuse
+
+Administration and security
+---------------------------
+
+.. toctree::
+   :titlesonly:
+
+   howto/admin/admin-users
+   howto/admin/resource-estimation
+   howto/admin/nbresuse
+   howto/admin/https
 
 Topic Guides
 ============
@@ -101,6 +111,7 @@ guides help you find what is broken & hopefully fix it.
 .. toctree::
    :titlesonly:
 
+   faq
    troubleshooting/logs
 
 Often, your issues are not related to TLJH itself but to the cloud provider

@@ -1,4 +1,4 @@
-.. _tutorials/nbgitpuller:
+.. _howto/content/nbgitpuller:
 
 ================================================
 Distributing materials to users with nbgitpuller
@@ -38,22 +38,24 @@ Pre-requisites
 Step 1: Generate nbgitpuller link
 =================================
 
+**Generate the link with a Binder app**.
+
 #. The easiest way to generate an nbgitpuller link is to use the
    `mybinder.org based application <https://mybinder.org/v2/gh/jupyterhub/nbgitpuller/master?urlpath=apps/binder%2Flink_generator.ipynb>`_.
    Open it, and wait for it to load.
 
-   .. image:: ../images/nbgitpuller/binder-progress.png
+   .. image:: ../../images/nbgitpuller/binder-progress.png
       :alt: Progress bar as the binder application loads
 
 #. A blank form with some help text will open up.
 
-   .. image:: ../images/nbgitpuller/blank-application.png
+   .. image:: ../../images/nbgitpuller/blank-application.png
       :alt: Blank application to make nbgitpuller links
 
-#. Enter the URL to your hub under ``hub_url``. Include ``http://`` or
-   ``https://`` as appropriate.
+#. Enter the IP address or URL to your JupyterHub under ``hub_url``.
+   Include ``http://`` or ``https://`` as appropriate.
 
-   .. image:: ../images/nbgitpuller/hub-url-application.png
+   .. image:: ../../images/nbgitpuller/hub-url-application.png
       :alt: Application with hub_url filled out
 
 #. Enter the URL to your Git repository. This could be from GitHub,
@@ -62,7 +64,7 @@ Step 1: Generate nbgitpuller link
    typing the URL here, you'll notice that the link is already
    being printed below!
 
-   .. image:: ../images/nbgitpuller/git-url-application.png
+   .. image:: ../../images/nbgitpuller/git-url-application.png
       :alt: Application with git_url filled out
 
 #. If your git repository is using a non-default branch name,
@@ -74,7 +76,7 @@ Step 1: Generate nbgitpuller link
    Make sure this file exists, otherwise users will get a 'File not found'
    error.
 
-   .. image:: ../images/nbgitpuller/filepath-application.png
+   .. image:: ../../images/nbgitpuller/filepath-application.png
       :alt: Application with filepath filled out
 
    If you do not specify a file path, the user will be shown the
@@ -87,6 +89,25 @@ Step 1: Generate nbgitpuller link
 The link printed at the bottom of the form can be distributed to students
 now! You can also click it to test that it is working as intended,
 and adjust the form values until you get something you are happy with.
+
+**Hand-craft your nbgitpuller link**
+
+If you'd prefer to hand-craft your ``nbgitpuller`` link (e.g. if the Binder
+link above doesn't work), you can use the following pattern::
+
+   http://<my-jhub-address>/hub/user-redirect/git-pull?repo=<your-repo-url>&branch=<your-branch-name>&subPath=<subPath>&app=<notebook | lab>
+
+- **repo** is the URL of the git repository you want to clone. This parameter is required.
+- **branch** is the branch name to use when cloning from the repository.
+  This parameter is optional and defaults to ``master``.
+- **subPath** is the path of the directory / notebook inside the repo to launch after cloning.
+  This parameter is optional, and defaults to opening the base directory of the linked Git repository.
+- **app** This parameter is optional and defaults to either the environment variable
+  `NBGITPULLER_APP`'s value or `notebook` if it is undefined. The allowed values
+  are `lab` and `notebook`, the value will determine in what application view
+  you end up in.
+- **urlPath** will, if specified, override `app` and `subPath` and redirect
+  blindly to the specified path.
 
 Step 2: Users click on the nbgitpuller link
 ===========================================
@@ -102,7 +123,7 @@ Step 2: Users click on the nbgitpuller link
 #. Users will see a progress bar as the git repository is fetched & any
    automatic merging required is performed.
 
-   .. image:: ../images/nbgitpuller/pull-progress.png
+   .. image:: ../../images/nbgitpuller/pull-progress.png
       :alt: Progress bar with git repository being pulled
 
 #. Users will now be redirected to the notebook specified in the URL!
