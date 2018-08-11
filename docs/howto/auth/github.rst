@@ -43,8 +43,8 @@ Step 1: Create a GitHub application
    IP address** to it. In this case, **you must update your GitHub application information**
    with the new IP address.
 
-Configure your JupyterHub to use the GitHub Oathenticator
-=========================================================
+Configure your JupyterHub to use the GitHub Oauthenticator
+==========================================================
 
 We'll use the ``tljh-config`` tool to configure your JupyterHub's authentication.
 For more information on ``tljh-config``, see :ref:`topic/tljh-config`.
