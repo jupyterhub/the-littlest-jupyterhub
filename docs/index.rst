@@ -3,7 +3,8 @@ The Littlest JupyterHub
 =======================
 
 A simple `JupyterHub <https://github.com/jupyterhub/jupyterhub>`_ distribution for
-a small (0-100) number of users on a single server.
+a small (0-100) number of users on a single server. We recommend reading
+:ref:`topic/whentouse` to determine if this is the right tool for you.
 
 Development Status
 ==================
@@ -84,6 +85,7 @@ Topic guides provide in-depth explanations of specific topics.
 .. toctree::
    :titlesonly:
 
+   topic/whentouse
    topic/requirements
    topic/security
    topic/customizing-installer
