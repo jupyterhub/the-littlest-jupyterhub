@@ -2,15 +2,17 @@ import argparse
 import os
 import secrets
 import subprocess
+import itertools
 import sys
 import time
 import logging
 from urllib.error import HTTPError
 from urllib.request import urlopen, URLError
+import pluggy
 
 from ruamel.yaml import YAML
 
-from tljh import conda, systemd, traefik, user, apt
+from tljh import conda, systemd, traefik, user, apt, hooks
 from tljh.config import INSTALL_PREFIX, HUB_ENV_PREFIX, USER_ENV_PREFIX, STATE_DIR
 
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -305,6 +307,44 @@ def ensure_symlinks(prefix):
             return
     os.symlink(tljh_config_src, tljh_config_dest)
 
+def run_plugin_actions(plugins):
+    """
+    Run installer hooks defined in plugins
+    """
+
+    # Install plugins
+    if plugins:
+        conda.ensure_pip_packages(HUB_ENV_PREFIX, plugins)
+
+    # Set up plugin infrastructure
+    pm = pluggy.PluginManager('tljh')
+    pm.add_hookspecs(hooks)
+    pm.load_setuptools_entrypoints('tljh')
+
+    # Install apt packages
+    apt_packages = list(set(itertools.chain(*pm.hook.tljh_extra_apt_packages())))
+    if apt_packages:
+        logger.info('Installing {} apt packages collected from plugins: {}'.format(
+            len(apt_packages), ' '.join(apt_packages)
+        ))
+        apt.install_packages(apt_packages)
+
+    # Install conda packages
+    conda_packages = list(set(itertools.chain(*pm.hook.tljh_extra_user_conda_packages())))
+    if conda_packages:
+        logger.info('Installing {} conda packages collected from plugins: {}'.format(
+            len(conda_packages), ' '.join(conda_packages)
+        ))
+        conda.ensure_conda_packages(USER_ENV_PREFIX, conda_packages)
+
+    # Install pip packages
+    pip_packages = list(set(itertools.chain(*pm.hook.tljh_extra_user_pip_packages())))
+    if pip_packages:
+        logger.info('Installing {} pip packages collected from plugins: {}'.format(
+            len(pip_packages), ' '.join(pip_packages)
+        ))
+        conda.ensure_pip_packages(USER_ENV_PREFIX, pip_packages)
+
 
 def main():
     argparser = argparse.ArgumentParser()
@@ -317,10 +357,13 @@ def main():
         '--user-requirements-txt-url',
         help='URL to a requirements.txt file that should be installed in the user enviornment'
     )
+    argparser.add_argument(
+        '--plugin',
+        nargs='*',
+        help='Plugin pip-specs to install'
+    )
 
     args = argparser.parse_args()
-
-
 
     ensure_admins(args.admin)
 
@@ -334,6 +377,9 @@ def main():
     ensure_jupyterhub_service(HUB_ENV_PREFIX)
     ensure_jupyterhub_running()
     ensure_symlinks(HUB_ENV_PREFIX)
+
+    # Run installer plugins last
+    run_plugin_actions(args.plugin)
 
     logger.info("Done!")
 
