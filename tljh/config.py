@@ -19,6 +19,7 @@ import re
 import sys
 
 from ruamel.yaml import YAML
+from ruamel.yaml.comments import CommentedMap, CommentedSeq
 yaml = YAML(typ='rt')
 
 
@@ -50,12 +51,11 @@ def set_item_in_config(config, property_path, value):
         else:
             # If we are asked to create new non-leaf nodes, we will always make them dicts
             # This means setting is *destructive* - will replace whatever is down there!
-            if cur_path not in cur_part or not isinstance(cur_part[cur_path], dict):
+            if cur_path not in cur_part or not _is_dict(cur_part[cur_path]):
                 cur_part[cur_path] = {}
             cur_part = cur_part[cur_path]
 
     return config_copy
-
 
 def add_item_to_config(config, property_path, value):
     """
@@ -68,7 +68,7 @@ def add_item_to_config(config, property_path, value):
     for i, cur_path in enumerate(path_components):
         if i == len(path_components) - 1:
             # Final component, it must be a list and we append to it
-            if cur_path not in cur_part or not isinstance(cur_part[cur_path], list):
+            if cur_path not in cur_part or not _is_list(cur_part[cur_path]):
                 cur_part[cur_path] = []
             cur_part = cur_part[cur_path]
 
@@ -76,7 +76,7 @@ def add_item_to_config(config, property_path, value):
         else:
             # If we are asked to create new non-leaf nodes, we will always make them dicts
             # This means setting is *destructive* - will replace whatever is down there!
-            if cur_path not in cur_part or not isinstance(cur_part[cur_path], dict):
+            if cur_path not in cur_part or not _is_dict(cur_part[cur_path]):
                 cur_part[cur_path] = {}
             cur_part = cur_part[cur_path]
 
@@ -94,12 +94,12 @@ def remove_item_from_config(config, property_path, value):
     for i, cur_path in enumerate(path_components):
         if i == len(path_components) - 1:
             # Final component, it must be a list and we append to it
-            if cur_path not in cur_part or not isinstance(cur_part[cur_path], list):
+            if cur_path not in cur_part or not _is_list(cur_part[cur_path]):
                 raise ValueError(f'{property_path} is not a list')
             cur_part = cur_part[cur_path]
             cur_part.remove(value)
         else:
-            if cur_path not in cur_part or not isinstance(cur_part[cur_path], dict):
+            if cur_path not in cur_part or not _is_dict(cur_part[cur_path]):
                 raise ValueError(f'{property_path} does not exist in config!')
             cur_part = cur_part[cur_path]
 
@@ -207,6 +207,14 @@ def parse_value(value_str):
     else:
         # it's a string
         return value_str
+
+
+def _is_dict(item):
+    return isinstance(item, (dict, CommentedMap))
+
+
+def _is_list(item):
+    return isinstance(item, (list, CommentedSeq))
 
 
 def main(argv=None):

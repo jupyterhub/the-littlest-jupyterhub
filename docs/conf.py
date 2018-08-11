@@ -17,7 +17,7 @@ def setup(app):
     app.add_javascript("https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js")
 
 # Enable MathJax for Math
-extensions = ['sphinx.ext.mathjax']
+extensions = ['sphinx.ext.mathjax', 'sphinx_copybutton.sphinx_copybutton']
 
 # The master toctree document.
 master_doc = 'index'
