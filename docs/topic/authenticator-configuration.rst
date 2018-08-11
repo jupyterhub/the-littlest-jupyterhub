@@ -27,7 +27,7 @@ Setting authenticator properties
 JupyterHub authenticators are customized by setting *traitlet properties*. In the authenticator's
 documentation, you will find these are usually represented as:
 
-.. code-block::
+.. code-block:: python
 
    c.<AuthenticatorName>.<property-name> = <some-value>
 
@@ -40,7 +40,7 @@ You can set these with ``tljh-config`` with:
 Example
 -------
 
-LDAPAuthenticator's `documentation <https://github.com/jupyterhub/ldapauthenticator#required-configuration>`_
+`LDAPAuthenticator's documentation <https://github.com/jupyterhub/ldapauthenticator#required-configuration>`_
 lists the various configuration options you can set for LDAPAuthenticator.
 When the documentation asks you to set ``LDAPAuthenticator.server_address``
 to some value, you can do that with the following command:

@@ -4,6 +4,12 @@
 Installing on your own server
 =============================
 
+.. note::
+
+    You should use this if your cloud provider does not already have a direct tutorial,
+    or if you have experience setting up servers.
+
+
 Goal
 ====
 
