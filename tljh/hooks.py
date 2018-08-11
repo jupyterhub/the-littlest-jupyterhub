@@ -31,3 +31,16 @@ def tljh_extra_apt_packages():
     These will be installed before additional pip or conda packages.
     """
     pass
+
+
+@hookspec
+def tljh_config_post_install(config):
+    """
+    Modify on-disk tljh-config after installation.
+
+    config is a dict-like object that should be modified
+    in-place. The contents of the on-disk config.yaml will
+    be the serialized contents of config, so try to not
+    overwrite anything the user might have explicitly set.
+    """
+    pass
