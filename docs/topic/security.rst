@@ -50,7 +50,8 @@ even after you remove them from JupyterHub. Admins should manually remove the us
 from the server & archive their home directories as needed. For example, the
 following command deletes the unix user associated with the JupyterHub user ``yuvipanda``.
 
-.. code-block::
+.. code-block:: bash
+
    sudo userdel jupyter-yuvipanda
 
 If the user removed from the server is an admin, extra care must be taken
@@ -69,4 +70,4 @@ HTTPS
 =====
 
 Any internet-facing JupyterHub should use HTTPS to secure its traffic. For
-information on how to use HTTPS with your JupyterHub, see :ref:`_howto/https`.
+information on how to use HTTPS with your JupyterHub, see :ref:`howto/https`.

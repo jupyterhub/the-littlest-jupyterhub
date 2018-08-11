@@ -50,18 +50,18 @@ __ http://docutils.sourceforge.net/
 
 To build the documentation locally, install Sphinx:
 
-.. console::
+.. code-block:: console
 
      $ pip install Sphinx
 
 Then from the ``docs`` directory, build the HTML:
 
-.. console::
+.. code-block:: console
 
      $ make html
 
 To get started contributing, you'll want to read the :ref:`reStructuredText
-reference <sphinx:rst-index>`.
+reference <sphinx:rst-index>`
 
 Your locally-built documentation will be themed differently than the
 documentation at `the-littlest-jupyterhub.readthedocs.io <https://the-littlest-jupyterhub.readthedocs.io>`_.

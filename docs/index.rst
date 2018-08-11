@@ -30,10 +30,7 @@ Ubuntu 18.04. We have a bunch of tutorials to get you started.
      install/digitalocean
      install/jetstream
      install/google
-
-- :ref:`install/custom`.
-  You should use this if your cloud provider does not already have a direct tutorial,
-  or if you have experience setting up servers.
+     install/custom-server
 
 Once you are ready to run your server for real,
 it's a good idea to proceed directly to :doc:`howto/https`.
