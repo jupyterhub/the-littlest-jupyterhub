@@ -29,6 +29,13 @@ async def test_user_code_execute():
     hub_url = 'http://localhost'
     username = secrets.token_hex(8)
 
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummyauthenticator.DummyAuthenticator')).wait()
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
+
+    # FIXME: wait for reload to finish & hub to come up
+    # Should be part of tljh-config reload
+    await asyncio.sleep(1)
+
     async with User(username, hub_url, partial(login_dummy, password='')) as u:
             await u.login()
             await u.ensure_server()
@@ -49,7 +56,7 @@ async def test_user_admin_add():
     hub_url = 'http://localhost'
     username = secrets.token_hex(8)
 
-
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummyauthenticator.DummyAuthenticator')).wait()
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'add-item', 'users.admin', username)).wait()
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
 
@@ -79,6 +86,7 @@ async def test_user_admin_remove():
     hub_url = 'http://localhost'
     username = secrets.token_hex(8)
 
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummyauthenticator.DummyAuthenticator')).wait()
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'add-item', 'users.admin', username)).wait()
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
 
