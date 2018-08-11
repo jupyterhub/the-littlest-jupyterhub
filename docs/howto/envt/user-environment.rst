@@ -6,7 +6,7 @@ Install conda, pip or apt packages
 
 :abbr:`TLJH (The Littlest JupyterHub)` starts all users in the same `conda <https://conda.io/docs/>`_
 environment. Packages / libraries installed in this environment are available
-to all users on the JupyterHub. Users with :ref:`admin rights <howto/admin-users>` can install packages
+to all users on the JupyterHub. Users with :ref:`admin rights <howto/admin/admin-users>` can install packages
 easily.
 
 .. _howto/envt/user_environment_pip:

@@ -16,7 +16,7 @@ contained in the link's target repository is downloaded to the user's home
 directory. Note that a copy of the dataset will be made for each user.
 
 For information on creating and sharing ``nbgitpuller`` links, see
-:ref:`tutorials/nbgitpuller`.
+:ref:`howto/content/nbgitpuller`.
 
 Option 2: Create a read-only shared folder for data
 ===================================================

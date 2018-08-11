@@ -70,4 +70,4 @@ HTTPS
 =====
 
 Any internet-facing JupyterHub should use HTTPS to secure its traffic. For
-information on how to use HTTPS with your JupyterHub, see :ref:`_howto/admin/https`.
+information on how to use HTTPS with your JupyterHub, see :ref:`howto/admin/https`.
