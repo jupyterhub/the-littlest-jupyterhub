@@ -10,12 +10,6 @@ version = ''
 # The full version, including alpha/beta/rc tags
 release = 'v0.1'
 
-# Add custom CSS/Javascript
-def setup(app):
-    app.add_javascript("custom.js")
-    app.add_stylesheet("custom.css")
-    app.add_javascript("https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js")
-
 # Enable MathJax for Math
 extensions = ['sphinx.ext.mathjax', 'sphinx_copybutton.sphinx_copybutton']
 
