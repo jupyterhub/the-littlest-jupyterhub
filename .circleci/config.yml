@@ -65,12 +65,12 @@ jobs:
             - run:
                 name: build systemd image
                 command: |
-                    python3 .circleci/integration-test.py build-image
+                    .circleci/integration-test.py build-image
 
             - run:
-                name: Run hub tests
+                name: Run basic tests tests
                 command: |
-                    python3 .circleci/integration-test.py run-test test_hub.py
+                    .circleci/integration-test.py run-test basic-tests test_hub.py test_install.py test_extensions.py
 
 
 

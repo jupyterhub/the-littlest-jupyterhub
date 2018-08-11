@@ -120,6 +120,7 @@ def main():
     argparser = argparse.ArgumentParser()
     subparsers = argparser.add_subparsers(dest='action')
 
+    subparsers.add_parser('build-image')
     subparsers.add_parser('stop-container').add_argument(
         'container_name'
     )
@@ -152,6 +153,8 @@ def main():
         copy_to_container(args.container_name, args.src, args.dest)
     elif args.action == 'stop-container':
         stop_container(args.container_name)
+    elif args.action == 'build-image':
+        build_systemd_image(image_name, 'integration-tests')
 
 
 if __name__ == '__main__':
