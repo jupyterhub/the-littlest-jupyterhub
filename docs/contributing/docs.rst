@@ -60,8 +60,8 @@ Then from the ``docs`` directory, build the HTML:
 
      $ make html
 
-To get started contributing, you'll want to read the `reStructuredText
-reference <http://www.sphinx-doc.org/en/master/usage/restructuredtext/>`_.
+To get started contributing, you'll want to read the :ref:`reStructuredText
+reference <sphinx:rst-index>`
 
 Your locally-built documentation will be themed differently than the
 documentation at `the-littlest-jupyterhub.readthedocs.io <https://the-littlest-jupyterhub.readthedocs.io>`_.
