@@ -65,41 +65,14 @@ jobs:
             - run:
                 name: build systemd image
                 command: |
-                    python3 .circleci/integration-test.py build-image
+                    .circleci/integration-test.py build-image
 
             - run:
-                name: start systemd image
+                name: Run basic tests tests
                 command: |
-                    python3 .circleci/integration-test.py start-container
-
-            - run:
-                name: run tljh installer
-                command: |
-                    python3 .circleci/integration-test.py copy . /srv/src
-                    python3 .circleci/integration-test.py run 'python3 /srv/src/bootstrap/bootstrap.py'
+                    .circleci/integration-test.py run-test basic-tests test_hub.py test_install.py test_extensions.py
 
 
-            - run:
-                name: switch to dummyauthenticator
-                command: |
-                    python3 .circleci/integration-test.py run '/opt/tljh/hub/bin/tljh-config set auth.type dummyauthenticator.DummyAuthenticator'
-                    python3 .circleci/integration-test.py run '/opt/tljh/hub/bin/tljh-config reload'
-
-            - run:
-                name: print systemd status + logs
-                command: |
-                    python3 .circleci/integration-test.py run 'journalctl --no-pager'
-                    python3 .circleci/integration-test.py run 'systemctl --no-pager status jupyterhub configurable-http-proxy'
-
-            - run:
-                name: install integration test requirements
-                command: |
-                    python3 .circleci/integration-test.py run 'python3 -m pip install -r /srv/src/integration-tests/requirements.txt'
-
-            - run:
-                name: run integration tests
-                command: |
-                    python3 .circleci/integration-test.py run 'python3 -m pytest -v /srv/src/integration-tests'
 
     documentation:
         docker:
