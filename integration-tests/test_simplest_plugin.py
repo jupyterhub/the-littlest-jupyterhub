@@ -12,7 +12,7 @@ def test_apt_packages():
     """
     Test extra apt packages are installed
     """
-    assert os.path.exists('/usr/bin/sl')
+    assert os.path.exists('/usr/games/sl')
 
 
 def test_pip_packages():
