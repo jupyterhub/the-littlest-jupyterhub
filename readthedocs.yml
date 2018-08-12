@@ -1,6 +1,0 @@
-name: the-littlest-jupyterhub
-type: sphinx
-conda:
-    file: docs/environment.yml
-python:
-  version: 3
