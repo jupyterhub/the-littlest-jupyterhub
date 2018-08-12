@@ -1,4 +1,5 @@
-# Support markdown too
+import os
+
 source_suffix = ['.rst']
 
 project = 'The Littlest JupyterHub'
@@ -38,7 +39,10 @@ html_theme = 'alabaster'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+# Do this only if _static exists, otherwise this will error
+here = os.path.dirname(os.path.abspath(__file__))
+if os.path.exists(os.path.join(here, '_static')):
+    html_static_path = ['_static']
 
 # Configure the sidebar to be how we want it to be
 # We don't have 'navigation' here, since it is very cluttered
