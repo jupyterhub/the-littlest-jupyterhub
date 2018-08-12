@@ -104,7 +104,7 @@ jobs:
                 name: install dependencies
                 command: |
                     pip install sphinx
-                    pip install -r docs/doc-requirements.txt
+                    pip install -r docs/requirements.txt
 
             - save_cache:
                 paths:
