@@ -68,10 +68,16 @@ jobs:
                     .circleci/integration-test.py build-image
 
             - run:
-                name: Run basic tests tests
+                name: Run basic tests
                 command: |
                     .circleci/integration-test.py run-test basic-tests test_hub.py test_install.py test_extensions.py
 
+            - run:
+                name: Run plugin tests
+                command: |
+                    .circleci/integration-test.py run-test \
+                        --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
+                        plugins test_simplest_plugin.py
 
 
     documentation:
