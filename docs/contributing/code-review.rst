@@ -47,3 +47,5 @@ add more tests.
 
 If you are unsure what kind of tests to add for your pull request, other
 contributors to the repo will be happy to help guide you!
+
+See :ref:`contributing/tests` for guidelines on writing tests.
