@@ -8,7 +8,7 @@ This script is run as:
     curl <script-url> | sudo python3 -
 
 Constraints:
-  - Be compatible with Python 3.4 (since we support Ubuntu 16.04)
+  - Be compatible with Python 3.6 (since we support Ubuntu 16.04)
   - Use stdlib modules only
 """
 import os
@@ -36,17 +36,17 @@ def main():
     logger.setLevel(logging.INFO)
 
     logger.info('Checking if TLJH is already installed...')
-    if os.path.exists(os.path.join(hub_prefix, 'bin', 'python3')):
+    if os.path.exists(os.path.join(hub_prefix, 'bin', 'python3.6')):
         logger.info('TLJH already installed, upgrading...')
         initial_setup = False
     else:
         logger.info('Setting up hub environment')
         initial_setup = True
         subprocess.check_output(['apt-get', 'update', '--yes'], stderr=subprocess.STDOUT)
-        subprocess.check_output(['apt-get', 'install', '--yes', 'python3', 'python3-venv'], stderr=subprocess.STDOUT)
+        subprocess.check_output(['apt-get', 'install', '--yes', 'python3.6', 'python3.6-venv'], stderr=subprocess.STDOUT)
         logger.info('Installed python & virtual environment')
         os.makedirs(hub_prefix, exist_ok=True)
-        subprocess.check_output(['python3', '-m', 'venv', hub_prefix], stderr=subprocess.STDOUT)
+        subprocess.check_output(['python3.6', '-m', 'venv', hub_prefix], stderr=subprocess.STDOUT)
         logger.info('Set up hub virtual environment')
 
     if initial_setup:
@@ -70,9 +70,9 @@ def main():
 
     logger.info('Starting TLJH installer...')
     os.execv(
-        os.path.join(hub_prefix, 'bin', 'python3'),
+        os.path.join(hub_prefix, 'bin', 'python3.6'),
         [
-            os.path.join(hub_prefix, 'bin', 'python3'),
+            os.path.join(hub_prefix, 'bin', 'python3.6'),
             '-m',
             'tljh.installer',
         ] + sys.argv[1:]
