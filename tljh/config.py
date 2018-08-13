@@ -192,6 +192,21 @@ def reload_component(component):
         print('Proxy reload with new configuration complete')
 
 
+def uninstall_tljh(confirm):
+    """Uninstall TLJH entirely from a machine."""
+    if confirm is False:
+        print('To confirm that you wish to uninstall JupyterHub entirely, '
+              're-run this command with the text "confirm", like so: \n\n'
+              '     tljh-config uninstall confirm')
+        return
+
+    # Uninstall all JupyterHub components
+    os.removedirs('/opt/tljh')
+    cmd = "curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py | sudo python3 - --admin <admin-user-name>"
+    print('JupyterHub has been removed. To re-install it, you may run the '
+          'following command:\n\n {}'.format(cmd))
+
+
 def parse_value(value_str):
     """Parse a value string"""
     if value_str is None:
@@ -285,6 +300,16 @@ def main(argv=None):
         nargs='?'
     )
 
+    uninstall_parser = subparsers.add_parser(
+        'uninstall',
+        help="Uninstall JupyterHub and delete all JupyterHub-related files"
+    )
+    uninstall_parser.add_argument(
+        'confirm',
+        help='Confirm that you really wish to uninstall JupyterHub entirely.',
+        default=False
+    )
+
     args = argparser.parse_args(argv)
 
     if args.action == 'show':
@@ -297,6 +322,8 @@ def main(argv=None):
         remove_config_value(args.config_path, args.key_path, parse_value(args.value))
     elif args.action == 'reload':
         reload_component(args.component)
+    elif args.action == 'uninstall':
+        uninstall_tljh(args.confirm)
     else:
         argparser.print_help()
 
