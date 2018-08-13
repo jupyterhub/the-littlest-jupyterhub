@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 
@@ -40,3 +41,11 @@ def test_nbextensions():
 
     # Ensure we have 'OK' messages in our stdout, to make sure everything is importable
     proc.stderr.decode() == '      - Validating: \x1b[32mOK\x1b[0m\n' * len(extensions)
+
+
+def test_labextensions():
+    """
+    Validate labextensions we want installed
+    """
+    # Currently we only install jupyterhub
+    assert os.path.exists('/opt/tljh/user/bin/jupyter-labhub')
