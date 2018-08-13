@@ -111,7 +111,6 @@ guides help you find what is broken & hopefully fix it.
 .. toctree::
    :titlesonly:
 
-   faq
    troubleshooting/logs
 
 Often, your issues are not related to TLJH itself but to the cloud provider
