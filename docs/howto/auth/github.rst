@@ -57,19 +57,19 @@ For more information on ``tljh-config``, see :ref:`topic/tljh-config`.
 
 #. Configure the GitHub OAuthenticator to use your client ID and secret with the following commands::
 
-     sudo -E tljh-config set auth.GitHubOAuthenticator.client_id '<my-tljh-client-id>'
+     sudo tljh-config set auth.GitHubOAuthenticator.client_id '<my-tljh-client-id>'
 
    ::
 
-     sudo -E tljh-config set auth.GitHubOAuthenticator.client_secret '<my-tljh-client-secret>'
+     sudo tljh-config set auth.GitHubOAuthenticator.client_secret '<my-tljh-client-secret>'
 
 #. Tell your JupyterHub to *use* the GitHub OAuthenticator for authentication::
 
-     sudo -E tljh-config set auth.type oauthenticator.github.GitHubOAuthenticator
+     sudo tljh-config set auth.type oauthenticator.github.GitHubOAuthenticator
 
 #. Restart your JupyterHub so that new users see these changes::
 
-     sudo -E tljh-config reload
+     sudo tljh-config reload
 
 Confirm that the new authentactor works
 =======================================

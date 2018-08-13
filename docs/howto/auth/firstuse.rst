@@ -16,8 +16,8 @@ Enabling the authenticator
 
 #. Enable the authenticator and reload config to apply the configuration:
 
-   sudo -E tljh-config set auth.type firstuseauthenticator.FirstUseAuthenticator
-   sudo -E tljh-config reload
+   sudo tljh-config set auth.type firstuseauthenticator.FirstUseAuthenticator
+   sudo tljh-config reload
 
 Users who are currently logged in will continue to be logged in. When they
 log out and try to log back in, they will be asked to provide a username and

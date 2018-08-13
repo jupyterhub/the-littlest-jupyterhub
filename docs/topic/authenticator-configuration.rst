@@ -35,7 +35,7 @@ You can set these with ``tljh-config`` with:
 
 .. code-block:: bash
 
-   sudo -E tljh-config set auth.<AuthenticatorName>.<property-name> <some-value>
+   sudo tljh-config set auth.<AuthenticatorName>.<property-name> <some-value>
 
 Example
 -------
@@ -47,7 +47,7 @@ to some value, you can do that with the following command:
 
 .. code-block:: bash
 
-   sudo -E tljh-config set auth.LDAPAuthenticator.server_address = 'my-ldap-server'
+   sudo tljh-config set auth.LDAPAuthenticator.server_address = 'my-ldap-server'
 
 Most authenticators require you set multiple configuration options before you can
 enable them. Read the authenticator's documentation carefully for more information.
@@ -67,13 +67,13 @@ You can accomplish the same with ``tljh-config``:
 
 .. code-block:: bash
 
-   sudo -E tljh-config set auth.type <fully-qualified-authenticator-name>
+   sudo tljh-config set auth.type <fully-qualified-authenticator-name>
 
 Once enabled, you need to reload JupyterHub for the config to take effect.
 
 .. code-block:: bash
 
-   sudo -E tljh-config reload
+   sudo tljh-config reload
 
 Try logging in a separate incognito window to check if your configuration works. This
 lets you preserve your terminal in case there were errors. If there are
@@ -88,5 +88,5 @@ Assuming you have already configured it, the following commands enable LDAPAuthe
 
 .. code-block:: bash
 
-   sudo -E tljh-config set auth.type ldapauthenticator.LDAPAuthenticator
-   sudo -E tljh-config reload
+   sudo tljh-config set auth.type ldapauthenticator.LDAPAuthenticator
+   sudo tljh-config reload

@@ -36,19 +36,19 @@ You can change the default interface users get when they log in by modifying
 
    .. code-block:: yaml
 
-      sudo -E tljh-config set user_environment.default_app jupyterlab
+      sudo tljh-config set user_environment.default_app jupyterlab
 
 #. Alternatively, to launch **nteract** when users log in, run the following in the admin console:
 
    .. code-block:: yaml
 
-      sudo -E tljh-config set user_environment.default_app nteract
+      sudo tljh-config set user_environment.default_app nteract
 
 #. Apply the changes by restarting JupyterHub. This should not disrupt current users.
 
    .. code-block:: yaml
 
-      sudo -E tljh-config reload
+      sudo tljh-config reload
 
    If this causes problems, check the :ref:`troubleshoot_logs_jupyterhub` for clues
    on what went wrong.

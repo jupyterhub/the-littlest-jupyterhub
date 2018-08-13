@@ -78,8 +78,8 @@ admin terminal:
 
 .. code-block:: bash
 
-   sudo -E tljh-config add-item users.admin <username>
-   sudo -E tljh-config reload
+   sudo tljh-config add-item users.admin <username>
+   sudo tljh-config reload
 
 If the user is already using the JupyterHub, they might have to stop and
 start their server from the control panel to gain new powers.
@@ -92,8 +92,8 @@ an admin terminal:
 
 .. code-block:: bash
 
-   sudo -E tljh-config remove-item users.admin <username>
-   sudo -E tljh-config reload
+   sudo tljh-config remove-item users.admin <username>
+   sudo tljh-config reload
 
 If the user is already using the JupyterHub, they will continue to have
 some of their admin powers until their server is stopped. Another admin

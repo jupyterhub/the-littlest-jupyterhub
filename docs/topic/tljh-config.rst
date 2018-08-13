@@ -27,7 +27,7 @@ set a particular property with the following command:
 
 .. code-block:: bash
 
-   sudo -E tljh-config set <property-path> <value>
+   sudo tljh-config set <property-path> <value>
 
 
 where:
@@ -42,7 +42,7 @@ do so with the following:
 
 .. code-block:: bash
 
-   sudo -E tljh-config set auth.DummyAuthenticator.password mypassword
+   sudo tljh-config set auth.DummyAuthenticator.password mypassword
 
 
 This can only set string and numerical properties, not lists.
@@ -54,7 +54,7 @@ To see the current configuration, you can run the following command:
 
 .. code-block:: bash
 
-   sudo -E tljh-config show
+   sudo tljh-config show
 
 This will print the current configuration of your TLJH. This is very
 useful when asking for support!
@@ -67,7 +67,7 @@ it to take effect. You can do so with:
 
 .. code-block:: bash
 
-   sudo -E tljh-config reload
+   sudo tljh-config reload
 
 This should not affect any running users. The JupyterHub will be
 restarted and loaded with the new configuration.

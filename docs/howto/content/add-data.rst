@@ -81,7 +81,7 @@ time. You can download it from your browser `at this link <https://swcarpentry.g
 
    .. code-block:: bash
 
-      sudo -E apt-get install unzip
+      sudo apt install unzip
 
 #. Finally, unzip the the file:
 
