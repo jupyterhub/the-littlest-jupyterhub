@@ -1,4 +1,4 @@
-.. _howto/https:
+.. _howto/admin/https:
 
 ============
 Enable HTTPS

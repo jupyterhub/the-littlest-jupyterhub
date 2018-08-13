@@ -33,16 +33,15 @@ Step 1: Installing The Littlest JupyterHub
 
 #. Copy the text below, and paste it into the terminal. Replace
    ``<admin-user-name>`` with the name of the first **admin user** for this
-   JupyterHub. This admin user can log in after the JupyterHub is set up, and
+   JupyterHub. Choose any name you like (don't forget to replace the brackets!).
+   This admin user can log in after the JupyterHub is set up, and
    can configure it to their needs. **Remember to add your username**!
 
    .. code-block:: bash
 
-      curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
-        | sudo python3 - \
-          --admin <admin-user-name>
+      curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py | sudo python3 - --admin <admin-user-name>
 
-   .. note:
+   .. note::
 
       See :ref:`topic/installer-actions` if you want to understand exactly what the installer is doing.
       :ref:`topic/customizing-installer` documents other options that can be passed to the installer.
@@ -56,7 +55,8 @@ Step 1: Installing The Littlest JupyterHub
    .. image:: ../images/first-login.png
       :alt: JupyterHub log-in page
 
-#. Login using the **admin user name** you used in step 2, and a password. Use a
+#. Login using the **admin user name** you used in step 2. You can choose any
+   password that you wish. Use a
    strong password & note it down somewhere, since this will be the password for
    the admin user account from now on.
 

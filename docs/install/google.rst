@@ -83,7 +83,7 @@ Let's create the server on which we can run JupyterHub.
    .. image:: ../images/providers/google/machine-type-advanced.png
       :alt: Select a customized VM size
 
-   Check out our guide on How To :ref:`howto/resource-estimation` to help pick
+   Check out our guide on How To :ref:`howto/admin/resource-estimation` to help pick
    how much Memory / CPU your server needs.
 
 #. Under **Boot Disk**, click the **Change** button. This lets us change the
@@ -109,7 +109,7 @@ Let's create the server on which we can run JupyterHub.
    to a hard drive. **SSD persistent disk** gives you a faster but more expensive
    disk, similar to an SSD.
 
-   Check out our guide on How To :ref:`howto/resource-estimation` to help pick
+   Check out our guide on How To :ref:`howto/admin/resource-estimation` to help pick
    how much Disk space your server needs.
 
 #. Click the **Select** button to dismiss the Boot disk popup and go back to the

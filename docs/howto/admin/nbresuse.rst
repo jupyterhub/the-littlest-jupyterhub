@@ -1,4 +1,4 @@
-.. _howto/nbresuse:
+.. _howto/admin/nbresuse:
 
 =======================
 Check your memory usage
@@ -11,5 +11,5 @@ top right corner of the notebook interface. Note that this is memory usage
 for everything your user is running through the Jupyter notebook interface,
 not just the specific notebook it is shown on.
 
-.. image:: ../images/nbresuse.png
+.. image:: ../../images/nbresuse.png
    :alt: Memory limit / usage shown with nbresuse

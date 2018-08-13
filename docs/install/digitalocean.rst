@@ -43,7 +43,7 @@ Let's create the server on which we can run JupyterHub.
    (4GB RAM, 2CPUs, 20 USD / month) is not a bad start. You can resize your server
    later if you need.
 
-   Check out our guide on How To :ref:`howto/resource-estimation` to help pick
+   Check out our guide on How To :ref:`howto/admin/resource-estimation` to help pick
    how much Memory, CPU & disk space your server needs.
 
 #. Scroll down to **Select additional options**, and select **User data**.

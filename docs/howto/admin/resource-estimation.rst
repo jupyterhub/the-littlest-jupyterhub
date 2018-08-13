@@ -1,4 +1,4 @@
-.. _howto/resource-estimation:
+.. _howto/admin/resource-estimation:
 
 ===================================
 Estimate Memory / CPU / Disk needed
@@ -40,7 +40,7 @@ Maximum memory allowed per user
 
 Depending on what kinda work your users are doing, they will use different amounts
 of memory. The easiest way to determine this is to run through a typical user
-workflow yourself, and measure how much memory is used. You can use :ref:`howto/nbresuse`
+workflow yourself, and measure how much memory is used. You can use :ref:`howto/admin/nbresuse`
 to determine how much memory your user is using.
 
 A good rule of thumb is to take the maximum amount of memory you used during
