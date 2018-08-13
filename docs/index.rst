@@ -56,8 +56,8 @@ The user environment
 .. toctree::
    :titlesonly:
 
-   howto/envt/user-environment
-   howto/envt/notebook-interfaces
+   howto/env/user-environment
+   howto/env/notebook-interfaces
 
 Authentication
 --------------

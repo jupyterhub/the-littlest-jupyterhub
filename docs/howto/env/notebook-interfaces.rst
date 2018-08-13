@@ -1,4 +1,4 @@
-.. _howto/envt/notebook_interfaces:
+.. _howto/env/notebook_interfaces:
 
 =======================================
 Change default User Interface for users

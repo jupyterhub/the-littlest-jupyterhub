@@ -1,4 +1,4 @@
-.. _howto/envt/user_environment:
+.. _howto/env/user_environment:
 
 ==================================
 Install conda, pip or apt packages
@@ -9,7 +9,7 @@ environment. Packages / libraries installed in this environment are available
 to all users on the JupyterHub. Users with :ref:`admin rights <howto/admin/admin-users>` can install packages
 easily.
 
-.. _howto/envt/user_environment_pip:
+.. _howto/env/user_environment_pip:
 
 Installing pip packages
 =======================
@@ -39,7 +39,7 @@ almost 145,000 packages in it right now, so a lot of what you need is going to b
       If you get an error message like ``sudo: pip: command not found``,
       make sure you are not missing the ``-E`` parameter after ``sudo``.
 
-.. _howto/envt/user_environment_conda:
+.. _howto/env/user_environment_conda:
 
 Installing conda packages
 =========================
@@ -73,7 +73,7 @@ a community maintained repository of  conda packages.
       If you get an error message like ``sudo: conda: command not found``,
       make sure you are not missing the ``-E`` parameter after ``sudo``.
 
-.. _howto/envt/user_environment_apt:
+.. _howto/env/user_environment_apt:
 
 Installing apt packages
 =======================
