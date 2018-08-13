@@ -209,4 +209,4 @@ def test_symlinks():
     """
     Test we symlink tljh-config to /usr/local/bin
     """
-    assert os.path.exists('/usr/local/bin/tljh-config')
+    assert os.path.exists('/usr/bin/tljh-config')

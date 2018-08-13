@@ -37,7 +37,7 @@ steps:
 
    .. code-block:: bash
 
-      sudo -E mkdir -p /srv/data/my_shared_data_folder
+      sudo mkdir -p /srv/data/my_shared_data_folder
 
 #. **Download the data** into this folder. See :ref:`howto/content/add-data` for
    details on how to do this.

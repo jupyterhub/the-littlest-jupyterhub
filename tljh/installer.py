@@ -286,22 +286,24 @@ def ensure_jupyterhub_running(times=4):
 
 def ensure_symlinks(prefix):
     """
-    Ensure we symlink appropriate things into /usr/local/bin
+    Ensure we symlink appropriate things into /usr/bin
 
     We add the user conda environment to PATH for notebook terminals,
     but not the hub venv. This means tljh-config is not actually accessible.
 
-    We symlink to /usr/local/bin to 'fix' this. /usr/local/bin is the appropriate
-    place, and works with sudo -E
+    We symlink to /usr/bin and not /usr/local/bin, since /usr/local/bin is
+    not place, and works with sudo -E in sudo's search $PATH. We can work
+    around this with sudo -E and extra entries in the sudoers file, but this
+    is far more secure at the cost of upsetting some FHS purists.
     """
     tljh_config_src = os.path.join(prefix, 'bin', 'tljh-config')
-    tljh_config_dest = '/usr/local/bin/tljh-config'
+    tljh_config_dest = '/usr/bin/tljh-config'
     if os.path.exists(tljh_config_dest):
         if os.path.realpath(tljh_config_dest) != tljh_config_src:
             #  tljh-config exists that isn't ours. We should *not* delete this file,
             # instead we throw an error and abort. Deleting files owned by other people
             # while running as root is dangerous, especially with symlinks involved.
-            raise FileExistsError(f'/usr/local/bin/tljh-config exists but is not a symlink to {tljh_config_src}')
+            raise FileExistsError(f'/usr/bin/tljh-config exists but is not a symlink to {tljh_config_src}')
         else:
             # We have a working symlink, so do nothing
             return

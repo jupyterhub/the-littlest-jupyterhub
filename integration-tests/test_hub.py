@@ -12,7 +12,7 @@ import sys
 
 # Use sudo to invoke it, since this is how users invoke it.
 # This catches issues with PATH
-TLJH_CONFIG_PATH = ['sudo', '-E', 'tljh-config']
+TLJH_CONFIG_PATH = ['sudo', 'tljh-config']
 
 def test_hub_up():
     r = requests.get('http://127.0.0.1')
