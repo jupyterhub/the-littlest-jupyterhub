@@ -57,12 +57,7 @@ def run_container_command(container_name, cmd):
         'docker', 'exec',
         '-it', container_name,
         '/bin/bash', '-c', cmd
-    ])
-
-    if proc.returncode != 0:
-        # Don't throw if command fails. This lets us continue next parts
-        # of tests. Not entirely sure this is the right thing to do though!
-        print(f'command {cmd} exited with return code {proc.returncode}')
+    ], check=True)
 
 
 def copy_to_container(container_name, src_path, dest_path):

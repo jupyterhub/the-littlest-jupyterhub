@@ -2,16 +2,18 @@ import argparse
 import os
 import secrets
 import subprocess
+import itertools
 import sys
 import time
 import logging
 from urllib.error import HTTPError
 from urllib.request import urlopen, URLError
+import pluggy
 
 from ruamel.yaml import YAML
 
-from tljh import conda, systemd, traefik, user, apt
-from tljh.config import INSTALL_PREFIX, HUB_ENV_PREFIX, USER_ENV_PREFIX, STATE_DIR
+from tljh import conda, systemd, traefik, user, apt, hooks
+from tljh.config import INSTALL_PREFIX, HUB_ENV_PREFIX, USER_ENV_PREFIX, STATE_DIR, CONFIG_FILE
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
@@ -306,6 +308,68 @@ def ensure_symlinks(prefix):
     os.symlink(tljh_config_src, tljh_config_dest)
 
 
+def setup_plugins(plugins):
+    """
+    Install plugins & setup a pluginmanager
+    """
+    # Install plugins
+    if plugins:
+        conda.ensure_pip_packages(HUB_ENV_PREFIX, plugins)
+
+    # Set up plugin infrastructure
+    pm = pluggy.PluginManager('tljh')
+    pm.add_hookspecs(hooks)
+    pm.load_setuptools_entrypoints('tljh')
+
+    return pm
+
+def run_plugin_actions(plugin_manager, plugins):
+    """
+    Run installer hooks defined in plugins
+    """
+    hook = plugin_manager.hook
+    # Install apt packages
+    apt_packages = list(set(itertools.chain(*hook.tljh_extra_apt_packages())))
+    if apt_packages:
+        logger.info('Installing {} apt packages collected from plugins: {}'.format(
+            len(apt_packages), ' '.join(apt_packages)
+        ))
+        apt.install_packages(apt_packages)
+
+    # Install conda packages
+    conda_packages = list(set(itertools.chain(*hook.tljh_extra_user_conda_packages())))
+    if conda_packages:
+        logger.info('Installing {} conda packages collected from plugins: {}'.format(
+            len(conda_packages), ' '.join(conda_packages)
+        ))
+        conda.ensure_conda_packages(USER_ENV_PREFIX, conda_packages)
+
+    # Install pip packages
+    pip_packages = list(set(itertools.chain(*hook.tljh_extra_user_pip_packages())))
+    if pip_packages:
+        logger.info('Installing {} pip packages collected from plugins: {}'.format(
+            len(pip_packages), ' '.join(pip_packages)
+        ))
+        conda.ensure_pip_packages(USER_ENV_PREFIX, pip_packages)
+
+
+def ensure_config_yaml(plugin_manager):
+    """
+    Ensure we have a config.yaml present
+    """
+    if os.path.exists(CONFIG_FILE):
+        with open(CONFIG_FILE, 'r') as f:
+            config = rt_yaml.load(f)
+    else:
+        config = {}
+
+    hook = plugin_manager.hook
+    hook.tljh_config_post_install(config=config)
+
+    with open(CONFIG_FILE, 'w+') as f:
+        rt_yaml.dump(config, f)
+
+
 def main():
     argparser = argparse.ArgumentParser()
     argparser.add_argument(
@@ -317,10 +381,15 @@ def main():
         '--user-requirements-txt-url',
         help='URL to a requirements.txt file that should be installed in the user enviornment'
     )
+    argparser.add_argument(
+        '--plugin',
+        nargs='*',
+        help='Plugin pip-specs to install'
+    )
 
     args = argparser.parse_args()
 
-
+    pm = setup_plugins(args.plugin)
 
     ensure_admins(args.admin)
 
@@ -331,9 +400,13 @@ def main():
     ensure_node()
     ensure_jupyterhub_package(HUB_ENV_PREFIX)
     ensure_chp_package(HUB_ENV_PREFIX)
+    ensure_config_yaml(pm)
     ensure_jupyterhub_service(HUB_ENV_PREFIX)
     ensure_jupyterhub_running()
     ensure_symlinks(HUB_ENV_PREFIX)
+
+    # Run installer plugins last
+    run_plugin_actions(pm, args.plugin)
 
     logger.info("Done!")
 

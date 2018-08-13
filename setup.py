@@ -14,6 +14,7 @@ setup(
         'pyyaml==3.*',
         'ruamel.yaml==0.15.*',
         'jinja2',
+        'pluggy>0.7<1.0'
     ],
     entry_points={
         'console_scripts': [

@@ -127,3 +127,4 @@ to people contributing in various ways.
    contributing/code-review
    contributing/dev-setup
    contributing/tests
+   contributing/plugins
