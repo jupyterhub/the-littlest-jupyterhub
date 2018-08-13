@@ -56,3 +56,32 @@ will fail.
 
    When pointing to a file on GitHub, make sure to use the 'Raw' version. It should point to
    ``raw.githubusercontent.com``, not ``github.com``.
+
+Installing TLJH plugins
+=======================
+
+The Littlest JupyterHub can install additional *plugins* that provide additional
+features. They are most commonly used to install a particular *stack* - such as
+the `PANGEO Stack <https://github.com/yuvipanda/tljh-pangeo>`_ for earth sciences
+research, a stack for a praticular class, etc.
+
+``--plugin <plugin-to-install>`` installs and activates a plugin. You can pass it
+however many times you want. Since plugins are distributed as python packages,
+``<plugin-to-install>`` can be anything that can be passed to ``pip install`` -
+``plugin-name-on-pypy==<version>`` and ``git+https://github.com/user/repo@tag``
+are the most popular ones. Specifying a version or tag is highly recommended.
+
+For example, to install the PANGEO Plugin version 0.1 in your new TLJH install,
+you would use:
+
+.. code-block:: bash
+
+   curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
+    | sudo python3 - \
+      --plugin git+https://github.com/yuvipanda/tljh-pangeo@v0.1
+
+
+.. note::
+
+   Plugins are extremely powerful and can do a large number of arbitrary things.
+   Only install plugins you trust.
