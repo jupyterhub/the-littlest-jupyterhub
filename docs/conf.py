@@ -14,7 +14,7 @@ release = 'v0.1'
 # Enable MathJax for Math
 extensions = ['sphinx.ext.mathjax',
               'sphinx.ext.intersphinx',
-              'sphinx_copybutton.sphinx_copybutton']
+              'sphinx_copybutton']
 
 # The master toctree document.
 master_doc = 'index'
