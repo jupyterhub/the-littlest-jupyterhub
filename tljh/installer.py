@@ -154,6 +154,20 @@ def ensure_jupyterhub_service(prefix):
     systemd.enable_service('traefik')
 
 
+def ensure_jupyterlab_extensions():
+    """
+    Install the JupyterLab extensions we want.
+    """
+    extensions = [
+        '@jupyterlab/hub-extension'
+    ]
+    subprocess.check_output([
+        os.path.join(USER_ENV_PREFIX, 'bin/jupyter'),
+        'labextension',
+        'install'
+    ] + extensions)
+
+
 def ensure_jupyterhub_package(prefix):
     """
     Install JupyterHub into our conda environment if needed.
@@ -403,6 +417,7 @@ def main():
     ensure_jupyterhub_package(HUB_ENV_PREFIX)
     ensure_chp_package(HUB_ENV_PREFIX)
     ensure_config_yaml(pm)
+    ensure_jupyterlab_extensions()
     ensure_jupyterhub_service(HUB_ENV_PREFIX)
     ensure_jupyterhub_running()
     ensure_symlinks(HUB_ENV_PREFIX)
