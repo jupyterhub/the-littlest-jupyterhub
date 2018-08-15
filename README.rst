@@ -48,7 +48,7 @@ Ubuntu 18.04. We have a bunch of tutorials to get you started!
   - ... your favorite provider here, if you can contribute!
 
 - `Tutorial to install TLJH on an already running server you have root access to
-  <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/custom.html>`_.
+  <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/custom-server.html>`_.
   You should use this if your cloud provider does not already have a direct tutorial,
   or if you have experience setting up servers.
 
