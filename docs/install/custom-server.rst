@@ -31,6 +31,12 @@ Step 1: Installing The Littlest JupyterHub
 #. Using a terminal program, SSH into your server. This should give you a prompt where you can
    type commands.
 
+#. Make sure you have ``Python3``, ``curl`` and ``git``  installed. On latest Ubuntu you can get all of these with:
+
+.. code::
+
+   apt-get install python3 git curl
+
 #. Copy the text below, and paste it into the terminal. Replace
    ``<admin-user-name>`` with the name of the first **admin user** for this
    JupyterHub. Choose any name you like (don't forget to replace the brackets!).
@@ -49,7 +55,7 @@ Step 1: Installing The Littlest JupyterHub
 #. Press ``Enter`` to start the installation process. This will take 5-10 minutes,
    and will say 'Done!' when the installation process is complete.
 
-#. Copy the **Public IP** of your server, and try accessing http://<public-ip> from
+#. Copy the **Public IP** of your server, and try accessing ``http://<public-ip>`` from
    your browser. If everything went well, this should give you a JupyterHub login page.
 
    .. image:: ../images/first-login.png
