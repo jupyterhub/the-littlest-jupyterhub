@@ -28,7 +28,7 @@ default = {
         'admin': [],
     },
     'limits': {
-        'memory': '1G',
+        'memory': None,
         'cpu': None,
     },
     'http': {
