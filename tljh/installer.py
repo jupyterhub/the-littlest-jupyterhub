@@ -234,7 +234,7 @@ def ensure_user_environment(user_requirements_txt_file):
         'jupyterhub==0.9.1',
         'notebook==5.6.0',
         # Install additional notebook frontends!
-        'jupyterlab==0.32.1',
+        'jupyterlab==0.34.1',
         'nteract-on-jupyter==1.8.1',
         # nbgitpuller for easily pulling in Git repositories
         'nbgitpuller==0.6.1',
