@@ -59,8 +59,8 @@ The easiest & safest way to develop & test TLJH is with `Docker <https://www.doc
      you can test it by running ``python3 -m tljh.installer``.
 
    * If you changed ``tljh/jupyterhub_config.py``, ``tljh/configurer.py``,
-     ``/opt/tljh/config.yaml`` or any of their dependencies, you only need to
-     restart jupyterhub for them to take effect. ``systemctl restart jupyterhub``
+     ``/opt/tljh/config/`` or any of their dependencies, you only need to
+     restart jupyterhub for them to take effect. ``tljh-config reload hub``
      should do that.
 
 :ref:`troubleshooting/logs` has information on looking at various logs in the container

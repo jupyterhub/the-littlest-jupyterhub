@@ -10,7 +10,7 @@ directory that lets you load multiple ``jupyterhub_config.py`` snippets for
 your configuration. You need to create the directory when you use it for
 the first time.
 
-Any files in ``/opt/tljh/jupyterhub_config.d`` that end in ``.py`` will be
+Any files in ``/opt/tljh/config/jupyterhub_config.d`` that end in ``.py`` will be
 loaded in alphabetical order as python files to provide configuration for
 JupyterHub. Any config that can go in a regular ``jupyterhub_config.py``
 file is valid in these files. They will be loaded *after* any of the config
