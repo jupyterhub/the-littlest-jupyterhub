@@ -21,7 +21,7 @@ def reload_daemon():
 
 def install_unit(name, unit, path='/etc/systemd/system'):
     """
-    Install unit wih given name
+    Install unit with given name
     """
     with open(os.path.join(path, name), 'w') as f:
         f.write(unit)

@@ -20,7 +20,7 @@ installations.
 
 
 The ``128MB`` is overhead for TLJH and related services. **Server Memory Recommended**
-is the amount of Memory (RAM) the server you aquire should have - we recommend
+is the amount of Memory (RAM) the server you acquire should have - we recommend
 erring on the side of 'more Memory'. The other terms are explained below.
 
 Maximum concurrent users

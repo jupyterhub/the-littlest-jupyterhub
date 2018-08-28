@@ -14,7 +14,7 @@ easily.
 Installing pip packages
 =======================
 
-`pip <https://pypi.org/project/pip/>`_ is the recomended tool for installing packages
+`pip <https://pypi.org/project/pip/>`_ is the recommended tool for installing packages
 in Python from the `Python Packaging Index (PyPI) <https://pypi.org/>`_. PyPI has
 almost 145,000 packages in it right now, so a lot of what you need is going to be there!
 
@@ -115,7 +115,7 @@ make sure to look in the version of Ubuntu you are using!
 User environment location
 =========================
 
-The user environment is a conda enviornment set up in ``/opt/tljh/user``, with
+The user environment is a conda environment set up in ``/opt/tljh/user``, with
 a Python3 kernel as the default. It is readable by all users, but writeable only
 by users who have root access. This makes it possible for JupyterHub admins (who have
 root access with ``sudo``) to install software in the user environment easily.
