@@ -179,12 +179,12 @@ def ensure_jupyterhub_package(prefix):
     and conda packages!
     """
     conda.ensure_pip_packages(prefix, [
-        'jupyterhub==0.9.1',
+        'jupyterhub==0.9.2',
         'jupyterhub-dummyauthenticator==0.3.1',
         'jupyterhub-systemdspawner==0.11',
         'jupyterhub-firstuseauthenticator==0.10',
         'jupyterhub-ldapauthenticator==1.2.2',
-        'oauthenticator==0.7.3',
+        'oauthenticator==0.8.0',
     ])
     traefik.ensure_traefik_binary(prefix)
 
@@ -231,7 +231,7 @@ def ensure_user_environment(user_requirements_txt_file):
 
     conda.ensure_pip_packages(USER_ENV_PREFIX, [
         # JupyterHub + notebook package are base requirements for user environment
-        'jupyterhub==0.9.1',
+        'jupyterhub==0.9.2',
         'notebook==5.6.0',
         # Install additional notebook frontends!
         'jupyterlab==0.34.1',
