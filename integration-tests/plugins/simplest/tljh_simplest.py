@@ -1,5 +1,5 @@
 """
-Simplest plugin that excercises all the hooks
+Simplest plugin that exercises all the hooks
 """
 from tljh.hooks import hookimpl
 

@@ -244,7 +244,7 @@ def main(argv=None):
     )
     set_parser.add_argument(
         'value',
-        help='Value ot set the configuration key to'
+        help='Value to set the configuration key to'
     )
 
     add_item_parser = subparsers.add_parser(
