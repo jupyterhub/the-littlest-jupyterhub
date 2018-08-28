@@ -119,10 +119,15 @@ def main():
     subparsers.add_parser('stop-container').add_argument(
         'container_name'
     )
-    subparsers.add_parser('run').add_argument(
-        'command',
+    subparsers.add_parser('start-container').add_argument(
+        'container_name'
     )
+    run_parser = subparsers.add_parser('run')
+    run_parser.add_argument('container_name')
+    run_parser.add_argument('command')
+
     copy_parser = subparsers.add_parser('copy')
+    copy_parser.add_argument('container_name')
     copy_parser.add_argument('src')
     copy_parser.add_argument('dest')
 
@@ -146,6 +151,8 @@ def main():
         run_container_command(args.container_name, args.command)
     elif args.action == 'copy':
         copy_to_container(args.container_name, args.src, args.dest)
+    elif args.action == 'start-container':
+        run_systemd_image(image_name, args.container_name)
     elif args.action == 'stop-container':
         stop_container(args.container_name)
     elif args.action == 'build-image':
