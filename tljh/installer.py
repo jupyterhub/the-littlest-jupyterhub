@@ -1,19 +1,31 @@
+"""Installation logic for TLJH"""
+
 import argparse
+from datetime import date
+import itertools
+import logging
 import os
 import secrets
+import shutil
 import subprocess
-import itertools
 import sys
 import time
-import logging
 from urllib.error import HTTPError
 from urllib.request import urlopen, URLError
-import pluggy
 
+import pluggy
 from ruamel.yaml import YAML
 
 from tljh import conda, systemd, traefik, user, apt, hooks
-from tljh.config import INSTALL_PREFIX, HUB_ENV_PREFIX, USER_ENV_PREFIX, STATE_DIR, CONFIG_FILE
+from tljh.config import (
+    CONFIG_DIR,
+    CONFIG_FILE,
+    HUB_ENV_PREFIX,
+    INSTALL_PREFIX,
+    OLD_CONFIG_FILE,
+    STATE_DIR,
+    USER_ENV_PREFIX,
+)
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
@@ -254,7 +266,7 @@ def ensure_admins(admins):
     if not admins:
         return
     logger.info("Setting up admin users")
-    config_path = os.path.join(INSTALL_PREFIX, 'config.yaml')
+    config_path = CONFIG_FILE
     if os.path.exists(config_path):
         with open(config_path, 'r') as f:
             config = rt_yaml.load(f)
@@ -339,6 +351,7 @@ def setup_plugins(plugins):
 
     return pm
 
+
 def run_plugin_actions(plugin_manager, plugins):
     """
     Run installer hooks defined in plugins
@@ -373,6 +386,29 @@ def ensure_config_yaml(plugin_manager):
     """
     Ensure we have a config.yaml present
     """
+    # ensure config dir exists and is private
+    for path in [CONFIG_DIR, os.path.join(CONFIG_DIR, 'jupyterhub_config.d')]:
+        os.makedirs(path, mode=0o700, exist_ok=True)
+
+    # handle old TLJH_DIR/config.yaml location
+    if os.path.exists(OLD_CONFIG_FILE):
+        if os.path.exists(CONFIG_FILE):
+            # new config file already created! still move the config,
+            # but avoid collision
+            timestamp = date.today().isoformat()
+            dest = dest_base = f"{CONFIG_FILE}.old.{timestamp}"
+            i = 0
+            while os.path.exists(dest):
+                # avoid collisions
+                dest = dest_base + f".{i}"
+                i += 1
+            logger.warning(f"Found config in both old ({OLD_CONFIG_FILE}) and new ({CONFIG_FILE}).")
+            logger.warning(f"Moving {OLD_CONFIG_FILE} to {dest} to avoid clobbering.  Its contents will be ignored.")
+        else:
+            logger.warning(f"Moving old config file to new location {OLD_CONFIG_FILE} -> {CONFIG_FILE}")
+            dest = CONFIG_FILE
+        shutil.move(OLD_CONFIG_FILE, dest)
+
     if os.path.exists(CONFIG_FILE):
         with open(CONFIG_FILE, 'r') as f:
             config = rt_yaml.load(f)
@@ -407,8 +443,8 @@ def main():
 
     pm = setup_plugins(args.plugin)
 
+    ensure_config_yaml(pm)
     ensure_admins(args.admin)
-
     ensure_usergroups()
     ensure_user_environment(args.user_requirements_txt_url)
 
@@ -416,7 +452,6 @@ def main():
     ensure_node()
     ensure_jupyterhub_package(HUB_ENV_PREFIX)
     ensure_chp_package(HUB_ENV_PREFIX)
-    ensure_config_yaml(pm)
     ensure_jupyterlab_extensions()
     ensure_jupyterhub_service(HUB_ENV_PREFIX)
     ensure_jupyterhub_running()
