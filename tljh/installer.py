@@ -336,7 +336,7 @@ def ensure_symlinks(prefix):
     os.symlink(tljh_config_src, tljh_config_dest)
 
 
-def setup_plugins(plugins):
+def setup_plugins(plugins=None):
     """
     Install plugins & setup a pluginmanager
     """
