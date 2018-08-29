@@ -22,6 +22,10 @@ permissions.
 
 #. A home directory is created for the user under ``/home/jupyter-<username>``.
 
+#. The default permission of the home directory is change with ``o-rwx`` (remove
+   non-group members the ability to read, write or list files and folders in the
+   Home directory).
+
 #. No password is set for this unix system user by default. The password used
    to log in to JupyterHub (if using an authenticator that requires a password)
    is not related to the unix user's password in any form.

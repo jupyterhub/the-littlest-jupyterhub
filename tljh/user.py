@@ -6,6 +6,7 @@ Supports minimal user & group management
 import pwd
 import grp
 import subprocess
+from os.path import expanduser
 
 
 def ensure_user(username):
@@ -25,6 +26,12 @@ def ensure_user(username):
         'useradd',
         '--create-home',
         username
+    ])
+
+    subprocess.check_call([
+        'chmod',
+        'o-rwx', 
+        expanduser('~{username}'.format(username=username))
     ])
 
 
