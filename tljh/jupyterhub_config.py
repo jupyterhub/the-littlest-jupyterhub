@@ -29,6 +29,9 @@ class CustomSpawner(SystemdSpawner):
 
 c.JupyterHub.spawner_class = CustomSpawner
 
+# leave users running when the Hub restarts
+c.JupyterHub.cleanup_servers = False
+
 # Use a high port so users can try this on machines with a JupyterHub already present
 c.JupyterHub.hub_port = 15001
 
