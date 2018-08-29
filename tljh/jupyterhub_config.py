@@ -40,7 +40,7 @@ c.SystemdSpawner.default_shell = '/bin/bash'
 # Drop the '-singleuser' suffix present in the default template
 c.SystemdSpawner.unit_name_template = 'jupyter-{USERNAME}'
 
-config_overrides_path = os.path.join(INSTALL_PREFIX, 'config.yaml')
+config_overrides_path = os.path.join(CONFIG_DIR, 'config.yaml')
 if os.path.exists(config_overrides_path):
     with open(config_overrides_path) as f:
         config_overrides = yaml.safe_load(f)
