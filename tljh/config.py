@@ -225,6 +225,9 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
 
+    from .log import init_logging
+    init_logging()
+
     argparser = argparse.ArgumentParser()
     argparser.add_argument(
         '--config-path',

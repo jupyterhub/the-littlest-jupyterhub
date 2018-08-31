@@ -31,19 +31,7 @@ HERE = os.path.abspath(os.path.dirname(__file__))
 
 rt_yaml = YAML()
 
-# Set up logging to print to a file and to stderr
 logger = logging.getLogger(__name__)
-
-os.makedirs(INSTALL_PREFIX, exist_ok=True)
-file_logger = logging.FileHandler(os.path.join(INSTALL_PREFIX, 'installer.log'))
-file_logger.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
-logger.addHandler(file_logger)
-
-stderr_logger = logging.StreamHandler()
-stderr_logger.setFormatter(logging.Formatter('%(message)s'))
-logger.addHandler(stderr_logger)
-logger.setLevel(logging.INFO)
-
 
 def ensure_node():
     """
@@ -423,6 +411,9 @@ def ensure_config_yaml(plugin_manager):
 
 
 def main():
+    from .log import init_logging
+    init_logging()
+
     argparser = argparse.ArgumentParser()
     argparser.add_argument(
         '--admin',
