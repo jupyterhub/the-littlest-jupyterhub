@@ -30,9 +30,6 @@ STATE_DIR = os.path.join(INSTALL_PREFIX, 'state')
 CONFIG_DIR = os.path.join(INSTALL_PREFIX, 'config')
 CONFIG_FILE = os.path.join(CONFIG_DIR, 'config.yaml')
 
-# deprecated config file location
-OLD_CONFIG_FILE = os.path.join(INSTALL_PREFIX, 'config.yaml')
-
 
 def set_item_in_config(config, property_path, value):
     """

@@ -1,12 +1,10 @@
 """Installation logic for TLJH"""
 
 import argparse
-from datetime import date
 import itertools
 import logging
 import os
 import secrets
-import shutil
 import subprocess
 import sys
 import time
@@ -16,13 +14,21 @@ from urllib.request import urlopen, URLError
 import pluggy
 from ruamel.yaml import YAML
 
-from tljh import conda, systemd, traefik, user, apt, hooks
+from tljh import (
+    apt,
+    conda,
+    hooks,
+    migrator,
+    systemd,
+    traefik,
+    user,
+)
+
 from tljh.config import (
     CONFIG_DIR,
     CONFIG_FILE,
     HUB_ENV_PREFIX,
     INSTALL_PREFIX,
-    OLD_CONFIG_FILE,
     STATE_DIR,
     USER_ENV_PREFIX,
 )
@@ -378,24 +384,7 @@ def ensure_config_yaml(plugin_manager):
     for path in [CONFIG_DIR, os.path.join(CONFIG_DIR, 'jupyterhub_config.d')]:
         os.makedirs(path, mode=0o700, exist_ok=True)
 
-    # handle old TLJH_DIR/config.yaml location
-    if os.path.exists(OLD_CONFIG_FILE):
-        if os.path.exists(CONFIG_FILE):
-            # new config file already created! still move the config,
-            # but avoid collision
-            timestamp = date.today().isoformat()
-            dest = dest_base = f"{CONFIG_FILE}.old.{timestamp}"
-            i = 0
-            while os.path.exists(dest):
-                # avoid collisions
-                dest = dest_base + f".{i}"
-                i += 1
-            logger.warning(f"Found config in both old ({OLD_CONFIG_FILE}) and new ({CONFIG_FILE}).")
-            logger.warning(f"Moving {OLD_CONFIG_FILE} to {dest} to avoid clobbering.  Its contents will be ignored.")
-        else:
-            logger.warning(f"Moving old config file to new location {OLD_CONFIG_FILE} -> {CONFIG_FILE}")
-            dest = CONFIG_FILE
-        shutil.move(OLD_CONFIG_FILE, dest)
+    migrator.migrate_config_files()
 
     if os.path.exists(CONFIG_FILE):
         with open(CONFIG_FILE, 'r') as f:
