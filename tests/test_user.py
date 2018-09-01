@@ -3,6 +3,8 @@ Test wrappers in tljw.user module
 """
 from tljh import user
 import os
+import os.path
+import stat
 import uuid
 import pwd
 import grp
@@ -23,9 +25,16 @@ def test_ensure_user():
         # Create user!
         user.ensure_user(username)
         # This raises exception if user doesn't exist
-        ent = pwd.getpwnam(username)
+        entry = pwd.getpwnam(username)
         # Home directory must also exist
-        assert os.path.exists(ent.pw_dir)
+        home_dir = entry.pw_dir
+        assert os.path.exists(home_dir)
+        # Ensure not word readable/writable especially in teaching context
+        homedir_stats = os.stat(home_dir).st_mode
+        assert not (homedir_stats & stat.S_IROTH), "Everyone should not be able to read users home directory"
+        assert not (homedir_stats & stat.S_IWOTH), "Everyone should not be able to write users home directory"
+        assert not (homedir_stats & stat.S_IXOTH), "Everyone should not be able to list what is in users home directory"
+
         # Run ensure_user again, should be a noop
         user.ensure_user(username)
         # User still exists, after our second ensure_user call
