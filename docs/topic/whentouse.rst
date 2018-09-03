@@ -22,7 +22,7 @@ container technology in administering user sessions.
 When to use TLJH vs. Z2JH
 =========================
 
-The choice between TLJH and Z2JH ultimately comes down to only a few questoins:
+The choice between TLJH and Z2JH ultimately comes down to only a few questions:
 
 1. Do you want your hub and all users to live on a **single, larger machine** vs. spreading users on a **cluster of smaller machines** that are scaled up or down?
 
