@@ -47,12 +47,12 @@ their new password.
 #. As an admin user, open the **Control Panel** by clicking the control panel
    button on the top right of your JupyterHub.
 
-   .. image:: ../images/control-panel-button.png
+   .. image:: ../../images/control-panel-button.png
       :alt: Control panel button in notebook, top right
 
 #. In the control panel, open the **Admin** link in the top left.
 
-   .. image:: ../images/admin/admin-access-button.png
+   .. image:: ../../images/admin/admin-access-button.png
       :alt: Admin button in control panel, top left
 
    This opens up the JupyterHub admin page, where you can add / delete users,
@@ -61,7 +61,7 @@ their new password.
 #. **Delete** the user whose password needs resetting. Remember this **does not**
    delete their data or home directory.
 
-   .. image:: ../images/auth/firstuse/delete-user.png
+   .. image:: ../../images/auth/firstuse/delete-user.png
       :alt: Delete user button for each user
 
    If there is a confirmation dialog, confirm the deletion. This will also log the
