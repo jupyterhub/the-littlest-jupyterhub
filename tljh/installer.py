@@ -182,7 +182,7 @@ def ensure_jupyterhub_package(prefix):
         'jupyterhub==0.9.2',
         'jupyterhub-dummyauthenticator==0.3.1',
         'jupyterhub-systemdspawner==0.11',
-        'jupyterhub-firstuseauthenticator==0.10',
+        'jupyterhub-firstuseauthenticator==0.11',
         'jupyterhub-ldapauthenticator==1.2.2',
         'oauthenticator==0.8.0',
     ])
