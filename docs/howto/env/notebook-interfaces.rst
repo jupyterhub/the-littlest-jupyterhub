@@ -48,7 +48,7 @@ You can change the default interface users get when they log in by modifying
 
    .. code-block:: yaml
 
-      sudo tljh-config reload
+      sudo tljh-config reload hub
 
    If this causes problems, check the :ref:`troubleshoot_logs_jupyterhub` for clues
    on what went wrong.

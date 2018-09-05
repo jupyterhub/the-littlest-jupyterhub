@@ -1,37 +1,43 @@
+"""Installation logic for TLJH"""
+
 import argparse
+import itertools
+import logging
 import os
 import secrets
 import subprocess
-import itertools
 import sys
 import time
-import logging
 from urllib.error import HTTPError
 from urllib.request import urlopen, URLError
-import pluggy
 
+import pluggy
 from ruamel.yaml import YAML
 
-from tljh import conda, systemd, traefik, user, apt, hooks
-from tljh.config import INSTALL_PREFIX, HUB_ENV_PREFIX, USER_ENV_PREFIX, STATE_DIR, CONFIG_FILE
+from tljh import (
+    apt,
+    conda,
+    hooks,
+    migrator,
+    systemd,
+    traefik,
+    user,
+)
+
+from tljh.config import (
+    CONFIG_DIR,
+    CONFIG_FILE,
+    HUB_ENV_PREFIX,
+    INSTALL_PREFIX,
+    STATE_DIR,
+    USER_ENV_PREFIX,
+)
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 rt_yaml = YAML()
 
-# Set up logging to print to a file and to stderr
 logger = logging.getLogger(__name__)
-
-os.makedirs(INSTALL_PREFIX, exist_ok=True)
-file_logger = logging.FileHandler(os.path.join(INSTALL_PREFIX, 'installer.log'))
-file_logger.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
-logger.addHandler(file_logger)
-
-stderr_logger = logging.StreamHandler()
-stderr_logger.setFormatter(logging.Formatter('%(message)s'))
-logger.addHandler(stderr_logger)
-logger.setLevel(logging.INFO)
-
 
 def ensure_node():
     """
@@ -254,7 +260,7 @@ def ensure_admins(admins):
     if not admins:
         return
     logger.info("Setting up admin users")
-    config_path = os.path.join(INSTALL_PREFIX, 'config.yaml')
+    config_path = CONFIG_FILE
     if os.path.exists(config_path):
         with open(config_path, 'r') as f:
             config = rt_yaml.load(f)
@@ -324,7 +330,7 @@ def ensure_symlinks(prefix):
     os.symlink(tljh_config_src, tljh_config_dest)
 
 
-def setup_plugins(plugins):
+def setup_plugins(plugins=None):
     """
     Install plugins & setup a pluginmanager
     """
@@ -338,6 +344,7 @@ def setup_plugins(plugins):
     pm.load_setuptools_entrypoints('tljh')
 
     return pm
+
 
 def run_plugin_actions(plugin_manager, plugins):
     """
@@ -373,6 +380,12 @@ def ensure_config_yaml(plugin_manager):
     """
     Ensure we have a config.yaml present
     """
+    # ensure config dir exists and is private
+    for path in [CONFIG_DIR, os.path.join(CONFIG_DIR, 'jupyterhub_config.d')]:
+        os.makedirs(path, mode=0o700, exist_ok=True)
+
+    migrator.migrate_config_files()
+
     if os.path.exists(CONFIG_FILE):
         with open(CONFIG_FILE, 'r') as f:
             config = rt_yaml.load(f)
@@ -387,6 +400,9 @@ def ensure_config_yaml(plugin_manager):
 
 
 def main():
+    from .log import init_logging
+    init_logging()
+
     argparser = argparse.ArgumentParser()
     argparser.add_argument(
         '--admin',
@@ -407,8 +423,8 @@ def main():
 
     pm = setup_plugins(args.plugin)
 
+    ensure_config_yaml(pm)
     ensure_admins(args.admin)
-
     ensure_usergroups()
     ensure_user_environment(args.user_requirements_txt_url)
 
@@ -416,7 +432,6 @@ def main():
     ensure_node()
     ensure_jupyterhub_package(HUB_ENV_PREFIX)
     ensure_chp_package(HUB_ENV_PREFIX)
-    ensure_config_yaml(pm)
     ensure_jupyterlab_extensions()
     ensure_jupyterhub_service(HUB_ENV_PREFIX)
     ensure_jupyterhub_running()

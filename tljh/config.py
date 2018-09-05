@@ -27,7 +27,8 @@ INSTALL_PREFIX = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
 HUB_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'hub')
 USER_ENV_PREFIX = os.path.join(INSTALL_PREFIX, 'user')
 STATE_DIR = os.path.join(INSTALL_PREFIX, 'state')
-CONFIG_FILE = os.path.join(INSTALL_PREFIX, 'config.yaml')
+CONFIG_DIR = os.path.join(INSTALL_PREFIX, 'config')
+CONFIG_FILE = os.path.join(CONFIG_DIR, 'config.yaml')
 
 
 def set_item_in_config(config, property_path, value):
@@ -220,6 +221,9 @@ def _is_list(item):
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
+
+    from .log import init_logging
+    init_logging()
 
     argparser = argparse.ArgumentParser()
     argparser.add_argument(

@@ -21,4 +21,5 @@ def tljh_dir(tmpdir):
                 reload(mod)
         assert tljh.config.INSTALL_PREFIX == tljh_dir
         os.makedirs(tljh.config.STATE_DIR)
+        os.makedirs(tljh.config.CONFIG_DIR)
         yield tljh_dir

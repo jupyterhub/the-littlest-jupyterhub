@@ -8,7 +8,7 @@ from glob import glob
 
 from systemdspawner import SystemdSpawner
 from tljh import user, configurer
-from tljh.config import INSTALL_PREFIX, USER_ENV_PREFIX
+from tljh.config import INSTALL_PREFIX, USER_ENV_PREFIX, CONFIG_DIR
 
 
 class CustomSpawner(SystemdSpawner):
@@ -43,7 +43,7 @@ c.SystemdSpawner.default_shell = '/bin/bash'
 # Drop the '-singleuser' suffix present in the default template
 c.SystemdSpawner.unit_name_template = 'jupyter-{USERNAME}'
 
-config_overrides_path = os.path.join(INSTALL_PREFIX, 'config.yaml')
+config_overrides_path = os.path.join(CONFIG_DIR, 'config.yaml')
 if os.path.exists(config_overrides_path):
     with open(config_overrides_path) as f:
         config_overrides = yaml.safe_load(f)
@@ -53,6 +53,6 @@ configurer.apply_config(config_overrides, c)
 
 # Load arbitrary .py config files if they exist.
 # This is our escape hatch
-extra_configs = sorted(glob(os.path.join(INSTALL_PREFIX, 'jupyterhub_config.d', '*.py')))
+extra_configs = sorted(glob(os.path.join(CONFIG_DIR, 'jupyterhub_config.d', '*.py')))
 for ec in extra_configs:
     load_subconfig(ec)
