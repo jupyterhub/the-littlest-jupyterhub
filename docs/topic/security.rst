@@ -42,8 +42,8 @@ command on the terminal. No password required.
 
 This is a **lot** of power, and they can do pretty much anything they want to
 the server - look at other people's work, modify it, break the server in cool &
-funky ways, etc. This also means **if an admin's credentials are compromised (
-easy to guess password, password re-use, etc) the entire JupyterHub is compromised.**
+funky ways, etc. This also means **if an admin's credentials are compromised 
+(easy to guess password, password re-use, etc) the entire JupyterHub is compromised.**
 
 Off-boarding users securely
 ===========================
