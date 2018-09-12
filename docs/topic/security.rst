@@ -18,7 +18,10 @@ permissions.
 #. The unix user account created for a JupyterHub user named ``<username>`` is
    ``jupyter-<username>``. This prefix helps prevent clashes with users that
    already exist - otherwise a user named ``root`` can trivially gain full root
-   access to your server.
+   access to your server. If the username (including the ``jupyter-`` prefix)
+   is longer than 26 characters, it is truncated at 26 characters & a 5 charcter
+   hash is appeneded to it. This keeps usernames under the linux username limit
+   of 32 characters while also reducing chances of collision.
 
 #. A home directory is created for the user under ``/home/jupyter-<username>``.
 
