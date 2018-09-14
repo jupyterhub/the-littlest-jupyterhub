@@ -7,17 +7,26 @@ import yaml
 from glob import glob
 
 from systemdspawner import SystemdSpawner
-from tljh import user, configurer
+from tljh import configurer, user
 from tljh.config import INSTALL_PREFIX, USER_ENV_PREFIX, CONFIG_DIR
+from tljh.normalize import generate_system_username
 
 
-class CustomSpawner(SystemdSpawner):
+class UserCreatingSpawner(SystemdSpawner):
+    """
+    SystemdSpawner with user creation on spawn.
+
+    FIXME: Remove this somehow?
+    """
     def start(self):
         """
         Perform system user activities before starting server
         """
         # FIXME: Move this elsewhere? Into the Authenticator?
-        system_username = 'jupyter-' + self.user.name
+        system_username = generate_system_username('jupyter-' + self.user.name)
+
+        # FIXME: This is a hack. Allow setting username directly instead
+        self.username_template = system_username
         user.ensure_user(system_username)
         user.ensure_user_group(system_username, 'jupyterhub-users')
         if self.user.admin:
@@ -26,8 +35,7 @@ class CustomSpawner(SystemdSpawner):
             user.remove_user_group(system_username, 'jupyterhub-admins')
         return super().start()
 
-
-c.JupyterHub.spawner_class = CustomSpawner
+c.JupyterHub.spawner_class = UserCreatingSpawner
 
 # leave users running when the Hub restarts
 c.JupyterHub.cleanup_servers = False

@@ -8,6 +8,8 @@ import asyncio
 import pwd
 import grp
 import sys
+import subprocess
+from tljh.normalize import generate_system_username
 
 
 # Use sudo to invoke it, since this is how users invoke it.
@@ -113,3 +115,39 @@ async def test_user_admin_remove():
 
             # Assert that the user does *not* have admin rights
             assert f'jupyter-{username}' in grp.getgrnam('jupyterhub-admins').gr_mem
+
+
+@pytest.mark.asyncio
+async def test_long_username():
+    """
+    User with a long name logs in, and we check if their name is properly truncated.
+    """
+    # This *must* be localhost, not an IP
+    # aiohttp throws away cookies if we are connecting to an IP!
+    hub_url = 'http://localhost'
+    username = secrets.token_hex(32)
+
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummyauthenticator.DummyAuthenticator')).wait()
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
+
+    # FIXME: wait for reload to finish & hub to come up
+    # Should be part of tljh-config reload
+    await asyncio.sleep(1)
+    try:
+        async with User(username, hub_url, partial(login_dummy, password='')) as u:
+                await u.login()
+                await u.ensure_server()
+
+                # Assert that the user exists
+                system_username = generate_system_username(f'jupyter-{username}')
+                assert pwd.getpwnam(system_username) is not None
+
+                await u.stop_server()
+    except:
+        # If we have any errors, print jupyterhub logs before exiting
+        subprocess.check_call([
+            'journalctl',
+            '-u', 'jupyterhub',
+            '--no-pager'
+        ])
+        raise
