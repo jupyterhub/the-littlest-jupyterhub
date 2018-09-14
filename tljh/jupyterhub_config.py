@@ -24,6 +24,9 @@ class UserCreatingSpawner(SystemdSpawner):
         """
         # FIXME: Move this elsewhere? Into the Authenticator?
         system_username = generate_system_username('jupyter-' + self.user.name)
+
+        # FIXME: This is a hack. Allow setting username directly instead
+        self.username_template = system_username
         user.ensure_user(system_username)
         user.ensure_user_group(system_username, 'jupyterhub-users')
         if self.user.admin:
