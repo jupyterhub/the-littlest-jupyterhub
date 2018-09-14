@@ -132,12 +132,21 @@ async def test_long_username():
     # FIXME: wait for reload to finish & hub to come up
     # Should be part of tljh-config reload
     await asyncio.sleep(1)
-    async with User(username, hub_url, partial(login_dummy, password='')) as u:
-            await u.login()
-            await u.ensure_server()
+    try:
+        async with User(username, hub_url, partial(login_dummy, password='')) as u:
+                await u.login()
+                await u.ensure_server()
 
-            # Assert that the user exists
-            system_username = generate_system_username(f'jupyter-{username}')
-            assert pwd.getpwnam(system_username) is not None
+                # Assert that the user exists
+                system_username = generate_system_username(f'jupyter-{username}')
+                assert pwd.getpwnam(system_username) is not None
 
-            await u.stop_server()
+                await u.stop_server()
+    except:
+        # If we have any errors, print jupyterhub logs before exiting
+        subprocess.check_call([
+            'journalctl',
+            '-u', 'jupyterhub',
+            '--no-pager'
+        ])
+        raise
