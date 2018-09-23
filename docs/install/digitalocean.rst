@@ -128,40 +128,6 @@ Step 4: Resizing and editing the droplet
    .. image:: ../images/providers/digitalocean/resize-droplet.png
       :alt: Resize panel of digital ocean
 
-#. You will need to tell the JupyterHub to make use of these new resources.
-   To accomplish this, you will follow the instructions in :ref:`topic/tljh-config` 
-   to set memory limits and reload the hub. This can be completed using the terminal
-   in the JupyterHub, as in Step 3. It can also be completed through the Digital Ocean
-   console.
-
-#. TLJH configuration options can be verified by viewing the tljh-config output.
-
-   .. code-block:: bash
-
-      sudo tljh-config show
-
-
-#. If you have changed your memory availability successfully, this will be reflected 
-   in the `nbresuse <https://github.com/yuvipanda/nbresuse>`_ extension in the upper-right 
-   when you open a Jupyter notebook on the Hub.
-
-   .. image:: ../images/nbresuse.png
-      :alt: nbresuse demonstration
-
-#. If you have changed the number of cores, this can be verified at the command line. 
-   ``nproc`` displays the number of available cores, and should be equal to the 
-   number of cores you selected in the "Resize Droplet" panel.
-
-   .. code-block:: bash
-
-      nproc --all
-
-
-#. Disk space changes can be verified, as well. The ``df`` command shows how much disk 
-   space is available. The ``-hT`` argument allows us to have this printed in a human readable
-   format, and condenses the output to show one storage volume. 
-
-   .. code-block:: bash
-
-      df -hT /home
+   Further information on making more resources available to TLJH and verifying resource 
+   availability can be found in the How-To :ref:`howto/admin/resize`. 
 

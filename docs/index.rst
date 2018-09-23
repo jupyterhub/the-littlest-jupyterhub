@@ -81,6 +81,7 @@ Administration and security
 
    howto/admin/admin-users
    howto/admin/resource-estimation
+   howto/admin/resize
    howto/admin/nbresuse
    howto/admin/https
 

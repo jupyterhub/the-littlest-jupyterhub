@@ -8,7 +8,7 @@ Configuring TLJH with ``tljh-config``
 changes to TLJH.
 
 Running ``tljh-config``
-======================`
+=======================
 
 You can run ``tljh-config`` in two ways:
 
@@ -18,6 +18,9 @@ You can run ``tljh-config`` in two ways:
 #. By directly calling ``/opt/tljh/hub/bin/tljh-config`` as root when
    logged in to the server via other means (such as SSH). This is an
    advanced use case, and not covered much in this guide.
+
+.. _topic/tljh-set:
+
 
 Set a configuration property
 ============================
