@@ -13,7 +13,7 @@ Running ``tljh-config``
 You can run ``tljh-config`` in two ways:
 
 #. From inside a terminal in JupyterHub while logged in as an admin user.
-   This method is **recommended**.
+   This method is recommended.
 
 #. By directly calling ``/opt/tljh/hub/bin/tljh-config`` as root when
    logged in to the server via other means (such as SSH). This is an
@@ -52,13 +52,21 @@ This can only set string and numerical properties, not lists.
 
 Some of the existing ``<property-path>`` are listed below by categories:
 
-**Authentication**
+
+.. _topic/tljh-set-auth:
+
+Authentication
+--------------
 
     Use ``auth.type`` to determine authenticator to use. All parameters
     in the config under ``auth.{auth.type}`` will be passed straight to the
     authenticators themselves.
 
-**User Lists**
+.. _topic/tljh-set-user-lists:
+
+User Lists
+----------
+
 
 * ``users.allowed`` takes in usernames to whitelist
 
@@ -66,7 +74,12 @@ Some of the existing ``<property-path>`` are listed below by categories:
 
 * ``users.admin`` takes in usernames to designate as admins
 
-**User Server Limits**
+.. _topic/tljh-set-user-limits:
+
+
+User Server Limits
+------------------
+
 
 * ``limits.memory`` Specifies the maximum memory that can be used by each
   individual user. It can be specified as an absolute byte value. You can use
@@ -93,7 +106,11 @@ Some of the existing ``<property-path>`` are listed below by categories:
 
      sudo tljh-config set limits.cpu 2
 
-**User Environment**
+.. _topic/tljh-set-user-env:
+
+User Environment
+----------------
+
 
     ``user_environment.default_app`` Set default application users are
     launched into. Currently can be set to the following values
@@ -102,6 +119,8 @@ Some of the existing ``<property-path>`` are listed below by categories:
     .. code-block:: bash
 
        sudo tljh-config set user_environment.default_app jupyterlab
+
+.. _topic/tljh-view-conf:
 
 View current configuration
 ==========================
@@ -115,6 +134,9 @@ To see the current configuration, you can run the following command:
 This will print the current configuration of your TLJH. This is very
 useful when asking for support!
 
+.. _topic/tljh-reload-hub:
+
+
 Reloading JupyterHub to apply configuration
 ===========================================
 
@@ -127,6 +149,8 @@ it to take effect. You can do so with:
 
 This should not affect any running users. The JupyterHub will be
 restarted and loaded with the new configuration.
+
+.. _topic/tljh-edit-yaml:
 
 Advanced: ``config.yaml``
 =========================
