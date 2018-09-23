@@ -17,10 +17,10 @@ and verify that the resources have become available.
 Verifying a Resize 
 ==================
 
-#. You will need to tell the JupyterHub to make use of these new resources.
-   To accomplish this, you will follow the instructions in :ref:`topic/tljh-config` 
-   to set memory limits and reload the hub. This can be completed using the terminal
-   in the JupyterHub. It can also be completed through the Digital Ocean console or terminal.
+#. Once you have resized your server, you will need to tell the JupyterHub to make use of 
+   these new resources. To accomplish this, you will follow the instructions in 
+   :ref:`topic/tljh-config` to set memory limits and reload the hub. This can be completed 
+   using the terminal in the JupyterHub. It can also be completed through the terminal.
 
 #. TLJH configuration options can be verified by viewing the tljh-config output.
 
@@ -38,7 +38,7 @@ Verifying a Resize
 
 #. If you have changed the number of cores, this can be verified at the command line. 
    ``nproc`` displays the number of available cores, and should be equal to the 
-   number of cores you selected in the "Resize Droplet" panel.
+   number of cores you selected in your provider's interface.
 
    .. code-block:: bash
 
