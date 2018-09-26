@@ -45,6 +45,7 @@ Ubuntu 18.04. We have a bunch of tutorials to get you started!
   - `Digital Ocean <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/digitalocean.html>`_
   - `Google Cloud <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/google.html>`_
   - `Jetstream <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/jetstream.html>`_
+  - `Amazon Web Services <https://aws.amazon.com/>`_
   - ... your favorite provider here, if you can contribute!
 
 - `Tutorial to install TLJH on an already running server you have root access to
