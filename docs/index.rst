@@ -58,6 +58,7 @@ The user environment
 
    howto/env/user-environment
    howto/env/notebook-interfaces
+   howto/env/server-resources
 
 Authentication
 --------------
