@@ -15,7 +15,7 @@ Currently there are instructions to resize your resources on the following provi
 
 * :ref:`Digital Ocean <digitalocean/resize>`.
 
-Once resources have been relocated, you must tell TLJH to make use of these resources,
+Once resources have been reallocated, you must tell TLJH to make use of these resources,
 and verify that the resources have become available.
 
 .. _tljhconf:
