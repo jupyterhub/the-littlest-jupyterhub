@@ -30,6 +30,7 @@ Ubuntu 18.04. We have a bunch of tutorials to get you started.
      install/digitalocean
      install/jetstream
      install/google
+     install/amazon
      install/custom-server
 
 Once you are ready to run your server for real,
@@ -124,6 +125,7 @@ here to better support your favorite provider!
    :titlesonly:
 
    troubleshooting/providers/google
+   troubleshooting/providers/amazon
 
 Contributing
 ============
