@@ -134,7 +134,7 @@ The documentation is organized into several categories:
 Writing style
 =============
 
-When using pronouns in reference to a hypothetical person, such as "a user with
+Typically, documentation is written second person, referring to the reader as “you”. When using pronouns in reference to a hypothetical person, such as "a user with
 a running notebook", gender neutral pronouns (they/their/them) should be used.
 Instead of:
 
