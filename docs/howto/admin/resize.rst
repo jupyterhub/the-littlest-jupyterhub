@@ -9,18 +9,19 @@ the amount of resources allocated to your TLJH install. How resources can be rea
 will depend on the server interface; consult the installation page for your provider for 
 more information. 
 
-However, once resources have been relocated, you must tell TLJH to make use of these resources,
+However, once resources have been reallocated, you must tell TLJH to make use of these resources,
 and verify that the resources have become available.
 
-.. _tljhconf:
+.. _tljh_verify:
 
 Verifying a Resize 
 ==================
 
 #. Once you have resized your server, you will need to tell the JupyterHub to make use of 
    these new resources. To accomplish this, you will follow the instructions in 
-   :ref:`topic/tljh-config` to set memory limits and reload the hub. This can be completed 
-   using the terminal in the JupyterHub. It can also be completed through the terminal.
+   :ref:`topic/tljh-config` to edit :ref:`tljh-set-user-limits`, and 
+   reload the hub. These steps can be completed using the terminal in the JupyterHub. 
+   They can also be completed through the terminal.
 
 #. TLJH configuration options can be verified by viewing the tljh-config output.
 
