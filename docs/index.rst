@@ -58,6 +58,7 @@ The user environment
 
    howto/env/user-environment
    howto/env/notebook-interfaces
+   howto/env/server-resources
 
 Authentication
 --------------
@@ -84,6 +85,8 @@ Administration and security
    howto/admin/resize
    howto/admin/nbresuse
    howto/admin/https
+   howto/admin/enable-extensions
+
 
 Topic Guides
 ============
