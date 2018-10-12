@@ -18,7 +18,7 @@ Currently there are instructions to resize your resources on the following provi
 Once resources have been reallocated, you must tell TLJH to make use of these resources,
 and verify that the resources have become available.
 
-.. _tljh_verify:
+.. _tljhconf:
 
 Verifying a Resize 
 ==================
