@@ -81,7 +81,8 @@ User Server Limits
 
 
 * ``limits.memory`` Specifies the maximum memory that can be used by each
-  individual user. It can be specified as an absolute byte value. You can use
+  individual user. By default there is no memory limit. The limit can be
+  specified as an absolute byte value. You can use
   the suffixes K, M, G or T to mean Kilobyte, Megabyte, Gigabyte or Terabyte
   respectively. Setting it to ``None`` disables memory limits.
 
@@ -95,6 +96,7 @@ User Server Limits
   handedly take down the machine accidentally by OOMing it.
 
 * ``limits.cpu`` A float representing the total CPU-cores each user can use.
+  By default there is no CPU limit.
   1 represents one full CPU, 4 represents 4 full CPUs, 0.5 represents
   half of one CPU, etc. This value is ultimately converted to a percentage and
   rounded down to the nearest integer percentage,

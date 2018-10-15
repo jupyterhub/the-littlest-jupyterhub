@@ -59,6 +59,22 @@ def apply_mock_config(overrides):
     return c
 
 
+def test_default_memory_limit():
+    """
+    Test default per user memory limit
+    """
+    c = apply_mock_config({})
+    assert c.SystemdSpawner.mem_limit is None
+
+
+def test_set_memory_limit():
+    """
+    Test setting per user memory limit
+    """
+    c = apply_mock_config({'limits': {'memory': '42G'}})
+    assert c.SystemdSpawner.mem_limit == '42G'
+
+
 def test_app_default():
     """
     Test default application with no config overrides.
