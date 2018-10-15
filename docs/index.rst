@@ -86,6 +86,8 @@ Administration and security
    howto/admin/resize
    howto/admin/nbresuse
    howto/admin/https
+   howto/admin/enable-extensions
+
 
 Topic Guides
 ============
