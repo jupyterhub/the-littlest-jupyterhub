@@ -123,6 +123,10 @@ jobs:
                     cd docs
                     make html
 
+            - store_artifacts:
+                path: docs/_build/html/
+                destination: html
+
 workflows:
     version: 2
     all-tests:

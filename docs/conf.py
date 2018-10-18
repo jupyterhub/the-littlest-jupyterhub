@@ -34,7 +34,10 @@ intersphinx_cache_limit = 90 # days
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
-html_theme = 'alabaster'
+import alabaster_jupyterhub
+
+html_theme = 'alabaster_jupyterhub'
+html_theme_path = [alabaster_jupyterhub.get_html_theme_path()]
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
