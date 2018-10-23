@@ -219,6 +219,10 @@ def _is_list(item):
 
 
 def main(argv=None):
+    if os.geteuid() != 0:
+        print("Perhaps you didn't use `sudo -E`?")
+        raise(SystemExit)
+
     if argv is None:
         argv = sys.argv[1:]
 
@@ -295,22 +299,18 @@ def main(argv=None):
 
     args = argparser.parse_args(argv)
 
-    try:
-        if args.action == 'show':
-            show_config(args.config_path)
-        elif args.action == 'set':
-            set_config_value(args.config_path, args.key_path, parse_value(args.value))
-        elif args.action == 'add-item':
-            add_config_value(args.config_path, args.key_path, parse_value(args.value))
-        elif args.action == 'remove-item':
-            remove_config_value(args.config_path, args.key_path, parse_value(args.value))
-        elif args.action == 'reload':
-            reload_component(args.component)
-        else:
-            argparser.print_help()
-    except Exception as e:
-        print(str(e))
-        print("Perhaps you didn't use `sudo -E`?")
+    if args.action == 'show':
+        show_config(args.config_path)
+    elif args.action == 'set':
+        set_config_value(args.config_path, args.key_path, parse_value(args.value))
+    elif args.action == 'add-item':
+        add_config_value(args.config_path, args.key_path, parse_value(args.value))
+    elif args.action == 'remove-item':
+        remove_config_value(args.config_path, args.key_path, parse_value(args.value))
+    elif args.action == 'reload':
+        reload_component(args.component)
+    else:
+        argparser.print_help()
 
 
 if __name__ == '__main__':
