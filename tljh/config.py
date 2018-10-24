@@ -220,7 +220,7 @@ def _is_list(item):
 
 def main(argv=None):
     if os.geteuid() != 0:
-        print("Perhaps you didn't use `sudo -E`?")
+        print("It looks like this command wasn't run with root privileges. Perhaps you didn't use `sudo -E`?")
         raise(SystemExit)
 
     if argv is None:
