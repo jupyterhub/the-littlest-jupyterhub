@@ -219,11 +219,18 @@ def _is_list(item):
 
 
 def main(argv=None):
+    if os.geteuid() != 0:
+        print("It looks like this command wasn't run with root privileges. Perhaps you didn't use `sudo -E`?")
+
     if argv is None:
         argv = sys.argv[1:]
 
     from .log import init_logging
-    init_logging()
+    try:
+        init_logging()
+    except Exception as e:
+        print(str(e))
+        print("Perhaps you didn't use `sudo -E`?")
 
     argparser = argparse.ArgumentParser()
     argparser.add_argument(
