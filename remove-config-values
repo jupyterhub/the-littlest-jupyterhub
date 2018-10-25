@@ -1,0 +1,2 @@
+Remove config values in the-littlest-jupyterhub by editing 'config.py' file
+and making the change. ie. comment out or delete the value to be unset
