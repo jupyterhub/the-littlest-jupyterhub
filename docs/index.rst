@@ -144,3 +144,4 @@ to people contributing in various ways.
    contributing/dev-setup
    contributing/tests
    contributing/plugins
+   contributing/packages
