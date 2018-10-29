@@ -160,3 +160,15 @@ Advanced: ``config.yaml``
 ``config.yaml`` file located at ``/opt/tljh/config.yaml``. ``tljh-config``
 is the recommended method of editing / viewing configuration since editing
 YAML by hand in a terminal text editor is a large source of errors.
+
+``Remove configuration values``
+---------------------------------
+
+Use the argument ``remove-item`` to delete a configuration value from the 
+``config.yaml`` file:
+
+``tljh-config remove-item <item being removed>``
+		
+After modifying the configuration, reload JupyterHub to apply changes
+
+``tljh-config reload``
