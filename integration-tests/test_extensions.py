@@ -13,9 +13,9 @@ def test_serverextensions():
     ], stderr=subprocess.PIPE)
 
     extensions = [
-        'jupyterlab 0.34.1',
+        'jupyterlab 0.35.3',
         'nbgitpuller 0.6.1',
-        'nteract_on_jupyter 1.8.1',
+        'nteract_on_jupyter 1.9.12',
         'nbresuse '
     ]
 
