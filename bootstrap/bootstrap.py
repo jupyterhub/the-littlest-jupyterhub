@@ -8,15 +8,24 @@ This script is run as:
     curl <script-url> | sudo python3 -
 
 Constraints:
-  - Be compatible with Python 3.4 (since we support Ubuntu 16.04)
+  - Entire script should be compatible with Python 3.6 (We run on Ubuntu 18.04+)
+  - Script should parse in Python 3.4 (since we exit with useful error message on Ubuntu 14.04+)
   - Use stdlib modules only
 """
 import os
 import subprocess
 import sys
 import logging
+import platform
 
-
+# Support only Ubuntu 18.04+
+distro, version, _ = platform.linux_distribution()
+if distro != 'Ubuntu':
+    print('The Littlest JupyterHub currently supports Ubuntu Linux only')
+    sys.exit(1)
+elif float(version) < 18.04:
+    print('The Littlest JupyterHub requires Ubuntu 18.04 or higher')
+    sys.exit(1)
 
 def main():
     install_prefix = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
