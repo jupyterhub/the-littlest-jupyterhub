@@ -1,9 +1,13 @@
 """
-Test running on non-supported distros
+Test running bootstrap script in different circumstances
 """
 import subprocess
 
+
 def test_ubuntu_too_old():
+    """
+    Error with a useful message when running in older Ubuntu
+    """
     container_name = 'old-distro-test'
 
     # stop container if it is already running

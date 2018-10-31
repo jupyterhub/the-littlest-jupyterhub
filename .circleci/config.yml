@@ -80,9 +80,9 @@ jobs:
                         plugins test_simplest_plugin.py
 
             - run:
-                name: Run distro check test
+                name: Run bootstrap checks
                 command: |
-                    py.test integration-tests/test_distro.py
+                    py.test integration-tests/test_bootstrap.py
 
 
 
