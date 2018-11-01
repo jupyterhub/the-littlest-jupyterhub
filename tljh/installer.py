@@ -12,7 +12,6 @@ from urllib.error import HTTPError
 from urllib.request import urlopen, URLError
 
 import pluggy
-from ruamel.yaml import YAML
 
 from tljh import (
     apt,
@@ -23,8 +22,7 @@ from tljh import (
     traefik,
     user,
 )
-
-from tljh.config import (
+from .config import (
     CONFIG_DIR,
     CONFIG_FILE,
     HUB_ENV_PREFIX,
@@ -32,10 +30,10 @@ from tljh.config import (
     STATE_DIR,
     USER_ENV_PREFIX,
 )
+from .yaml import yaml
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
-rt_yaml = YAML()
 
 logger = logging.getLogger(__name__)
 
@@ -263,7 +261,7 @@ def ensure_admins(admins):
     config_path = CONFIG_FILE
     if os.path.exists(config_path):
         with open(config_path, 'r') as f:
-            config = rt_yaml.load(f)
+            config = yaml.load(f)
     else:
         config = {}
 
@@ -271,7 +269,7 @@ def ensure_admins(admins):
     config['users']['admin'] = list(admins)
 
     with open(config_path, 'w+') as f:
-        rt_yaml.dump(config, f)
+        yaml.dump(config, f)
 
 
 def ensure_jupyterhub_running(times=4):
@@ -388,7 +386,7 @@ def ensure_config_yaml(plugin_manager):
 
     if os.path.exists(CONFIG_FILE):
         with open(CONFIG_FILE, 'r') as f:
-            config = rt_yaml.load(f)
+            config = yaml.load(f)
     else:
         config = {}
 
@@ -396,7 +394,7 @@ def ensure_config_yaml(plugin_manager):
     hook.tljh_config_post_install(config=config)
 
     with open(CONFIG_FILE, 'w+') as f:
-        rt_yaml.dump(config, f)
+        yaml.dump(config, f)
 
 
 def main():
