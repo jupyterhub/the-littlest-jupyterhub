@@ -33,23 +33,23 @@ Step 1: Installing The Littlest JupyterHub
 
 #. If your server is behind a firewall and needs a proxy:
 
-.. code::
+   .. code-block:: bash
 
-   export http_proxy=<your_proxy>
-   export https_proxy=<your_proxy>
+      export http_proxy=<your_proxy>
+      export https_proxy=<your_proxy>
 
 #. Some requests will fail if your certs are self-signed:
 
-.. code::
+   .. code::
 
-   export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates
-   sudo npm config set strict-ssl false
+      export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates
+      sudo npm config set strict-ssl false
 
 #. Make sure you have ``Python3``, ``curl`` and ``git``  installed. On latest Ubuntu you can get all of these with:
 
-.. code::
+   .. code::
 
-   apt-get install python3 git curl
+      apt-get install python3 git curl
 
 #. Copy the text below, and paste it into the terminal. Replace
    ``<admin-user-name>`` with the name of the first **admin user** for this
