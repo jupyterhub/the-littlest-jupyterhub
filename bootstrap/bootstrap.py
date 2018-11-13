@@ -28,8 +28,8 @@ def get_os_release_variable(key):
     """
     return subprocess.check_output([
         '/bin/bash', '-c',
-        "source /etc/os-release && echo $\{{key}\}".format(key=key)
-    ]).split()
+        "source /etc/os-release && echo ${{{key}}}".format(key=key)
+    ]).trim()
 
 def main():
 
