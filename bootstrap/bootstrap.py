@@ -16,18 +16,33 @@ import os
 import subprocess
 import sys
 import logging
-import platform
 
-# Support only Ubuntu 18.04+
-distro, version, _ = platform.linux_distribution()
-if distro != 'Ubuntu':
-    print('The Littlest JupyterHub currently supports Ubuntu Linux only')
-    sys.exit(1)
-elif float(version) < 18.04:
-    print('The Littlest JupyterHub requires Ubuntu 18.04 or higher')
-    sys.exit(1)
+
+def get_os_release_variable(key):
+    """
+    Return value for key from /etc/os-release
+
+    /etc/os-release is a bash file, so should use bash to parse it.
+
+    Returns empty string if key is not found.
+    """
+    return subprocess.check_output([
+        '/bin/bash', '-c',
+        "source /etc/os-release && echo $\{{key}\}".format(key=key)
+    ]).split()
 
 def main():
+
+    # Support only Ubuntu 18.04+
+    distro = get_os_release_variable('ID')
+    version = float(get_os_release_variable('VERSION_ID'))
+    if distro != 'ubuntu':
+        print('The Littlest JupyterHub currently supports Ubuntu Linux only')
+        sys.exit(1)
+    elif float(version) < 18.04:
+        print('The Littlest JupyterHub requires Ubuntu 18.04 or higher')
+        sys.exit(1)
+
     install_prefix = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
     hub_prefix = os.path.join(install_prefix, 'hub')
 
