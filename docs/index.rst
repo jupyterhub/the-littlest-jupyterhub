@@ -6,6 +6,7 @@ A simple `JupyterHub <https://github.com/jupyterhub/jupyterhub>`_ distribution f
 a small (0-100) number of users on a single server. We recommend reading
 :ref:`topic/whentouse` to determine if this is the right tool for you.
 
+
 Development Status
 ==================
 
@@ -18,7 +19,8 @@ Installation
 ============
 
 The Littlest JupyterHub (TLJH) can run on any server that is running at least
-Ubuntu 18.04. We have a bunch of tutorials to get you started.
+**Ubuntu 18.04**. Earlier versions of Ubuntu are not supported.
+We have a bunch of tutorials to get you started.
 
 - Tutorials to create a new server from scratch on a cloud provider & run TLJH
   on it. These are **recommended** if you do not have much experience setting up
