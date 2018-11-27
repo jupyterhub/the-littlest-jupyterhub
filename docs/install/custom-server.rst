@@ -36,14 +36,15 @@ Step 1: Installing The Littlest JupyterHub
    .. code-block:: bash
 
       export http_proxy=<your_proxy>
-      export https_proxy=<your_proxy>
 
-#. Some requests will fail if your certs are self-signed:
+#. Some requests will fail if your certs are self-signed. Copy the text below and paste it
+   into the terminal after replacing ``</directory/with/your/ssl/certificates>`` 
+   with the **path of the directory containing your ssl certificates** (don't include the brackets!).:
 
    .. code::
 
-      export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates
-      sudo npm config set strict-ssl false
+      export REQUESTS_CA_BUNDLE=</directory/with/your/ssl/certificates>
+      sudo npm config set cafile </directory/with/your/ssl/certificates>
 
 #. Make sure you have ``Python3``, ``curl`` and ``git``  installed. On latest Ubuntu you can get all of these with:
 
