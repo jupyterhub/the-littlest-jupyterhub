@@ -1,0 +1,16 @@
+Nov 26 13:39:12 ip-1-70-56-145 systemd[1]: Started traefik.service.
+Nov 26 13:39:12 ip-1-70-56-145 traefik[11860]: time="2018-11-26T13:39:12Z" level=info msg="Using TOML configuration file /opt/tljh/state/traefik.toml"
+Nov 26 13:39:12 ip-1-70-56-145 traefik[11860]: time="2018-11-26T13:39:12Z" level=info msg="Traefik version v1.6.5 built on 2018-07-10_03:54:03PM"
+Nov 26 13:39:12 ip-1-70-56-145 traefik[11860]: time="2018-11-26T13:39:12Z" level=info msg="\nStats collection is disabled.\nHelp us improve Traefik by turning this feature on :)\nMore details on: https://docs.traefik.io/basics/#collected-data\n"
+Nov 26 13:39:12 ip-1-70-56-145 traefik[11860]: time="2018-11-26T13:39:12Z" level=info msg="Preparing server https &{Address::443 TLS:0xc42004cd00 Redirect:<nil> Auth:<nil> WhitelistSourceRange:[] WhiteList:<nil> Compress:false ProxyProtocol:<nil> Forwar
+Nov 26 13:39:12 ip-1-70-56-145 traefik[11860]: time="2018-11-26T13:39:12Z" level=error msg="Unable to add a certificate to the entryPoint \"https\" : unable to generate TLS certificate : tls: private key does not match public key"
+Nov 26 13:39:12 ip-1-70-56-145 traefik[11860]: time="2018-11-26T13:39:12Z" level=error msg="Error creating TLS config: No certificates found for TLS entrypoint https"
+Nov 26 13:39:12 ip-1-70-56-145 traefik[11860]: time="2018-11-26T13:39:12Z" level=fatal msg="Error preparing server: No certificates found for TLS entrypoint https"
+Nov 26 13:39:12 ip-1-70-56-145 systemd[1]: traefik.service: Main process exited, code=exited, status=1/FAILURE
+Nov 26 13:39:12 ip-1-70-56-145 systemd[1]: traefik.service: Failed with result 'exit-code'.
+Nov 26 13:39:13 ip-1-70-56-145 systemd[1]: traefik.service: Service hold-off time over, scheduling restart.
+Nov 26 13:39:13 ip-1-70-56-145 systemd[1]: traefik.service: Scheduled restart job, restart counter is at 5.
+Nov 26 13:39:13 ip-1-70-56-145 systemd[1]: Stopped traefik.service.
+Nov 26 13:39:13 ip-1-70-56-145 systemd[1]: traefik.service: Start request repeated too quickly.
+Nov 26 13:39:13 ip-1-70-56-145 systemd[1]: traefik.service: Failed with result 'exit-code'.
+Nov 26 13:39:13 ip-1-70-56-145 systemd[1]: Failed to start traefik.service.
