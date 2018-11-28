@@ -23,7 +23,7 @@ Pre-requisites
 #. Some familiarity with the command line.
 #. A server running Ubuntu 18.04 where you have root access.
 #. Ability to ``ssh`` into the server & run commands from the prompt.
-#. A **public IP** where the server can be accessed from the internet.
+#. A **IP address** where the server can be reached from the browsers of your target audience.
 
 Step 1: Installing The Littlest JupyterHub
 ==========================================
