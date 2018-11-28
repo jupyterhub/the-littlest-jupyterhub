@@ -66,6 +66,7 @@ def main():
     else:
         logger.info('Setting up hub environment')
         initial_setup = True
+        subprocess.check_output(['add-apt-repository', 'universe'], stderr=subprocess.STDOUT)
         subprocess.check_output(['apt-get', 'update', '--yes'], stderr=subprocess.STDOUT)
         subprocess.check_output(['apt-get', 'install', '--yes', 'python3', 'python3-venv', 'git'], stderr=subprocess.STDOUT)
         logger.info('Installed python & virtual environment')
