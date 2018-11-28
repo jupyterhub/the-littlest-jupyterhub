@@ -31,7 +31,7 @@ Step 1: Installing The Littlest JupyterHub
 #. Using a terminal program, SSH into your server. This should give you a prompt where you can
    type commands.
 
-#. If your server is behind a firewall and needs a proxy:
+#. If your server is behind a firewall and needs a proxy to reach the internet:
 
    .. code-block:: bash
 
