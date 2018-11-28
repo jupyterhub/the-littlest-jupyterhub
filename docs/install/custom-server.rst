@@ -44,7 +44,7 @@ Step 1: Installing The Littlest JupyterHub
    .. code::
 
       export REQUESTS_CA_BUNDLE=</directory/with/your/ssl/certificates>
-      sudo npm config set cafile </directory/with/your/ssl/certificates>
+      sudo npm config set cafile=</directory/with/your/ssl/certificates>
 
 #. Make sure you have ``Python3``, ``curl`` and ``git``  installed. On latest Ubuntu you can get all of these with:
 
