@@ -6,7 +6,7 @@ The Littlest JupyterHub
    :target: https://circleci.com/gh/jupyterhub/the-littlest-jupyterhub
 .. image:: https://codecov.io/gh/jupyterhub/the-littlest-jupyterhub/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/jupyterhub/the-littlest-jupyterhub
-.. image:: https://media.readthedocs.org/static/projects/badges/passing-flat.svg
+.. image:: https://readthedocs.org/projects/the-littlest-jupyterhub/badge/?version=latest
    :target: https://the-littlest-jupyterhub.readthedocs.io
 .. image:: https://badges.gitter.im/jupyterhub/jupyterhub.svg
    :target: https://gitter.im/jupyterhub/jupyterhub
