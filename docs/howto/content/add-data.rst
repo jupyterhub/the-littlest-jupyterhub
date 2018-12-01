@@ -83,7 +83,7 @@ time. You can download it from your browser `at this link <https://swcarpentry.g
 
       sudo apt install unzip
 
-#. Finally, unzip the the file:
+#. Finally, unzip the file:
 
    unzip python-novice-gapminder-data.zip
 

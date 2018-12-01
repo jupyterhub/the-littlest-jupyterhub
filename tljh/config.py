@@ -13,14 +13,13 @@ tljh-config show firstlevel.second_level
 """
 
 import argparse
+from collections import Sequence, Mapping
 from copy import deepcopy
 import os
 import re
 import sys
 
-from ruamel.yaml import YAML
-from ruamel.yaml.comments import CommentedMap, CommentedSeq
-yaml = YAML(typ='rt')
+from .yaml import yaml
 
 
 INSTALL_PREFIX = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
@@ -211,11 +210,11 @@ def parse_value(value_str):
 
 
 def _is_dict(item):
-    return isinstance(item, (dict, CommentedMap))
+    return isinstance(item, Mapping)
 
 
 def _is_list(item):
-    return isinstance(item, (list, CommentedSeq))
+    return isinstance(item, Sequence)
 
 
 def main(argv=None):
