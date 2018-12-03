@@ -23,7 +23,7 @@ Pre-requisites
 #. Some familiarity with the command line.
 #. A server running Ubuntu 18.04 where you have root access.
 #. Ability to ``ssh`` into the server & run commands from the prompt.
-#. A **public IP** where the server can be accessed from the internet.
+#. A **IP address** where the server can be reached from the browsers of your target audience.
 
 Step 1: Installing The Littlest JupyterHub
 ==========================================
@@ -31,11 +31,26 @@ Step 1: Installing The Littlest JupyterHub
 #. Using a terminal program, SSH into your server. This should give you a prompt where you can
    type commands.
 
+#. If your server is behind a firewall and needs a proxy to reach the internet:
+
+   .. code-block:: bash
+
+      export http_proxy=<your_proxy>
+
+#. Some requests will fail if your certs are self-signed. Copy the text below and paste it
+   into the terminal after replacing ``</directory/with/your/ssl/certificates>`` 
+   with the **path of the directory containing your ssl certificates** (don't include the brackets!).:
+
+   .. code::
+
+      export REQUESTS_CA_BUNDLE=</directory/with/your/ssl/certificates>
+      sudo npm config set cafile=</directory/with/your/ssl/certificates>
+
 #. Make sure you have ``Python3``, ``curl`` and ``git``  installed. On latest Ubuntu you can get all of these with:
 
-.. code::
+   .. code::
 
-   apt-get install python3 git curl
+      apt-get install python3 git curl
 
 #. Copy the text below, and paste it into the terminal. Replace
    ``<admin-user-name>`` with the name of the first **admin user** for this
@@ -45,7 +60,7 @@ Step 1: Installing The Littlest JupyterHub
 
    .. code-block:: bash
 
-      curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py | sudo python3 - --admin <admin-user-name>
+      curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py | sudo -E python3 - --admin <admin-user-name>
 
    .. note::
 
