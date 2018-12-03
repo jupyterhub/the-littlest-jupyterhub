@@ -35,6 +35,8 @@ from .yaml import yaml
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 
+logger = logging.getLogger(__name__)
+
 def ensure_node():
     """
     Ensure nodejs from nodesource is installed
