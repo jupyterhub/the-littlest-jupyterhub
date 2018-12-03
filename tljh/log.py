@@ -17,3 +17,4 @@ def init_logging():
     stderr_logger.setFormatter(logging.Formatter("%(message)s"))
     logger.addHandler(stderr_logger)
     logger.setLevel(logging.INFO)
+    return logger
