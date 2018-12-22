@@ -40,7 +40,7 @@ def test_nbextensions():
         assert '{} \x1b[32m enabled \x1b[0m'.format(e) in proc.stdout.decode()
 
     # Ensure we have 'OK' messages in our stdout, to make sure everything is importable
-    proc.stderr.decode() == '      - Validating: \x1b[32mOK\x1b[0m\n' * len(extensions)
+    assert proc.stderr.decode() == '      - Validating: \x1b[32mOK\x1b[0m\n' * len(extensions)
 
 
 def test_labextensions():

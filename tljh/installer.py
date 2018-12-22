@@ -163,7 +163,8 @@ def ensure_jupyterlab_extensions():
     Install the JupyterLab extensions we want.
     """
     extensions = [
-        '@jupyterlab/hub-extension'
+        '@jupyterlab/hub-extension',
+        '@jupyter-widgets/jupyterlab-manager'
     ]
     subprocess.check_output([
         os.path.join(USER_ENV_PREFIX, 'bin/jupyter'),
@@ -243,7 +244,9 @@ def ensure_user_environment(user_requirements_txt_file):
         # nbgitpuller for easily pulling in Git repositories
         'nbgitpuller==0.6.1',
         # nbresuse to show people how much RAM they are using
-        'nbresuse==0.3.0'
+        'nbresuse==0.3.0',
+        # Most people consider ipywidgets to be part of the core notebook experience
+        'ipywidgets==7.4.2'
     ])
 
     if user_requirements_txt_file:
