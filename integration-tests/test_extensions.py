@@ -34,6 +34,8 @@ def test_nbextensions():
 
     extensions = [
         'nbresuse/main',
+        # This is what ipywidgets nbextension is called
+        'jupyter-js-widgets/extension'
     ]
 
     for e in extensions:
