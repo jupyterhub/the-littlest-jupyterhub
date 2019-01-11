@@ -130,6 +130,7 @@ here to better support your favorite provider!
 
    troubleshooting/providers/google
    troubleshooting/providers/amazon
+   troubleshooting/providers/custom
 
 Contributing
 ============
