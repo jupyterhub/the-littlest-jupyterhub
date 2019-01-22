@@ -18,6 +18,7 @@ from copy import deepcopy
 import os
 import re
 import sys
+import asyncio
 
 from .yaml import yaml
 
@@ -85,7 +86,7 @@ def add_item_to_config(config, property_path, value):
 
 def remove_item_from_config(config, property_path, value):
     """
-    Add an item to a list in config.
+    Remove an item from a list in config.
     """
     path_components = property_path.split('.')
 
@@ -183,11 +184,14 @@ def reload_component(component):
     from tljh import systemd, traefik
     if component == 'hub':
         systemd.restart_service('jupyterhub')
-        # FIXME: Verify hub is back up?
+        # Ensure hub is back up
+        while not systemd.check_service_active('jupyterhub'):
+            asyncio.sleep(1)
+        while not systemd.check_hub_ready():
+            asyncio.sleep(1)
         print('Hub reload with new configuration complete')
     elif component == 'proxy':
         traefik.ensure_traefik_config(STATE_DIR)
-        systemd.restart_service('configurable-http-proxy')
         systemd.restart_service('traefik')
         print('Proxy reload with new configuration complete')
 

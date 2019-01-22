@@ -34,10 +34,6 @@ async def test_user_code_execute():
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummyauthenticator.DummyAuthenticator')).wait()
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
 
-    # FIXME: wait for reload to finish & hub to come up
-    # Should be part of tljh-config reload
-    await asyncio.sleep(1)
-
     async with User(username, hub_url, partial(login_dummy, password='')) as u:
             await u.login()
             await u.ensure_server()
@@ -62,9 +58,6 @@ async def test_user_admin_add():
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'add-item', 'users.admin', username)).wait()
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
 
-    # FIXME: wait for reload to finish & hub to come up
-    # Should be part of tljh-config reload
-    await asyncio.sleep(1)
     async with User(username, hub_url, partial(login_dummy, password='')) as u:
             await u.login()
             await u.ensure_server()
@@ -94,9 +87,6 @@ async def test_user_admin_remove():
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'add-item', 'users.admin', username)).wait()
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
 
-    # FIXME: wait for reload to finish & hub to come up
-    # Should be part of tljh-config reload
-    await asyncio.sleep(1)
     async with User(username, hub_url, partial(login_dummy, password='')) as u:
             await u.login()
             await u.ensure_server()
@@ -107,16 +97,14 @@ async def test_user_admin_remove():
             # Assert that the user has admin rights
             assert f'jupyter-{username}' in grp.getgrnam('jupyterhub-admins').gr_mem
 
-
             assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'remove-item', 'users.admin', username)).wait()
             assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
-            await asyncio.sleep(1)
 
             await u.stop_server()
             await u.ensure_server()
 
             # Assert that the user does *not* have admin rights
-            assert f'jupyter-{username}' in grp.getgrnam('jupyterhub-admins').gr_mem
+            assert f'jupyter-{username}' not in grp.getgrnam('jupyterhub-admins').gr_mem
 
 
 @pytest.mark.asyncio
@@ -132,9 +120,6 @@ async def test_long_username():
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummyauthenticator.DummyAuthenticator')).wait()
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
 
-    # FIXME: wait for reload to finish & hub to come up
-    # Should be part of tljh-config reload
-    await asyncio.sleep(1)
     try:
         async with User(username, hub_url, partial(login_dummy, password='')) as u:
                 await u.login()

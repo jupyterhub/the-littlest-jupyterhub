@@ -1,9 +1,9 @@
 # Template file for JupyterHub systemd service
 # Uses simple string.format() for 'templating'
 [Unit]
-# CHP must have successfully started *before* we launch JupyterHub
-Requires=configurable-http-proxy.service
-After=configurable-http-proxy.service
+# Traefik must have successfully started *before* we launch JupyterHub
+Requires=traefik.service
+After=traefik.service
 
 [Service]
 User=root
@@ -17,7 +17,6 @@ PrivateDevices=yes
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
 # Source CONFIGPROXY_AUTH_TOKEN from here!
-EnvironmentFile={install_prefix}/state/configurable-http-proxy.secret
 Environment=TLJH_INSTALL_PREFIX={install_prefix}
 ExecStart={python_interpreter_path} -m jupyterhub.app -f {jupyterhub_config_path}
 

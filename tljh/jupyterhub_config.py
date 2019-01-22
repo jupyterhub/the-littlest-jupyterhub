@@ -10,7 +10,7 @@ from tljh import configurer, user
 from tljh.config import INSTALL_PREFIX, USER_ENV_PREFIX, CONFIG_DIR
 from tljh.normalize import generate_system_username
 from tljh.yaml import yaml
-
+from jupyterhub_traefik_proxy import TraefikTomlProxy
 
 class UserCreatingSpawner(SystemdSpawner):
     """
@@ -43,8 +43,11 @@ c.JupyterHub.cleanup_servers = False
 # Use a high port so users can try this on machines with a JupyterHub already present
 c.JupyterHub.hub_port = 15001
 
-c.ConfigurableHTTPProxy.should_start = False
-c.ConfigurableHTTPProxy.api_url = 'http://127.0.0.1:15002'
+c.TraefikTomlProxy.should_start = False
+c.TraefikTomlProxy.traefik_api_password = "admin"
+c.TraefikTomlProxy.traefik_api_username = "api_admin"
+c.TraefikTomlProxy.toml_dynamic_config_file = "/opt/tljh/state/rules.toml"
+c.JupyterHub.proxy_class = TraefikTomlProxy
 
 c.SystemdSpawner.extra_paths = [os.path.join(USER_ENV_PREFIX, 'bin')]
 c.SystemdSpawner.default_shell = '/bin/bash'

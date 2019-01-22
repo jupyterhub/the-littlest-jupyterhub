@@ -33,7 +33,6 @@ idleTimeout = "10m0s"
   {% if https['enabled'] %}
   [entryPoints.https]
   address = ":{{https['port']}}"
-  backend = "jupyterhub"
   [entryPoints.https.tls]
   {% if https['tls']['cert'] %}
     [[entryPoints.https.tls.certificates]]
@@ -41,6 +40,17 @@ idleTimeout = "10m0s"
       keyFile = "{{https['tls']['key']}}"
   {% endif %}
   {% endif %}
+  [entryPoints.auth_api]
+  address = ":8099"
+  [entryPoints.auth_api.auth.basic]
+  users = ["api_admin:$apr1$eS/j3kum$q/X2khsIEG/bBGsteP.x./"]
+
+[wss]
+protocol = "http"
+
+[api]
+dashboard = true
+entrypoint = "auth_api"
 
 {% if https['enabled'] and https['letsencrypt']['email'] %}
 [acme]
@@ -57,13 +67,5 @@ entryPoint = "https"
 {% endif %}
 
 [file]
-
-[frontends]
-  [frontends.jupyterhub]
-  backend = "jupyterhub"
-  passHostHeader = true
-[backends]
-  [backends.jupyterhub]
-    [backends.jupyterhub.servers.chp]
-    url = "http://127.0.0.1:15003"
-
+filename = "/opt/tljh/state/rules.toml"
+watch = true

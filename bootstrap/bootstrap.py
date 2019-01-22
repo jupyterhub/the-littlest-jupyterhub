@@ -86,11 +86,19 @@ def main():
         'git+https://github.com/jupyterhub/the-littlest-jupyterhub.git'
     )
 
+    traefik_proxy_repo_path = 'git+https://github.com/jupyterhub/traefik-proxy.git'
+
     subprocess.check_output([
         os.path.join(hub_prefix, 'bin', 'pip'),
         'install'
     ] + pip_flags + [tljh_repo_path], stderr=subprocess.STDOUT)
     logger.info('Setup tljh package')
+
+    subprocess.check_output([
+        os.path.join(hub_prefix, 'bin', 'pip'),
+        'install'
+    ] + [traefik_proxy_repo_path], stderr=subprocess.STDOUT)
+    logger.info('Setup traefik-proxy package')
 
     logger.info('Starting TLJH installer...')
     os.execv(

@@ -9,11 +9,11 @@ from tljh.configurer import load_config
 
 # FIXME: support more than one platform here
 plat = "linux-amd64"
-traefik_version = "1.6.5"
+traefik_version = "1.7.5"
 
 # record sha256 hashes for supported platforms here
 checksums = {
-    "linux-amd64": "9e77c7664e316953e3f5463c323dffeeecbb35d0b1db7fb49f52e1d9464ca193"
+    "linux-amd64": "4417a9d83753e1ad6bdd64bbbeaeb4b279bcc71542e779b7bcb3b027c6e3356e"
 }
 
 
@@ -77,6 +77,9 @@ def ensure_traefik_config(state_dir):
     with open(os.path.join(state_dir, "traefik.toml"), "w") as f:
         os.fchmod(f.fileno(), 0o744)
         f.write(new_toml)
+
+    with open(os.path.join(state_dir, "rules.toml"), "w") as f:
+        os.fchmod(f.fileno(), 0o744)
 
     # ensure acme.json exists and is private
     with open(os.path.join(state_dir, "acme.json"), "a") as f:

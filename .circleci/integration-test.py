@@ -108,7 +108,7 @@ def show_logs(container_name):
     )
     run_container_command(
         container_name,
-        'systemctl --no-pager status jupyterhub configurable-http-proxy'
+        'systemctl --no-pager status jupyterhub traefik'
     )
 
 def main():
