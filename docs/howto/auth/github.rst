@@ -19,11 +19,11 @@ Step 1: Create a GitHub application
 #. Go to the `GitHub OAuth app creation page <https://github.com/settings/applications/new>`_.
 
    * **Application name**: Choose a descriptive application name (e.g. ``tljh``)
-   * **Homepage URL**: Use the IP address or URL of your JupyterHub. e.g. ``http://<my-tljh-url>```.
+   * **Homepage URL**: Use the IP address or URL of your JupyterHub. e.g. ``http(s)://<my-tljh-url>```.
    * **Application description**: Use any description that you like.
    * **Authorization callback URL**: Insert text with the following form::
 
-          http://<my-tljh-ip-address>/hub/oauth_callback
+          http(s)://<my-tljh-ip-address>/hub/oauth_callback
 
    * When you're done filling in the page, it should look something like this:
 
@@ -55,13 +55,16 @@ For more information on ``tljh-config``, see :ref:`topic/tljh-config`.
    .. image:: ../../images/notebook/new-terminal-button.png
       :alt: New terminal button.
 
-#. Configure the GitHub OAuthenticator to use your client ID and secret with the following commands::
+#. Configure the GitHub OAuthenticator to use your client ID, client secret and callback URL with the following commands::
 
      sudo tljh-config set auth.GitHubOAuthenticator.client_id '<my-tljh-client-id>'
 
    ::
 
      sudo tljh-config set auth.GitHubOAuthenticator.client_secret '<my-tljh-client-secret>'
+   ::
+
+     sudo tljh-config set auth.GitHubOAuthenticator.oauth_callback_url 'http(s)://<my-tljh-ip-address>/hub/oauth_callback'
 
 #. Tell your JupyterHub to *use* the GitHub OAuthenticator for authentication::
 
