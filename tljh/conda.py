@@ -58,6 +58,21 @@ def download_miniconda_installer(version, md5sum):
         yield f.name
 
 
+def fix_permissions(prefix):
+    """Fix permissions in the install prefix
+
+    For all files in the prefix, ensure that:
+    - everything is owned by current user:group
+    - nothing is world-writeable
+
+    Run after each install command.
+    """
+    subprocess.check_call(
+        ["chown", "-R", "{}:{}".format(os.getuid(), os.getgid()), prefix]
+    )
+    subprocess.check_call(["chmod", "-R", "o-w", prefix])
+
+
 def install_miniconda(installer_path, prefix):
     """
     Install miniconda with installer at installer_path under prefix
@@ -71,10 +86,7 @@ def install_miniconda(installer_path, prefix):
     # fix permissions on initial install
     # a few files have the wrong ownership and permissions initially
     # when the installer is run as root
-    subprocess.check_call(
-        ["chown", "-R", "{}:{}".format(os.getuid(), os.getgid()), prefix]
-    )
-    subprocess.check_call(["chmod", "-R", "o-w", prefix])
+    fix_permissions(prefix)
 
 
 def ensure_conda_packages(prefix, packages):
@@ -105,6 +117,7 @@ def ensure_conda_packages(prefix, packages):
     output = json.loads(filtered_output.lstrip('\x00'))
     if 'success' in output and output['success'] == True:
         return
+    fix_permissions(prefix)
 
 
 def ensure_pip_packages(prefix, packages):
@@ -118,6 +131,7 @@ def ensure_pip_packages(prefix, packages):
         'install',
         '--no-cache-dir',
     ] + packages, stderr=subprocess.STDOUT)
+    fix_permissions(prefix)
 
 
 def ensure_pip_requirements(prefix, requirements_path):
@@ -134,3 +148,4 @@ def ensure_pip_requirements(prefix, requirements_path):
         '-r',
         requirements_path
     ], stderr=subprocess.STDOUT)
+    fix_permissions(prefix)
