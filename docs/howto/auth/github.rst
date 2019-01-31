@@ -62,6 +62,7 @@ For more information on ``tljh-config``, see :ref:`topic/tljh-config`.
    ::
 
      sudo tljh-config set auth.GitHubOAuthenticator.client_secret '<my-tljh-client-secret>'
+   
    ::
 
      sudo tljh-config set auth.GitHubOAuthenticator.oauth_callback_url 'http(s)://<my-tljh-ip-address>/hub/oauth_callback'
