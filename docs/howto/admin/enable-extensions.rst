@@ -34,7 +34,7 @@ Enabling extensions via the command line
 
    .. code-block:: bash
 
-      sudo -E jupyter contrib nbextension install --system
+      sudo -E jupyter contrib nbextension install --sys-prefix
 
 #. Then, you will enable the extensions you would like to use. The syntax for this is 
    ``jupyter nbextension enable`` followed by the path to the desired extension's main file. 
@@ -43,7 +43,7 @@ Enabling extensions via the command line
 
    .. code-block:: bash
 
-      sudo -E jupyter nbextension enable scratchpad/main --system
+      sudo -E jupyter nbextension enable scratchpad/main --sys-prefix
 
 #. When this is completed, the enabled extension should be visible in the extension list:
 
