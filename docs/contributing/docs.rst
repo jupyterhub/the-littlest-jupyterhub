@@ -199,11 +199,18 @@ Our policy for new features is:
     All new features must have appropriate documentation before they
     can be merged.
 
-Minimizing images
-=================
+Choosing image size
+===================
 
-Optimize image compression where possible. For PNG files, use OptiPNG and
-AdvanceCOMP's ``advpng``:
+When adding images to the documentation, try to keep them as small as possible.
+Larger images make the site load more slowly on browsers, and may make the site
+inaccessible for people with a slow internet connection.
+
+If you're adding screenshots, make the size of your shot as small as possible.
+If you're uploading large images, consider using an image optimizer in order
+to reduce its size.
+
+For example, for PNG files, use OptiPNG and AdvanceCOMP's ``advpng``:
 
 .. code-block:: console
 
