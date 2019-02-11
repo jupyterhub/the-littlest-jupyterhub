@@ -1,15 +1,15 @@
 """
 JupyterHub config for the littlest jupyterhub.
 """
-import copy
-import os
-import yaml
+
 from glob import glob
+import os
 
 from systemdspawner import SystemdSpawner
 from tljh import configurer, user
 from tljh.config import INSTALL_PREFIX, USER_ENV_PREFIX, CONFIG_DIR
 from tljh.normalize import generate_system_username
+from tljh.yaml import yaml
 
 
 class UserCreatingSpawner(SystemdSpawner):
@@ -54,7 +54,7 @@ c.SystemdSpawner.unit_name_template = 'jupyter-{USERNAME}'
 config_overrides_path = os.path.join(CONFIG_DIR, 'config.yaml')
 if os.path.exists(config_overrides_path):
     with open(config_overrides_path) as f:
-        config_overrides = yaml.safe_load(f)
+        config_overrides = yaml.load(f)
 else:
     config_overrides = {}
 configurer.apply_config(config_overrides, c)
