@@ -46,11 +46,17 @@ default = {
             'domains': [],
         },
     },
+    'auth_api': {
+        'ip': "127.0.0.1",
+        'port': 8099,
+        'username': 'api_admin',
+        'password': 'admin',
+        'basic_auth': ''
+    },
     'user_environment': {
         'default_app': 'classic',
     },
 }
-
 
 def load_config(config_file=CONFIG_FILE):
     """Load the current config as a dictionary
@@ -62,6 +68,8 @@ def load_config(config_file=CONFIG_FILE):
             config_overrides = yaml.load(f)
     else:
         config_overrides = {}
+
+    generate_traefik_api_credentials()
     return _merge_dictionaries(dict(default), config_overrides)
 
 
@@ -76,6 +84,7 @@ def apply_config(config_overrides, c):
     update_limits(c, tljh_config)
     update_user_environment(c, tljh_config)
     update_user_account_config(c, tljh_config)
+    update_auth_api(c, tljh_config)
 
 
 def set_if_not_none(parent, key, value):
@@ -84,6 +93,14 @@ def set_if_not_none(parent, key, value):
     """
     if value is not None:
         setattr(parent, key, value)
+
+def generate_traefik_api_credentials():
+    from passlib.apache import HtpasswdFile
+
+    ht = HtpasswdFile()
+    ht.set_password(default['auth_api']['username'], default['auth_api']['password'])
+    traefik_api_hashed_password = str(ht.to_string()).split(":")[1][:-3]
+    default['auth_api']['basic_auth'] = default['auth_api']['username'] + ":" + traefik_api_hashed_password
 
 
 def update_auth(c, config):
@@ -147,6 +164,14 @@ def update_user_environment(c, config):
 
 def update_user_account_config(c, config):
     c.SystemdSpawner.username_template = 'jupyter-{USERNAME}'
+
+
+def update_auth_api(c, config):
+    """
+    Set traefik api endpoint credentials
+    """
+    c.TraefikTomlProxy.traefik_api_username = config['auth_api']['username']
+    c.TraefikTomlProxy.traefik_api_password = config['auth_api']['password']
 
 
 def _merge_dictionaries(a, b, path=None, update=True):

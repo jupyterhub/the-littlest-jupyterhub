@@ -75,11 +75,11 @@ def ensure_traefik_config(state_dir):
         ):
             raise ValueError("Both email and domains must be set for letsencrypt")
     with open(os.path.join(state_dir, "traefik.toml"), "w") as f:
-        os.fchmod(f.fileno(), 0o744)
+        os.fchmod(f.fileno(), 0o600)
         f.write(new_toml)
 
     with open(os.path.join(state_dir, "rules.toml"), "w") as f:
-        os.fchmod(f.fileno(), 0o744)
+        os.fchmod(f.fileno(), 0o600)
 
     # ensure acme.json exists and is private
     with open(os.path.join(state_dir, "acme.json"), "a") as f:

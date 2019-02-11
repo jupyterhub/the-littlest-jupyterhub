@@ -173,6 +173,14 @@ def remove_config_value(config_path, key_path, value):
     with open(config_path, 'w') as f:
         yaml.dump(config, f)
 
+def check_hub_ready():
+    import requests
+
+    try:
+        r = requests.get('http://127.0.0.1:80')
+        return r.status_code == 200
+    except:
+        return False
 
 def reload_component(component):
     """
@@ -182,17 +190,21 @@ def reload_component(component):
     """
     # import here to avoid circular imports
     from tljh import systemd, traefik
+    import time
+
     if component == 'hub':
         systemd.restart_service('jupyterhub')
         # Ensure hub is back up
         while not systemd.check_service_active('jupyterhub'):
-            asyncio.sleep(1)
-        while not systemd.check_hub_ready():
-            asyncio.sleep(1)
+            time.sleep(1)
+        while not check_hub_ready():
+            time.sleep(1)
         print('Hub reload with new configuration complete')
     elif component == 'proxy':
         traefik.ensure_traefik_config(STATE_DIR)
         systemd.restart_service('traefik')
+        while not systemd.check_service_active('traefik'):
+            time.sleep(1)
         print('Proxy reload with new configuration complete')
 
 

@@ -85,33 +85,3 @@ def check_service_active(name):
         return True
     except subprocess.CalledProcessError:
         return False
-
-
-def check_hub_ready():
-    """
-    Check if the hub is ready
-    """
-
-    try:
-        last_restart = subprocess.check_output([
-            'systemctl',
-            'show',
-            'jupyterhub',
-            '-p',
-            'ActiveEnterTimestamp'
-            ]).decode().strip()
-
-        last_restart = " ".join(last_restart.split(" ")[-3:-1])
-
-        out = subprocess.check_output([
-            'journalctl',
-            '-u',
-            'jupyterhub',
-            '--since',
-            last_restart
-        ])
-
-        if "JupyterHub is now running at" in out.decode():
-            return True
-    except subprocess.CalledProcessError:
-        return False

@@ -41,9 +41,11 @@ idleTimeout = "10m0s"
   {% endif %}
   {% endif %}
   [entryPoints.auth_api]
-  address = ":8099"
+  address = ":{{auth_api['port']}}"
+  [entryPoints.auth_api.whiteList]
+  sourceRange = ['{{auth_api['ip']}}']
   [entryPoints.auth_api.auth.basic]
-  users = ["api_admin:$apr1$eS/j3kum$q/X2khsIEG/bBGsteP.x./"]
+  users = ['{{auth_api['basic_auth']}}']
 
 [wss]
 protocol = "http"
@@ -67,5 +69,5 @@ entryPoint = "https"
 {% endif %}
 
 [file]
-filename = "/opt/tljh/state/rules.toml"
+filename = "rules.toml"
 watch = true

@@ -159,3 +159,27 @@ def test_auth_github():
     assert c.JupyterHub.authenticator_class == 'oauthenticator.github.GitHubOAuthenticator'
     assert c.GitHubOAuthenticator.client_id == 'something'
     assert c.GitHubOAuthenticator.client_secret == 'something-else'
+
+
+def test_auth_api_default():
+    """
+    Test default traefik api authentication settings with no overrides
+    """
+    c = apply_mock_config({})
+
+    assert c.TraefikTomlProxy.traefik_api_username == 'api_admin'
+    assert c.TraefikTomlProxy.traefik_api_password == 'admin'
+
+
+def test_set_auth_api():
+    """
+    Test setting per traefik api credentials
+    """
+    c = apply_mock_config({
+                            'auth_api': {
+                                        'username': 'some_user',
+                                        'password': '1234'
+                            }
+    })
+    assert c.TraefikTomlProxy.traefik_api_username == 'some_user'
+    assert c.TraefikTomlProxy.traefik_api_password == '1234'

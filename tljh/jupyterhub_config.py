@@ -44,9 +44,9 @@ c.JupyterHub.cleanup_servers = False
 c.JupyterHub.hub_port = 15001
 
 c.TraefikTomlProxy.should_start = False
-c.TraefikTomlProxy.traefik_api_password = "admin"
-c.TraefikTomlProxy.traefik_api_username = "api_admin"
-c.TraefikTomlProxy.toml_dynamic_config_file = "/opt/tljh/state/rules.toml"
+
+dynamic_conf_file_path = os.path.join(INSTALL_PREFIX, 'state', 'rules.toml')
+c.TraefikTomlProxy.toml_dynamic_config_file = dynamic_conf_file_path
 c.JupyterHub.proxy_class = TraefikTomlProxy
 
 c.SystemdSpawner.extra_paths = [os.path.join(USER_ENV_PREFIX, 'bin')]

@@ -1,3 +1,4 @@
 pytest
 pytest-asyncio
+passlib
 git+https://github.com/yuvipanda/hubtraf.git
