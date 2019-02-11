@@ -9,9 +9,9 @@ FIXME: A strong feeling that JSON Schema should be involved somehow.
 """
 
 import os
-import yaml
 
-from tljh.config import CONFIG_FILE
+from .config import CONFIG_FILE
+from .yaml import yaml
 
 # Default configuration for tljh
 # User provided config is merged into this
@@ -59,7 +59,7 @@ def load_config(config_file=CONFIG_FILE):
     """
     if os.path.exists(config_file):
         with open(config_file) as f:
-            config_overrides = yaml.safe_load(f)
+            config_overrides = yaml.load(f)
     else:
         config_overrides = {}
     return _merge_dictionaries(dict(default), config_overrides)
