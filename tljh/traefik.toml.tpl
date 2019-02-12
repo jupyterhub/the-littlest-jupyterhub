@@ -41,7 +41,7 @@ idleTimeout = "10m0s"
   {% endif %}
   {% endif %}
   [entryPoints.auth_api]
-  address = ":{{auth_api['port']}}"
+  address = "127.0.0.1:{{auth_api['port']}}"
   [entryPoints.auth_api.whiteList]
   sourceRange = ['{{auth_api['ip']}}']
   [entryPoints.auth_api.auth.basic]

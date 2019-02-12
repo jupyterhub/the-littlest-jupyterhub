@@ -86,7 +86,7 @@ def main():
         'git+https://github.com/jupyterhub/the-littlest-jupyterhub.git'
     )
 
-    traefik_proxy_repo_path = 'git+https://github.com/jupyterhub/traefik-proxy.git'
+    traefik_proxy_repo_path = 'jupyterhub-traefik-proxy==0.1.0a1'
 
     subprocess.check_output([
         os.path.join(hub_prefix, 'bin', 'pip'),
