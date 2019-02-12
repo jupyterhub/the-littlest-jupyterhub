@@ -35,7 +35,7 @@ def test_default_config(tmpdir, tljh_dir):
     assert cfg["entryPoints"] == {
         "http": {"address": ":80"},
         "auth_api": {
-            "address": ":8099",
+            "address": "127.0.0.1:8099",
             "auth": {
                 "basic": {"users": [""]}
             },
@@ -72,7 +72,7 @@ def test_letsencrypt_config(tljh_dir):
         "http": {"address": ":80", "redirect": {"entryPoint": "https"}},
         "https": {"address": ":443", "tls": {}},
         "auth_api": {
-            "address": ":8099",
+            "address": "127.0.0.1:8099",
             "auth": {
                 "basic": {"users": [""]}
             },
@@ -118,7 +118,7 @@ def test_manual_ssl_config(tljh_dir):
             },
         },
         "auth_api": {
-            "address": ":8099",
+            "address": "127.0.0.1:8099",
             "auth": {
                 "basic": {"users": [""]}
             },
