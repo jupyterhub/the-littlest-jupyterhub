@@ -14,14 +14,14 @@ The easiest & safest way to develop & test TLJH is with `Docker <https://www.doc
 
    .. code-block:: bash
 
-      sudo docker build -t tljh-systemd .
+      docker build -t tljh-systemd . -f integration-tests/Dockerfile
 
 #. Run a docker container with the image in the background, while bind mounting
    your TLJH repository under ``/srv/src``.
 
    .. code-block:: bash
 
-      sudo docker run \
+      docker run \
         --privileged \
         --detach \
         --name=tljh-dev \
@@ -33,7 +33,7 @@ The easiest & safest way to develop & test TLJH is with `Docker <https://www.doc
 
    .. code-block:: bash
 
-      sudo docker exec -it tljh-dev /bin/bash
+      docker exec -it tljh-dev /bin/bash
 
 #. Run the bootstrapper from inside the container (see step above):
    The container image is already set up to default to a ``dev`` install, so
@@ -41,7 +41,7 @@ The easiest & safest way to develop & test TLJH is with `Docker <https://www.doc
 
    .. code-block:: console
 
-      python3 /srv/src/bootstrap/bootstrap.py
+      python3 /srv/src/bootstrap/bootstrap.py --admin admin
 
    The primary hub environment will also be in your PATH already for convenience.
 
