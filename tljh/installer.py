@@ -120,8 +120,17 @@ def ensure_jupyterhub_service(prefix):
     with open(os.path.join(HERE, 'systemd-units', 'jupyterhub.service')) as f:
         hub_unit_template = f.read()
 
+    # with open(os.path.join(HERE, 'systemd-units', 'configurable-http-proxy.service')) as f:
+    #     chp_unit_template = f.read()
+
     with open(os.path.join(HERE, 'systemd-units', 'traefik.service')) as f:
         traefik_unit_template = f.read()
+
+    #Set up proxy / hub secret token if it is not already setup
+    proxy_secret_path = os.path.join(STATE_DIR, 'traefik-api.secret')
+    if not os.path.exists(proxy_secret_path):
+        with open(proxy_secret_path, 'w') as f:
+            f.write(secrets.token_hex(32))
 
     traefik.ensure_traefik_config(STATE_DIR)
 
@@ -132,13 +141,14 @@ def ensure_jupyterhub_service(prefix):
     )
     systemd.install_unit('jupyterhub.service', hub_unit_template.format(**unit_params))
     systemd.install_unit('traefik.service', traefik_unit_template.format(**unit_params))
+    # systemd.install_unit('configurable-http-proxy.service', chp_unit_template.format(**unit_params))
     systemd.reload_daemon()
 
     # If JupyterHub is running, we want to restart it.
     systemd.restart_service('jupyterhub')
     systemd.restart_service('traefik')
 
-    # Mark JupyterHub & CHP to start at boot time
+    # Mark JupyterHub & traefik to start at boot time
     systemd.enable_service('jupyterhub')
     systemd.enable_service('traefik')
 

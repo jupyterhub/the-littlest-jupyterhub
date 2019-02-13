@@ -10,7 +10,9 @@ FIXME: A strong feeling that JSON Schema should be involved somehow.
 
 import os
 
-from .config import CONFIG_FILE
+from passlib.apache import HtpasswdFile
+
+from .config import CONFIG_FILE, STATE_DIR
 from .yaml import yaml
 
 # Default configuration for tljh
@@ -50,7 +52,7 @@ default = {
         'ip': "127.0.0.1",
         'port': 8099,
         'username': 'api_admin',
-        'password': 'admin',
+        'password': '',
         'basic_auth': ''
     },
     'user_environment': {
@@ -95,9 +97,13 @@ def set_if_not_none(parent, key, value):
         setattr(parent, key, value)
 
 def generate_traefik_api_credentials():
-    from passlib.apache import HtpasswdFile
+    proxy_secret_path = os.path.join(STATE_DIR, 'traefik-api.secret')
+    with open(proxy_secret_path,'r') as f:
+        password = f.read()
 
+    default['auth_api']['password'] = password
     ht = HtpasswdFile()
+    # generate htpassword
     ht.set_password(default['auth_api']['username'], default['auth_api']['password'])
     traefik_api_hashed_password = str(ht.to_string()).split(":")[1][:-3]
     default['auth_api']['basic_auth'] = default['auth_api']['username'] + ":" + traefik_api_hashed_password

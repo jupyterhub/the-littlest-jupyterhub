@@ -168,7 +168,7 @@ def test_auth_api_default():
     c = apply_mock_config({})
 
     assert c.TraefikTomlProxy.traefik_api_username == 'api_admin'
-    assert c.TraefikTomlProxy.traefik_api_password == 'admin'
+    assert len(c.TraefikTomlProxy.traefik_api_password) == 0
 
 
 def test_set_auth_api():

@@ -13,12 +13,15 @@ tljh-config show firstlevel.second_level
 """
 
 import argparse
+import asyncio
 from collections import Sequence, Mapping
 from copy import deepcopy
 import os
 import re
 import sys
-import asyncio
+import time
+
+import requests
 
 from .yaml import yaml
 
@@ -174,10 +177,8 @@ def remove_config_value(config_path, key_path, value):
         yaml.dump(config, f)
 
 def check_hub_ready():
-    import requests
-
     try:
-        r = requests.get('http://127.0.0.1:80')
+        r = requests.get('http://127.0.0.1:80', verify=False)
         return r.status_code == 200
     except:
         return False
@@ -190,7 +191,6 @@ def reload_component(component):
     """
     # import here to avoid circular imports
     from tljh import systemd, traefik
-    import time
 
     if component == 'hub':
         systemd.restart_service('jupyterhub')

@@ -13,7 +13,9 @@ setup(
     install_requires=[
         'ruamel.yaml==0.15.*',
         'jinja2',
-        'pluggy>0.7<1.0'
+        'pluggy>0.7<1.0',
+        'passlib',
+        'jupyterhub-traefik-proxy==0.1.0a1'
     ],
     entry_points={
         'console_scripts': [

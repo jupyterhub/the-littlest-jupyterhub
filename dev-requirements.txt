@@ -2,4 +2,3 @@ pytest
 pytest-cov
 codecov
 pytoml
-passlib
