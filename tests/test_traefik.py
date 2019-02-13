@@ -1,5 +1,6 @@
 """Test traefik configuration"""
 import os
+import mock
 
 import pytoml as toml
 
@@ -17,7 +18,10 @@ def test_download_traefik(tmpdir):
 
 def test_default_config(tmpdir, tljh_dir):
     state_dir = tmpdir.mkdir("state")
-    traefik.ensure_traefik_config(str(state_dir))
+    with mock.patch(
+        "tljh.configurer.generate_traefik_api_credentials"
+    ) as generate_credentials:
+        traefik.ensure_traefik_config(str(state_dir))
     assert state_dir.join("traefik.toml").exists()
     traefik_toml = os.path.join(state_dir, "traefik.toml")
     with open(traefik_toml) as f:
@@ -28,7 +32,6 @@ def test_default_config(tmpdir, tljh_dir):
         cfg = toml.loads(toml_cfg)
     assert cfg["defaultEntryPoints"] == ["http"]
     assert len(cfg["entryPoints"]["auth_api"]["auth"]["basic"]["users"]) == 1
-    assert cfg["entryPoints"]["auth_api"]["auth"]["basic"]["users"][0].startswith("api_admin")
     # runtime generated entry, value not testable
     cfg["entryPoints"]["auth_api"]["auth"]["basic"]["users"] = [""]
 
@@ -53,7 +56,10 @@ def test_letsencrypt_config(tljh_dir):
     config.set_config_value(
         config.CONFIG_FILE, "https.letsencrypt.domains", ["testing.jovyan.org"]
     )
-    traefik.ensure_traefik_config(str(state_dir))
+    with mock.patch(
+        "tljh.configurer.generate_traefik_api_credentials"
+    ) as generate_credentials:
+        traefik.ensure_traefik_config(str(state_dir))
     traefik_toml = os.path.join(state_dir, "traefik.toml")
     with open(traefik_toml) as f:
         toml_cfg = f.read()
@@ -64,7 +70,6 @@ def test_letsencrypt_config(tljh_dir):
     assert cfg["defaultEntryPoints"] == ["http", "https"]
     assert "acme" in cfg
     assert len(cfg["entryPoints"]["auth_api"]["auth"]["basic"]["users"]) == 1
-    assert cfg["entryPoints"]["auth_api"]["auth"]["basic"]["users"][0].startswith("api_admin")
     # runtime generated entry, value not testable
     cfg["entryPoints"]["auth_api"]["auth"]["basic"]["users"] = [""]
 
@@ -93,7 +98,10 @@ def test_manual_ssl_config(tljh_dir):
     config.set_config_value(config.CONFIG_FILE, "https.enabled", True)
     config.set_config_value(config.CONFIG_FILE, "https.tls.key", "/path/to/ssl.key")
     config.set_config_value(config.CONFIG_FILE, "https.tls.cert", "/path/to/ssl.cert")
-    traefik.ensure_traefik_config(str(state_dir))
+    with mock.patch(
+        "tljh.configurer.generate_traefik_api_credentials"
+    ) as generate_credentials:
+        traefik.ensure_traefik_config(str(state_dir))
     traefik_toml = os.path.join(state_dir, "traefik.toml")
     with open(traefik_toml) as f:
         toml_cfg = f.read()
@@ -104,7 +112,6 @@ def test_manual_ssl_config(tljh_dir):
     assert cfg["defaultEntryPoints"] == ["http", "https"]
     assert "acme" not in cfg
     assert len(cfg["entryPoints"]["auth_api"]["auth"]["basic"]["users"]) == 1
-    assert cfg["entryPoints"]["auth_api"]["auth"]["basic"]["users"][0].startswith("api_admin")
     # runtime generated entry, value not testable
     cfg["entryPoints"]["auth_api"]["auth"]["basic"]["users"] = [""]
     assert cfg["entryPoints"] == {

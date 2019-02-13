@@ -126,9 +126,11 @@ def test_reload_hub():
 
 
 def test_reload_proxy(tljh_dir):
-    with mock.patch('tljh.systemd.restart_service') as restart_service, mock.patch(
-        'tljh.systemd.check_service_active'
-    ) as check_active:
+    with mock.patch("tljh.systemd.restart_service") as restart_service, mock.patch(
+        "tljh.systemd.check_service_active"
+    ) as check_active, mock.patch(
+        "tljh.configurer.generate_traefik_api_credentials"
+    ) as generate_credentials:
         config.reload_component('proxy')
     assert restart_service.called_with('traefik')
     assert check_active.called_with('traefik')
@@ -151,29 +153,44 @@ def test_cli_no_command(capsys):
 )
 def test_cli_set_bool(tljh_dir, arg, value):
     config.main(["set", "https.enabled", arg])
-    cfg = configurer.load_config()
+    with mock.patch(
+        "tljh.configurer.generate_traefik_api_credentials"
+    ) as generate_credentials:
+        cfg = configurer.load_config()
     assert cfg['https']['enabled'] == value
 
 
 def test_cli_set_int(tljh_dir):
     config.main(["set", "https.port", "123"])
-    cfg = configurer.load_config()
+    with mock.patch(
+        "tljh.configurer.generate_traefik_api_credentials"
+    ) as generate_credentials:
+        cfg = configurer.load_config()
     assert cfg['https']['port'] == 123
 
 
 def test_cli_add_float(tljh_dir):
     config.main(["add-item", "foo.bar", "1.25"])
-    cfg = configurer.load_config()
+    with mock.patch(
+        "tljh.configurer.generate_traefik_api_credentials"
+    ) as generate_credentials:
+        cfg = configurer.load_config()
     assert cfg['foo']['bar'] == [1.25]
 
 
 def test_cli_remove_int(tljh_dir):
     config.main(["add-item", "foo.bar", "1"])
     config.main(["add-item", "foo.bar", "2"])
-    cfg = configurer.load_config()
+    with mock.patch(
+        "tljh.configurer.generate_traefik_api_credentials"
+    ) as generate_credentials:
+        cfg = configurer.load_config()
     assert cfg['foo']['bar'] == [1, 2]
     config.main(["remove-item", "foo.bar", "1"])
-    cfg = configurer.load_config()
+    with mock.patch(
+        "tljh.configurer.generate_traefik_api_credentials"
+    ) as generate_credentials:
+        cfg = configurer.load_config()
     assert cfg['foo']['bar'] == [2]
 
 
