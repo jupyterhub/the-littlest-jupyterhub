@@ -1,6 +1,6 @@
 """Test traefik configuration"""
 import os
-import mock
+from unittest import mock
 
 import pytoml as toml
 
