@@ -103,7 +103,7 @@ def remove_chp():
     """
     Ensure CHP is not running
     """
-    if os.path.exists(os.path.join(HERE, 'systemd-units', 'configurable-http-proxy.service')):
+    if os.path.exists("/etc/systemd/system/configurable-http-proxy.service"):
         if systemd.check_service_active('configurable-http-proxy.service'):
             try:
                 systemd.stop_service('configurable-http-proxy.service')
