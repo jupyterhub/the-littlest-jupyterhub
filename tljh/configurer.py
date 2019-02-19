@@ -17,10 +17,8 @@ from tljh.config import CONFIG_FILE
 # User provided config is merged into this
 default = {
     'auth': {
-        'type': 'firstuseauthenticator.FirstUseAuthenticator',
-        'FirstUseAuthenticator': {
-            'create_users': False
-        }
+        'type': 'nativeauthenticator.NativeAuthenticator',
+        'NativeAuthenticator': {}
     },
     'users': {
         'allowed': [],
