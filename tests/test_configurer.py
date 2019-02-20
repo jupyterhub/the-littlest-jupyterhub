@@ -106,9 +106,8 @@ def test_auth_default():
     """
     c = apply_mock_config({})
 
-    assert c.JupyterHub.authenticator_class == 'firstuseauthenticator.FirstUseAuthenticator'
-    # Do not auto create users who haven't been manually added by default
-    assert not c.FirstUseAuthenticator.create_users
+    assert c.JupyterHub.authenticator_class == 'nativeauthenticator.NativeAuthenticator'
+    assert not c.NativeAuthenticator.open_signup
 
 
 def test_auth_dummy():
@@ -127,20 +126,20 @@ def test_auth_dummy():
     assert c.DummyAuthenticator.password == 'test'
 
 
-def test_auth_firstuse():
+def test_auth_nativeauth():
     """
-    Test setting FirstUse Authenticator options
+    Test setting Native Authenticator options
     """
     c = apply_mock_config({
         'auth': {
-            'type': 'firstuseauthenticator.FirstUseAuthenticator',
-            'FirstUseAuthenticator': {
-                'create_users': True
+            'type': 'nativeauthenticator.NativeAuthenticator',
+            'NativeAuthenticator': {
+                'open_signup': True
             }
         }
     })
-    assert c.JupyterHub.authenticator_class == 'firstuseauthenticator.FirstUseAuthenticator'
-    assert c.FirstUseAuthenticator.create_users
+    assert c.JupyterHub.authenticator_class == 'nativeauthenticator.NativeAuthenticator'
+    assert c.NativeAuthenticator.open_signup
 
 
 def test_auth_github():
