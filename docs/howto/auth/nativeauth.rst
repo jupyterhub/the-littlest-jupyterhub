@@ -1,8 +1,8 @@
 .. _howto/auth/nativeauth:
 
-==================================================
-Users can signup and create username and password
-==================================================
+==============================================
+Let users sign up with a username and password
+==============================================
 
 The **Native Authenticator** lets users signup for creating a new username 
 and password.
