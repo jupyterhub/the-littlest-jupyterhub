@@ -68,8 +68,10 @@ def load_config(config_file=CONFIG_FILE):
     else:
         config_overrides = {}
 
-    generate_traefik_api_credentials()
-    return _merge_dictionaries(dict(default), config_overrides)
+    secrets = load_secrets()
+    config = _merge_dictionaries(dict(default), secrets)
+    config = _merge_dictionaries(config, config_overrides)
+    return config
 
 
 def apply_config(config_overrides, c):
@@ -93,12 +95,29 @@ def set_if_not_none(parent, key, value):
     if value is not None:
         setattr(parent, key, value)
 
-def generate_traefik_api_credentials():
+
+def load_traefik_api_credentials():
+    """Load traefik api secret from a file"""
     proxy_secret_path = os.path.join(STATE_DIR, 'traefik-api.secret')
+    if not os.path.exists(proxy_secret_path):
+        return {}
     with open(proxy_secret_path,'r') as f:
         password = f.read()
+    return {
+        'traefik_api': {
+            'password': password,
+        }
+    }
 
-    default['traefik_api']['password'] = password
+
+def load_secrets():
+    """Load any secret values stored on disk
+
+    Returns dict to be merged into config during load
+    """
+    config = {}
+    config = _merge_dictionaries(config, load_traefik_api_credentials())
+    return config
 
 
 def update_auth(c, config):
