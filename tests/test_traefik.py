@@ -18,10 +18,7 @@ def test_download_traefik(tmpdir):
 
 def test_default_config(tmpdir, tljh_dir):
     state_dir = tmpdir.mkdir("state")
-    with mock.patch(
-        "tljh.configurer.generate_traefik_api_credentials"
-    ) as generate_credentials:
-        traefik.ensure_traefik_config(str(state_dir))
+    traefik.ensure_traefik_config(str(state_dir))
     assert state_dir.join("traefik.toml").exists()
     traefik_toml = os.path.join(state_dir, "traefik.toml")
     with open(traefik_toml) as f:
@@ -56,10 +53,7 @@ def test_letsencrypt_config(tljh_dir):
     config.set_config_value(
         config.CONFIG_FILE, "https.letsencrypt.domains", ["testing.jovyan.org"]
     )
-    with mock.patch(
-        "tljh.configurer.generate_traefik_api_credentials"
-    ) as generate_credentials:
-        traefik.ensure_traefik_config(str(state_dir))
+    traefik.ensure_traefik_config(str(state_dir))
     traefik_toml = os.path.join(state_dir, "traefik.toml")
     with open(traefik_toml) as f:
         toml_cfg = f.read()
@@ -98,10 +92,7 @@ def test_manual_ssl_config(tljh_dir):
     config.set_config_value(config.CONFIG_FILE, "https.enabled", True)
     config.set_config_value(config.CONFIG_FILE, "https.tls.key", "/path/to/ssl.key")
     config.set_config_value(config.CONFIG_FILE, "https.tls.cert", "/path/to/ssl.cert")
-    with mock.patch(
-        "tljh.configurer.generate_traefik_api_credentials"
-    ) as generate_credentials:
-        traefik.ensure_traefik_config(str(state_dir))
+    traefik.ensure_traefik_config(str(state_dir))
     traefik_toml = os.path.join(state_dir, "traefik.toml")
     with open(traefik_toml) as f:
         toml_cfg = f.read()
