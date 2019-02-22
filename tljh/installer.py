@@ -99,15 +99,25 @@ sckuXINIU3DFWzZGr0QrqkuE/jyr7FXeUJj9B7cLo+s/TXo+RaVfi3kOc9BoxIvy
     apt.add_source('nodesource', 'https://deb.nodesource.com/node_10.x', 'main')
     apt.install_packages(['nodejs'])
 
-
-def ensure_chp_package(prefix):
+def remove_chp():
     """
-    Ensure CHP is installed
+    Ensure CHP is not running
     """
-    if not os.path.exists(os.path.join(prefix, 'node_modules', '.bin', 'configurable-http-proxy')):
-        subprocess.check_output([
-            'npm', 'install', 'configurable-http-proxy@3.1.0'
-        ], cwd=prefix, stderr=subprocess.STDOUT)
+    if os.path.exists("/etc/systemd/system/configurable-http-proxy.service"):
+        if systemd.check_service_active('configurable-http-proxy.service'):
+            try:
+                systemd.stop_service('configurable-http-proxy.service')
+            except subprocess.CalledProcessError:
+                logger.info("Cannot stop configurable-http-proxy...")
+        if systemd.check_service_enabled('configurable-http-proxy.service'):
+            try:
+                systemd.disable_service('configurable-http-proxy.service')
+            except subprocess.CalledProcessError:
+                logger.info("Cannot disable configurable-http-proxy...")
+        try:
+            systemd.uninstall_unit('configurable-http-proxy.service')
+        except subprocess.CalledProcessError:
+            logger.info("Cannot uninstall configurable-http-proxy...")
 
 
 def ensure_jupyterhub_service(prefix):
@@ -117,14 +127,21 @@ def ensure_jupyterhub_service(prefix):
 
     os.makedirs(STATE_DIR, mode=0o700, exist_ok=True)
 
+    remove_chp()
+    systemd.reload_daemon()
+
     with open(os.path.join(HERE, 'systemd-units', 'jupyterhub.service')) as f:
         hub_unit_template = f.read()
 
-    with open(os.path.join(HERE, 'systemd-units', 'configurable-http-proxy.service')) as f:
-        proxy_unit_template = f.read()
 
     with open(os.path.join(HERE, 'systemd-units', 'traefik.service')) as f:
         traefik_unit_template = f.read()
+
+    #Set up proxy / hub secret token if it is not already setup
+    proxy_secret_path = os.path.join(STATE_DIR, 'traefik-api.secret')
+    if not os.path.exists(proxy_secret_path):
+        with open(proxy_secret_path, 'w') as f:
+            f.write(secrets.token_hex(32))
 
     traefik.ensure_traefik_config(STATE_DIR)
 
@@ -133,28 +150,16 @@ def ensure_jupyterhub_service(prefix):
         jupyterhub_config_path=os.path.join(HERE, 'jupyterhub_config.py'),
         install_prefix=INSTALL_PREFIX,
     )
-    systemd.install_unit('configurable-http-proxy.service', proxy_unit_template.format(**unit_params))
     systemd.install_unit('jupyterhub.service', hub_unit_template.format(**unit_params))
     systemd.install_unit('traefik.service', traefik_unit_template.format(**unit_params))
     systemd.reload_daemon()
 
-    # Set up proxy / hub secret oken if it is not already setup
-    proxy_secret_path = os.path.join(STATE_DIR, 'configurable-http-proxy.secret')
-    if not os.path.exists(proxy_secret_path):
-        with open(proxy_secret_path, 'w') as f:
-            f.write('CONFIGPROXY_AUTH_TOKEN=' + secrets.token_hex(32))
-        # If we are changing CONFIGPROXY_AUTH_TOKEN, restart configurable-http-proxy!
-        systemd.restart_service('configurable-http-proxy')
-
-    # Start CHP if it has already not been started
-    systemd.start_service('configurable-http-proxy')
     # If JupyterHub is running, we want to restart it.
     systemd.restart_service('jupyterhub')
     systemd.restart_service('traefik')
 
-    # Mark JupyterHub & CHP to start at boot time
+    # Mark JupyterHub & traefik to start at boot time
     systemd.enable_service('jupyterhub')
-    systemd.enable_service('configurable-http-proxy')
     systemd.enable_service('traefik')
 
 
@@ -276,7 +281,7 @@ def ensure_admins(admins):
         yaml.dump(config, f)
 
 
-def ensure_jupyterhub_running(times=4):
+def ensure_jupyterhub_running(times=20):
     """
     Ensure that JupyterHub is up and running
 
@@ -433,7 +438,6 @@ def main():
     logger.info("Setting up JupyterHub...")
     ensure_node()
     ensure_jupyterhub_package(HUB_ENV_PREFIX)
-    ensure_chp_package(HUB_ENV_PREFIX)
     ensure_jupyterlab_extensions()
     ensure_jupyterhub_service(HUB_ENV_PREFIX)
     ensure_jupyterhub_running()

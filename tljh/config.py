@@ -13,11 +13,15 @@ tljh-config show firstlevel.second_level
 """
 
 import argparse
+import asyncio
 from collections import Sequence, Mapping
 from copy import deepcopy
 import os
 import re
 import sys
+import time
+
+import requests
 
 from .yaml import yaml
 
@@ -85,7 +89,7 @@ def add_item_to_config(config, property_path, value):
 
 def remove_item_from_config(config, property_path, value):
     """
-    Add an item to a list in config.
+    Remove an item from a list in config.
     """
     path_components = property_path.split('.')
 
@@ -172,6 +176,12 @@ def remove_config_value(config_path, key_path, value):
     with open(config_path, 'w') as f:
         yaml.dump(config, f)
 
+def check_hub_ready():
+    try:
+        r = requests.get('http://127.0.0.1:80', verify=False)
+        return r.status_code == 200
+    except:
+        return False
 
 def reload_component(component):
     """
@@ -181,14 +191,20 @@ def reload_component(component):
     """
     # import here to avoid circular imports
     from tljh import systemd, traefik
+
     if component == 'hub':
         systemd.restart_service('jupyterhub')
-        # FIXME: Verify hub is back up?
+        # Ensure hub is back up
+        while not systemd.check_service_active('jupyterhub'):
+            time.sleep(1)
+        while not check_hub_ready():
+            time.sleep(1)
         print('Hub reload with new configuration complete')
     elif component == 'proxy':
         traefik.ensure_traefik_config(STATE_DIR)
-        systemd.restart_service('configurable-http-proxy')
         systemd.restart_service('traefik')
+        while not systemd.check_service_active('traefik'):
+            time.sleep(1)
         print('Proxy reload with new configuration complete')
 
 

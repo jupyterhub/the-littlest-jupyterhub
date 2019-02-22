@@ -1,6 +1,8 @@
 """
-Test
+Test configurer
 """
+
+import os
 
 from tljh import configurer
 
@@ -161,6 +163,43 @@ def test_auth_github():
     assert c.GitHubOAuthenticator.client_secret == 'something-else'
 
 
+def test_traefik_api_default():
+    """
+    Test default traefik api authentication settings with no overrides
+    """
+    c = apply_mock_config({})
+
+    assert c.TraefikTomlProxy.traefik_api_username == 'api_admin'
+    assert len(c.TraefikTomlProxy.traefik_api_password) == 0
+
+
+def test_set_traefik_api():
+    """
+    Test setting per traefik api credentials
+    """
+    c = apply_mock_config({
+        'traefik_api': {
+            'username': 'some_user',
+            'password': '1234'
+        }
+    })
+    assert c.TraefikTomlProxy.traefik_api_username == 'some_user'
+    assert c.TraefikTomlProxy.traefik_api_password == '1234'
+
+
+def test_load_secrets(tljh_dir):
+    """
+    Test loading secret files
+    """
+    with open(os.path.join(tljh_dir, 'state', 'traefik-api.secret'), 'w') as f:
+        f.write("traefik-password")
+
+    tljh_config = configurer.load_config()
+    assert tljh_config['traefik_api']['password'] == "traefik-password"
+    c = apply_mock_config(tljh_config)
+    assert c.TraefikTomlProxy.traefik_api_password == "traefik-password"
+
+    
 def test_auth_native():
     """
     Test setting Native Authenticator
@@ -175,3 +214,4 @@ def test_auth_native():
     })
     assert c.JupyterHub.authenticator_class == 'nativeauthenticator.NativeAuthenticator'
     assert c.NativeAuthenticator.open_signup == True
+

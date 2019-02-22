@@ -10,7 +10,7 @@ FIXME: A strong feeling that JSON Schema should be involved somehow.
 
 import os
 
-from .config import CONFIG_FILE
+from .config import CONFIG_FILE, STATE_DIR
 from .yaml import yaml
 
 # Default configuration for tljh
@@ -46,11 +46,16 @@ default = {
             'domains': [],
         },
     },
+    'traefik_api': {
+        'ip': "127.0.0.1",
+        'port': 8099,
+        'username': 'api_admin',
+        'password': '',
+    },
     'user_environment': {
         'default_app': 'classic',
     },
 }
-
 
 def load_config(config_file=CONFIG_FILE):
     """Load the current config as a dictionary
@@ -62,7 +67,11 @@ def load_config(config_file=CONFIG_FILE):
             config_overrides = yaml.load(f)
     else:
         config_overrides = {}
-    return _merge_dictionaries(dict(default), config_overrides)
+
+    secrets = load_secrets()
+    config = _merge_dictionaries(dict(default), secrets)
+    config = _merge_dictionaries(config, config_overrides)
+    return config
 
 
 def apply_config(config_overrides, c):
@@ -76,6 +85,7 @@ def apply_config(config_overrides, c):
     update_limits(c, tljh_config)
     update_user_environment(c, tljh_config)
     update_user_account_config(c, tljh_config)
+    update_traefik_api(c, tljh_config)
 
 
 def set_if_not_none(parent, key, value):
@@ -84,6 +94,30 @@ def set_if_not_none(parent, key, value):
     """
     if value is not None:
         setattr(parent, key, value)
+
+
+def load_traefik_api_credentials():
+    """Load traefik api secret from a file"""
+    proxy_secret_path = os.path.join(STATE_DIR, 'traefik-api.secret')
+    if not os.path.exists(proxy_secret_path):
+        return {}
+    with open(proxy_secret_path,'r') as f:
+        password = f.read()
+    return {
+        'traefik_api': {
+            'password': password,
+        }
+    }
+
+
+def load_secrets():
+    """Load any secret values stored on disk
+
+    Returns dict to be merged into config during load
+    """
+    config = {}
+    config = _merge_dictionaries(config, load_traefik_api_credentials())
+    return config
 
 
 def update_auth(c, config):
@@ -147,6 +181,14 @@ def update_user_environment(c, config):
 
 def update_user_account_config(c, config):
     c.SystemdSpawner.username_template = 'jupyter-{USERNAME}'
+
+
+def update_traefik_api(c, config):
+    """
+    Set traefik api endpoint credentials
+    """
+    c.TraefikTomlProxy.traefik_api_username = config['traefik_api']['username']
+    c.TraefikTomlProxy.traefik_api_password = config['traefik_api']['password']
 
 
 def _merge_dictionaries(a, b, path=None, update=True):

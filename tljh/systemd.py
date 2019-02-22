@@ -48,6 +48,17 @@ def start_service(name):
     ], check=True)
 
 
+def stop_service(name):
+    """
+    Start service with given name.
+    """
+    subprocess.run([
+        'systemctl',
+        'stop',
+        name
+    ], check=True)
+
+
 def restart_service(name):
     """
     Restart service with given name.
@@ -70,3 +81,45 @@ def enable_service(name):
         'enable',
         name
     ], check=True)
+
+
+def disable_service(name):
+    """
+    Enable a service with given name.
+
+    This most likely makes the service start on bootup
+    """
+    subprocess.run([
+        'systemctl',
+        'disable',
+        name
+    ], check=True)
+
+
+def check_service_active(name):
+    """
+    Check if a service is currently active (running)
+    """
+    try:
+        subprocess.run([
+            'systemctl',
+            'is-active',
+            name
+        ], check=True)
+        return True
+    except subprocess.CalledProcessError:
+        return False
+
+def check_service_enabled(name):
+    """
+    Check if a service is enabled
+    """
+    try:
+        subprocess.run([
+            'systemctl',
+            'is-enabled',
+            name
+        ], check=True)
+        return True
+    except subprocess.CalledProcessError:
+        return False

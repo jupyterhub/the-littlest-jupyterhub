@@ -7,13 +7,13 @@ After=network.target
 [Service]
 User=root
 Restart=always
-# process only needs to write state/acme.json file, no other files
 ProtectHome=tmpfs
 ProtectSystem=strict
 PrivateTmp=yes
 PrivateDevices=yes
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
+ReadWritePaths={install_prefix}/state/rules.toml
 ReadWritePaths={install_prefix}/state/acme.json
 WorkingDirectory={install_prefix}/state
 ExecStart={install_prefix}/hub/bin/traefik \

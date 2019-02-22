@@ -75,6 +75,7 @@ def test_add_to_config_zero_level():
         'a': ['b']
     }
 
+
 def test_add_to_config_multiple():
     conf = {}
 
@@ -116,16 +117,21 @@ def test_remove_from_config_error():
 
 
 def test_reload_hub():
-    with mock.patch('tljh.systemd.restart_service') as restart_service:
+    with mock.patch('tljh.systemd.restart_service') as restart_service, mock.patch(
+        'tljh.systemd.check_service_active'
+    ) as check_active, mock.patch('tljh.config.check_hub_ready') as check_ready:
         config.reload_component('hub')
     assert restart_service.called_with('jupyterhub')
+    assert check_active.called_with('jupyterhub')
 
 
 def test_reload_proxy(tljh_dir):
-    with mock.patch('tljh.systemd.restart_service') as restart_service:
+    with mock.patch("tljh.systemd.restart_service") as restart_service, mock.patch(
+        "tljh.systemd.check_service_active"
+    ) as check_active:
         config.reload_component('proxy')
-    assert restart_service.called_with('configurable-http-proxy')
     assert restart_service.called_with('traefik')
+    assert check_active.called_with('traefik')
     assert os.path.exists(os.path.join(config.STATE_DIR, 'traefik.toml'))
 
 
@@ -140,8 +146,8 @@ def test_cli_no_command(capsys):
     "arg, value",
     [
         ("true", True),
-        ("FALSE", False),
-    ],
+        ("FALSE", False)
+    ]
 )
 def test_cli_set_bool(tljh_dir, arg, value):
     config.main(["set", "https.enabled", arg])

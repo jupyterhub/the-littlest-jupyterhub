@@ -4,16 +4,17 @@ import os
 from urllib.request import urlretrieve
 
 from jinja2 import Template
+from passlib.apache import HtpasswdFile
 
 from tljh.configurer import load_config
 
 # FIXME: support more than one platform here
 plat = "linux-amd64"
-traefik_version = "1.6.5"
+traefik_version = "1.7.5"
 
 # record sha256 hashes for supported platforms here
 checksums = {
-    "linux-amd64": "9e77c7664e316953e3f5463c323dffeeecbb35d0b1db7fb49f52e1d9464ca193"
+    "linux-amd64": "4417a9d83753e1ad6bdd64bbbeaeb4b279bcc71542e779b7bcb3b027c6e3356e"
 }
 
 
@@ -55,9 +56,23 @@ def ensure_traefik_binary(prefix):
         raise IOError(f"Checksum failed {traefik_bin}: {checksum} != {checksums[plat]}")
 
 
+def compute_basic_auth(username, password):
+    """Generate hashed HTTP basic auth from traefik_api username+password"""
+    ht = HtpasswdFile()
+    # generate htpassword
+    ht.set_password(username, password)
+    hashed_password = str(ht.to_string()).split(":")[1][:-3]
+    return username + ":" + hashed_password
+
+
 def ensure_traefik_config(state_dir):
     """Render the traefik.toml config file"""
     config = load_config()
+    config['traefik_api']['basic_auth'] = compute_basic_auth(
+        config['traefik_api']['username'],
+        config['traefik_api']['password'],
+    )
+
     with open(os.path.join(os.path.dirname(__file__), "traefik.toml.tpl")) as f:
         template = Template(f.read())
     new_toml = template.render(config)
@@ -75,8 +90,11 @@ def ensure_traefik_config(state_dir):
         ):
             raise ValueError("Both email and domains must be set for letsencrypt")
     with open(os.path.join(state_dir, "traefik.toml"), "w") as f:
-        os.fchmod(f.fileno(), 0o744)
+        os.fchmod(f.fileno(), 0o600)
         f.write(new_toml)
+
+    with open(os.path.join(state_dir, "rules.toml"), "w") as f:
+        os.fchmod(f.fileno(), 0o600)
 
     # ensure acme.json exists and is private
     with open(os.path.join(state_dir, "acme.json"), "a") as f:

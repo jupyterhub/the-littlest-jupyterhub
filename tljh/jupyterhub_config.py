@@ -10,7 +10,7 @@ from tljh import configurer, user
 from tljh.config import INSTALL_PREFIX, USER_ENV_PREFIX, CONFIG_DIR
 from tljh.normalize import generate_system_username
 from tljh.yaml import yaml
-
+from jupyterhub_traefik_proxy import TraefikTomlProxy
 
 class UserCreatingSpawner(SystemdSpawner):
     """
@@ -43,21 +43,19 @@ c.JupyterHub.cleanup_servers = False
 # Use a high port so users can try this on machines with a JupyterHub already present
 c.JupyterHub.hub_port = 15001
 
-c.ConfigurableHTTPProxy.should_start = False
-c.ConfigurableHTTPProxy.api_url = 'http://127.0.0.1:15002'
+c.TraefikTomlProxy.should_start = False
+
+dynamic_conf_file_path = os.path.join(INSTALL_PREFIX, 'state', 'rules.toml')
+c.TraefikTomlProxy.toml_dynamic_config_file = dynamic_conf_file_path
+c.JupyterHub.proxy_class = TraefikTomlProxy
 
 c.SystemdSpawner.extra_paths = [os.path.join(USER_ENV_PREFIX, 'bin')]
 c.SystemdSpawner.default_shell = '/bin/bash'
 # Drop the '-singleuser' suffix present in the default template
 c.SystemdSpawner.unit_name_template = 'jupyter-{USERNAME}'
 
-config_overrides_path = os.path.join(CONFIG_DIR, 'config.yaml')
-if os.path.exists(config_overrides_path):
-    with open(config_overrides_path) as f:
-        config_overrides = yaml.load(f)
-else:
-    config_overrides = {}
-configurer.apply_config(config_overrides, c)
+tljh_config = configurer.load_config()
+configurer.apply_config(tljh_config, c)
 
 # Load arbitrary .py config files if they exist.
 # This is our escape hatch

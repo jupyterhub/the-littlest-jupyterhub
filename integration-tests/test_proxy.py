@@ -53,8 +53,13 @@ def test_manual_https(preserve_config):
     # verify that our certificate was loaded by traefik
     assert server_cert == file_cert
 
-    # verify that we can still connect to the hub
-    r = requests.get("https://127.0.0.1/hub/api", verify=False)
+    for i in range(5):
+        time.sleep(i)
+        # verify that we can still connect to the hub
+        r = requests.get("https://127.0.0.1/hub/api", verify=False)
+        if r.status_code == 200:
+            break;
+
     r.raise_for_status()
 
     # cleanup
