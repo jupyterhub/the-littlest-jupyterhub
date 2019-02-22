@@ -198,3 +198,20 @@ def test_load_secrets(tljh_dir):
     assert tljh_config['traefik_api']['password'] == "traefik-password"
     c = apply_mock_config(tljh_config)
     assert c.TraefikTomlProxy.traefik_api_password == "traefik-password"
+
+    
+def test_auth_native():
+    """
+    Test setting Native Authenticator
+    """
+    c = apply_mock_config({
+        'auth': {
+            'type': 'nativeauthenticator.NativeAuthenticator',
+            'NativeAuthenticator': {
+                'open_signup': True,
+            }
+        }
+    })
+    assert c.JupyterHub.authenticator_class == 'nativeauthenticator.NativeAuthenticator'
+    assert c.NativeAuthenticator.open_signup == True
+
