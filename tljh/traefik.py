@@ -4,6 +4,7 @@ import os
 from urllib.request import urlretrieve
 
 from jinja2 import Template
+from passlib.apache import HtpasswdFile
 
 from tljh.configurer import load_config
 
@@ -55,9 +56,23 @@ def ensure_traefik_binary(prefix):
         raise IOError(f"Checksum failed {traefik_bin}: {checksum} != {checksums[plat]}")
 
 
+def compute_basic_auth(username, password):
+    """Generate hashed HTTP basic auth from traefik_api username+password"""
+    ht = HtpasswdFile()
+    # generate htpassword
+    ht.set_password(username, password)
+    hashed_password = str(ht.to_string()).split(":")[1][:-3]
+    return username + ":" + hashed_password
+
+
 def ensure_traefik_config(state_dir):
     """Render the traefik.toml config file"""
     config = load_config()
+    config['traefik_api']['basic_auth'] = compute_basic_auth(
+        config['traefik_api']['username'],
+        config['traefik_api']['password'],
+    )
+
     with open(os.path.join(os.path.dirname(__file__), "traefik.toml.tpl")) as f:
         template = Template(f.read())
     new_toml = template.render(config)

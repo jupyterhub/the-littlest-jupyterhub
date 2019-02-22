@@ -10,8 +10,6 @@ FIXME: A strong feeling that JSON Schema should be involved somehow.
 
 import os
 
-from passlib.apache import HtpasswdFile
-
 from .config import CONFIG_FILE, STATE_DIR
 from .yaml import yaml
 
@@ -48,12 +46,11 @@ default = {
             'domains': [],
         },
     },
-    'auth_api': {
+    'traefik_api': {
         'ip': "127.0.0.1",
         'port': 8099,
         'username': 'api_admin',
         'password': '',
-        'basic_auth': ''
     },
     'user_environment': {
         'default_app': 'classic',
@@ -86,7 +83,7 @@ def apply_config(config_overrides, c):
     update_limits(c, tljh_config)
     update_user_environment(c, tljh_config)
     update_user_account_config(c, tljh_config)
-    update_auth_api(c, tljh_config)
+    update_traefik_api(c, tljh_config)
 
 
 def set_if_not_none(parent, key, value):
@@ -101,12 +98,7 @@ def generate_traefik_api_credentials():
     with open(proxy_secret_path,'r') as f:
         password = f.read()
 
-    default['auth_api']['password'] = password
-    ht = HtpasswdFile()
-    # generate htpassword
-    ht.set_password(default['auth_api']['username'], default['auth_api']['password'])
-    traefik_api_hashed_password = str(ht.to_string()).split(":")[1][:-3]
-    default['auth_api']['basic_auth'] = default['auth_api']['username'] + ":" + traefik_api_hashed_password
+    default['traefik_api']['password'] = password
 
 
 def update_auth(c, config):
@@ -172,12 +164,12 @@ def update_user_account_config(c, config):
     c.SystemdSpawner.username_template = 'jupyter-{USERNAME}'
 
 
-def update_auth_api(c, config):
+def update_traefik_api(c, config):
     """
     Set traefik api endpoint credentials
     """
-    c.TraefikTomlProxy.traefik_api_username = config['auth_api']['username']
-    c.TraefikTomlProxy.traefik_api_password = config['auth_api']['password']
+    c.TraefikTomlProxy.traefik_api_username = config['traefik_api']['username']
+    c.TraefikTomlProxy.traefik_api_password = config['traefik_api']['password']
 
 
 def _merge_dictionaries(a, b, path=None, update=True):

@@ -41,11 +41,11 @@ idleTimeout = "10m0s"
   {% endif %}
   {% endif %}
   [entryPoints.auth_api]
-  address = "127.0.0.1:{{auth_api['port']}}"
+  address = "127.0.0.1:{{traefik_api['port']}}"
   [entryPoints.auth_api.whiteList]
-  sourceRange = ['{{auth_api['ip']}}']
+  sourceRange = ['{{traefik_api['ip']}}']
   [entryPoints.auth_api.auth.basic]
-  users = ['{{auth_api['basic_auth']}}']
+  users = ['{{ traefik_api['basic_auth'] }}']
 
 [wss]
 protocol = "http"
