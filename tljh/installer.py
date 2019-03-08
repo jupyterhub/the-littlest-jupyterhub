@@ -196,6 +196,7 @@ def ensure_jupyterhub_package(prefix):
         'jupyterhub-nativeauthenticator==0.0.4',
         'jupyterhub-ldapauthenticator==1.2.2',
         'oauthenticator==0.8.0',
+        'tornado<6.0'
     ])
     traefik.ensure_traefik_binary(prefix)
 
