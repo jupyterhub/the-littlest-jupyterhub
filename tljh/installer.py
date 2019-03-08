@@ -195,8 +195,7 @@ def ensure_jupyterhub_package(prefix):
         'jupyterhub-firstuseauthenticator==0.12',
         'jupyterhub-nativeauthenticator==0.0.4',
         'jupyterhub-ldapauthenticator==1.2.2',
-        'oauthenticator==0.8.0',
-        'tornado<6.0'
+        'oauthenticator==0.8.0'
     ])
     traefik.ensure_traefik_binary(prefix)
 
@@ -253,7 +252,9 @@ def ensure_user_environment(user_requirements_txt_file):
         # nbresuse to show people how much RAM they are using
         'nbresuse==0.3.0',
         # Most people consider ipywidgets to be part of the core notebook experience
-        'ipywidgets==7.4.2'
+        'ipywidgets==7.4.2',
+        # Pin tornado
+        'tornado<6.0'
     ])
 
     if user_requirements_txt_file:
