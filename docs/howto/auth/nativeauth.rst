@@ -14,7 +14,9 @@ will be authorized automatically.
 Enabling the authenticator
 ==========================
 
-#. Enable the authenticator and reload config to apply the configuration:
+Enable the authenticator and reload config to apply the configuration:
+
+.. code-block:: bash
 
    sudo tljh-config set auth.type nativeauthenticator.NativeAuthenticator
    sudo tljh-config reload
