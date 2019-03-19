@@ -7,18 +7,18 @@ Installing on Amazon Web Services
 Goal
 ====
 
-By the end of this tutorial, you should have a JupyterHub with some admin
-users and a user environment with packages you want installed running on
-`Amazon Web Services <https://aws.amazon.com/>`_.
+To have a JupyterHub with admin users and a user environment with conda / pip packages.
 
 Prerequisites
 =============
 
-#. An Amazon Web Services account. When you set it up, it will probably ask you 
-   to set your default region. 
+#. An Amazon Web Services account.
 
-   There is a tier of compute use that is free for the first year that is fully
+   The `AWS free tier <https://aws.amazon.com/free/>`_ is fully
    capable of running a minimal littlest Jupyterhub for testing purposes. 
+
+   If asked to choose a default region, choose the one closest to the majority 
+   of your users.
 
 Step 1: Installing The Littlest JupyterHub
 ==========================================
@@ -31,9 +31,8 @@ Let's create the server on which we can run JupyterHub.
    
    If you need to adjust your region from your default, there is a drop-down 
    menu between your name and the **Support** menu on the far right of the dark 
-   navigation bar across the top of the window. Adjust the region of the 
-   services you want to interact with now to match the closest one to the 
-   majority of your users.
+   navigation bar across the top of the window. Adjust the region to match the
+   closest one to the majority of your users.
 
 #. On the screen listing all the availabe services, pick **EC2** under **Compute** 
    on the left side at the top of the first column. 
@@ -56,19 +55,19 @@ Let's create the server on which we can run JupyterHub.
       :alt: Click launch instance
    
    This will start the 'launch instance wizard' process.  This lets you customize
-   the kind of server you want, the resources it will have & what it'll be called.
+   the kind of server you want, the resources it will have and its name.
    
    
 #. On the page **Step 1: Choose an Amazon Machine Image (AMI)** you are going 
-   to pick the base image your remote server machine will have. The view will 
+   to pick the base image your remote server will have. The view will 
    default to the 'Quick-start' tab selected and just a few down the page, select 
-   **Ubuntu Server 18.04 LTS (HVM), SSD Volume Type - ami-0ac019f4fcb7cb7e6**.
+   **Ubuntu Server 18.04 LTS (HVM), SSD Volume Type - ami-XXXXXXXXXXXXXXXXX**.
    
    .. image:: ../images/providers/amazon/select_ubuntu_18.png
       :alt: Click Ubuntu server 18.04
    
    The `ami` alpha-numeric at the end references the specific Amazon machine 
-   image. It may be different as Amazon updates these routinely. The 
+   image, ignore this as Amazon updates them routinely. The 
    **Ubuntu Server 18.04 LTS (HVM)** is the important part.
    
    
@@ -84,21 +83,18 @@ Let's create the server on which we can run JupyterHub.
    You may wish to consult the listing `here <https://www.ec2instances.info/>`_ 
    because it shows cost per hour. The **On Demand** price is the pertinent cost.
    
-   (For point of reference, I was able to get a minimal hub that worked for 
-   developing this tutorial using  **t2.micro** tier. That tier is free for 
-   Amazon users the first year they sign up. Two users were able to concurrently 
-   access this development hub.)
+   (For reference, a minimal hub that worked for developing this tutorial used a
+   **t2.micro** tier, which is free for Amazon users the first year they sign
+   up. Two users were able to concurrently utilize this development hub without issue.)
    
-   If you want to **GPUs**, you'll have to scroll down about half way to find 
-   the `GPU graphics` and `GPU compute` products.
+   `GPU graphics` and `GPU compute` products are also available around half way down the page
    
 #. Under **Step 3: Configure Instance Details**, scroll to the bottom of the page 
-   and toggle the arrow next to **Advanced Details** to get the rest of the page to 
-   drop down. Scroll down further to reveal a section entitled 'User data'. Copy 
+   and toggle the arrow next to **Advanced Details**. Scroll down to 'User data'. Copy 
    the text below, and paste it into the **User data** text box. Replace
    ``<admin-user-name>`` with the name of the first **admin user** for this
    JupyterHub. This admin user can log in after the JupyterHub is set up, and
-   can configure it to their needs. **Remember to add your username**!
+   configure it. **Remember to add your username**!
 
    .. code-block:: bash
 
@@ -112,8 +108,8 @@ Let's create the server on which we can run JupyterHub.
 
    .. note::
 
-      See :ref:`topic/installer-actions` if you want to understand exactly what the installer is doing.
-      :ref:`topic/customizing-installer` documents other options that can be passed to the installer.
+      See :ref:`topic/installer-actions` for a detailed description and 
+      :ref:`topic/customizing-installer` for other options that can be used.
    
 #. Under **Step 4: Add Storage**, you can change the **size** and **type of your 
    disk by adjusting the value in **Size (GiB)** and selecting **Volume Type**.
@@ -121,11 +117,11 @@ Let's create the server on which we can run JupyterHub.
    .. image:: ../images/providers/amazon/change_size_type.png
       :alt: Selecting disk size and type
    
-   Check out our guide on How To :ref:`howto/admin/resource-estimation` to help pick
+   Check out :ref:`howto/admin/resource-estimation` to help pick
    how much Disk space your server needs.
    
    Hover over the encircled `i` next to **Volume Type** for an explanation of
-   each.  Leaving the default as is is fine. `General Purpose SSD (gp2)` is 
+   each. Leaving the default as is is fine. `General Purpose SSD (gp2)` is 
    recommended for most workloads. With  `Provisioned IOPS SSD (io1)` being the 
    highest-performance SSD volume. Magnetic (standard) is a previous generation 
    volume and not suited for a hub for multi-users.
@@ -150,7 +146,7 @@ Let's create the server on which we can run JupyterHub.
    **Create a new security group**. You should give it a disitnguishing name 
    under **Security group name**
    such as `ssh_web` for future reference. If you have, one from before you can 
-   selectit and adjust it to have the rules you need, if oyu prefer.
+   select it and adjust it to have the rules you need, if you prefer.
    
    The rules will default to include `SSH`. Leave that there, and then click on 
    the **Add Rule** button. Under **Type** for the new rule, change the field 
@@ -186,8 +182,8 @@ Let's create the server on which we can run JupyterHub.
    acknowledge your choice in order to proceed. If you already have a key pair you 
    can select to associate it with this instance, otherwise you need to 
    **Create a new key pair**. Choosing to `Proceed with a key pair` is not 
-   recommended as you'll have no way to access your server if anything goes wrong 
-   with the Jupyterhub amd no way to recover files via download.
+   recommended as you'll have no way to access your server via SSH if anything
+   goes wrong with the Jupyterhub and have no way to recover files via download.
    
    Download and keep the key pair file unless you are associating one you already 
    have.
@@ -244,12 +240,13 @@ Let's create the server on which we can run JupyterHub.
    expecting to see when trying the URL and things work. 
    While waiting until the appropriate time to try, another way to check if 
    things are churning away, is to open the **System Log**. To do this, go to 
-   the **EC2 Management Console** &  highlight the instance by clicking on that 
+   the **EC2 Management Console** & highlight the instance by clicking on that 
    row and then right-click **Instance Settings** > **Get System Log**.
    
    .. image:: ../images/providers/amazon/get_system_log.png
       :alt: Getting system log.
    
+.. This image doesn't exist, commenting out this part 
    When the Jupyterhub creation process works and the hub is ready to show you 
    the login the **System Log** will look like the image below if you scroll to 
    the bottom. Note the line **Starting TLJH installer**. (Somtimes I would 
@@ -260,7 +257,7 @@ Let's create the server on which we can run JupyterHub.
    .. image:: ../images/first-login.png
       :alt: JupyterHub log-in page
    
-#. Login using the **admin user name** you used in step 6, and a password. Use a
+#. Login using the **admin user name** you used in step 7, and a password. Use a
    strong password & note it down somewhere, since this will be the password for
    the admin user account from now on.
    
