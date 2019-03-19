@@ -16,7 +16,8 @@ installations.
 
 .. math::
 
-    Server Memory Recommended = (Maximum concurrent users \times Maximum memory allowed per user) + 128MB
+    Recommended\, Memory =
+    (Max\, concurrent\, users \times Max\, mem\, per\, user) + 128MB
 
 
 The ``128MB`` is overhead for TLJH and related services. **Server Memory Recommended**
@@ -27,7 +28,7 @@ Maximum concurrent users
 ------------------------
 
 Even if your class has 100 students, most of them will not be using the JupyterHub
-actively at an given moment. At 2am on a normal night, maybe you'll have 10 students
+actively at a single given moment. At 2am on a normal night, maybe you'll have 10 students
 using it. At 2am before a final, maybe you'll have 60 students using it. Maybe
 you'll have a lab session with all 100 of your students using it at the same time.
 
@@ -38,7 +39,7 @@ over time. We generally recommend between 40-60% of your total class size to sta
 Maximum memory allowed per user
 -------------------------------
 
-Depending on what kinda work your users are doing, they will use different amounts
+Depending on what kind of work your users are doing, they will use different amounts
 of memory. The easiest way to determine this is to run through a typical user
 workflow yourself, and measure how much memory is used. You can use :ref:`howto/admin/nbresuse`
 to determine how much memory your user is using.
@@ -47,7 +48,7 @@ A good rule of thumb is to take the maximum amount of memory you used during
 your session, and add 20-40% headroom for users to 'play around'. This is the
 maximum amount of memory that should be given to each user.
 
-If users use *more* than this alloted amount of memory, their notebook kernel will restart.
+If users use *more* than this alloted amount of memory, their notebook kernel will *restart*.
 
 CPU
 ===
@@ -58,11 +59,13 @@ stop, unlike with RAM.
 
 .. math::
 
-    Server CPU Recommended = (Maximum concurrent users \times Maximum CPU usage per user) + 0.2
+    Recommended\, CPU = (Max\, concurrent\, users \times Max\, CPU\, usage\, per\, user) + 20\%
 
-The ``0.2`` is overhead for TLJH and related services. **Server CPU Recommended**
-is the amount of CPU the server you acquire should have. We recommend using
+The ``20%`` is overhead for TLJH and related services. This is around 20% of a 
+single modern CPU. This of course is just an estimate. We recommend using
 the same process used to estimate Memory required for estimating CPU required.
+You cannot use nbresuse for this, but you should carry out normal workflow and
+investigate the CPU usage on the machine.
 
 Disk space
 ==========
@@ -72,7 +75,7 @@ rather than **maximum concurrent** users.
 
 .. math::
 
-    Server Disk Size Recommended = (Total \times Maximum disk usage per user) + 2GB
+    Recommended\, Disk\, Size = (Total\, users \times Max\, disk\, usage\, per\, user) + 2GB
 
 Resizing your server
 ====================
