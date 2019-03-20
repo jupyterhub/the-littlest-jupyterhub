@@ -246,11 +246,13 @@ Let's create the server on which we can run JupyterHub.
    .. image:: ../images/providers/amazon/get_system_log.png
       :alt: Getting system log.
    
-.. This image doesn't exist, commenting out this part 
-   When the Jupyterhub creation process works and the hub is ready to show you 
-   the login the **System Log** will look like the image below if you scroll to 
-   the bottom. Note the line **Starting TLJH installer**. (Somtimes I would 
-   also see **Started jupyterhub.service** shortly after that, but not always.)
+#. When the Jupyterhub creation process finishes and the hub is ready to show 
+   the login, the **System Log** should look similar to the image below. Scroll to 
+   the bottom of your output from the previous step.
+   Note the line **Starting TLJH installer**, you may also see **Started jupyterhub.service**
+
+   .. image:: ../images/providers/amazon/completed_system_log.png
+      :alt: Completed system log
    
 #. When the installation is complete, it should give you a JupyterHub login page.
    
