@@ -243,7 +243,7 @@ def ensure_user_environment(user_requirements_txt_file):
     conda.ensure_pip_packages(USER_ENV_PREFIX, [
         # JupyterHub + notebook package are base requirements for user environment
         'jupyterhub==0.9.5',
-        'notebook==5.7.7',
+        'notebook==5.7.8',
         # Install additional notebook frontends!
         'jupyterlab==0.35.4',
         'nteract-on-jupyter==2.0.7',
