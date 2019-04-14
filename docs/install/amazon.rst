@@ -87,7 +87,7 @@ Let's create the server on which we can run JupyterHub.
    **t2.micro** tier, which is free for Amazon users the first year they sign
    up. Two users were able to concurrently utilize this development hub without issue.)
    
-   `GPU graphics` and `GPU compute` products are also available around half way down the page
+   ``GPU graphics`` and ``GPU compute`` products are also available around half way down the page
    
 #. Under **Step 3: Configure Instance Details**, scroll to the bottom of the page 
    and toggle the arrow next to **Advanced Details**. Scroll down to 'User data'. Copy 

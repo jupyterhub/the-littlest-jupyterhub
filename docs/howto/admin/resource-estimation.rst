@@ -62,7 +62,7 @@ stop, unlike with RAM.
     Recommended\, CPU = (Max\, concurrent\, users \times Max\, CPU\, usage\, per\, user) + 20\%
 
 The ``20%`` is overhead for TLJH and related services. This is around 20% of a 
-single modern CPU. This of course is just an estimate. We recommend using
+single modern CPU. This, of course, is just an estimate. We recommend using
 the same process used to estimate Memory required for estimating CPU required.
 You cannot use nbresuse for this, but you should carry out normal workflow and
 investigate the CPU usage on the machine.

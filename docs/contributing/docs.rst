@@ -60,7 +60,7 @@ Then from the ``docs`` directory, build the HTML:
 
      $ make html
 
-If you encounter this error, it's likely that running it in virtual environment is your problem.
+If you encounter this error, it's likely that you are running inside a virtual environment.
 
 .. code-block:: console
 
