@@ -60,6 +60,12 @@ Then from the ``docs`` directory, build the HTML:
 
      $ make html
 
+If you encounter this error, it's likely that you are running inside a virtual environment.
+
+.. code-block:: console
+
+   Error in "currentmodule" directive:
+
 To get started contributing, you'll want to read the :ref:`reStructuredText
 reference <sphinx:rst-index>`
 
