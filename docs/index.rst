@@ -28,6 +28,7 @@ We have a bunch of tutorials to get you started.
 
   .. toctree::
      :titlesonly:
+     :caption: Installation
 
      install/digitalocean
      install/jetstream
@@ -48,6 +49,7 @@ Content and Data
 
 .. toctree::
    :titlesonly:
+   :caption: Content and data
 
    howto/content/nbgitpuller
    howto/content/add-data
@@ -58,6 +60,7 @@ The user environment
 
 .. toctree::
    :titlesonly:
+   :caption: The user environment
 
    howto/env/user-environment
    howto/env/notebook-interfaces
@@ -72,6 +75,7 @@ with your JupyterHub. For more information on Authentication, see
 
 .. toctree::
    :titlesonly:
+   :caption: Authentication
 
    howto/auth/dummy
    howto/auth/github
@@ -83,6 +87,7 @@ Administration and security
 
 .. toctree::
    :titlesonly:
+   :caption: Administration and security
 
    howto/admin/admin-users
    howto/admin/resource-estimation
@@ -99,6 +104,7 @@ Topic guides provide in-depth explanations of specific topics.
 
 .. toctree::
    :titlesonly:
+   :caption: Topic guides
 
    topic/whentouse
    topic/requirements
@@ -118,6 +124,7 @@ guides help you find what is broken & hopefully fix it.
 
 .. toctree::
    :titlesonly:
+   :caption: Troubleshooting
 
    troubleshooting/logs
 
@@ -142,6 +149,7 @@ to people contributing in various ways.
 
 .. toctree::
    :titlesonly:
+   :caption: Contributing
 
    contributing/docs
    contributing/code-review

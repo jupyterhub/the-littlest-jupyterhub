@@ -56,6 +56,7 @@ if os.path.exists(os.path.join(here, '_static')):
 html_sidebars = {
     '**': [
         'about.html',
+        'globaltoc.html',
         'relations.html',
         'searchbox.html',
         'donate.html',
@@ -74,3 +75,6 @@ html_theme_options = {
     'github_banner': False,
     'github_type': 'star',
 }
+
+def setup(app):
+    app.add_stylesheet('custom.css')
