@@ -17,6 +17,9 @@ PrivateDevices=yes
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
 Environment=TLJH_INSTALL_PREFIX={install_prefix}
+# Run upgrade-db before starting, in case Hub version has changed
+# This is a no-op when no db exists or no upgrades are needed
+ExecStartPre={python_interpreter_path} -m jupyterhub.app -f {jupyterhub_config_path} upgrade-db
 ExecStart={python_interpreter_path} -m jupyterhub.app -f {jupyterhub_config_path}
 
 [Install]
