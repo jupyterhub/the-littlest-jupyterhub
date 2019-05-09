@@ -13,12 +13,10 @@ the cloud provider of your choice.
 
 Currently there are instructions to resize your resources on the following providers:
 
-* :ref:`Digital Ocean <digitalocean/resize>`.
+* :ref:`Digital Ocean <howto/providers/digitalocean/resize>`.
 
 Once resources have been reallocated, you must tell TLJH to make use of these resources,
 and verify that the resources have become available.
-
-.. _tljhconf:
 
 Verifying a Resize 
 ==================
