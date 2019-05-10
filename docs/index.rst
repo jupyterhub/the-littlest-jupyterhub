@@ -95,6 +95,14 @@ Administration and security
    howto/admin/https
    howto/admin/enable-extensions
 
+Cloud provider configuration
+----------------------------
+
+.. toctree::
+   :titlesonly:
+   :caption: Cloud provider configuration
+
+   howto/providers/digitalocean
 
 Topic Guides
 ============
