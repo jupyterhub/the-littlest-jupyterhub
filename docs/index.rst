@@ -10,10 +10,9 @@ a small (0-100) number of users on a single server. We recommend reading
 Development Status
 ==================
 
-This project is currently in **alpha** state. Most things work, but we might
-still make breaking changes that have no clear upgrade pathway. We are targeting
-a v0.1 release sometime in mid-August 2018. Follow `this milestone <https://github.com/jupyterhub/the-littlest-jupyterhub/milestone/1>`_
-to see progress towards the release!
+This project is currently in **beta** state. Folks have been using installations
+of TLJH for more than a year now to great success. While we try hard not to, we
+might still make breaking changes that have no clear upgrade pathway.
 
 Installation
 ============
