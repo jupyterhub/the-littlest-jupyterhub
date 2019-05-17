@@ -34,7 +34,7 @@ Pre-requisites
 #. A server running Ubuntu 18.04 where you have root access.
 #. At least **768MB** of RAM on your server.
 #. Ability to ``ssh`` into the server & run commands from the prompt.
-#. A **IP address** where the server can be reached from the browsers of your target audience.
+#. An **IP address** where the server can be reached from the browsers of your target audience.
 
 If you run into issues, look at the specific :ref:`troubleshooting guide <troubleshooting/providers/custom>`
 for custom server installations.
@@ -67,7 +67,7 @@ Step 1: Installing The Littlest JupyterHub
       :ref:`topic/customizing-installer` documents other options that can be passed to the installer.
 
 #. Press ``Enter`` to start the installation process. This will take 5-10 minutes,
-   and will say 'Done!' when the installation process is complete.
+   and will say ``Done!`` when the installation process is complete.
 
 #. Copy the **Public IP** of your server, and try accessing ``http://<public-ip>`` from
    your browser. If everything went well, this should give you a JupyterHub login page.
