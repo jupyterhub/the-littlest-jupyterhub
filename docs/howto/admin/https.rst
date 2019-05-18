@@ -5,14 +5,17 @@ Enable HTTPS
 ============
 
 Every JupyterHub deployment should enable HTTPS!
-HTTPS encrypts traffic so that usernames and passwords and other potentially sensitive bits of information are communicated securely.
-The Littlest JupyterHub supports automatically configuring HTTPS via `Let's Encrypt <https://letsencrypt.org>`_,
-or setting it up :ref:`manually <manual_https>` with your own TLS key and certificate.
-If you don't know how to do that,
-then :ref:`Let's Encrypt <letsencrypt>` is probably the right path for you.
 
+HTTPS encrypts traffic so that usernames, passwords and your data are
+communicated securely. sensitive bits of information are communicated
+securely. The Littlest JupyterHub supports automatically configuring HTTPS
+via `Let's Encrypt <https://letsencrypt.org>`_, or setting it up
+:ref:`manually <howto/admin/https/manual>` with your own TLS key and
+certificate. Unless you have a strong reason to use the manual method,
+you should use the :ref:`Let's Encrypt <howto/admin/https/letsencrypt>`
+method.
 
-.. _letsencrypt:
+.. _howto/admin/https/letsencrypt:
 
 Automatic HTTPS with Let's Encrypt
 ==================================
@@ -23,7 +26,8 @@ To enable HTTPS via letsencrypt::
     sudo tljh-config set https.letsencrypt.email you@example.com
     sudo tljh-config add-item https.letsencrypt.domains yourhub.yourdomain.edu
 
-where ``you@example.com`` is your email address and ``yourhub.yourdomain.edu`` is the domain where your hub will be running.
+where ``you@example.com`` is your email address and ``yourhub.yourdomain.edu``
+s the domain where your hub will be running.
 
 Once you have loaded this, your config should look like::
 
@@ -43,10 +47,15 @@ Finally, you can reload the proxy to load the new configuration::
 
     sudo tljh-config reload proxy
 
-At this point, the proxy should negotiate with Let's Encrypt to set up a trusted HTTPS certificate for you.
-It may take a moment for the proxy to negotiate with Let's Encrypt to get your certificates, after which you can access your Hub securely at https://yourhub.yourdomain.edu.
+At this point, the proxy should negotiate with Let's Encrypt to set up a
+trusted HTTPS certificate for you. It may take a moment for the proxy to
+negotiate with Let's Encrypt to get your certificates, after which you can
+access your Hub securely at https://yourhub.yourdomain.edu.
 
-.. _manual_https:
+These certificates are valid for 3 months. The proxy will automatically
+renew them for you before they expire.
+
+.. _howto/admin/https/manual:
 
 Manual HTTPS with existing key and certificate
 ==============================================
