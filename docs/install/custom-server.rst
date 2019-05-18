@@ -4,11 +4,15 @@
 Installing on your own server
 =============================
 
-.. note::
 
-    You should use this if your cloud provider does not already have a direct tutorial,
-    or if you have experience setting up servers.
+Follow this guide if your cloud provider doesn't have a direct tutorial, or
+you are setting this up on a bare metal server.
 
+.. warning::
+
+   Do **not** install TLJH directly on your laptop or personal computer!
+   It will most likely open up exploitable security holes when run directly
+   on your personal computer.
 
 Goal
 ====
