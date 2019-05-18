@@ -48,7 +48,7 @@ to some value, you can do that with the following command:
 
 .. code-block:: bash
 
-   sudo tljh-config set auth.LDAPAuthenticator.server_address = 'my-ldap-server'
+   sudo tljh-config set auth.LDAPAuthenticator.server_address 'my-ldap-server'
 
 Most authenticators require you set multiple configuration options before you can
 enable them. Read the authenticator's documentation carefully for more information.
