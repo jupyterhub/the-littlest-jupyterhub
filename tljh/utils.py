@@ -21,12 +21,11 @@ def run_subprocess(cmd, *args, **kwargs):
     printable_command = ' '.join(cmd)
     if proc.returncode != 0:
         # Our process failed! Show output to the user
-        logger.error(proc.stdout.decode())
-        e = Exception( 'command {command} failed with return code {code}'.format(
-            printable_command, proc.returncode
+        logger.error('Ran {command} with exit code {code}'.format(
+            command=printable_command, code=proc.returncode
         ))
-        logger.exception(e)
-        raise e
+        logger.error(proc.stdout.decode())
+        raise subprocess.CalledProcessError(cmd=cmd, returncode=proc.returncode)
     else:
         # This goes into installer.log
         logger.debug('Ran {command} with exit code {code}'.format(
