@@ -14,6 +14,12 @@ you are setting this up on a bare metal server.
    It will most likely open up exploitable security holes when run directly
    on your personal computer.
 
+.. note::
+
+   Running TLJH *inside* a docker container is not supported, since we depend
+   on systemd. If you want to run TLJH locally for development, see
+   :ref:`contributing/dev-setup`.
+
 Goal
 ====
 
