@@ -29,6 +29,7 @@ def run_systemd_image(image_name, container_name):
         '--mount', 'type=bind,source=/sys/fs/cgroup,target=/sys/fs/cgroup',
         '--detach',
         '--name', container_name,
+        '--memory', '512M', # This is the minimum VM size we support
         image_name
     ])
 
