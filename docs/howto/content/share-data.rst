@@ -67,7 +67,7 @@ follow these steps:
 
    .. code-block:: bash
 
-      sudo ln -s /src/data/my_shared_data_folder my_shared_data_folder
+      sudo ln -s /srv/data/my_shared_data_folder my_shared_data_folder
 
 #. **Confirm that this worked** by logging in as a new user. You can do this
    by opening a new "incognito" browser window and accessing your JupyterHub.
