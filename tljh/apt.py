@@ -3,6 +3,7 @@ Utilities for working with the apt package manager
 """
 import os
 import subprocess
+from tljh import utils
 
 
 def trust_gpg_key(key):
@@ -14,7 +15,7 @@ def trust_gpg_key(key):
     # If gpg2 doesn't exist, install it.
     if not os.path.exists('/usr/bin/gpg2'):
         install_packages(['gnupg2'])
-    subprocess.check_output(['apt-key', 'add', '-'], input=key, stderr=subprocess.STDOUT)
+    utils.run_subprocess(['apt-key', 'add', '-'], input=key)
 
 
 def add_source(name, source_url, section):
@@ -32,7 +33,7 @@ def add_source(name, source_url, section):
             f.seek(0)
             f.write(line)
             f.truncate()
-            subprocess.check_output(['apt-get', 'update', '--yes'], stderr=subprocess.STDOUT)
+            utils.run_subprocess(['apt-get', 'update', '--yes'])
 
 
 def install_packages(packages):
@@ -41,9 +42,9 @@ def install_packages(packages):
     """
     # Check if an apt-get update is required
     if len(os.listdir('/var/lib/apt/lists')) == 0:
-        subprocess.check_output(['apt-get', 'update', '--yes'], stderr=subprocess.STDOUT)
-    subprocess.check_output([
+        utils.run_subprocess(['apt-get', 'update', '--yes'])
+    utils.run_subprocess([
         'apt-get',
         'install',
         '--yes'
-    ] + packages, stderr=subprocess.STDOUT)
+    ] + packages)

@@ -20,6 +20,7 @@ from tljh import (
     systemd,
     traefik,
     user,
+    utils
 )
 from .config import (
     CONFIG_DIR,
@@ -32,7 +33,6 @@ from .config import (
 from .yaml import yaml
 
 HERE = os.path.abspath(os.path.dirname(__file__))
-
 
 logger = logging.getLogger("tljh")
 
@@ -170,7 +170,7 @@ def ensure_jupyterlab_extensions():
         '@jupyterlab/hub-extension',
         '@jupyter-widgets/jupyterlab-manager'
     ]
-    subprocess.check_output([
+    utils.run_subprocess([
         os.path.join(USER_ENV_PREFIX, 'bin/jupyter'),
         'labextension',
         'install'
