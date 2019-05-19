@@ -69,7 +69,7 @@ Let's create the server on which we can run JupyterHub.
 #. For **Zone**, pick any of the options. Leaving the default as is is fine.
 
 #. Under **Machine** type, select the amount of CPU / RAM / GPU you want for your
-   server.
+   server. You need at least **768MB** of RAM.
 
    You can select a preset combination in the default **basic view**.
 
