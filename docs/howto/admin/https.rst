@@ -15,10 +15,22 @@ certificate. Unless you have a strong reason to use the manual method,
 you should use the :ref:`Let's Encrypt <howto/admin/https/letsencrypt>`
 method.
 
+.. note::
+
+   You *must* have a domain name set up to point to the IP address on
+   which TLJH is accessible before you can set up HTTPS.
+
 .. _howto/admin/https/letsencrypt:
 
 Automatic HTTPS with Let's Encrypt
 ==================================
+
+.. note::
+
+   If the machine you are running on is not reachable from the internet -
+   for example, if it is a machine internal to your organization that
+   is cut off from the internet - you can not use this method. Please
+   set up a DNS entry and HTTPS :ref:`manually <howto/admin/https/manual>`.
 
 To enable HTTPS via letsencrypt::
 
@@ -32,7 +44,6 @@ s the domain where your hub will be running.
 Once you have loaded this, your config should look like::
 
     sudo tljh-config show
-
 
 .. sourcecode:: yaml
 
