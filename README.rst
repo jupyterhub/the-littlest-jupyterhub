@@ -16,10 +16,8 @@ to 1-50 users on a single server.
 
 Administrators who do not consider themselves 'system administrators' but would
 like to provide hosted Jupyter Notebooks for their students / users are the
-primary audience. All users get the same environment, and administrators can
-install libraries into this environment without any specialized knowledge.
-It provides all users with the same environment, and administrators can install
-libraries into this environment easily without any specialized knowledge.
+primary audience. All users are provided with the same environment, and administrators
+can easily install libraries into this environment without any specialized knowledge.
 
 See `this blog post <http://words.yuvi.in/post/the-littlest-jupyterhub/>`_ for
 more information.
@@ -45,7 +43,7 @@ Ubuntu 18.04. We have a bunch of tutorials to get you started!
   - `Digital Ocean <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/digitalocean.html>`_
   - `Google Cloud <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/google.html>`_
   - `Jetstream <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/jetstream.html>`_
-  - `Amazon Web Services <https://aws.amazon.com/>`_
+  - `Amazon Web Services <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/amazon.html>`_
   - ... your favorite provider here, if you can contribute!
 
 - `Tutorial to install TLJH on an already running server you have root access to
