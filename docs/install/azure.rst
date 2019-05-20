@@ -6,7 +6,7 @@ Goal
 ====
 
 By the end of this tutorial, you should have a JupyterHub with some admin
-users and a user environment with packages you want installed running on
+users and a user environment with packages you want to be installed running on
 `Microsoft Azure <https://azure.microsoft.com>`_.
 
 Prerequisites
@@ -14,7 +14,7 @@ Prerequisites
 
 * A Microsoft Azure account. 
 
-* To get started you can get a free acount which  includes 150 dollars worth of Azure acredits (`get a free account here <https://azure.microsoft.com/en-us/free//?wt.mc_id=LTJH-github-taallard>`_) 
+* To get started you can get a free account which  includes 150 dollars worth of Azure credits (`get a free account here <https://azure.microsoft.com/en-us/free//?wt.mc_id=LTJH-github-taallard>`_) 
 
 These instructions cover how to set up a Virtual Machine
 on Microsoft Azure. For subsequent information about creating
@@ -23,8 +23,8 @@ your JupyterHub and configuring it, see `The Littlest JupyterHub guide <https://
 Choose your Virtual Machine operating system
 =============================================
 
-#. Go to `your azure portal <https://portal.azure.com/>`_ 
-#. Find virtual machines on your Azure dashboard (left hand panel)
+#. Go to `your Azure portal <https://portal.azure.com/>`_ 
+#. Find virtual machines on your Azure dashboard (left-hand panel)
 
     .. image:: ../images/providers/azure/azure-vms.png
             :alt: Virtual machines on Azure portal
@@ -36,7 +36,7 @@ Choose your Virtual Machine operating system
 
 #. Select Create VM from Marketplace
     .. image:: ../images/providers/azure/create-vm.png
-        :alt: Create from marketplace
+        :alt: Create from the marketplace
   
 * **Choose an Ubuntu server for your VM**.
     * Click `Ubuntu Server`
@@ -56,15 +56,15 @@ Customize the virtual machine
     * **Authentication type**. Change authentication type to "password"
     * **Password**. Type in a password. This will be used to SSH into the machine. It is your user password on the VM.
     * **Login with Azure Active Directory**. Choose "Disabled" (usually the default)
-    * **Subscription**. Choose the "Free Trial" if this is what you're using. Otherwise choose a different plan. This is the billing account that will be charged.
-    * **Resource group**. Create new resource group if you don't already have one. Resource groups let you bundle components that you request from Azure. This is overkill for our use case so it's easiest to create a new resource group.
+    * **Subscription**. Choose the "Free Trial" if this is what you're using. Otherwise, choose a different plan. This is the billing account that will be charged.
+    * **Resource group**. Create a new resource group if you don't already have one. Resource groups let you bundle components that you request from Azure. This is overkill for our use case so it's easiest to create a new resource group.
     * **Location**. Choose a location near where you expect your users to be located.
 
     .. image:: ../images/providers/azure/password-vm.png
-            :alt: Add password to vm
+            :alt: Add password to VM
 
 * Size
-    * Choose a machine with enough RAM to accomodate your users. For example, if each user needs 2GB of RAM, and you have 10 total users, you need at least 20GB of RAM on the machine. It's also good to have a few GB of "buffer" RAM beyond what you think you'll need.
+    * Choose a machine with enough RAM to accommodate your users. For example, if each user needs 2GB of RAM, and you have 10 total users, you need at least 20GB of RAM on the machine. It's also good to have a few GB of "buffer" RAM beyond what you think you'll need.
     * Click on "select image" and choose one of the options, then click "select".
     
     .. image:: ../images/providers/azure/size-vm.png
@@ -99,7 +99,7 @@ Customize the virtual machine
         * **Backup**. Choose "Disabled".
 
 .. image:: ../images/providers/azure/backup-vm.png
-            :alt: Choose vm Backup
+            :alt: Choose VM Backup
 
 
 * Summary -> confirm -> OK
@@ -107,10 +107,10 @@ Customize the virtual machine
 
 * Confirm that it worked
     * Wait for it to be created. This might take about 5-10 minutes.
-    * After completion you should see a similar screen to the one below:
+    * After completion, you should see a similar screen to the one below:
 
     .. image:: ../images/providers/azure/deployed-vm.png
-        :alt: Deployed vm
+        :alt: Deployed VM
 
 SSH into your virtual machine
 ------------------------------
