@@ -97,3 +97,9 @@ Finally, you can reload the proxy to load the new configuration::
     sudo tljh-config reload proxy
 
 and now access your Hub securely at https://yourhub.yourdomain.edu.
+
+Troubleshooting
+===============
+
+If you're having trouble with HTTPS, looking at the :ref:`traefik
+proxy logs <troubleshooting/logs/traefik>` might help.

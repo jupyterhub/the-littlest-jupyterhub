@@ -44,18 +44,20 @@ logs is a great first step.
 This command displays logs from JupyterHub itself. See :ref:`journalctl_tips`
 for tips on navigating the logs.
 
-Configurable HTTP Proxy Logs
-============================
+.. _troubleshooting/logs/traefik:
 
-Configurable HTTP Proxy redirects traffic to JupyterHub / user notebook servers
-as necessary & handles HTTPS. It usually is the least problematic of the components,
-but things do go wrong sometimes!
+Traefik Proxy Logs
+==================
+
+`traefik <https://traefik.io/>`_ redirects traffic to JupyterHub / user notebook servers
+as necessary & handles HTTPS. Look at this if all you can see in your browser
+is one line cryptic error messages, or if you are having trouble with HTTPS.
 
 .. code-block:: bash
 
-   sudo journalctl -u configurable-http-proxy
+   sudo journalctl -u traefik
 
-This command displays logs from Configurable HTTP Proxy. See :ref:`journalctl_tips`
+This command displays logs from Traefik. See :ref:`journalctl_tips`
 for tips on navigating the logs.
 
 User Server Logs
