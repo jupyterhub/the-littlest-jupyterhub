@@ -117,6 +117,12 @@ def test_admin_writable():
     permissions_test(ADMIN_GROUP, sys.prefix, writable=True, dirs_only=True)
 
 
+def test_installer_log_readable():
+    # Test that installer.log is owned by root, and not readable by anyone else
+    file_stat = os.stat('/opt/tljh/installer.log')
+    assert file_stat.st_uid == 0
+    assert file_stat.st_mode == 0o100500
+
 @pytest.mark.parametrize("group", [ADMIN_GROUP, USER_GROUP])
 def test_user_env_readable(group):
     # every file in user env should be readable by everyone

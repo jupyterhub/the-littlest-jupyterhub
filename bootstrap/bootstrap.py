@@ -97,7 +97,11 @@ def main():
 
     # Set up logging to print to a file and to stderr
     os.makedirs(install_prefix, exist_ok=True)
-    file_logger = logging.FileHandler(os.path.join(install_prefix, 'installer.log'))
+    file_logger_path = os.path.join(install_prefix, 'installer.log')
+    file_logger = logging.FileHandler(file_logger_path)
+    # installer.log should be readable only by root
+    os.chmod(file_logger_path, 0o500)
+
     file_logger.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
     file_logger.setLevel(logging.DEBUG)
     logger.addHandler(file_logger)
