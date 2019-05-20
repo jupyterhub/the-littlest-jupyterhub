@@ -70,14 +70,15 @@ Customize the virtual machine
     .. image:: ../images/providers/azure/size-vm.png
             :alt: Choose vm size 
     
-
 * Settings
-    * High Availability
-        * **Availability zone**. Make sure "None" is selected.
-        * **Availability set**. Make sure "None" is selected.
+    * Availability options
+        * Select no infrastructure redundancy required
     * Storage
         * **Use managed disks**. Choose "yes"
-        * **OS disk size**. Select the appropriate size for your JupyterHub.
+        * **OS disk size**. Click on create and attach a new disk. Select an appropriate type and size and click ok.
+
+    .. image:: ../images/providers/azure/disk-vm.png
+            :alt: Choose disk size  
     * Network
         * **Virtual network**. Do not change this.
         * **Subnet**. Do not change this.
@@ -89,53 +90,57 @@ Customize the virtual machine
     * Auto-Shutdown
         * **Enable auto-shutdown**. Choose "Off".
     * Monitoring
-        * **Boot diagnostics**. Choose "Enabled".
-        * **Guest OS diagnostics**. Choose "Disabled".
-        * **Diagnostics storage account**. Leave as teh default.
+        * **Boot diagnostics**. Choose "On".
+        * **OS guest diagnostics**. Choose "Disabled".
+        * **Diagnostics storage account**. Leave as the default.
     * Managed service identity
-        * **Register with Azure Active Directory**. Choose "No".
+        * **System assigned managed identity**. Choose "No".
     * Backup
         * **Backup**. Choose "Disabled".
-  
+
 .. image:: ../images/providers/azure/backup-vm.png
             :alt: Choose vm Backup
 
 
 * Summary -> confirm -> OK
 
-  ![](https://i.imgur.com/VNEOnHA.png)
 
 * Confirm that it worked
-    * Wait for it to be created. Should take about 5-10 minutes.
-    * Go to "Virtual Machines", you should see it there.
-      
-      ![](https://i.imgur.com/RoOnGOa.png)
-      
-## SSH into your virtual machine
+    * Wait for it to be created. This might take about 5-10 minutes.
+    * After completion you should see a similar screen to the one below:
 
-* Click on **Virtual Machines** and then click on your recently-created VM.
+    .. image:: ../images/providers/azure/deployed-vm.png
+        :alt: Deployed vm
 
-  ![](https://i.imgur.com/bEf8kGG.png)
+SSH into your virtual machine
+------------------------------
+
+* Click on go to resource (see image above)
 
 * Copy the **Public IP address**
 
-  ![](https://i.imgur.com/8ydNm2l.png)
+  .. image:: ../images/providers/azure/ip-vm.png
+        :alt: Get IP address
 
 * Open a terminal on your local machine.
-* SSH into your VM:
-  
-  ```bash
-  ssh <username>@<ip-address>
-  ```
+* SSH into your VM: ::
 
-## Install JupyterHub
+    ssh <username>@<ip-address>
 
-* Follow the guide at https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/custom.html#install-custom
 
-## (optional) Delete your virtual machine
+where the username is the one you chose in the Settings step.
+
+Install JupyterHub
+===================
+
+* Follow the guide at `https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/custom.html#install-custom <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/custom.html#install-custom>`_ 
+
+(optional) Delete your virtual machine
+=======================================
 
 * Go to "Virtual Machines"
-* Click your machine name
+* Click on your machine name
 * Click on "Stop" to stop the machine temporarily, or "Delete" to delete it permanently.
 
-![](https://i.imgur.com/6CgoYDx.png)
+.. image:: ../images/providers/azure/delete-vm.png
+        :alt: Delete vm
