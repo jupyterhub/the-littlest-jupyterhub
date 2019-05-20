@@ -45,11 +45,12 @@ def test_ubuntu_too_old():
     assert output.returncode == 1
 
 
-def test_inside_plain_docker():
+def test_inside_no_systemd_docker():
     output = run_bootstrap('plain-docker-test', 'ubuntu:18.04')
     assert output.stdout.strip() == dedent("""
         Systemd is required to run TLJH
-        Running inside a plain docker container isn't supported
+        Running inside a docker container without systemd isn't supported
+        We recommend against running a production TLJH instance inside a docker container
         For local development, see http://tljh.jupyter.org/en/latest/contributing/dev-setup.html
     """).strip()
     assert output.returncode == 1

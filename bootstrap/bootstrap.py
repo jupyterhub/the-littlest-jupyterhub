@@ -54,7 +54,8 @@ def validate_host():
         print("Systemd is required to run TLJH")
         # Only fail running inside docker if systemd isn't present
         if os.path.exists('/.dockerenv'):
-            print("Running inside a plain docker container isn't supported")
+            print("Running inside a docker container without systemd isn't supported")
+            print("We recommend against running a production TLJH instance inside a docker container")
             print("For local development, see http://tljh.jupyter.org/en/latest/contributing/dev-setup.html")
         sys.exit(1)
 
