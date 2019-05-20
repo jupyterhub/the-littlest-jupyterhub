@@ -162,8 +162,8 @@ def update_limits(c, config):
     """
     limits = config['limits']
 
-    c.SystemdSpawner.mem_limit = limits['memory']
-    c.SystemdSpawner.cpu_limit = limits['cpu']
+    c.Spawner.mem_limit = limits['memory']
+    c.Spawner.cpu_limit = limits['cpu']
 
 
 def update_user_environment(c, config):
