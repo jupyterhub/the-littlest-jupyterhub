@@ -1,10 +1,11 @@
 """Traefik installation and setup"""
 import hashlib
 import os
-from urllib.request import urlretrieve
+from urllib.request import urlretrieve, ContentTooShortError
 
 from jinja2 import Template
 from passlib.apache import HtpasswdFile
+import backoff
 
 from tljh.configurer import load_config
 
@@ -26,7 +27,12 @@ def checksum_file(path):
             hasher.update(chunk)
     return hasher.hexdigest()
 
-
+@backoff.on_exception(
+    backoff.expo,
+    # Retry when connection is reset or we think we didn't download entire file
+    (ConnectionResetError, ContentTooShortError),
+    max_tries=2
+)
 def ensure_traefik_binary(prefix):
     """Download and install the traefik binary"""
     traefik_bin = os.path.join(prefix, "bin", "traefik")
