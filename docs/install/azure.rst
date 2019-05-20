@@ -37,7 +37,7 @@ Choose your Virtual Machine operating system
 #. Select Create VM from Marketplace
     .. image:: ../images/providers/azure/create-vm.png
         :alt: Create from the marketplace
-  
+
 * **Choose an Ubuntu server for your VM**.
     * Click `Ubuntu Server`
     * Click `Ubuntu Server 18.04 LTS`
@@ -79,6 +79,7 @@ Customize the virtual machine
 
     .. image:: ../images/providers/azure/disk-vm.png
             :alt: Choose disk size  
+
     * Network
         * **Virtual network**. Do not change this.
         * **Subnet**. Do not change this.
@@ -101,9 +102,7 @@ Customize the virtual machine
 .. image:: ../images/providers/azure/backup-vm.png
             :alt: Choose VM Backup
 
-
 * Summary -> confirm -> OK
-
 
 * Confirm that it worked
     * Wait for it to be created. This might take about 5-10 minutes.
@@ -119,14 +118,13 @@ SSH into your virtual machine
 
 * Copy the **Public IP address**
 
-  .. image:: ../images/providers/azure/ip-vm.png
-        :alt: Get IP address
+.. image:: ../images/providers/azure/ip-vm.png
+    :alt: Get IP address
 
 * Open a terminal on your local machine.
 * SSH into your VM: ::
 
     ssh <username>@<ip-address>
-
 
 where the username is the one you chose in the Settings step.
 
@@ -143,4 +141,4 @@ Install JupyterHub
 * Click on "Stop" to stop the machine temporarily, or "Delete" to delete it permanently.
 
 .. image:: ../images/providers/azure/delete-vm.png
-        :alt: Delete vm
+    :alt: Delete vm
