@@ -74,8 +74,14 @@ def main():
         subprocess.check_output(['apt-get', 'update', '--yes'], stderr=subprocess.STDOUT)
         subprocess.check_output(['apt-get', 'install', '--yes', 'software-properties-common'], stderr=subprocess.STDOUT)
         subprocess.check_output(['add-apt-repository', 'universe'], stderr=subprocess.STDOUT)
+
         subprocess.check_output(['apt-get', 'update', '--yes'], stderr=subprocess.STDOUT)
-        subprocess.check_output(['apt-get', 'install', '--yes', 'python3', 'python3-venv', 'git'], stderr=subprocess.STDOUT)
+        subprocess.check_output(['apt-get', 'install', '--yes', 
+            'git',
+            'python3',
+            'python3-venv',
+            'python3-pip'
+        ], stderr=subprocess.STDOUT)
         logger.info('Installed python & virtual environment')
         os.makedirs(hub_prefix, exist_ok=True)
         subprocess.check_output(['python3', '-m', 'venv', hub_prefix], stderr=subprocess.STDOUT)
