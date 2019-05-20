@@ -16,6 +16,7 @@ import os
 import subprocess
 import sys
 import logging
+import shutil
 
 
 def get_os_release_variable(key):
@@ -31,8 +32,10 @@ def get_os_release_variable(key):
         "source /etc/os-release && echo ${{{key}}}".format(key=key)
     ]).decode().strip()
 
-def main():
-
+def validate_host():
+    """
+    Make sure TLJH is installable in current host
+    """
     # Support only Ubuntu 18.04+
     distro = get_os_release_variable('ID')
     version = float(get_os_release_variable('VERSION_ID'))
@@ -43,6 +46,20 @@ def main():
         print('The Littlest JupyterHub requires Ubuntu 18.04 or higher')
         sys.exit(1)
 
+    if sys.version_info < (3, 5):
+        print("bootstrap.py must be run with at least Python 3.5")
+        sys.exit(1)
+
+    if not (shutil.which('systemd') and shutil.which('systemctl')):
+        print("Systemd is required to run TLJH")
+        # Only fail running inside docker if systemd isn't present
+        if os.path.exists('/.dockerenv'):
+            print("Running inside a plain docker container isn't supported")
+            print("For local development, see http://tljh.jupyter.org/en/latest/contributing/dev-setup.html")
+        sys.exit(1)
+
+def main():
+    validate_host()
     install_prefix = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
     hub_prefix = os.path.join(install_prefix, 'hub')
 
