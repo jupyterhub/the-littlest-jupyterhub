@@ -4,11 +4,21 @@
 Installing on your own server
 =============================
 
+
+Follow this guide if your cloud provider doesn't have a direct tutorial, or
+you are setting this up on a bare metal server.
+
+.. warning::
+
+   Do **not** install TLJH directly on your laptop or personal computer!
+   It will most likely open up exploitable security holes when run directly
+   on your personal computer.
+
 .. note::
 
-    You should use this if your cloud provider does not already have a direct tutorial,
-    or if you have experience setting up servers.
-
+   Running TLJH *inside* a docker container is not supported, since we depend
+   on systemd. If you want to run TLJH locally for development, see
+   :ref:`contributing/dev-setup`.
 
 Goal
 ====
