@@ -137,11 +137,13 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
     .. image:: ../images/providers/azure/goto-vm.png
         :alt: Go to VM
 
-#. Check if the installation is complete by **copying** the **External IP**
-   of your server, and trying to access it with a browser. Do **not click** on the
-   IP - this will open the link with HTTPS, and will not work.
+#. Check if the installation is complete by **copying** the **Public IP address**
+   of your virtual machine, and trying to access it with a browser. 
 
-   Accessing the JupyterHub will also fail until the installation is complete,
+   .. image:: ../images/providers/azure/IP-vm.png
+        :alt: Public IP address
+
+   Note that accessing the JupyterHub will fail until the installation is complete,
    so be patient.
 
 #. When the installation is complete, it should give you a JupyterHub login page.
@@ -153,7 +155,7 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
    strong password & note it down somewhere, since this will be the password for
    the admin user account from now on.
 
-#. Congratulations, you have a running working JupyterHub!
+#. Congratulations, you have a running working JupyterHub! 🎉
 
 Step 2: Adding more users
 ==========================
