@@ -15,6 +15,7 @@ setup(
         'jinja2',
         'pluggy>0.7<1.0',
         'passlib',
+        'backoff',
         'jupyterhub-traefik-proxy==0.1.*'
     ],
     entry_points={
