@@ -1,4 +1,4 @@
-.. _contributing_dev_setup:
+.. _contributing/dev-setup:
 
 ==================================
 Setting up Development Environment
