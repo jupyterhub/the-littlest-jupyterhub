@@ -133,7 +133,9 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
 #. Note that the Littlest JupyterHub should be installing in the background on your new server.
    It takes around 5-10 minutes for this installation to complete.
 
-#. Click 
+#. Click on the **Go to resource button**
+    .. image:: ../images/providers/azure/goto-vm.png
+        :alt: Go to VM
 
 #. Check if the installation is complete by **copying** the **External IP**
    of your server, and trying to access it with a browser. Do **not click** on the
