@@ -20,118 +20,148 @@ These instructions cover how to set up a Virtual Machine
 on Microsoft Azure. For subsequent information about creating
 your JupyterHub and configuring it, see `The Littlest JupyterHub guide <https://the-littlest-jupyterhub.readthedocs.io/en/latest/>`_.
 
-Choose your Virtual Machine operating system
-=============================================
 
-#. Go to `your Azure portal <https://portal.azure.com/>`_ 
-#. Find virtual machines on your Azure dashboard (left-hand panel)
+Step 1: Installing The Littlest JupyterHub
+==========================================
 
-    .. image:: ../images/providers/azure/azure-vms.png
-            :alt: Virtual machines on Azure portal
+We will start by creating the Virtual Machine in which we can run TLJH (The Littlest JupyterHub).
 
-#. Click "+ add" to create a new Virtual Machine
+#. Go to `Azure portal <https://portal.azure.com/>`_  and login with your Azure account.
+#. Expand the left-hand panel, find the Virtual Machines tab and click on it.
+
+.. image:: ../images/providers/azure/azure-vms.png
+    :alt: Virtual machines on Azure portal
+
+#. Click **+ add** to create a new Virtual Machine
 
     .. image:: ../images/providers/azure/add-vm.png
         :alt: Add a new virtual machine
 
-#. Select Create VM from Marketplace
+#. Select **Create VM from Marketplace** in the next sreen. This will display a new screen with all the optiond for Virtual Machines in Azure.
     .. image:: ../images/providers/azure/create-vm.png
-        :alt: Create from the marketplace
+        :alt: Create VM from the marketplace
 
-* **Choose an Ubuntu server for your VM**.
-    * Click `Ubuntu Server`
+#. **Choose an Ubuntu server for your VM**: 
     * Click `Ubuntu Server 18.04 LTS`
-    * Make sure `Resource Manager` is selected when creating the virtual machine
+    * Make sure `Resource Manager` is selected in the next screen and click **Create**
 
     .. image:: ../images/providers/azure/ubuntu-vm.png
         :alt: Ubuntu VM
 
-Customize the virtual machine
-==============================
-
-* Basics
-    * **Name**. Use a descriptive, short name that you like (note that you cannot use spaces or special characters)
-    * **VM disk type**. Choose SSD
-    * **Username**. Choose any username. This will be used to SSH into your VM, it is the root username for your VM.
-    * **Authentication type**. Change authentication type to "password"
-    * **Password**. Type in a password. This will be used to SSH into the machine. It is your user password on the VM.
-    * **Login with Azure Active Directory**. Choose "Disabled" (usually the default)
+#. Customise the Virtual Machine basics:
     * **Subscription**. Choose the "Free Trial" if this is what you're using. Otherwise, choose a different plan. This is the billing account that will be charged.
-    * **Resource group**. Create a new resource group if you don't already have one. Resource groups let you bundle components that you request from Azure. This is overkill for our use case so it's easiest to create a new resource group.
-    * **Location**. Choose a location near where you expect your users to be located.
-
+    * **Resource group**. Resource groups let you bundle components that you request from Azure. If you already have one you'd like to use it select that resource.
+    * **Name**. Use a descriptive name for your virtual machine (note that you cannot use spaces or special characters).
+    * **Region**. Choose a location near where you expect your users to be located.
+    * **Availability options**. Choose "No infrastructure redundancy required".
+    * **Image**. Make sure "Ubuntu Server 18.04 LTS" is selected (from the previous step).
+    * **Authentication type**. Change authentication type to "password".
+    * **Username**. Choose a memorable username, this will be your "root" user and you'll need it later on.
+    * **Password**. Type in a password, this will be used later for admin access so make sure it is something memorable.
     .. image:: ../images/providers/azure/password-vm.png
             :alt: Add password to VM
+    * **Login with Azure Active Directory**. Choose "Off" (usually the default)
+    * **Inbound port rules**. Leave the defaults for now and we will update these later on in the Network configuration step.
 
-* Size
-    * Choose a machine with enough RAM to accommodate your users. For example, if each user needs 2GB of RAM, and you have 10 total users, you need at least 20GB of RAM on the machine. It's also good to have a few GB of "buffer" RAM beyond what you think you'll need.
-    * Click on "select image" and choose one of the options, then click "select".
-    
+#. Before clicking on "Next" we need to select the RAM size for the image.
+    * For this we need to make sure we have enough RAM to accommodate your users. For example, if each user needs 2GB of RAM, and you have 10 total users, you need at least 20GB of RAM on the machine. It's also good to have a few GB of "buffer" RAM beyond what you think you'll need.
+    * Click on **Change size** (see image below) 
     .. image:: ../images/providers/azure/size-vm.png
             :alt: Choose vm size 
+    * Select a suitable image (to check available images and prices in your region `click on this link <https://azuremarketplace.microsoft.com/en-gb/marketplace/apps/Canonical.UbuntuServer?tab=PlansAndPrice/?wt.mc_id=LTJH-github-taallard>`_.    
     
-* Settings
-    * Availability options
-        * Select no infrastructure redundancy required
-    * Storage
-        * **Use managed disks**. Choose "yes"
-        * **OS disk size**. Click on create and attach a new disk. Select an appropriate type and size and click ok.
+#. Disks (Storage):
+    * **Disk options**: slect the OS disk type there are options for SDD and HDD. **SSD persistent disk** gives you a faster but more expensive
+    disk than HDD. 
+    * **Data disk**. Click on create and attach a new disk. Select an appropriate type and size and click ok.
+    * Click "Next"
 
     .. image:: ../images/providers/azure/disk-vm.png
             :alt: Choose disk size  
 
-    * Network
-        * **Virtual network**. Do not change this.
-        * **Subnet**. Do not change this.
-        * **Public IP address**. Do not change this.
-        * **Network Security Group**. Choose "Basic"
-        * **Select public inbound ports**. Check "HTTP", "HTTPS", and "SSH".
-    * Extensions
-        * **Extensions**. Should read "No extensions".
-    * Auto-Shutdown
-        * **Enable auto-shutdown**. Choose "Off".
+#. * Networking
+    * **Virtual network**. Leave the default values selected.
+    * **Subnet**. Leave the default values selected.
+    * **Public IP address**.Leave the default values selected. This will make your server accessible from a browser.
+    * **Network Security Group**. Choose "Basic"
+    * **Public inbound ports**. Check **HTTP**, **HTTPS**, and **SSH**.
+    .. image:: ../images/providers/azure/networking-vm.png
+            :alt: Choose networking ports 
+#. Management
     * Monitoring
         * **Boot diagnostics**. Choose "On".
-        * **OS guest diagnostics**. Choose "Disabled".
+        * **OS guest diagnostics**. Choose "Off".
         * **Diagnostics storage account**. Leave as the default.
-    * Managed service identity
-        * **System assigned managed identity**. Choose "No".
+    * Auto-Shutdown
+        * **Enable auto-shutdown**. Choose "Off".
     * Backup
-        * **Backup**. Choose "Disabled".
+        * **Backup**. Choose "Off".
+    * System assigned managed identity Select "Off"
 
-.. image:: ../images/providers/azure/backup-vm.png
-            :alt: Choose VM Backup
+    .. image:: ../images/providers/azure/backup-vm.png
+                :alt: Choose VM Backup
 
-* Summary -> confirm -> OK
+#. Advanced settings
+    * **Extensions**. Make sure there are no extensions listed
+    * **Cloud init**. We are going to use this section to install TLJH directly into our Virtual Machine. 
+    Copy the code snippet below: ::
 
-* Confirm that it worked
-    * Wait for it to be created. This might take about 5-10 minutes.
+        #!/bin/bash
+        curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
+        | sudo python3 - \
+        --admin <admin-user-name>
+
+    where the ``username`` is the root username you chose for your Virtual Machine.
+
+    .. image:: ../images/providers/azure/cloudinit-vm.png
+                :alt: Install TLJH
+
+    .. note::
+
+        See :ref:`topic/installer-actions` if you want to understand exactly what the installer is doing.
+        :ref:`topic/customizing-installer` documents other options that can be passed to the installer.
+
+#. Check the summary and confirm the creation of your Virtual Machine.
+
+#. Check that the creation of your Virtual Machine worked
+    * Wait for the virtual machine to be created. This might take about 5-10 minutes.
     * After completion, you should see a similar screen to the one below:
 
     .. image:: ../images/providers/azure/deployed-vm.png
         :alt: Deployed VM
 
-SSH into your virtual machine
-------------------------------
+#. Note that the Littlest JupyterHub should be installing in the background on your new server.
+   It takes around 5-10 minutes for this installation to complete.
 
-* Click on go to resource (see image above)
+#. Click 
 
-* Copy the **Public IP address**
+#. Check if the installation is complete by **copying** the **External IP**
+   of your server, and trying to access it with a browser. Do **not click** on the
+   IP - this will open the link with HTTPS, and will not work.
 
-.. image:: ../images/providers/azure/ip-vm.png
-    :alt: Get IP address
+   Accessing the JupyterHub will also fail until the installation is complete,
+   so be patient.
 
-* Open a terminal on your local machine.
-* SSH into your VM: ::
+#. When the installation is complete, it should give you a JupyterHub login page.
 
-    ssh <username>@<ip-address>
+   .. image:: ../images/first-login.png
+      :alt: JupyterHub log-in page
 
-where the username is the one you chose in the Settings step.
+#. Login using the **admin user name** you used in step 6, and a password. Use a
+   strong password & note it down somewhere, since this will be the password for
+   the admin user account from now on.
 
-Install JupyterHub
-===================
+#. Congratulations, you have a running working JupyterHub!
 
-* Follow the guide at `https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/custom.html#install-custom <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/custom.html#install-custom>`_ 
+Step 2: Adding more users
+==========================
+
+.. include:: add_users.txt
+
+Step 3: Install conda / pip packages for all users
+==================================================
+
+.. include:: add_packages.txt
 
 (optional) Delete your virtual machine
 =======================================
