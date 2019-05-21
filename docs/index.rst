@@ -104,6 +104,7 @@ Cloud provider configuration
    :caption: Cloud provider configuration
 
    howto/providers/digitalocean
+   howto/providers/azure
 
 Topic Guides
 ============
