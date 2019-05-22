@@ -78,7 +78,8 @@ Let's create the server on which we can run JupyterHub.
    `Next: Configure Instance Details` in the lower right corner.  
    
    Check out our guide on How To :ref:`howto/admin/resource-estimation` to help pick
-   how much Memory / CPU your server needs.
+   how much Memory / CPU your server needs. You need to have at least **768MB** of
+   RAM.
    
    You may wish to consult the listing `here <https://www.ec2instances.info/>`_ 
    because it shows cost per hour. The **On Demand** price is the pertinent cost.
