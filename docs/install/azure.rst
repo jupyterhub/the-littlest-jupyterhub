@@ -58,16 +58,20 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
     * **Authentication type**. Change authentication type to "password".
     * **Username**. Choose a memorable username, this will be your "root" user and you'll need it later on.
     * **Password**. Type in a password, this will be used later for admin access so make sure it is something memorable.
+
     .. image:: ../images/providers/azure/password-vm.png
             :alt: Add password to VM
+
     * **Login with Azure Active Directory**. Choose "Off" (usually the default)
     * **Inbound port rules**. Leave the defaults for now and we will update these later on in the Network configuration step.
 
 #. Before clicking on "Next" we need to select the RAM size for the image.
     * For this we need to make sure we have enough RAM to accommodate your users. For example, if each user needs 2GB of RAM, and you have 10 total users, you need at least 20GB of RAM on the machine. It's also good to have a few GB of "buffer" RAM beyond what you think you'll need.
     * Click on **Change size** (see image below) 
+
     .. image:: ../images/providers/azure/size-vm.png
             :alt: Choose vm size 
+
     * Select a suitable image (to check available images and prices in your region `click on this link <https://azuremarketplace.microsoft.com/en-gb/marketplace/apps/Canonical.UbuntuServer?tab=PlansAndPrice/?wt.mc_id=LTJH-github-taallard>`_.    
     
 #. Disks (Storage):
@@ -85,8 +89,10 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
     * **Public IP address**.Leave the default values selected. This will make your server accessible from a browser.
     * **Network Security Group**. Choose "Basic"
     * **Public inbound ports**. Check **HTTP**, **HTTPS**, and **SSH**.
+
     .. image:: ../images/providers/azure/networking-vm.png
             :alt: Choose networking ports 
+
 #. Management
     * Monitoring
         * **Boot diagnostics**. Choose "On".
@@ -131,29 +137,25 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
         :alt: Deployed VM
 
 #. Note that the Littlest JupyterHub should be installing in the background on your new server.
-   It takes around 5-10 minutes for this installation to complete.
+    It takes around 5-10 minutes for this installation to complete.
 
 #. Click on the **Go to resource button**
     .. image:: ../images/providers/azure/goto-vm.png
         :alt: Go to VM
 
-#. Check if the installation is complete by **copying** the **Public IP address**
-   of your virtual machine, and trying to access it with a browser. 
+#. Check if the installation is complete by **copying** the **Public IP address** of your virtual machine, and trying to access it with a browser. 
 
-   .. image:: ../images/providers/azure/IP-vm.png
+    .. image:: ../images/providers/azure/IP-vm.png
         :alt: Public IP address
 
-   Note that accessing the JupyterHub will fail until the installation is complete,
-   so be patient.
+    Note that accessing the JupyterHub will fail until the installation is complete, so be patient.
 
 #. When the installation is complete, it should give you a JupyterHub login page.
 
-   .. image:: ../images/first-login.png
-      :alt: JupyterHub log-in page
+    .. image:: ../images/first-login.png
+        :alt: JupyterHub log-in page
 
-#. Login using the **admin user name** you used in step 6, and a password. Use a
-   strong password & note it down somewhere, since this will be the password for
-   the admin user account from now on.
+#. Login using the **admin user name** you used in step 6, and a password. Use a strong password & note it down somewhere, since this will be the password for the admin user account from now on.
 
 #. Congratulations, you have a running working JupyterHub! 🎉
 
