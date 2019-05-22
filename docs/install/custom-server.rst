@@ -44,15 +44,15 @@ Step 1: Installing The Littlest JupyterHub
 #. Using a terminal program, SSH into your server. This should give you a prompt where you can
    type commands.
 
-#. Make sure you have ``Python3``, ``curl`` and ``git``  installed. On latest Ubuntu you can get all of these with:
+#. Make sure you have ``python3``, ``curl`` and ``git`` installed.
 
    .. code::
 
-      apt-get install python3 git curl
+      sudo apt install python3 git curl
 
 #. Copy the text below, and paste it into the terminal. Replace
    ``<admin-user-name>`` with the name of the first **admin user** for this
-   JupyterHub. Choose any name you like (don't forget to replace the brackets!).
+   JupyterHub. Choose any name you like (don't forget to remove the brackets!).
    This admin user can log in after the JupyterHub is set up, and
    can configure it to their needs. **Remember to add your username**!
 
