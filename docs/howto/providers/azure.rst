@@ -1,6 +1,6 @@
 
 Deleting or stopping your virtual machine
-=======================================
+===========================================
 
 After you have finished using your LTJH you might wanto to either Stop or completely delete the Virtual Machine to avoid incurring in subsequent costs. 
 
