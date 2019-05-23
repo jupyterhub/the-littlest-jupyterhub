@@ -14,7 +14,7 @@ Prerequisites
 
 * A Microsoft Azure account. 
 
-* To get started you can get a free account which  includes 150 dollars worth of Azure credits (`get a free account here <https://azure.microsoft.com/en-us/free//?wt.mc_id=LTJH-github-taallard>`_) 
+* To get started you can get a free account which  includes 150 dollars worth of Azure credits (`get a free account here <https://azure.microsoft.com/en-us/free//?wt.mc_id=TLJH-github-taallard>`_) 
 
 These instructions cover how to set up a Virtual Machine
 on Microsoft Azure. For subsequent information about creating
@@ -72,7 +72,7 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
     .. image:: ../images/providers/azure/size-vm.png
             :alt: Choose vm size 
 
-    * Select a suitable image (to check available images and prices in your region `click on this link <https://azuremarketplace.microsoft.com/en-gb/marketplace/apps/Canonical.UbuntuServer?tab=PlansAndPrice/?wt.mc_id=LTJH-github-taallard>`_.    
+    * Select a suitable image (to check available images and prices in your region `click on this link <https://azuremarketplace.microsoft.com/en-gb/marketplace/apps/Canonical.UbuntuServer?tab=PlansAndPrice/?wt.mc_id=TLJH-github-taallard>`_.    
     
 #. Disks (Storage):
     * **Disk options**: slect the OS disk type there are options for SDD and HDD. **SSD persistent disk** gives you a faster but more expensive
@@ -168,13 +168,3 @@ Step 3: Install conda / pip packages for all users
 ==================================================
 
 .. include:: add_packages.txt
-
-(optional) Delete your virtual machine
-=======================================
-
-* Go to "Virtual Machines"
-* Click on your machine name
-* Click on "Stop" to stop the machine temporarily, or "Delete" to delete it permanently.
-
-.. image:: ../images/providers/azure/delete-vm.png
-    :alt: Delete vm

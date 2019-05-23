@@ -14,3 +14,5 @@ To do either of this:
 
     .. image:: ../../images/providers/azure/delete-vm.png
         :alt: Delete vm
+
+.. note:: It is important to mention that even if you stop the machine you will still be charged for the use of the data disk.
