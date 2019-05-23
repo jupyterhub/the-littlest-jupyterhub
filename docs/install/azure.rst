@@ -72,6 +72,9 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
     .. image:: ../images/providers/azure/size-vm.png
             :alt: Choose vm size 
 
+    .. note:: For more information about estimating memory, CPU and disk needs check 
+     `The memory section in the TLJH documentation <https://tljh.jupyter.org/en/latest/howto/admin/resource-estimation.html>`_ 
+
     * Select a suitable image (to check available images and prices in your region `click on this link <https://azuremarketplace.microsoft.com/en-gb/marketplace/apps/Canonical.UbuntuServer?tab=PlansAndPrice/?wt.mc_id=TLJH-github-taallard>`_.    
     
 #. Disks (Storage):
