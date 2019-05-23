@@ -72,21 +72,19 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
     .. image:: ../images/providers/azure/size-vm.png
             :alt: Choose vm size 
 
-    .. note:: For more information about estimating memory, CPU and disk needs check 
-     `The memory section in the TLJH documentation <https://tljh.jupyter.org/en/latest/howto/admin/resource-estimation.html>`_ 
+    .. note:: For more information about estimating memory, CPU and disk needs check `The memory section in the TLJH documentation <https://tljh.jupyter.org/en/latest/howto/admin/resource-estimation.html>`_ 
 
     * Select a suitable image (to check available images and prices in your region `click on this link <https://azuremarketplace.microsoft.com/en-gb/marketplace/apps/Canonical.UbuntuServer?tab=PlansAndPrice/?wt.mc_id=TLJH-github-taallard>`_.    
     
 #. Disks (Storage):
-    * **Disk options**: slect the OS disk type there are options for SDD and HDD. **SSD persistent disk** gives you a faster but more expensive
-    disk than HDD. 
+    * **Disk options**: slect the OS disk type there are options for SDD and HDD. **SSD persistent disk** gives you a faster but more expensive disk than HDD. 
     * **Data disk**. Click on create and attach a new disk. Select an appropriate type and size and click ok.
     * Click "Next"
 
     .. image:: ../images/providers/azure/disk-vm.png
             :alt: Choose disk size  
 
-#. * Networking
+#. Networking
     * **Virtual network**. Leave the default values selected.
     * **Subnet**. Leave the default values selected.
     * **Public IP address**.Leave the default values selected. This will make your server accessible from a browser.
