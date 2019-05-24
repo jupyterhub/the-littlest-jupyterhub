@@ -292,7 +292,8 @@ def ensure_jupyterhub_running(times=20):
     for i in range(times):
         try:
             logger.info('Waiting for JupyterHub to come up ({}/{} tries)'.format(i + 1, times))
-            requests.get('http://127.0.0.1')
+            # We don't care at this level that SSL is valid
+            requests.get('http://127.0.0.1', verify=False)
             return
         except requests.HTTPError as h:
             if h.response.status_code in [404, 502, 503]:
