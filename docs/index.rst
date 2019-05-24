@@ -34,6 +34,7 @@ We have a bunch of tutorials to get you started.
      install/google
      install/amazon
      install/custom-server
+     install/azure
 
 Once you are ready to run your server for real,
 it's a good idea to proceed directly to :doc:`howto/admin/https`.
@@ -103,6 +104,7 @@ Cloud provider configuration
    :caption: Cloud provider configuration
 
    howto/providers/digitalocean
+   howto/providers/azure
 
 Topic Guides
 ============
