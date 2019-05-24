@@ -1,11 +1,11 @@
 """Traefik installation and setup"""
 import hashlib
 import os
-from urllib.request import urlretrieve, ContentTooShortError
 
 from jinja2 import Template
 from passlib.apache import HtpasswdFile
 import backoff
+import requests
 
 from tljh.configurer import load_config
 
@@ -27,11 +27,15 @@ def checksum_file(path):
             hasher.update(chunk)
     return hasher.hexdigest()
 
+def fatal_error(e):
+    # Retry only when connection is reset or we think we didn't download entire file
+    return str(e) != "ContentTooShort" and not isinstance(e, ConnectionResetError)
+
 @backoff.on_exception(
     backoff.expo,
-    # Retry when connection is reset or we think we didn't download entire file
-    (ConnectionResetError, ContentTooShortError),
-    max_tries=2
+    Exception,
+    max_tries=2,
+    giveup=fatal_error
 )
 def ensure_traefik_binary(prefix):
     """Download and install the traefik binary"""
@@ -53,7 +57,11 @@ def ensure_traefik_binary(prefix):
     )
     print(f"Downloading traefik {traefik_version}...")
     # download the file
-    urlretrieve(traefik_url, traefik_bin)
+    response = requests.get(traefik_url)
+    if response.status_code == 206:
+        raise Exception("ContentTooShort")
+    with open(traefik_bin, 'wb') as f:
+        f.write(response.content)
     os.chmod(traefik_bin, 0o755)
 
     # verify that we got what we expected

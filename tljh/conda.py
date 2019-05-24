@@ -7,7 +7,7 @@ import json
 import hashlib
 import contextlib
 import tempfile
-import urllib.request
+import requests
 from distutils.version import LooseVersion as V
 
 
@@ -50,7 +50,8 @@ def download_miniconda_installer(version, md5sum):
     """
     with tempfile.NamedTemporaryFile() as f:
         installer_url = "https://repo.continuum.io/miniconda/Miniconda3-{}-Linux-x86_64.sh".format(version)
-        urllib.request.urlretrieve(installer_url, f.name)
+        with open(f.name, 'wb') as f:
+            f.write(requests.get(installer_url).content)
 
         if md5_file(f.name) != md5sum:
             raise Exception('md5 hash mismatch! Downloaded file corrupted')
