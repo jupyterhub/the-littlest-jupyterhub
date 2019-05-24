@@ -1,3 +1,5 @@
+.. _install/azure:
+
 ====================
 Installing on Azure
 ====================
@@ -111,17 +113,19 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
 #. Advanced settings
     * **Extensions**. Make sure there are no extensions listed
     * **Cloud init**. We are going to use this section to install TLJH directly into our Virtual Machine. 
-    Copy the code snippet below: ::
+      Copy the code snippet below:
 
-        #!/bin/bash
-        curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
-        | sudo python3 - \
-        --admin <admin-user-name>
+      .. code:: bash
 
-    where the ``username`` is the root username you chose for your Virtual Machine.
+         #!/bin/bash
+         curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
+           | sudo python3 - \
+             --admin <admin-user-name>
 
-    .. image:: ../images/providers/azure/cloudinit-vm.png
-                :alt: Install TLJH
+      where the ``username`` is the root username you chose for your Virtual Machine.
+
+      .. image:: ../images/providers/azure/cloudinit-vm.png
+                 :alt: Install TLJH
 
     .. note::
 
@@ -146,7 +150,7 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
 
 #. Check if the installation is complete by **copying** the **Public IP address** of your virtual machine, and trying to access it with a browser. 
 
-    .. image:: ../images/providers/azure/IP-vm.png
+    .. image:: ../images/providers/azure/ip-vm.png
         :alt: Public IP address
 
     Note that accessing the JupyterHub will fail until the installation is complete, so be patient.
