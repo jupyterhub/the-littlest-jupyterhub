@@ -8,10 +8,9 @@ import secrets
 import subprocess
 import sys
 import time
-from urllib.error import HTTPError
-from urllib.request import urlopen, URLError
 
 import pluggy
+import requests
 
 from tljh import (
     apt,
@@ -293,20 +292,21 @@ def ensure_jupyterhub_running(times=20):
     for i in range(times):
         try:
             logger.info('Waiting for JupyterHub to come up ({}/{} tries)'.format(i + 1, times))
-            urlopen('http://127.0.0.1')
+            # We don't care at this level that SSL is valid
+            requests.get('http://127.0.0.1', verify=False)
             return
-        except HTTPError as h:
-            if h.code in [404, 502, 503]:
+        except requests.HTTPError as h:
+            if h.response.status_code in [404, 502, 503]:
                 # May be transient
                 time.sleep(1)
                 continue
             # Everything else should immediately abort
             raise
-        except URLError as e:
-            if isinstance(e.reason, ConnectionRefusedError):
+        except requests.ConnectionError:
                 # Hub isn't up yet, sleep & loop
                 time.sleep(1)
                 continue
+        except Exception:
             # Everything else should immediately abort
             raise
 

@@ -16,6 +16,7 @@ setup(
         'pluggy>0.7<1.0',
         'passlib',
         'backoff',
+        'requests',
         'jupyterhub-traefik-proxy==0.1.*'
     ],
     entry_points={
