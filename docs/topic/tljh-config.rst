@@ -168,6 +168,6 @@ Advanced: ``config.yaml``
 =========================
 
 ``tljh-config`` is a simple program that modifies the contents of the
-``config.yaml`` file located at ``/opt/tljh/config.yaml``. ``tljh-config``
+``config.yaml`` file located at ``/opt/tljh/config/config.yaml``. ``tljh-config``
 is the recommended method of editing / viewing configuration since editing
 YAML by hand in a terminal text editor is a large source of errors.
