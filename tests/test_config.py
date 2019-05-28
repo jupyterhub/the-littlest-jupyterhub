@@ -58,6 +58,57 @@ def test_set_overwrite():
     assert new_conf == {'a': 'hi'}
 
 
+def test_unset_no_mutate():
+    conf = {'a': 'b'}
+
+    new_conf = config.unset_item_from_config(conf, 'a')
+    assert conf == {'a': 'b'}
+
+
+def test_unset_one_level():
+    conf = {'a': 'b'}
+
+    new_conf = config.unset_item_from_config(conf, 'a')
+    assert new_conf == {}
+
+
+def test_unset_multi_level():
+    conf = {
+        'a': {'b': 'c', 'd': 'e'},
+        'f': 'g'
+    }
+
+    new_conf = config.unset_item_from_config(conf, 'a.b')
+    assert new_conf == {
+        'a': {'d': 'e'},
+        'f': 'g'
+    }
+    new_conf = config.unset_item_from_config(new_conf, 'a.d')
+    assert new_conf == {'f': 'g'}
+    new_conf = config.unset_item_from_config(new_conf, 'f')
+    assert new_conf == {}
+
+
+def test_unset_and_clean_empty_configs():
+    conf = {
+        'a': {'b': {'c': {'d': {'e': 'f'}}}}
+    }
+
+    new_conf = config.unset_item_from_config(conf, 'a.b.c.d.e')
+    assert new_conf == {}
+
+
+def test_unset_config_error():
+    with pytest.raises(ValueError):
+        config.unset_item_from_config({}, 'a')
+
+    with pytest.raises(ValueError):
+        config.unset_item_from_config({'a': 'b'}, 'b')
+
+    with pytest.raises(ValueError):
+        config.unset_item_from_config({'a': {'b': 'c'}}, 'a.z')
+
+
 def test_add_to_config_one_level():
     conf = {}
 
@@ -159,6 +210,18 @@ def test_cli_set_int(tljh_dir):
     config.main(["set", "https.port", "123"])
     cfg = configurer.load_config()
     assert cfg['https']['port'] == 123
+
+
+def test_cli_unset(tljh_dir):
+    config.main(["set", "foo.bar", "1"])
+    config.main(["set", "foo.bar2", "2"])
+    cfg = configurer.load_config()
+    assert cfg['foo'] == {'bar': 1, 'bar2': 2}
+
+    config.main(["unset", "foo.bar"])
+    cfg = configurer.load_config()
+
+    assert cfg['foo'] == {'bar2': 2}
 
 
 def test_cli_add_float(tljh_dir):

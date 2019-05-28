@@ -22,8 +22,8 @@ You can run ``tljh-config`` in two ways:
 .. _tljh-set:
 
 
-Set a configuration property
-============================
+Set / Unset a configuration property
+====================================
 
 TLJH's configuration is organized in a nested tree structure. You can
 set a particular property with the following command:
@@ -49,6 +49,17 @@ do so with the following:
 
 
 This can only set string and numerical properties, not lists.
+
+To unset a configuration property you can use the following command:
+
+.. code-block:: bash
+
+   sudo tljh-config unset <property-path>
+
+Unsetting a configuration property removes the property from the configuration
+file. If what you want is only to change the property's value, you should use
+``set`` and overwrite it with the desired value.
+
 
 Some of the existing ``<property-path>`` are listed below by categories:
 

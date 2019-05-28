@@ -61,6 +61,50 @@ def set_item_in_config(config, property_path, value):
 
     return config_copy
 
+def unset_item_from_config(config, property_path):
+    """
+    Unset key at property_path in config & return new config.
+
+    config is not mutated.
+
+    property_path is a series of dot separated values.
+    """
+    path_components = property_path.split('.')
+
+    # Mutate a copy of the config, not config itself
+    cur_part = config_copy = deepcopy(config)
+
+    def remove_empty_configs(configuration, path):
+        """
+        Delete the keys that hold an empty dict.
+
+        This might happen when we delete a config property
+        that has no siblings from a multi-level config.
+        """
+        if not path:
+            return configuration
+        conf_iter = configuration
+        for cur_path in path:
+            if conf_iter[cur_path] == {}:
+                del conf_iter[cur_path]
+                remove_empty_configs(configuration, path[:-1])
+            else:
+                conf_iter = conf_iter[cur_path]
+
+    for i, cur_path in enumerate(path_components):
+        if i == len(path_components) - 1:
+            if cur_path not in cur_part:
+                raise ValueError(f'{property_path} does not exist in config!')
+            del cur_part[cur_path]
+            remove_empty_configs(config_copy, path_components[:-1])
+            break
+        else:
+            if cur_path not in cur_part:
+                raise ValueError(f'{property_path} does not exist in config!')
+            cur_part = cur_part[cur_path]
+
+    return config_copy
+
 def add_item_to_config(config, property_path, value):
     """
     Add an item to a list in config.
@@ -97,7 +141,7 @@ def remove_item_from_config(config, property_path, value):
     cur_part = config_copy = deepcopy(config)
     for i, cur_path in enumerate(path_components):
         if i == len(path_components) - 1:
-            # Final component, it must be a list and we append to it
+            # Final component, it must be a list and we delete from it
             if cur_path not in cur_part or not _is_list(cur_part[cur_path]):
                 raise ValueError(f'{property_path} is not a list')
             cur_part = cur_part[cur_path]
@@ -136,6 +180,24 @@ def set_config_value(config_path, key_path, value):
         config = {}
 
     config = set_item_in_config(config, key_path, value)
+
+    with open(config_path, 'w') as f:
+        yaml.dump(config, f)
+
+
+def unset_config_value(config_path, key_path):
+    """
+    Unset key at key_path in config_path
+    """
+    # FIXME: Have a file lock here
+    # FIXME: Validate schema here
+    try:
+        with open(config_path) as f:
+            config = yaml.load(f)
+    except FileNotFoundError:
+        config = {}
+
+    config = unset_item_from_config(config, key_path)
 
     with open(config_path, 'w') as f:
         yaml.dump(config, f)
@@ -260,6 +322,15 @@ def main(argv=None):
         help='Show current configuration'
     )
 
+    unset_parser = subparsers.add_parser(
+        'unset',
+        help='Unset a configuration property'
+    )
+    unset_parser.add_argument(
+        'key_path',
+        help='Dot separated path to configuration key to unset'
+    )
+
     set_parser = subparsers.add_parser(
         'set',
         help='Set a configuration property'
@@ -317,6 +388,8 @@ def main(argv=None):
         show_config(args.config_path)
     elif args.action == 'set':
         set_config_value(args.config_path, args.key_path, parse_value(args.value))
+    elif args.action == 'unset':
+        unset_config_value(args.config_path, args.key_path)
     elif args.action == 'add-item':
         add_config_value(args.config_path, args.key_path, parse_value(args.value))
     elif args.action == 'remove-item':
