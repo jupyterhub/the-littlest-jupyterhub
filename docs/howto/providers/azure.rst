@@ -1,3 +1,13 @@
+.. _howto/providers/azure:
+
+==================================================
+Perform common Microsoft Azure configuration tasks
+==================================================
+
+This page lists various common tasks you can perform on your
+Microsoft Azure virtual machine.
+
+.. _howto/providers/azure/resize:
 
 Deleting or stopping your virtual machine
 ===========================================

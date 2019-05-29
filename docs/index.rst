@@ -33,8 +33,8 @@ We have a bunch of tutorials to get you started.
      install/jetstream
      install/google
      install/amazon
-     install/custom-server
      install/azure
+     install/custom-server
 
 Once you are ready to run your server for real,
 it's a good idea to proceed directly to :doc:`howto/admin/https`.
