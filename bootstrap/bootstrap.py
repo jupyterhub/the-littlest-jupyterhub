@@ -18,6 +18,7 @@ import sys
 import logging
 import shutil
 
+logger = logging.getLogger(__name__)
 
 def get_os_release_variable(key):
     """
@@ -31,6 +32,36 @@ def get_os_release_variable(key):
         '/bin/bash', '-c',
         "source /etc/os-release && echo ${{{key}}}".format(key=key)
     ]).decode().strip()
+
+# Copied into tljh/utils.py. Make sure the copies are exactly the same!
+def run_subprocess(cmd, *args, **kwargs):
+    """
+    Run given cmd with smart output behavior.
+
+    If command succeeds, print output to debug logging.
+    If it fails, print output to info logging.
+
+    In TLJH, this sends successful output to the installer log,
+    and failed output directly to the user's screen
+    """
+    logger = logging.getLogger('tljh')
+    proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, *args, **kwargs)
+    printable_command = ' '.join(cmd)
+    if proc.returncode != 0:
+        # Our process failed! Show output to the user
+        logger.error('Ran {command} with exit code {code}'.format(
+            command=printable_command, code=proc.returncode
+        ))
+        logger.error(proc.stdout.decode())
+        raise subprocess.CalledProcessError(cmd=cmd, returncode=proc.returncode)
+    else:
+        # This goes into installer.log
+        logger.debug('Ran {command} with exit code {code}'.format(
+            command=printable_command, code=proc.returncode
+        ))
+        # This produces multi line log output, unfortunately. Not sure how to fix.
+        # For now, prioritizing human readability over machine readability.
+        logger.debug(proc.stdout.decode())
 
 def validate_host():
     """
@@ -65,17 +96,21 @@ def main():
     hub_prefix = os.path.join(install_prefix, 'hub')
 
     # Set up logging to print to a file and to stderr
-    logger = logging.getLogger(__name__)
-
     os.makedirs(install_prefix, exist_ok=True)
-    file_logger = logging.FileHandler(os.path.join(install_prefix, 'installer.log'))
+    file_logger_path = os.path.join(install_prefix, 'installer.log')
+    file_logger = logging.FileHandler(file_logger_path)
+    # installer.log should be readable only by root
+    os.chmod(file_logger_path, 0o500)
+
     file_logger.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
+    file_logger.setLevel(logging.DEBUG)
     logger.addHandler(file_logger)
 
     stderr_logger = logging.StreamHandler()
     stderr_logger.setFormatter(logging.Formatter('%(message)s'))
+    stderr_logger.setLevel(logging.INFO)
     logger.addHandler(stderr_logger)
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
 
     logger.info('Checking if TLJH is already installed...')
     if os.path.exists(os.path.join(hub_prefix, 'bin', 'python3')):
@@ -89,20 +124,20 @@ def main():
         # that's where the python3-pip package lives. In some very minimal base
         # VM images, it looks like the universe repository is disabled by default,
         # causing bootstrapping to fail.
-        subprocess.check_output(['apt-get', 'update', '--yes'], stderr=subprocess.STDOUT)
-        subprocess.check_output(['apt-get', 'install', '--yes', 'software-properties-common'], stderr=subprocess.STDOUT)
-        subprocess.check_output(['add-apt-repository', 'universe'], stderr=subprocess.STDOUT)
+        run_subprocess(['apt-get', 'update', '--yes'])
+        run_subprocess(['apt-get', 'install', '--yes', 'software-properties-common'])
+        run_subprocess(['add-apt-repository', 'universe'])
 
-        subprocess.check_output(['apt-get', 'update', '--yes'], stderr=subprocess.STDOUT)
-        subprocess.check_output(['apt-get', 'install', '--yes', 
-            'git',
+        run_subprocess(['apt-get', 'update', '--yes'])
+        run_subprocess(['apt-get', 'install', '--yes', 
             'python3',
             'python3-venv',
-            'python3-pip'
-        ], stderr=subprocess.STDOUT)
+            'python3-pip',
+            'git'
+        ])
         logger.info('Installed python & virtual environment')
         os.makedirs(hub_prefix, exist_ok=True)
-        subprocess.check_output(['python3', '-m', 'venv', hub_prefix], stderr=subprocess.STDOUT)
+        run_subprocess(['python3', '-m', 'venv', hub_prefix])
         logger.info('Set up hub virtual environment')
 
     if initial_setup:
@@ -118,10 +153,10 @@ def main():
         'git+https://github.com/jupyterhub/the-littlest-jupyterhub.git'
     )
 
-    subprocess.check_output([
+    run_subprocess([
         os.path.join(hub_prefix, 'bin', 'pip'),
         'install'
-    ] + pip_flags + [tljh_repo_path], stderr=subprocess.STDOUT)
+    ] + pip_flags + [tljh_repo_path])
     logger.info('Setup tljh package')
 
     logger.info('Starting TLJH installer...')
