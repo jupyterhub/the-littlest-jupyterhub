@@ -8,9 +8,11 @@ import secrets
 import subprocess
 import sys
 import time
+import warnings
 
 import pluggy
 import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 from tljh import (
     apt,
@@ -292,8 +294,11 @@ def ensure_jupyterhub_running(times=20):
     for i in range(times):
         try:
             logger.info('Waiting for JupyterHub to come up ({}/{} tries)'.format(i + 1, times))
-            # We don't care at this level that SSL is valid
-            requests.get('http://127.0.0.1', verify=False)
+            # Because we don't care at this level that SSL is valid, we can suppress
+            # InsecureRequestWarning for this request.
+            with warnings.catch_warnings():
+                warnings.filterwarnings("ignore", category=InsecureRequestWarning)
+                requests.get('http://127.0.0.1', verify=False)
             return
         except requests.HTTPError as h:
             if h.response.status_code in [404, 502, 503]:
