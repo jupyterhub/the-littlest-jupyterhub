@@ -189,6 +189,18 @@ def ensure_jupyterhub_package(prefix):
     hub environment be installed with pip prevents accidental mixing of python
     and conda packages!
     """
+    # Install pycurl. JupyterHub prefers pycurl over SimpleHTTPClient automatically
+    # pycurl is generally more bugfree - see https://github.com/jupyterhub/the-littlest-jupyterhub/issues/289
+    # build-essential is also generally useful to everyone involved, and required for pycurl
+    apt.install_packages([
+        'libssl-dev',
+        'libcurl4-openssl-dev',
+        'build-essential'
+    ])
+    conda.ensure_pip_packages(prefix, [
+        'pycurl==7.43.*'
+    ])
+
     conda.ensure_pip_packages(prefix, [
         'jupyterhub==1.0.0',
         'jupyterhub-dummyauthenticator==0.3.1',
@@ -230,11 +242,6 @@ def ensure_user_environment(user_requirements_txt_file):
         logger.info('Downloading & setting up user environment...')
         with conda.download_miniconda_installer(miniconda_version, miniconda_installer_md5) as installer_path:
             conda.install_miniconda(installer_path, USER_ENV_PREFIX)
-
-    # nbresuse needs psutil, which requires gcc
-    apt.install_packages([
-        'gcc'
-    ])
 
     conda.ensure_conda_packages(USER_ENV_PREFIX, [
         # Conda's latest version is on conda much more so than on PyPI.
