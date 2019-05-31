@@ -4,7 +4,7 @@ Test simplest plugin
 from ruamel.yaml import YAML
 import os
 import subprocess
-from tljh.config import CONFIG_FILE, USER_ENV_PREFIX
+from tljh.config import CONFIG_FILE, USER_ENV_PREFIX, HUB_ENV_PREFIX
 
 yaml = YAML(typ='rt')
 
@@ -18,12 +18,18 @@ def test_apt_packages():
 
 def test_pip_packages():
     """
-    Test extra user pip packages are installed
+    Test extra user & hub pip packages are installed
     """
     subprocess.check_call([
         f'{USER_ENV_PREFIX}/bin/python3',
         '-c',
         'import django'
+    ])
+
+    subprocess.check_call([
+        f'{HUB_ENV_PREFIX}/bin/python3',
+        '-c',
+        'import there'
     ])
 
 

@@ -22,6 +22,12 @@ def tljh_extra_user_pip_packages():
     """
     pass
 
+@hookspec
+def tljh_extra_hub_pip_packages():
+    """
+    Return list of extra pip packages to install in the hub environment.
+    """
+    pass
 
 @hookspec
 def tljh_extra_apt_packages():

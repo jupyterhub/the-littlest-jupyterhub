@@ -17,6 +17,11 @@ def tljh_extra_user_pip_packages():
         'django',
     ]
 
+@hookimpl
+def tljh_extra_hub_pip_packages():
+    return [
+        'there',
+    ]
 
 @hookimpl
 def tljh_extra_apt_packages():

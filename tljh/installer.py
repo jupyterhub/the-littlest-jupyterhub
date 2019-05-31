@@ -381,21 +381,29 @@ def run_plugin_actions(plugin_manager, plugins):
         ))
         apt.install_packages(apt_packages)
 
+    # Install hub pip packages
+    hub_pip_packages = list(set(itertools.chain(*hook.tljh_extra_hub_pip_packages())))
+    if hub_pip_packages:
+        logger.info('Installing {} hub pip packages collected from plugins: {}'.format(
+            len(hub_pip_packages), ' '.join(hub_pip_packages)
+        ))
+        conda.ensure_pip_packages(HUB_ENV_PREFIX, hub_pip_packages)
+
     # Install conda packages
     conda_packages = list(set(itertools.chain(*hook.tljh_extra_user_conda_packages())))
     if conda_packages:
-        logger.info('Installing {} conda packages collected from plugins: {}'.format(
+        logger.info('Installing {} user conda packages collected from plugins: {}'.format(
             len(conda_packages), ' '.join(conda_packages)
         ))
         conda.ensure_conda_packages(USER_ENV_PREFIX, conda_packages)
 
     # Install pip packages
-    pip_packages = list(set(itertools.chain(*hook.tljh_extra_user_pip_packages())))
-    if pip_packages:
-        logger.info('Installing {} pip packages collected from plugins: {}'.format(
-            len(pip_packages), ' '.join(pip_packages)
+    user_pip_packages = list(set(itertools.chain(*hook.tljh_extra_user_pip_packages())))
+    if user_pip_packages:
+        logger.info('Installing {} user pip packages collected from plugins: {}'.format(
+            len(user_pip_packages), ' '.join(user_pip_packages)
         ))
-        conda.ensure_pip_packages(USER_ENV_PREFIX, pip_packages)
+        conda.ensure_pip_packages(USER_ENV_PREFIX, user_pip_packages)
 
 
 def ensure_config_yaml(plugin_manager):
