@@ -36,3 +36,7 @@ def tljh_config_post_install(config):
     config['simplest_plugin'] = {
         'present': True
     }
+
+@hookimpl
+def tljh_custom_jupyterhub_config(c):
+    c.JupyterHub.authenticator_class = 'tmpauthenticator.TmpAuthenticator'

@@ -2,6 +2,7 @@
 Test simplest plugin
 """
 from ruamel.yaml import YAML
+import requests
 import os
 import subprocess
 from tljh.config import CONFIG_FILE, USER_ENV_PREFIX, HUB_ENV_PREFIX
@@ -52,3 +53,11 @@ def test_config_hook():
         data = yaml.load(f)
 
     assert data['simplest_plugin']['present']
+
+def test_jupyterhub_config_hook():
+    """
+    Test that tmpauthenticator is enabled by our custom config plugin
+    """
+    resp = requests.get('http://localhost/hub/tmplogin', allow_redirects=False)
+    assert resp.status_code == 302
+    assert resp.headers['Location'] == '/hub/spawn'

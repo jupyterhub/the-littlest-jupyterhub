@@ -38,6 +38,15 @@ def tljh_extra_apt_packages():
     """
     pass
 
+@hookspec
+def tljh_custom_jupyterhub_config(c):
+    """
+    Provide custom traitlet based config to JupyterHub.
+
+    Anything you can put in `jupyterhub_config.py` can
+    be here.
+    """
+    pass
 
 @hookspec
 def tljh_config_post_install(config):
