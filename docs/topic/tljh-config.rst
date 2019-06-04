@@ -133,7 +133,7 @@ User Server Limits
   .. code-block:: bash
 
      sudo tljh-config set limits.cpu 2
-     
+
 .. _tljh-set-user-env:
 
 User Environment
