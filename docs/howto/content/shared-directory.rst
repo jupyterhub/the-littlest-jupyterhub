@@ -34,7 +34,7 @@ and User C cannot edit the Notebook.  Only User A can make changes.
 
   .. code-block:: bash
       
-      sudo chown  root:jupyterhub-users /srv/scratch
+     sudo chown  root:jupyterhub-users /srv/scratch
       
 #. **Change default permissions to use group**.  The default permissions for new 
    sub-directories uses the global umask (``drwxr-sr-x``), the ``chmod g+s`` tells
