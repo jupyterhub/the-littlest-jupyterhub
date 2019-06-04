@@ -54,3 +54,8 @@ and User C cannot edit the Notebook.  Only User A can make changes.
       sudo ln -s /srv/scratch /etc/skel/scratch
    
 
+=======================
+Shared-directory plugin
+=======================
+
+A TLJH Plugin at https://github.com/kafonek/tljh-shared-directory installs ``voila`` and sets up the directories as specified above.  Include ``--plugin git+https://github.com/kafonek/tljh-shared-directory`` in your deployment startup script.
