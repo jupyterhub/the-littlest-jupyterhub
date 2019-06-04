@@ -5,7 +5,7 @@ Share data with your users
 ==========================
 
 There are a few options for sharing data with your users, this page covers
-a few useful patterns.
+a few useful patterns.  
 
 Option 1: Distributing data with `nbgitpuller`
 ==============================================
@@ -78,3 +78,14 @@ From now on, when a new user account is created, their home directory will
 have this symbolic link (and any other files in ``/etc/skel``) in their home
 directory. This will have **no effect on the directories of existing
 users**.
+
+Option 3: Create a directory for users to share Notebooks and other files
+=========================================================================
+
+You may want a place for users to share files with each other rather than 
+only having administrators share files with users (Option 2).  In this 
+configuration, any user can put files into ``/srv/scratch`` that other users
+can read.  However, only the user that created the file can edit the file.
+
+For information on creating and sharing a **shared directory** for users, see
+:ref:`howto/content/shared-directory`.
