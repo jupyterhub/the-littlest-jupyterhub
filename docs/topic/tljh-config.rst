@@ -72,6 +72,22 @@ Authentication
     Use ``auth.type`` to determine authenticator to use. All parameters
     in the config under ``auth.{auth.type}`` will be passed straight to the
     authenticators themselves.
+    
+.. _tljh-set-ports:
+
+Ports
+-----
+
+  Use ``http.port`` and ``https.port`` to set the ports that TLJH will listen on, 
+  which are 80 and 443 by default. However, if you change these, note that 
+  TLJH does a lot of other things to the system (with user accounts and sudo
+  rules primarily) that might break security assumptions your other 
+  applications have, so use with extreme caution.
+  
+  .. code-block:: bash
+
+    sudo tljh-config set http.port 8080
+    sudo tljh-config set https.port 8443
 
 .. _tljh-set-user-lists:
 
@@ -117,7 +133,7 @@ User Server Limits
   .. code-block:: bash
 
      sudo tljh-config set limits.cpu 2
-
+     
 .. _tljh-set-user-env:
 
 User Environment
