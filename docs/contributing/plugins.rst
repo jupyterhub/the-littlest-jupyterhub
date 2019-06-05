@@ -21,6 +21,17 @@ points in the application that can be explicitly extended by plugins,
 balancing the need to change TLJH internals in the future with the
 stability required for a good plugin ecosystem.
 
+Installing Plugins
+==================
+
+Include ``--plugin <install_name>`` in the Installer script.  See :ref:`topics/customizing-installer#installing-tljh-plugins` for more info.
+
+Example Plugins
+===============
+
+ - .. tljh-pangeo: https://github.com/yuvipanda/tljh-pangeo
+ - .. shared-directory: https://github.com/kafonek/tljh-shared-directory
+
 Writing a simple plugins
 ========================
 
