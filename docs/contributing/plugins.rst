@@ -29,8 +29,8 @@ Include ``--plugin <install_name>`` in the Installer script.  See :ref:`topics/c
 Example Plugins
 ===============
 
- - `tljh-pangeo <https://github.com/yuvipanda/tljh-pangeo>`_
- - `shared-directory <https://github.com/kafonek/tljh-shared-directory>`_
+  - `tljh-pangeo <https://github.com/yuvipanda/tljh-pangeo>`_
+  - `shared-directory <https://github.com/kafonek/tljh-shared-directory>`_
 
 Writing a simple plugins
 ========================
