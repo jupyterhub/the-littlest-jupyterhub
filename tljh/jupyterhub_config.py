@@ -4,9 +4,10 @@ JupyterHub config for the littlest jupyterhub.
 
 from glob import glob
 import os
+import pluggy
 
 from systemdspawner import SystemdSpawner
-from tljh import configurer, user
+from tljh import configurer, user, hooks
 from tljh.config import INSTALL_PREFIX, USER_ENV_PREFIX, CONFIG_DIR
 from tljh.normalize import generate_system_username
 from tljh.yaml import yaml
@@ -56,6 +57,15 @@ c.SystemdSpawner.unit_name_template = 'jupyter-{USERNAME}'
 
 tljh_config = configurer.load_config()
 configurer.apply_config(tljh_config, c)
+
+# Let TLJH hooks modify `c` if they want
+
+# Set up plugin infrastructure
+pm = pluggy.PluginManager('tljh')
+pm.add_hookspecs(hooks)
+pm.load_setuptools_entrypoints('tljh')
+# Call our custom configuration plugin
+pm.hook.tljh_custom_jupyterhub_config(c=c)
 
 # Load arbitrary .py config files if they exist.
 # This is our escape hatch

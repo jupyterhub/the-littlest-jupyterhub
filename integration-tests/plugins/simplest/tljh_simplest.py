@@ -17,6 +17,11 @@ def tljh_extra_user_pip_packages():
         'django',
     ]
 
+@hookimpl
+def tljh_extra_hub_pip_packages():
+    return [
+        'there',
+    ]
 
 @hookimpl
 def tljh_extra_apt_packages():
@@ -31,3 +36,7 @@ def tljh_config_post_install(config):
     config['simplest_plugin'] = {
         'present': True
     }
+
+@hookimpl
+def tljh_custom_jupyterhub_config(c):
+    c.JupyterHub.authenticator_class = 'tmpauthenticator.TmpAuthenticator'
