@@ -1,4 +1,4 @@
-.. _howto/content/share-data:
+.. _howto/content/shared-directory:
 
 =================================================
 Shared-directory for users to "publish" Notebooks
