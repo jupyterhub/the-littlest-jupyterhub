@@ -208,6 +208,7 @@ def ensure_jupyterhub_package(prefix):
         'jupyterhub-firstuseauthenticator==0.12',
         'jupyterhub-nativeauthenticator==0.0.4',
         'jupyterhub-ldapauthenticator==1.2.2',
+        'jupyterhub-tmpauthenticator==0.6',
         'oauthenticator==0.8.2',
     ])
     traefik.ensure_traefik_binary(prefix)
