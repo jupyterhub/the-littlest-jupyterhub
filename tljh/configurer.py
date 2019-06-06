@@ -235,7 +235,9 @@ def set_cull_idle_service(c, config):
 
 
 def update_services(c, config):
-    c.JupyterHub.services.append(set_cull_idle_service(c, config))
+    c.JupyterHub.services = []
+    if config['services']['cull']['enabled']:
+        c.JupyterHub.services.append(set_cull_idle_service(c, config))
 
 
 def _merge_dictionaries(a, b, path=None, update=True):
