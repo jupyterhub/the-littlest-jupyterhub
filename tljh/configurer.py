@@ -9,6 +9,7 @@ FIXME: A strong feeling that JSON Schema should be involved somehow.
 """
 
 import os
+import sys
 
 from .config import CONFIG_FILE, STATE_DIR
 from .yaml import yaml
@@ -55,6 +56,16 @@ default = {
     'user_environment': {
         'default_app': 'classic',
     },
+    'services': {
+        'cull': {
+            'enabled': True,
+            'timeout': 600,
+            'every': 60,
+            'concurrency': 5,
+            'users': False,
+            'max_age': 0
+        }
+    }
 }
 
 def load_config(config_file=CONFIG_FILE):
@@ -86,6 +97,7 @@ def apply_config(config_overrides, c):
     update_user_environment(c, tljh_config)
     update_user_account_config(c, tljh_config)
     update_traefik_api(c, tljh_config)
+    update_services(c, tljh_config)
 
 
 def set_if_not_none(parent, key, value):
@@ -189,6 +201,41 @@ def update_traefik_api(c, config):
     """
     c.TraefikTomlProxy.traefik_api_username = config['traefik_api']['username']
     c.TraefikTomlProxy.traefik_api_password = config['traefik_api']['password']
+
+
+def set_cull_idle_service(c, config):
+    """
+    Set Idle Culler service
+    """
+    cull_cmd = [
+       sys.executable, '/srv/src/tljh/cull_idle_servers.py'
+    ]
+    if config['services']['cull']['timeout']:
+        cull_cmd.append('--timeout=%s' % config['services']['cull']['timeout'])
+
+    if config['services']['cull']['every']:
+        cull_cmd.append('--cull-every=%s' % config['services']['cull']['every'])
+
+    if config['services']['cull']['concurrency']:
+        cull_cmd.append('--concurrency=%s' % config['services']['cull']['concurrency'])
+
+    if config['services']['cull']['users']:
+        cull_cmd.append('--cull-users')
+
+    if config['services']['cull']['max_age']:
+        cull_cmd.append('--max-age=%s' % config['services']['cull']['max_age'])
+
+    cull_service = {
+        'name': 'cull-idle',
+        'admin': True,
+        'command': cull_cmd,
+    }
+
+    return cull_service
+
+
+def update_services(c, config):
+    c.JupyterHub.services.append(set_cull_idle_service(c, config))
 
 
 def _merge_dictionaries(a, b, path=None, update=True):
