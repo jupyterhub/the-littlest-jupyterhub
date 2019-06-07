@@ -10,6 +10,7 @@ import grp
 import sys
 import subprocess
 from tljh.normalize import generate_system_username
+import time
 
 
 # Use sudo to invoke it, since this is how users invoke it.
@@ -138,3 +139,40 @@ async def test_long_username():
             '--no-pager'
         ])
         raise
+
+
+@pytest.mark.asyncio
+async def test_idle_culler  ():
+    """
+    User logs in, starts a server & stays idle for 1 min
+    """
+    # This *must* be localhost, not an IP
+    # aiohttp throws away cookies if we are connecting to an IP!
+    hub_url = 'http://localhost'
+    username = secrets.token_hex(8)
+
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummyauthenticator.DummyAuthenticator')).wait()
+    # Check every 10s for idle servers to cull
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'services.cull.every', "10")).wait()
+    # Apart from servers, also cull users
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'services.cull.users', "True")).wait()
+    # Cull servers and users after 60s of activity
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'services.cull.max_age', "60")).wait()
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
+
+    async with User(username, hub_url, partial(login_dummy, password='')) as u:
+            await u.login()
+            # Start user's server
+            await u.ensure_server()
+            # Assert that the user exists
+            assert pwd.getpwnam(f'jupyter-{username}') is not None
+
+            # Check that we can get to the user's server
+            r = await u.session.get(u.hub_url / 'hub/api/users' / username,
+                headers={'Referer': str(u.hub_url / 'hub/')})
+            assert r.status == 200
+            time.sleep(60)
+            # Check that after 60s, the user and server have been culled and are not reacheable anymore
+            r = await u.session.get(u.hub_url / 'hub/api/users' / username,
+                headers={'Referer': str(u.hub_url / 'hub/')})
+            assert r.status == 403
