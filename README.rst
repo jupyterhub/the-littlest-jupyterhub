@@ -44,7 +44,7 @@ Ubuntu 18.04. We have a bunch of tutorials to get you started!
   - `Google Cloud <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/google.html>`_
   - `Jetstream <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/jetstream.html>`_
   - `Amazon Web Services <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/amazon.html>`_
-  - `Microsoft Azure<https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/azure.html>`_
+  - `Microsoft Azure <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/azure.html>`_
   - ... your favorite provider here, if you can contribute!
 
 - `Tutorial to install TLJH on an already running server you have root access to
