@@ -3,6 +3,7 @@ Test configurer
 """
 
 import os
+import sys
 
 from tljh import configurer
 
@@ -185,6 +186,52 @@ def test_set_traefik_api():
     })
     assert c.TraefikTomlProxy.traefik_api_username == 'some_user'
     assert c.TraefikTomlProxy.traefik_api_password == '1234'
+
+
+def test_cull_service_default():
+    """
+    Test default cull service settings with no overrides
+    """
+    c = apply_mock_config({})
+
+    cull_cmd = [
+       sys.executable, '/srv/src/tljh/cull_idle_servers.py',
+       '--timeout', '600', '--cull-every', '60', '--concurrency', '5',
+       '--max-age', '0'
+    ]
+    assert c.JupyterHub.services == [{
+        'name': 'cull-idle',
+        'admin': True,
+        'command': cull_cmd,
+    }]
+    assert c.TraefikTomlProxy.traefik_api_username == 'api_admin'
+
+
+def test_set_cull_service():
+    """
+    Test setting cull service options
+    """
+    c = apply_mock_config({
+        'services': {
+            'cull': {
+                'every': 10,
+                'users': True,
+                'max_age': 60
+            }
+        }
+    })
+    cull_cmd = [
+       sys.executable, '/srv/src/tljh/cull_idle_servers.py',
+       '--timeout', '600', '--cull-every', '10', '--concurrency', '5',
+       '--max-age', '60', '--cull-users'
+    ]
+    assert c.JupyterHub.services == [{
+        'name': 'cull-idle',
+        'admin': True,
+        'command': cull_cmd,
+    }]
+    assert c.TraefikTomlProxy.traefik_api_username == 'api_admin'
+
 
 
 def test_load_secrets(tljh_dir):
