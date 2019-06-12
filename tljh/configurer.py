@@ -203,27 +203,22 @@ def update_traefik_api(c, config):
     c.TraefikTomlProxy.traefik_api_password = config['traefik_api']['password']
 
 
-def set_cull_idle_service(c, config):
+def set_cull_idle_service(config):
     """
     Set Idle Culler service
     """
     cull_cmd = [
        sys.executable, '/srv/src/tljh/cull_idle_servers.py'
     ]
-    if config['services']['cull']['timeout']:
-        cull_cmd.append('--timeout=%s' % config['services']['cull']['timeout'])
+    cull_config = config['services']['cull']
+    print()
 
-    if config['services']['cull']['every']:
-        cull_cmd.append('--cull-every=%s' % config['services']['cull']['every'])
-
-    if config['services']['cull']['concurrency']:
-        cull_cmd.append('--concurrency=%s' % config['services']['cull']['concurrency'])
-
-    if config['services']['cull']['users']:
-        cull_cmd.append('--cull-users')
-
-    if config['services']['cull']['max_age']:
-        cull_cmd.append('--max-age=%s' % config['services']['cull']['max_age'])
+    cull_cmd += ['--timeout=%d' % cull_config['timeout']]
+    cull_cmd += ['--cull-every=%d' % cull_config['every']]
+    cull_cmd += ['--concurrency=%d' % cull_config['concurrency']]
+    cull_cmd += ['--max-age=%d' % cull_config['max_age']]
+    if cull_config['users']:
+        cull_cmd += ['--cull-users']
 
     cull_service = {
         'name': 'cull-idle',
@@ -237,7 +232,7 @@ def set_cull_idle_service(c, config):
 def update_services(c, config):
     c.JupyterHub.services = []
     if config['services']['cull']['enabled']:
-        c.JupyterHub.services.append(set_cull_idle_service(c, config))
+        c.JupyterHub.services.append(set_cull_idle_service(config))
 
 
 def _merge_dictionaries(a, b, path=None, update=True):
