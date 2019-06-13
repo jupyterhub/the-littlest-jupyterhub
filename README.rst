@@ -41,6 +41,7 @@ Ubuntu 18.04. We have a bunch of tutorials to get you started!
   servers.
 
   - `Digital Ocean <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/digitalocean.html>`_
+  - `OVH <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/ovh.html>`_
   - `Google Cloud <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/google.html>`_
   - `Jetstream <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/jetstream.html>`_
   - `Amazon Web Services <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/amazon.html>`_
