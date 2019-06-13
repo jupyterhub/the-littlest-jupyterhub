@@ -30,6 +30,7 @@ We have a bunch of tutorials to get you started.
      :caption: Installation
 
      install/digitalocean
+     install/ovh
      install/jetstream
      install/google
      install/amazon
