@@ -86,7 +86,7 @@ Let's create the server on which we can run JupyterHub.
 
 #. Select a billing period: monthly or hourly.
 
-#. Click the **Create an instane** button! You will be taken to a different screen,
+#. Click the **Create an instance** button! You will be taken to a different screen,
    where you can see progress of your server being created.
 
    .. image:: ../images/providers/ovh/create-instance.png
