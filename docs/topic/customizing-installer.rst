@@ -63,7 +63,7 @@ Installing TLJH plugins
 The Littlest JupyterHub can install additional *plugins* that provide additional
 features. They are most commonly used to install a particular *stack* - such as
 the `PANGEO Stack <https://github.com/yuvipanda/tljh-pangeo>`_ for earth sciences
-research, a stack for a praticular class, etc.
+research, a stack for a particular class, etc.
 
 ``--plugin <plugin-to-install>`` installs and activates a plugin. You can pass it
 however many times you want. Since plugins are distributed as python packages,
