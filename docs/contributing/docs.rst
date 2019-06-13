@@ -48,11 +48,12 @@ documentation is transformed into HTML, PDF, and any other output format.
 __ http://sphinx-doc.org/
 __ http://docutils.sourceforge.net/
 
-To build the documentation locally, install Sphinx:
+To build the documentation locally, install the Sphinx dependencies:
 
 .. code-block:: console
 
-     $ pip install Sphinx
+     $ cd docs/
+     $ pip install -r requirements.txt
 
 Then from the ``docs`` directory, build the HTML:
 
