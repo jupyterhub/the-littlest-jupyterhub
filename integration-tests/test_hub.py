@@ -1,6 +1,7 @@
 import requests
 from hubtraf.user import User
 from hubtraf.auth.dummy import login_dummy
+from jupyterhub.utils import exponential_backoff
 import secrets
 import pytest
 from functools import partial
@@ -138,3 +139,98 @@ async def test_long_username():
             '--no-pager'
         ])
         raise
+
+
+@pytest.mark.asyncio
+async def test_idle_server_culled():
+    """
+    User logs in, starts a server & stays idle for 1 min.
+    (the user's server should be culled during this period)
+    """
+    # This *must* be localhost, not an IP
+    # aiohttp throws away cookies if we are connecting to an IP!
+    hub_url = 'http://localhost'
+    username = secrets.token_hex(8)
+
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummyauthenticator.DummyAuthenticator')).wait()
+    # Check every 10s for idle servers to cull
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'services.cull.every', "10")).wait()
+    # Apart from servers, also cull users
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'services.cull.users', "True")).wait()
+    # Cull servers and users after 60s of activity
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'services.cull.max_age', "60")).wait()
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
+
+    async with User(username, hub_url, partial(login_dummy, password='')) as u:
+            await u.login()
+            # Start user's server
+            await u.ensure_server()
+            # Assert that the user exists
+            assert pwd.getpwnam(f'jupyter-{username}') is not None
+
+            # Check that we can get to the user's server
+            r = await u.session.get(u.hub_url / 'hub/api/users' / username,
+                headers={'Referer': str(u.hub_url / 'hub/')})
+            assert r.status == 200
+
+            async def _check_culling_done():
+                # Check that after 60s, the user and server have been culled and are not reacheable anymore
+                r = await u.session.get(u.hub_url / 'hub/api/users' / username,
+                    headers={'Referer': str(u.hub_url / 'hub/')})
+                print(r.status)
+                return r.status == 403
+
+            await exponential_backoff(
+                _check_culling_done,
+                "Server culling failed!",
+                timeout=100,
+            )
+
+@pytest.mark.asyncio
+async def test_active_server_not_culled():
+    """
+    User logs in, starts a server & stays idle for 30s
+    (the user's server should not be culled during this period).
+    """
+    # This *must* be localhost, not an IP
+    # aiohttp throws away cookies if we are connecting to an IP!
+    hub_url = 'http://localhost'
+    username = secrets.token_hex(8)
+
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummyauthenticator.DummyAuthenticator')).wait()
+    # Check every 10s for idle servers to cull
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'services.cull.every', "10")).wait()
+    # Apart from servers, also cull users
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'services.cull.users', "True")).wait()
+    # Cull servers and users after 60s of activity
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'services.cull.max_age', "60")).wait()
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
+
+    async with User(username, hub_url, partial(login_dummy, password='')) as u:
+            await u.login()
+            # Start user's server
+            await u.ensure_server()
+            # Assert that the user exists
+            assert pwd.getpwnam(f'jupyter-{username}') is not None
+
+            # Check that we can get to the user's server
+            r = await u.session.get(u.hub_url / 'hub/api/users' / username,
+                headers={'Referer': str(u.hub_url / 'hub/')})
+            assert r.status == 200
+
+            async def _check_culling_done():
+                # Check that after 30s, we can still reach the user's server
+                r = await u.session.get(u.hub_url / 'hub/api/users' / username,
+                    headers={'Referer': str(u.hub_url / 'hub/')})
+                print(r.status)
+                return r.status != 200
+
+            try:
+                await exponential_backoff(
+                    _check_culling_done,
+                    "User's server is still reacheable!",
+                    timeout=30,
+                )
+            except TimeoutError:
+                # During the 30s timeout the user's server wasn't culled, which is what we intended.
+                pass
