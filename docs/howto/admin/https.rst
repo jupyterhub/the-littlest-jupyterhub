@@ -39,7 +39,7 @@ To enable HTTPS via letsencrypt::
     sudo tljh-config add-item https.letsencrypt.domains yourhub.yourdomain.edu
 
 where ``you@example.com`` is your email address and ``yourhub.yourdomain.edu``
-s the domain where your hub will be running.
+is the domain where your hub will be running.
 
 Once you have loaded this, your config should look like::
 
