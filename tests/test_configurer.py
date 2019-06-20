@@ -130,6 +130,24 @@ def test_auth_dummy():
     assert c.DummyAuthenticator.password == 'test'
 
 
+def test_user_groups():
+    """
+    Test setting user groups
+    """
+    c = apply_mock_config({
+        'users': {
+            'groups': {
+                "g1": ["u1", "u2"],
+                "g1": ["u3", "u4"]
+            },
+        }
+    })
+    assert c.UserCreatingSpawner.user_groups == {
+                "g1": ["u1", "u2"],
+                "g1": ["u3", "u4"]
+            }
+
+
 def test_auth_firstuse():
     """
     Test setting FirstUse Authenticator options
