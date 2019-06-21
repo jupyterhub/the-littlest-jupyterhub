@@ -132,6 +132,34 @@ User Environment
 
        sudo tljh-config set user_environment.default_app jupyterlab
 
+.. _tljh-set-extra-user-groups:
+
+Extra User Groups
+=================
+
+
+``users.extra_user_groups`` is a configuration option that can be used
+to automatically add a user to a specific group. By default, there are
+no extra groups defined.
+
+Users can be "paired" with the desired, **existing** groups using:
+
+* ``tljh-config set``, if only one user is to be added to the
+  desired group:
+
+.. code-block:: bash
+
+  tljh-config set users.extra_user_groups.group1 user1
+
+* ``tljh-config add-item``, if multiple users are to be added to
+  the group:
+
+.. code-block:: bash
+
+  tljh-config add-item users.extra_user_groups.group1 user1
+  tljh-config add-item users.extra_user_groups.group1 user2
+
+
 .. _tljh-view-conf:
 
 View current configuration
