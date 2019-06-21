@@ -27,7 +27,7 @@ default = {
         'allowed': [],
         'banned': [],
         'admin': [],
-        'groups': {}
+        'extra_user_groups': {}
     },
     'limits': {
         'memory': None,
@@ -175,7 +175,7 @@ def update_usergroups(c, config):
     Set user groups
     """
     users = config['users']
-    c.UserCreatingSpawner.user_groups = users['groups']
+    c.UserCreatingSpawner.user_groups = users['extra_user_groups']
 
 
 def update_limits(c, config):

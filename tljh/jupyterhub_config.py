@@ -13,7 +13,7 @@ from tljh.normalize import generate_system_username
 from tljh.yaml import yaml
 from jupyterhub_traefik_proxy import TraefikTomlProxy
 
-from traitlets import Any
+from traitlets import Dict
 
 class UserCreatingSpawner(SystemdSpawner):
     """
@@ -21,7 +21,7 @@ class UserCreatingSpawner(SystemdSpawner):
 
     FIXME: Remove this somehow?
     """
-    user_groups = Any(config=True)
+    user_groups = Dict(config=True)
 
     def start(self):
         """
