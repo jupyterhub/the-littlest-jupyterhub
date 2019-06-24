@@ -25,16 +25,16 @@ more information.
 Development Status
 ==================
 
-This project is currently in **alpha** state. Most things work, but we might
-still make breaking changes that have no clear upgrade pathway. We are targeting
-a v0.1 release sometime in mid-August 2018. Follow `this milestone <https://github.com/jupyterhub/the-littlest-jupyterhub/milestone/1>`_
-to see progress towards the release!
+This project is currently in **beta** state. Folks have been using installations
+of TLJH for more than a year now to great success. While we try hard not to, we
+might still make breaking changes that have no clear upgrade pathway.
 
 Installation
 ============
 
 The Littlest JupyterHub (TLJH) can run on any server that is running at least
-Ubuntu 18.04. We have a bunch of tutorials to get you started!
+**Ubuntu 18.04**. Earlier versions of Ubuntu are not supported.
+We have a bunch of tutorials to get you started.
 
 - Tutorials to create a new server from scratch on a cloud provider & run TLJH
   on it. These are **recommended** if you do not have much experience setting up
