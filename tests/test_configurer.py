@@ -195,7 +195,7 @@ def test_cull_service_default():
     c = apply_mock_config({})
 
     cull_cmd = [
-       sys.executable, '/srv/src/tljh/cull_idle_servers.py',
+       sys.executable, '-m', 'tljh.cull_idle_servers',
        '--timeout=600', '--cull-every=60', '--concurrency=5',
        '--max-age=0'
     ]
@@ -220,7 +220,7 @@ def test_set_cull_service():
         }
     })
     cull_cmd = [
-       sys.executable, '/srv/src/tljh/cull_idle_servers.py',
+       sys.executable, '-m', 'tljh.cull_idle_servers',
        '--timeout=600', '--cull-every=10', '--concurrency=5',
        '--max-age=60', '--cull-users'
     ]
