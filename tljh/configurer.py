@@ -208,7 +208,7 @@ def set_cull_idle_service(config):
     Set Idle Culler service
     """
     cull_cmd = [
-       sys.executable, '/srv/src/tljh/cull_idle_servers.py'
+       sys.executable, '-m', 'tljh.cull_idle_servers'
     ]
     cull_config = config['services']['cull']
     print()
