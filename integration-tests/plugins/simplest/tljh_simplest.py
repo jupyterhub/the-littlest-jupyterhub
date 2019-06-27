@@ -1,6 +1,9 @@
 """
 Simplest plugin that exercises all the hooks
 """
+from textwrap import dedent
+
+from tljh import systemd
 from tljh.hooks import hookimpl
 
 
@@ -40,3 +43,21 @@ def tljh_config_post_install(config):
 @hookimpl
 def tljh_custom_jupyterhub_config(c):
     c.JupyterHub.authenticator_class = 'tmpauthenticator.TmpAuthenticator'
+
+
+@hookimpl
+def tljh_post_install():
+    post_install_service = dedent("""
+    [Unit]
+    Description=Post Install Test Service
+
+    [Service]
+    ExecStart=ls
+
+    [Install]
+    WantedBy=multi-user.target
+    """)
+    service = "post-install-test.service"
+    systemd.install_unit(service, post_install_service)
+    systemd.enable_service(service)
+    systemd.reload_daemon()

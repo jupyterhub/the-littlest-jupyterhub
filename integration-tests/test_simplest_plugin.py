@@ -6,6 +6,7 @@ import requests
 import os
 import subprocess
 from tljh.config import CONFIG_FILE, USER_ENV_PREFIX, HUB_ENV_PREFIX
+from tljh.systemd import check_service_enabled
 
 yaml = YAML(typ='rt')
 
@@ -54,6 +55,7 @@ def test_config_hook():
 
     assert data['simplest_plugin']['present']
 
+
 def test_jupyterhub_config_hook():
     """
     Test that tmpauthenticator is enabled by our custom config plugin
@@ -61,3 +63,10 @@ def test_jupyterhub_config_hook():
     resp = requests.get('http://localhost/hub/tmplogin', allow_redirects=False)
     assert resp.status_code == 302
     assert resp.headers['Location'] == '/hub/spawn'
+
+
+def test_post_install_hook():
+    """
+    Test that the post-install-test systemd service is enabled
+    """
+    assert check_service_enabled("post-install-test")

@@ -405,6 +405,9 @@ def run_plugin_actions(plugin_manager, plugins):
         ))
         conda.ensure_pip_packages(USER_ENV_PREFIX, user_pip_packages)
 
+    # Custom post install actions
+    hook.tljh_post_install()
+
 
 def ensure_config_yaml(plugin_manager):
     """
