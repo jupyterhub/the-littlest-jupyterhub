@@ -88,7 +88,7 @@ A hook implementation is a function that has the following characteristics:
    ``tljh.hooks``.
 
 The current list of available hooks and when they are called can be
-seen in ```tljh/hooks.py`` <https://github.com/jupyterhub/the-littlest-jupyterhub/blob/master/tljh/hooks.py>`_
+seen in `tljh/hooks.py <https://github.com/jupyterhub/the-littlest-jupyterhub/blob/master/tljh/hooks.py>`_
 in the source repository.
 
 
