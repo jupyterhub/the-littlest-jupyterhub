@@ -13,7 +13,7 @@ from tljh.normalize import generate_system_username
 from tljh.yaml import yaml
 from jupyterhub_traefik_proxy import TraefikTomlProxy
 
-from traitlets import Dict
+from traitlets import Dict, Unicode, List
 
 class UserCreatingSpawner(SystemdSpawner):
     """
