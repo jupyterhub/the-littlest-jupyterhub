@@ -21,7 +21,7 @@ class UserCreatingSpawner(SystemdSpawner):
 
     FIXME: Remove this somehow?
     """
-    user_groups = Dict(config=True)
+    user_groups = Dict(key_trait=Unicode(), value_trait=List(Unicode(), config=True))
 
     def start(self):
         """
