@@ -54,6 +54,7 @@ def test_config_hook():
 
     assert data['simplest_plugin']['present']
 
+
 def test_jupyterhub_config_hook():
     """
     Test that tmpauthenticator is enabled by our custom config plugin
@@ -61,3 +62,13 @@ def test_jupyterhub_config_hook():
     resp = requests.get('http://localhost/hub/tmplogin', allow_redirects=False)
     assert resp.status_code == 302
     assert resp.headers['Location'] == '/hub/spawn'
+
+
+def test_post_install_hook():
+    """
+    Test that the test_post_install file has the correct content
+    """
+    with open("test_post_install") as f:
+        content = f.read()
+
+    assert content == "123456789"

@@ -59,3 +59,13 @@ def tljh_config_post_install(config):
     overwrite anything the user might have explicitly set.
     """
     pass
+
+@hookspec
+def tljh_post_install():
+    """
+    Post install script to be executed after installation
+    and after all the other hooks.
+
+    This can be arbitrary Python code.
+    """
+    pass

@@ -40,3 +40,9 @@ def tljh_config_post_install(config):
 @hookimpl
 def tljh_custom_jupyterhub_config(c):
     c.JupyterHub.authenticator_class = 'tmpauthenticator.TmpAuthenticator'
+
+
+@hookimpl
+def tljh_post_install():
+    with open('test_post_install', 'w') as f:
+        f.write('123456789')
