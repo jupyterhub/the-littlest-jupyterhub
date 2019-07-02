@@ -6,7 +6,6 @@ import requests
 import os
 import subprocess
 from tljh.config import CONFIG_FILE, USER_ENV_PREFIX, HUB_ENV_PREFIX
-from tljh.systemd import check_service_enabled
 
 yaml = YAML(typ='rt')
 
@@ -67,6 +66,9 @@ def test_jupyterhub_config_hook():
 
 def test_post_install_hook():
     """
-    Test that the post-install-test systemd service is enabled
+    Test that the test_post_install file has the correct content
     """
-    assert check_service_enabled("post-install-test")
+    with open("test_post_install") as f:
+        content = f.read()
+
+    assert content == "123456789"
