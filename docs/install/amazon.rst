@@ -139,7 +139,7 @@ Let's create the server on which we can run JupyterHub.
 
 #. Under **Step 6: Configure Security Group**, you'll set the firewall rules 
    that control the traffic for your instance. Specifically you'll want to add 
-   rules can add rules to allow both **HTTP Traffic** and **HTTPS Traffic**. For 
+   rules to allow both **HTTP Traffic** and **HTTPS Traffic**. For 
    advanced troubleshooting, it will be helpful to set rules so you can use 
    SSH to connect (port 22). 
    
