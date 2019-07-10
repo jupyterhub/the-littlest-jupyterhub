@@ -1,6 +1,7 @@
 """Installation logic for TLJH"""
 
 import argparse
+import dbm
 import itertools
 import logging
 import os
@@ -10,9 +11,11 @@ import sys
 import time
 import warnings
 
+import bcrypt
 import pluggy
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
+from getpass import getpass
 
 from tljh import (
     apt,
@@ -271,7 +274,7 @@ def ensure_user_environment(user_requirements_txt_file):
         conda.ensure_pip_requirements(USER_ENV_PREFIX, user_requirements_txt_file)
 
 
-def ensure_admins(admins):
+def ensure_admins(admins, passwords):
     """
     Setup given list of users as admins.
     """
@@ -289,6 +292,13 @@ def ensure_admins(admins):
     # Flatten admin lists
     config['users']['admin'] = [admin for admin_sublist in admins
         for admin in admin_sublist]
+
+    if passwords:
+        for i in range(len(passwords)):
+            passwords[i] = bcrypt.hashpw(passwords[i].encode(), bcrypt.gensalt())
+            db_passw = os.path.join(STATE_DIR, 'passwords.dbm')
+            with dbm.open(db_passw, 'c', 0o600) as db:
+                db[admins[i]] = passwords[i]
 
     with open(config_path, 'w+') as f:
         yaml.dump(config, f)
@@ -454,13 +464,26 @@ def main():
         nargs='*',
         help='Plugin pip-specs to install'
     )
+    argparser.add_argument(
+        '--password',
+        action='store_true',
+        help='List of admin passwords'
+    )
 
     args = argparser.parse_args()
 
     pm = setup_plugins(args.plugin)
 
     ensure_config_yaml(pm)
-    ensure_admins(args.admin)
+
+    # Set a password for each admin user
+    passwords = []
+    if args.password:
+        for admin_user in args.admin:
+            passw = getpass(prompt='Set password for %s: ' % admin_user)
+            passwords.append(passw)
+    ensure_admins(args.admin, passwords)
+
     ensure_usergroups()
     ensure_user_environment(args.user_requirements_txt_url)
 
