@@ -467,7 +467,7 @@ def main():
     argparser.add_argument(
         '--password',
         action='store_true',
-        help='List of admin passwords'
+        help='Whether or not to set admin passwords during install'
     )
 
     args = argparser.parse_args()
