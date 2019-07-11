@@ -14,7 +14,7 @@ tljh-config show firstlevel.second_level
 
 import argparse
 import asyncio
-from collections import Sequence, Mapping
+from collections.abc import Sequence, Mapping
 from copy import deepcopy
 import os
 import re
