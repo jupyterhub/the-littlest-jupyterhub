@@ -286,7 +286,9 @@ def ensure_admins(admins):
         config = {}
 
     config['users'] = config.get('users', {})
-    config['users']['admin'] = list(admins)
+    # Flatten admin lists
+    config['users']['admin'] = [admin for admin_sublist in admins
+        for admin in admin_sublist]
 
     with open(config_path, 'w+') as f:
         yaml.dump(config, f)
@@ -440,6 +442,7 @@ def main():
     argparser.add_argument(
         '--admin',
         nargs='*',
+        action='append',
         help='List of usernames set to be admin'
     )
     argparser.add_argument(
