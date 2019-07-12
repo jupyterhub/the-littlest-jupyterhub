@@ -129,6 +129,24 @@ def test_auth_dummy():
     assert c.JupyterHub.authenticator_class == 'dummyauthenticator.DummyAuthenticator'
     assert c.DummyAuthenticator.password == 'test'
 
+from traitlets import Dict
+def test_user_groups():
+    """
+    Test setting user groups
+    """
+    c = apply_mock_config({
+        'users': {
+            'extra_user_groups': {
+                "g1": ["u1", "u2"],
+                "g2": ["u3", "u4"]
+            },
+        }
+    })
+    assert c.UserCreatingSpawner.user_groups == {
+                "g1": ["u1", "u2"],
+                "g2": ["u3", "u4"]
+            }
+
 
 def test_auth_firstuse():
     """

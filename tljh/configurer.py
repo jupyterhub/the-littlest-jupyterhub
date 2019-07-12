@@ -27,6 +27,7 @@ default = {
         'allowed': [],
         'banned': [],
         'admin': [],
+        'extra_user_groups': {}
     },
     'limits': {
         'memory': None,
@@ -93,6 +94,7 @@ def apply_config(config_overrides, c):
 
     update_auth(c, tljh_config)
     update_userlists(c, tljh_config)
+    update_usergroups(c, tljh_config)
     update_limits(c, tljh_config)
     update_user_environment(c, tljh_config)
     update_user_account_config(c, tljh_config)
@@ -166,6 +168,14 @@ def update_userlists(c, config):
     c.Authenticator.whitelist = set(users['allowed'])
     c.Authenticator.blacklist = set(users['banned'])
     c.Authenticator.admin_users = set(users['admin'])
+
+
+def update_usergroups(c, config):
+    """
+    Set user groups
+    """
+    users = config['users']
+    c.UserCreatingSpawner.user_groups = users['extra_user_groups']
 
 
 def update_limits(c, config):

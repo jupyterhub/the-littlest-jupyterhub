@@ -10,6 +10,7 @@ import pwd
 import grp
 import sys
 import subprocess
+from os import system
 from tljh.normalize import generate_system_username
 
 
@@ -131,6 +132,48 @@ async def test_long_username():
                 assert pwd.getpwnam(system_username) is not None
 
                 await u.stop_server()
+    except:
+        # If we have any errors, print jupyterhub logs before exiting
+        subprocess.check_call([
+            'journalctl',
+            '-u', 'jupyterhub',
+            '--no-pager'
+        ])
+        raise
+
+
+@pytest.mark.asyncio
+async def test_user_group_adding():
+    """
+    User logs in, and we check if they are added to the specified group.
+    """
+    # This *must* be localhost, not an IP
+    # aiohttp throws away cookies if we are connecting to an IP!
+    hub_url = 'http://localhost'
+    username = secrets.token_hex(8)
+    groups = {"somegroup": [username]}
+    # Create the group we want to add the user to
+    system('groupadd somegroup')
+
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummyauthenticator.DummyAuthenticator')).wait()
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'add-item', 'users.extra_user_groups.somegroup', username)).wait()
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
+
+    try:
+        async with User(username, hub_url, partial(login_dummy, password='')) as u:
+                await u.login()
+                await u.ensure_server()
+
+                # Assert that the user exists
+                system_username = generate_system_username(f'jupyter-{username}')
+                assert pwd.getpwnam(system_username) is not None
+
+                # Assert that the user was added to the specified group
+                assert f'jupyter-{username}' in grp.getgrnam('somegroup').gr_mem
+
+                await u.stop_server()
+                # Delete the group
+                system('groupdel somegroup')
     except:
         # If we have any errors, print jupyterhub logs before exiting
         subprocess.check_call([
