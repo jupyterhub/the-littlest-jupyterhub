@@ -88,6 +88,7 @@ Ports
 
     sudo tljh-config set http.port 8080
     sudo tljh-config set https.port 8443
+    sudo tljh-config reload proxy
 
 .. _tljh-set-user-lists:
 
