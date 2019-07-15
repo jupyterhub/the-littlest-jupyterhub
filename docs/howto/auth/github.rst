@@ -75,7 +75,7 @@ For more information on ``tljh-config``, see :ref:`topic/tljh-config`.
 
      sudo tljh-config reload
 
-Confirm that the new authentactor works
+Confirm that the new authenticator works
 =======================================
 
 #. **Open an incognito window** in your browser (do not log out until you confirm
