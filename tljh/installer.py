@@ -274,11 +274,11 @@ def ensure_user_environment(user_requirements_txt_file):
         conda.ensure_pip_requirements(USER_ENV_PREFIX, user_requirements_txt_file)
 
 
-def ensure_admins(admins, passwords):
+def ensure_admins(admin_password_list):
     """
     Setup given list of users as admins.
     """
-    if not admins:
+    if not admin_password_list:
         return
     logger.info("Setting up admin users")
     config_path = CONFIG_FILE
@@ -289,16 +289,22 @@ def ensure_admins(admins, passwords):
         config = {}
 
     config['users'] = config.get('users', {})
-    # Flatten admin lists
-    config['users']['admin'] = [admin for admin_sublist in admins
-        for admin in admin_sublist]
 
-    if passwords:
-        for i in range(len(passwords)):
-            passwords[i] = bcrypt.hashpw(passwords[i].encode(), bcrypt.gensalt())
-            db_passw = os.path.join(STATE_DIR, 'passwords.dbm')
-            with dbm.open(db_passw, 'c', 0o600) as db:
-                db[admins[i]] = passwords[i]
+    db_passw = os.path.join(STATE_DIR, 'passwords.dbm')
+
+    admins = []
+    for i in range(len(admin_password_list)):
+        for admin_password_pair in admin_password_list[i]:
+            if ":" in admin_password_pair:
+                admin, password = admin_password_pair.split(':')
+                admins.append(admin)
+                # Add admin:password to the db
+                password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+                with dbm.open(db_passw, 'c', 0o600) as db:
+                    db[admin] = password
+            else:
+                admins.append(admin_password_pair)
+    config['users']['admin'] = admins
 
     with open(config_path, 'w+') as f:
         yaml.dump(config, f)
@@ -464,11 +470,6 @@ def main():
         nargs='*',
         help='Plugin pip-specs to install'
     )
-    argparser.add_argument(
-        '--password',
-        action='store_true',
-        help='Whether or not to set admin passwords during install'
-    )
 
     args = argparser.parse_args()
 
@@ -476,13 +477,7 @@ def main():
 
     ensure_config_yaml(pm)
 
-    # Set a password for each admin user
-    passwords = []
-    if args.password:
-        for admin_user in args.admin:
-            passw = getpass(prompt='Set password for %s: ' % admin_user)
-            passwords.append(passw)
-    ensure_admins(args.admin, passwords)
+    ensure_admins(args.admin)
 
     ensure_usergroups()
     ensure_user_environment(args.user_requirements_txt_url)
