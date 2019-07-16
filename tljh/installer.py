@@ -129,8 +129,6 @@ def ensure_jupyterhub_service(prefix):
     Ensure JupyterHub Services are set up properly
     """
 
-    os.makedirs(STATE_DIR, mode=0o700, exist_ok=True)
-
     remove_chp()
     systemd.reload_daemon()
 
@@ -278,6 +276,8 @@ def ensure_admins(admin_password_list):
     """
     Setup given list of users as admins.
     """
+    os.makedirs(STATE_DIR, mode=0o700, exist_ok=True)
+
     if not admin_password_list:
         return
     logger.info("Setting up admin users")
@@ -293,8 +293,8 @@ def ensure_admins(admin_password_list):
     db_passw = os.path.join(STATE_DIR, 'passwords.dbm')
 
     admins = []
-    for i in range(len(admin_password_list)):
-        for admin_password_pair in admin_password_list[i]:
+    for admin_password_entry in admin_password_list:
+        for admin_password_pair in admin_password_entry:
             if ":" in admin_password_pair:
                 admin, password = admin_password_pair.split(':')
                 admins.append(admin)
