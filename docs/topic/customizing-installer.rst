@@ -20,17 +20,38 @@ This page documents the various options you can pass as commandline parameters t
 Adding admin users
 ===================
 
-``--admin <username>`` adds user ``<username>`` to JupyterHub as an admin user.
-This can be repeated multiple times.
+``--admin <username>:<password>`` adds user ``<username>`` to JupyterHub as an admin user
+and sets its password to be ``<password>``.
+Although it is not recommended, it is possible to only set the admin username at this point
+and set the admin password after the installation.
 
-For example, to add ``admin-user1`` and ``admin-user2`` as admins when installing, you
-would do:
+Also, the ``--admin`` flag can be repeated multiple times. For example, to add ``admin-user1``
+and ``admin-user2`` as admins when installing, depending if you would like to set their passwords
+during install you would:
+
+* set ``admin-user1`` with password ``password-user1`` and ``admin-user2`` with ``password-user2`` using:
+
+.. code-block:: bash
+
+    curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
+     | sudo python3 - \
+       --admin admin-user1:password-user1 --admin admin-user2:password-user2
+
+* set ``admin-user1`` and ``admin-user2`` to be admins, without any passwords at this stage, using:
 
 .. code-block:: bash
 
     curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
      | sudo python3 - \
        --admin admin-user1 --admin admin-user2
+
+* set ``admin-user1`` with password ``password-user1`` and ``admin-user2`` with no password at this stage using:
+
+.. code-block:: bash
+
+    curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
+     | sudo python3 - \
+       --admin admin-user1:password-user1 --admin admin-user2
 
 Installing python packages in the user environment
 ==================================================
