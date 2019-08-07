@@ -23,6 +23,6 @@ STOPSIGNAL SIGRTMIN+3
 # Set up image to be useful out of the box for development & CI
 ENV TLJH_BOOTSTRAP_DEV=yes
 ENV TLJH_BOOTSTRAP_PIP_SPEC=/srv/src
-ENV PATH=/opt/tljh/hub/bin:${PATH}
+ENV PATH=/opt/tljh/user/bin:/opt/tljh/hub/bin:${PATH}
 
 CMD ["/bin/bash", "-c", "exec /sbin/init --log-target=journal 3>&1"]
