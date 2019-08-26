@@ -18,6 +18,9 @@ def prefix():
     with tempfile.TemporaryDirectory() as tmpdir:
         with conda.download_miniconda_installer(miniconda_version, miniconda_installer_md5) as installer_path:
             conda.install_miniconda(installer_path, tmpdir)
+        conda.ensure_conda_packages(tmpdir, [
+            'conda==4.5.8'
+        ])
         yield tmpdir
 
 
