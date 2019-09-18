@@ -80,6 +80,7 @@ with your JupyterHub. For more information on Authentication, see
 
    howto/auth/dummy
    howto/auth/github
+   howto/auth/google
    howto/auth/firstuse
    howto/auth/nativeauth
 
