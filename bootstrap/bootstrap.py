@@ -113,7 +113,11 @@ def main():
     logger.setLevel(logging.DEBUG)
 
     logger.info('Checking if TLJH is already installed...')
+    python3_version = "python3"
     if os.path.exists(os.path.join(hub_prefix, 'bin', 'python3')):
+        # Check if the existing install is under Python3.7
+        if os.path.exists(os.path.join(hub_prefix, 'bin', 'python3.7')):
+            python3_version = "python3.7"
         logger.info('TLJH already installed, upgrading...')
         initial_setup = False
     else:
@@ -130,14 +134,15 @@ def main():
 
         run_subprocess(['apt-get', 'update', '--yes'])
         run_subprocess(['apt-get', 'install', '--yes', 
-            'python3',
-            'python3-venv',
+            'python3.7',
+            'python3.7-venv',
+            'python3.7-dev',
             'python3-pip',
             'git'
         ])
         logger.info('Installed python & virtual environment')
         os.makedirs(hub_prefix, exist_ok=True)
-        run_subprocess(['python3', '-m', 'venv', hub_prefix])
+        run_subprocess(['python3.7', '-m', 'venv', hub_prefix])
         logger.info('Set up hub virtual environment')
 
     if initial_setup:
@@ -161,9 +166,9 @@ def main():
 
     logger.info('Starting TLJH installer...')
     os.execv(
-        os.path.join(hub_prefix, 'bin', 'python3'),
+        os.path.join(hub_prefix, 'bin', python3_version),
         [
-            os.path.join(hub_prefix, 'bin', 'python3'),
+            os.path.join(hub_prefix, 'bin', python3_version),
             '-m',
             'tljh.installer',
         ] + sys.argv[1:]
