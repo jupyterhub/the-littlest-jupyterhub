@@ -2,9 +2,10 @@
 Test simplest plugin
 """
 from ruamel.yaml import YAML
+import requests
 import os
 import subprocess
-from tljh.config import CONFIG_FILE, USER_ENV_PREFIX
+from tljh.config import CONFIG_FILE, USER_ENV_PREFIX, HUB_ENV_PREFIX
 
 yaml = YAML(typ='rt')
 
@@ -18,12 +19,18 @@ def test_apt_packages():
 
 def test_pip_packages():
     """
-    Test extra user pip packages are installed
+    Test extra user & hub pip packages are installed
     """
     subprocess.check_call([
         f'{USER_ENV_PREFIX}/bin/python3',
         '-c',
         'import django'
+    ])
+
+    subprocess.check_call([
+        f'{HUB_ENV_PREFIX}/bin/python3',
+        '-c',
+        'import there'
     ])
 
 
@@ -46,3 +53,22 @@ def test_config_hook():
         data = yaml.load(f)
 
     assert data['simplest_plugin']['present']
+
+
+def test_jupyterhub_config_hook():
+    """
+    Test that tmpauthenticator is enabled by our custom config plugin
+    """
+    resp = requests.get('http://localhost/hub/tmplogin', allow_redirects=False)
+    assert resp.status_code == 302
+    assert resp.headers['Location'] == '/hub/spawn'
+
+
+def test_post_install_hook():
+    """
+    Test that the test_post_install file has the correct content
+    """
+    with open("test_post_install") as f:
+        content = f.read()
+
+    assert content == "123456789"

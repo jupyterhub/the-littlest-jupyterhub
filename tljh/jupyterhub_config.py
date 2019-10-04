@@ -1,16 +1,19 @@
 """
 JupyterHub config for the littlest jupyterhub.
 """
-import copy
-import os
-import yaml
+
 from glob import glob
+import os
+import pluggy
 
 from systemdspawner import SystemdSpawner
-from tljh import configurer, user
+from tljh import configurer, user, hooks
 from tljh.config import INSTALL_PREFIX, USER_ENV_PREFIX, CONFIG_DIR
 from tljh.normalize import generate_system_username
+from tljh.yaml import yaml
+from jupyterhub_traefik_proxy import TraefikTomlProxy
 
+from traitlets import Dict, Unicode, List
 
 class UserCreatingSpawner(SystemdSpawner):
     """
@@ -18,6 +21,8 @@ class UserCreatingSpawner(SystemdSpawner):
 
     FIXME: Remove this somehow?
     """
+    user_groups = Dict(key_trait=Unicode(), value_trait=List(Unicode()), config=True)
+
     def start(self):
         """
         Perform system user activities before starting server
@@ -33,6 +38,10 @@ class UserCreatingSpawner(SystemdSpawner):
             user.ensure_user_group(system_username, 'jupyterhub-admins')
         else:
             user.remove_user_group(system_username, 'jupyterhub-admins')
+        if self.user_groups:
+            for group, users in self.user_groups.items():
+                if self.user.name in users:
+                    user.ensure_user_group(system_username, group)
         return super().start()
 
 c.JupyterHub.spawner_class = UserCreatingSpawner
@@ -43,21 +52,28 @@ c.JupyterHub.cleanup_servers = False
 # Use a high port so users can try this on machines with a JupyterHub already present
 c.JupyterHub.hub_port = 15001
 
-c.ConfigurableHTTPProxy.should_start = False
-c.ConfigurableHTTPProxy.api_url = 'http://127.0.0.1:15002'
+c.TraefikTomlProxy.should_start = False
+
+dynamic_conf_file_path = os.path.join(INSTALL_PREFIX, 'state', 'rules.toml')
+c.TraefikTomlProxy.toml_dynamic_config_file = dynamic_conf_file_path
+c.JupyterHub.proxy_class = TraefikTomlProxy
 
 c.SystemdSpawner.extra_paths = [os.path.join(USER_ENV_PREFIX, 'bin')]
 c.SystemdSpawner.default_shell = '/bin/bash'
 # Drop the '-singleuser' suffix present in the default template
 c.SystemdSpawner.unit_name_template = 'jupyter-{USERNAME}'
 
-config_overrides_path = os.path.join(CONFIG_DIR, 'config.yaml')
-if os.path.exists(config_overrides_path):
-    with open(config_overrides_path) as f:
-        config_overrides = yaml.safe_load(f)
-else:
-    config_overrides = {}
-configurer.apply_config(config_overrides, c)
+tljh_config = configurer.load_config()
+configurer.apply_config(tljh_config, c)
+
+# Let TLJH hooks modify `c` if they want
+
+# Set up plugin infrastructure
+pm = pluggy.PluginManager('tljh')
+pm.add_hookspecs(hooks)
+pm.load_setuptools_entrypoints('tljh')
+# Call our custom configuration plugin
+pm.hook.tljh_custom_jupyterhub_config(c=c)
 
 # Load arbitrary .py config files if they exist.
 # This is our escape hatch

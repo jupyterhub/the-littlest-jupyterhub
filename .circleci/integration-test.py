@@ -29,6 +29,10 @@ def run_systemd_image(image_name, container_name):
         '--mount', 'type=bind,source=/sys/fs/cgroup,target=/sys/fs/cgroup',
         '--detach',
         '--name', container_name,
+        # This is the minimum VM size we support. JupyterLab extensions seem
+        # to need at least this much RAM to build. Boo?
+        # If we change this, need to change all other references to this number.
+        '--memory', '768M',
         image_name
     ])
 
@@ -108,7 +112,7 @@ def show_logs(container_name):
     )
     run_container_command(
         container_name,
-        'systemctl --no-pager status jupyterhub configurable-http-proxy'
+        'systemctl --no-pager status jupyterhub traefik'
     )
 
 def main():

@@ -9,9 +9,10 @@ FIXME: A strong feeling that JSON Schema should be involved somehow.
 """
 
 import os
-import yaml
+import sys
 
-from tljh.config import CONFIG_FILE
+from .config import CONFIG_FILE, STATE_DIR
+from .yaml import yaml
 
 # Default configuration for tljh
 # User provided config is merged into this
@@ -26,9 +27,10 @@ default = {
         'allowed': [],
         'banned': [],
         'admin': [],
+        'extra_user_groups': {}
     },
     'limits': {
-        'memory': '1G',
+        'memory': None,
         'cpu': None,
     },
     'http': {
@@ -46,11 +48,26 @@ default = {
             'domains': [],
         },
     },
+    'traefik_api': {
+        'ip': "127.0.0.1",
+        'port': 8099,
+        'username': 'api_admin',
+        'password': '',
+    },
     'user_environment': {
         'default_app': 'classic',
     },
+    'services': {
+        'cull': {
+            'enabled': True,
+            'timeout': 600,
+            'every': 60,
+            'concurrency': 5,
+            'users': False,
+            'max_age': 0
+        }
+    }
 }
-
 
 def load_config(config_file=CONFIG_FILE):
     """Load the current config as a dictionary
@@ -59,10 +76,14 @@ def load_config(config_file=CONFIG_FILE):
     """
     if os.path.exists(config_file):
         with open(config_file) as f:
-            config_overrides = yaml.safe_load(f)
+            config_overrides = yaml.load(f)
     else:
         config_overrides = {}
-    return _merge_dictionaries(dict(default), config_overrides)
+
+    secrets = load_secrets()
+    config = _merge_dictionaries(dict(default), secrets)
+    config = _merge_dictionaries(config, config_overrides)
+    return config
 
 
 def apply_config(config_overrides, c):
@@ -73,9 +94,12 @@ def apply_config(config_overrides, c):
 
     update_auth(c, tljh_config)
     update_userlists(c, tljh_config)
+    update_usergroups(c, tljh_config)
     update_limits(c, tljh_config)
     update_user_environment(c, tljh_config)
     update_user_account_config(c, tljh_config)
+    update_traefik_api(c, tljh_config)
+    update_services(c, tljh_config)
 
 
 def set_if_not_none(parent, key, value):
@@ -84,6 +108,30 @@ def set_if_not_none(parent, key, value):
     """
     if value is not None:
         setattr(parent, key, value)
+
+
+def load_traefik_api_credentials():
+    """Load traefik api secret from a file"""
+    proxy_secret_path = os.path.join(STATE_DIR, 'traefik-api.secret')
+    if not os.path.exists(proxy_secret_path):
+        return {}
+    with open(proxy_secret_path,'r') as f:
+        password = f.read()
+    return {
+        'traefik_api': {
+            'password': password,
+        }
+    }
+
+
+def load_secrets():
+    """Load any secret values stored on disk
+
+    Returns dict to be merged into config during load
+    """
+    config = {}
+    config = _merge_dictionaries(config, load_traefik_api_credentials())
+    return config
 
 
 def update_auth(c, config):
@@ -122,14 +170,22 @@ def update_userlists(c, config):
     c.Authenticator.admin_users = set(users['admin'])
 
 
+def update_usergroups(c, config):
+    """
+    Set user groups
+    """
+    users = config['users']
+    c.UserCreatingSpawner.user_groups = users['extra_user_groups']
+
+
 def update_limits(c, config):
     """
     Set user server limits
     """
     limits = config['limits']
 
-    c.SystemdSpawner.mem_limit = limits['memory']
-    c.SystemdSpawner.cpu_limit = limits['cpu']
+    c.Spawner.mem_limit = limits['memory']
+    c.Spawner.cpu_limit = limits['cpu']
 
 
 def update_user_environment(c, config):
@@ -147,6 +203,46 @@ def update_user_environment(c, config):
 
 def update_user_account_config(c, config):
     c.SystemdSpawner.username_template = 'jupyter-{USERNAME}'
+
+
+def update_traefik_api(c, config):
+    """
+    Set traefik api endpoint credentials
+    """
+    c.TraefikTomlProxy.traefik_api_username = config['traefik_api']['username']
+    c.TraefikTomlProxy.traefik_api_password = config['traefik_api']['password']
+
+
+def set_cull_idle_service(config):
+    """
+    Set Idle Culler service
+    """
+    cull_cmd = [
+       sys.executable, '-m', 'tljh.cull_idle_servers'
+    ]
+    cull_config = config['services']['cull']
+    print()
+
+    cull_cmd += ['--timeout=%d' % cull_config['timeout']]
+    cull_cmd += ['--cull-every=%d' % cull_config['every']]
+    cull_cmd += ['--concurrency=%d' % cull_config['concurrency']]
+    cull_cmd += ['--max-age=%d' % cull_config['max_age']]
+    if cull_config['users']:
+        cull_cmd += ['--cull-users']
+
+    cull_service = {
+        'name': 'cull-idle',
+        'admin': True,
+        'command': cull_cmd,
+    }
+
+    return cull_service
+
+
+def update_services(c, config):
+    c.JupyterHub.services = []
+    if config['services']['cull']['enabled']:
+        c.JupyterHub.services.append(set_cull_idle_service(config))
 
 
 def _merge_dictionaries(a, b, path=None, update=True):

@@ -48,17 +48,24 @@ documentation is transformed into HTML, PDF, and any other output format.
 __ http://sphinx-doc.org/
 __ http://docutils.sourceforge.net/
 
-To build the documentation locally, install Sphinx:
+To build the documentation locally, install the Sphinx dependencies:
 
 .. code-block:: console
 
-     $ pip install Sphinx
+     $ cd docs/
+     $ pip install -r requirements.txt
 
 Then from the ``docs`` directory, build the HTML:
 
 .. code-block:: console
 
      $ make html
+
+If you encounter this error, it's likely that you are running inside a virtual environment.
+
+.. code-block:: console
+
+   Error in "currentmodule" directive:
 
 To get started contributing, you'll want to read the :ref:`reStructuredText
 reference <sphinx:rst-index>`
@@ -134,6 +141,7 @@ The documentation is organized into several categories:
 Writing style
 =============
 
+Typically, documentation is written in second person, referring to the reader as “you”. 
 When using pronouns in reference to a hypothetical person, such as "a user with
 a running notebook", gender neutral pronouns (they/their/them) should be used.
 Instead of:
@@ -198,11 +206,18 @@ Our policy for new features is:
     All new features must have appropriate documentation before they
     can be merged.
 
-Minimizing images
-=================
+Choosing image size
+===================
 
-Optimize image compression where possible. For PNG files, use OptiPNG and
-AdvanceCOMP's ``advpng``:
+When adding images to the documentation, try to keep them as small as possible.
+Larger images make the site load more slowly on browsers, and may make the site
+inaccessible for people with a slow internet connection.
+
+If you're adding screenshots, make the size of your shot as small as possible.
+If you're uploading large images, consider using an image optimizer in order
+to reduce its size.
+
+For example, for PNG files, use OptiPNG and AdvanceCOMP's ``advpng``:
 
 .. code-block:: console
 

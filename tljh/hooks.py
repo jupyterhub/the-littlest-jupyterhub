@@ -22,6 +22,12 @@ def tljh_extra_user_pip_packages():
     """
     pass
 
+@hookspec
+def tljh_extra_hub_pip_packages():
+    """
+    Return list of extra pip packages to install in the hub environment.
+    """
+    pass
 
 @hookspec
 def tljh_extra_apt_packages():
@@ -32,6 +38,15 @@ def tljh_extra_apt_packages():
     """
     pass
 
+@hookspec
+def tljh_custom_jupyterhub_config(c):
+    """
+    Provide custom traitlet based config to JupyterHub.
+
+    Anything you can put in `jupyterhub_config.py` can
+    be here.
+    """
+    pass
 
 @hookspec
 def tljh_config_post_install(config):
@@ -42,5 +57,15 @@ def tljh_config_post_install(config):
     in-place. The contents of the on-disk config.yaml will
     be the serialized contents of config, so try to not
     overwrite anything the user might have explicitly set.
+    """
+    pass
+
+@hookspec
+def tljh_post_install():
+    """
+    Post install script to be executed after installation
+    and after all the other hooks.
+
+    This can be arbitrary Python code.
     """
     pass

@@ -13,14 +13,17 @@ tljh-config show firstlevel.second_level
 """
 
 import argparse
+import asyncio
+from collections.abc import Sequence, Mapping
 from copy import deepcopy
 import os
 import re
 import sys
+import time
 
-from ruamel.yaml import YAML
-from ruamel.yaml.comments import CommentedMap, CommentedSeq
-yaml = YAML(typ='rt')
+import requests
+
+from .yaml import yaml
 
 
 INSTALL_PREFIX = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
@@ -58,6 +61,50 @@ def set_item_in_config(config, property_path, value):
 
     return config_copy
 
+def unset_item_from_config(config, property_path):
+    """
+    Unset key at property_path in config & return new config.
+
+    config is not mutated.
+
+    property_path is a series of dot separated values.
+    """
+    path_components = property_path.split('.')
+
+    # Mutate a copy of the config, not config itself
+    cur_part = config_copy = deepcopy(config)
+
+    def remove_empty_configs(configuration, path):
+        """
+        Delete the keys that hold an empty dict.
+
+        This might happen when we delete a config property
+        that has no siblings from a multi-level config.
+        """
+        if not path:
+            return configuration
+        conf_iter = configuration
+        for cur_path in path:
+            if conf_iter[cur_path] == {}:
+                del conf_iter[cur_path]
+                remove_empty_configs(configuration, path[:-1])
+            else:
+                conf_iter = conf_iter[cur_path]
+
+    for i, cur_path in enumerate(path_components):
+        if i == len(path_components) - 1:
+            if cur_path not in cur_part:
+                raise ValueError(f'{property_path} does not exist in config!')
+            del cur_part[cur_path]
+            remove_empty_configs(config_copy, path_components[:-1])
+            break
+        else:
+            if cur_path not in cur_part:
+                raise ValueError(f'{property_path} does not exist in config!')
+            cur_part = cur_part[cur_path]
+
+    return config_copy
+
 def add_item_to_config(config, property_path, value):
     """
     Add an item to a list in config.
@@ -86,7 +133,7 @@ def add_item_to_config(config, property_path, value):
 
 def remove_item_from_config(config, property_path, value):
     """
-    Add an item to a list in config.
+    Remove an item from a list in config.
     """
     path_components = property_path.split('.')
 
@@ -94,7 +141,7 @@ def remove_item_from_config(config, property_path, value):
     cur_part = config_copy = deepcopy(config)
     for i, cur_path in enumerate(path_components):
         if i == len(path_components) - 1:
-            # Final component, it must be a list and we append to it
+            # Final component, it must be a list and we delete from it
             if cur_path not in cur_part or not _is_list(cur_part[cur_path]):
                 raise ValueError(f'{property_path} is not a list')
             cur_part = cur_part[cur_path]
@@ -138,6 +185,24 @@ def set_config_value(config_path, key_path, value):
         yaml.dump(config, f)
 
 
+def unset_config_value(config_path, key_path):
+    """
+    Unset key at key_path in config_path
+    """
+    # FIXME: Have a file lock here
+    # FIXME: Validate schema here
+    try:
+        with open(config_path) as f:
+            config = yaml.load(f)
+    except FileNotFoundError:
+        config = {}
+
+    config = unset_item_from_config(config, key_path)
+
+    with open(config_path, 'w') as f:
+        yaml.dump(config, f)
+
+
 def add_config_value(config_path, key_path, value):
     """
     Add value to list at key_path
@@ -173,6 +238,12 @@ def remove_config_value(config_path, key_path, value):
     with open(config_path, 'w') as f:
         yaml.dump(config, f)
 
+def check_hub_ready():
+    try:
+        r = requests.get('http://127.0.0.1:80', verify=False)
+        return r.status_code == 200
+    except:
+        return False
 
 def reload_component(component):
     """
@@ -182,14 +253,20 @@ def reload_component(component):
     """
     # import here to avoid circular imports
     from tljh import systemd, traefik
+
     if component == 'hub':
         systemd.restart_service('jupyterhub')
-        # FIXME: Verify hub is back up?
+        # Ensure hub is back up
+        while not systemd.check_service_active('jupyterhub'):
+            time.sleep(1)
+        while not check_hub_ready():
+            time.sleep(1)
         print('Hub reload with new configuration complete')
     elif component == 'proxy':
         traefik.ensure_traefik_config(STATE_DIR)
-        systemd.restart_service('configurable-http-proxy')
         systemd.restart_service('traefik')
+        while not systemd.check_service_active('traefik'):
+            time.sleep(1)
         print('Proxy reload with new configuration complete')
 
 
@@ -211,19 +288,26 @@ def parse_value(value_str):
 
 
 def _is_dict(item):
-    return isinstance(item, (dict, CommentedMap))
+    return isinstance(item, Mapping)
 
 
 def _is_list(item):
-    return isinstance(item, (list, CommentedSeq))
+    return isinstance(item, Sequence)
 
 
 def main(argv=None):
+    if os.geteuid() != 0:
+        print("It looks like this command wasn't run with root privileges. Perhaps you didn't use `sudo -E`?")
+
     if argv is None:
         argv = sys.argv[1:]
 
     from .log import init_logging
-    init_logging()
+    try:
+        init_logging()
+    except Exception as e:
+        print(str(e))
+        print("Perhaps you didn't use `sudo -E`?")
 
     argparser = argparse.ArgumentParser()
     argparser.add_argument(
@@ -236,6 +320,15 @@ def main(argv=None):
     show_parser = subparsers.add_parser(
         'show',
         help='Show current configuration'
+    )
+
+    unset_parser = subparsers.add_parser(
+        'unset',
+        help='Unset a configuration property'
+    )
+    unset_parser.add_argument(
+        'key_path',
+        help='Dot separated path to configuration key to unset'
     )
 
     set_parser = subparsers.add_parser(
@@ -295,6 +388,8 @@ def main(argv=None):
         show_config(args.config_path)
     elif args.action == 'set':
         set_config_value(args.config_path, args.key_path, parse_value(args.value))
+    elif args.action == 'unset':
+        unset_config_value(args.config_path, args.key_path)
     elif args.action == 'add-item':
         add_config_value(args.config_path, args.key_path, parse_value(args.value))
     elif args.action == 'remove-item':

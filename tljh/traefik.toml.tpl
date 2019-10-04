@@ -33,7 +33,6 @@ idleTimeout = "10m0s"
   {% if https['enabled'] %}
   [entryPoints.https]
   address = ":{{https['port']}}"
-  backend = "jupyterhub"
   [entryPoints.https.tls]
   {% if https['tls']['cert'] %}
     [[entryPoints.https.tls.certificates]]
@@ -41,6 +40,19 @@ idleTimeout = "10m0s"
       keyFile = "{{https['tls']['key']}}"
   {% endif %}
   {% endif %}
+  [entryPoints.auth_api]
+  address = "127.0.0.1:{{traefik_api['port']}}"
+  [entryPoints.auth_api.whiteList]
+  sourceRange = ['{{traefik_api['ip']}}']
+  [entryPoints.auth_api.auth.basic]
+  users = ['{{ traefik_api['basic_auth'] }}']
+
+[wss]
+protocol = "http"
+
+[api]
+dashboard = true
+entrypoint = "auth_api"
 
 {% if https['enabled'] and https['letsencrypt']['email'] %}
 [acme]
@@ -57,13 +69,5 @@ entryPoint = "https"
 {% endif %}
 
 [file]
-
-[frontends]
-  [frontends.jupyterhub]
-  backend = "jupyterhub"
-  passHostHeader = true
-[backends]
-  [backends.jupyterhub]
-    [backends.jupyterhub.servers.chp]
-    url = "http://127.0.0.1:15003"
-
+filename = "rules.toml"
+watch = true

@@ -6,7 +6,7 @@ The Littlest JupyterHub
    :target: https://circleci.com/gh/jupyterhub/the-littlest-jupyterhub
 .. image:: https://codecov.io/gh/jupyterhub/the-littlest-jupyterhub/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/jupyterhub/the-littlest-jupyterhub
-.. image:: https://media.readthedocs.org/static/projects/badges/passing-flat.svg
+.. image:: https://readthedocs.org/projects/the-littlest-jupyterhub/badge/?version=latest
    :target: https://the-littlest-jupyterhub.readthedocs.io
 .. image:: https://badges.gitter.im/jupyterhub/jupyterhub.svg
    :target: https://gitter.im/jupyterhub/jupyterhub
@@ -16,10 +16,8 @@ to 1-50 users on a single server.
 
 Administrators who do not consider themselves 'system administrators' but would
 like to provide hosted Jupyter Notebooks for their students / users are the
-primary audience. All users get the same environment, and administrators can
-install libraries into this environment without any specialized knowledge.
-It provides all users with the same environment, and administrators can install
-libraries into this environment easily without any specialized knowledge.
+primary audience. All users are provided with the same environment, and administrators
+can easily install libraries into this environment without any specialized knowledge.
 
 See `this blog post <http://words.yuvi.in/post/the-littlest-jupyterhub/>`_ for
 more information.
@@ -27,24 +25,27 @@ more information.
 Development Status
 ==================
 
-This project is currently in **alpha** state. Most things work, but we might
-still make breaking changes that have no clear upgrade pathway. We are targeting
-a v0.1 release sometime in mid-August 2018. Follow `this milestone <https://github.com/jupyterhub/the-littlest-jupyterhub/milestone/1>`_
-to see progress towards the release!
+This project is currently in **beta** state. Folks have been using installations
+of TLJH for more than a year now to great success. While we try hard not to, we
+might still make breaking changes that have no clear upgrade pathway.
 
 Installation
 ============
 
 The Littlest JupyterHub (TLJH) can run on any server that is running at least
-Ubuntu 18.04. We have a bunch of tutorials to get you started!
+**Ubuntu 18.04**. Earlier versions of Ubuntu are not supported.
+We have a bunch of tutorials to get you started.
 
 - Tutorials to create a new server from scratch on a cloud provider & run TLJH
   on it. These are **recommended** if you do not have much experience setting up
   servers.
 
   - `Digital Ocean <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/digitalocean.html>`_
+  - `OVH <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/ovh.html>`_
   - `Google Cloud <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/google.html>`_
   - `Jetstream <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/jetstream.html>`_
+  - `Amazon Web Services <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/amazon.html>`_
+  - `Microsoft Azure <https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/azure.html>`_
   - ... your favorite provider here, if you can contribute!
 
 - `Tutorial to install TLJH on an already running server you have root access to

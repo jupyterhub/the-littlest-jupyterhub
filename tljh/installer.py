@@ -8,11 +8,11 @@ import secrets
 import subprocess
 import sys
 import time
-from urllib.error import HTTPError
-from urllib.request import urlopen, URLError
+import warnings
 
 import pluggy
-from ruamel.yaml import YAML
+import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 from tljh import (
     apt,
@@ -22,9 +22,9 @@ from tljh import (
     systemd,
     traefik,
     user,
+    utils
 )
-
-from tljh.config import (
+from .config import (
     CONFIG_DIR,
     CONFIG_FILE,
     HUB_ENV_PREFIX,
@@ -32,12 +32,11 @@ from tljh.config import (
     STATE_DIR,
     USER_ENV_PREFIX,
 )
+from .yaml import yaml
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
-rt_yaml = YAML()
-
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("tljh")
 
 def ensure_node():
     """
@@ -98,18 +97,28 @@ sckuXINIU3DFWzZGr0QrqkuE/jyr7FXeUJj9B7cLo+s/TXo+RaVfi3kOc9BoxIvy
 -----END PGP PUBLIC KEY BLOCK-----
     """.strip()
     apt.trust_gpg_key(key)
-    apt.add_source('nodesource', 'https://deb.nodesource.com/node_8.x', 'main')
+    apt.add_source('nodesource', 'https://deb.nodesource.com/node_10.x', 'main')
     apt.install_packages(['nodejs'])
 
-
-def ensure_chp_package(prefix):
+def remove_chp():
     """
-    Ensure CHP is installed
+    Ensure CHP is not running
     """
-    if not os.path.exists(os.path.join(prefix, 'node_modules', '.bin', 'configurable-http-proxy')):
-        subprocess.check_output([
-            'npm', 'install', 'configurable-http-proxy@3.1.0'
-        ], cwd=prefix, stderr=subprocess.STDOUT)
+    if os.path.exists("/etc/systemd/system/configurable-http-proxy.service"):
+        if systemd.check_service_active('configurable-http-proxy.service'):
+            try:
+                systemd.stop_service('configurable-http-proxy.service')
+            except subprocess.CalledProcessError:
+                logger.info("Cannot stop configurable-http-proxy...")
+        if systemd.check_service_enabled('configurable-http-proxy.service'):
+            try:
+                systemd.disable_service('configurable-http-proxy.service')
+            except subprocess.CalledProcessError:
+                logger.info("Cannot disable configurable-http-proxy...")
+        try:
+            systemd.uninstall_unit('configurable-http-proxy.service')
+        except subprocess.CalledProcessError:
+            logger.info("Cannot uninstall configurable-http-proxy...")
 
 
 def ensure_jupyterhub_service(prefix):
@@ -119,14 +128,21 @@ def ensure_jupyterhub_service(prefix):
 
     os.makedirs(STATE_DIR, mode=0o700, exist_ok=True)
 
+    remove_chp()
+    systemd.reload_daemon()
+
     with open(os.path.join(HERE, 'systemd-units', 'jupyterhub.service')) as f:
         hub_unit_template = f.read()
 
-    with open(os.path.join(HERE, 'systemd-units', 'configurable-http-proxy.service')) as f:
-        proxy_unit_template = f.read()
 
     with open(os.path.join(HERE, 'systemd-units', 'traefik.service')) as f:
         traefik_unit_template = f.read()
+
+    #Set up proxy / hub secret token if it is not already setup
+    proxy_secret_path = os.path.join(STATE_DIR, 'traefik-api.secret')
+    if not os.path.exists(proxy_secret_path):
+        with open(proxy_secret_path, 'w') as f:
+            f.write(secrets.token_hex(32))
 
     traefik.ensure_traefik_config(STATE_DIR)
 
@@ -135,28 +151,16 @@ def ensure_jupyterhub_service(prefix):
         jupyterhub_config_path=os.path.join(HERE, 'jupyterhub_config.py'),
         install_prefix=INSTALL_PREFIX,
     )
-    systemd.install_unit('configurable-http-proxy.service', proxy_unit_template.format(**unit_params))
     systemd.install_unit('jupyterhub.service', hub_unit_template.format(**unit_params))
     systemd.install_unit('traefik.service', traefik_unit_template.format(**unit_params))
     systemd.reload_daemon()
 
-    # Set up proxy / hub secret oken if it is not already setup
-    proxy_secret_path = os.path.join(STATE_DIR, 'configurable-http-proxy.secret')
-    if not os.path.exists(proxy_secret_path):
-        with open(proxy_secret_path, 'w') as f:
-            f.write('CONFIGPROXY_AUTH_TOKEN=' + secrets.token_hex(32))
-        # If we are changing CONFIGPROXY_AUTH_TOKEN, restart configurable-http-proxy!
-        systemd.restart_service('configurable-http-proxy')
-
-    # Start CHP if it has already not been started
-    systemd.start_service('configurable-http-proxy')
     # If JupyterHub is running, we want to restart it.
     systemd.restart_service('jupyterhub')
     systemd.restart_service('traefik')
 
-    # Mark JupyterHub & CHP to start at boot time
+    # Mark JupyterHub & traefik to start at boot time
     systemd.enable_service('jupyterhub')
-    systemd.enable_service('configurable-http-proxy')
     systemd.enable_service('traefik')
 
 
@@ -165,9 +169,10 @@ def ensure_jupyterlab_extensions():
     Install the JupyterLab extensions we want.
     """
     extensions = [
-        '@jupyterlab/hub-extension'
+        '@jupyterlab/hub-extension',
+        '@jupyter-widgets/jupyterlab-manager'
     ]
-    subprocess.check_output([
+    utils.run_subprocess([
         os.path.join(USER_ENV_PREFIX, 'bin/jupyter'),
         'labextension',
         'install'
@@ -184,13 +189,27 @@ def ensure_jupyterhub_package(prefix):
     hub environment be installed with pip prevents accidental mixing of python
     and conda packages!
     """
+    # Install pycurl. JupyterHub prefers pycurl over SimpleHTTPClient automatically
+    # pycurl is generally more bugfree - see https://github.com/jupyterhub/the-littlest-jupyterhub/issues/289
+    # build-essential is also generally useful to everyone involved, and required for pycurl
+    apt.install_packages([
+        'libssl-dev',
+        'libcurl4-openssl-dev',
+        'build-essential'
+    ])
     conda.ensure_pip_packages(prefix, [
-        'jupyterhub==0.9.2',
+        'pycurl==7.43.*'
+    ])
+
+    conda.ensure_pip_packages(prefix, [
+        'jupyterhub==1.0.0',
         'jupyterhub-dummyauthenticator==0.3.1',
-        'jupyterhub-systemdspawner==0.11',
-        'jupyterhub-firstuseauthenticator==0.11',
+        'jupyterhub-systemdspawner==0.13',
+        'jupyterhub-firstuseauthenticator==0.12',
+        'jupyterhub-nativeauthenticator==0.0.4',
         'jupyterhub-ldapauthenticator==1.2.2',
-        'oauthenticator==0.8.0',
+        'jupyterhub-tmpauthenticator==0.6',
+        'oauthenticator==0.8.2',
     ])
     traefik.ensure_traefik_binary(prefix)
 
@@ -225,11 +244,6 @@ def ensure_user_environment(user_requirements_txt_file):
         with conda.download_miniconda_installer(miniconda_version, miniconda_installer_md5) as installer_path:
             conda.install_miniconda(installer_path, USER_ENV_PREFIX)
 
-    # nbresuse needs psutil, which requires gcc
-    apt.install_packages([
-        'gcc'
-    ])
-
     conda.ensure_conda_packages(USER_ENV_PREFIX, [
         # Conda's latest version is on conda much more so than on PyPI.
         'conda==4.5.8'
@@ -237,15 +251,19 @@ def ensure_user_environment(user_requirements_txt_file):
 
     conda.ensure_pip_packages(USER_ENV_PREFIX, [
         # JupyterHub + notebook package are base requirements for user environment
-        'jupyterhub==0.9.2',
-        'notebook==5.6.0',
+        'jupyterhub==1.0.0',
+        'notebook==5.7.8',
         # Install additional notebook frontends!
-        'jupyterlab==0.34.1',
-        'nteract-on-jupyter==1.8.1',
+        'jupyterlab==0.35.4',
+        'nteract-on-jupyter==2.0.7',
         # nbgitpuller for easily pulling in Git repositories
         'nbgitpuller==0.6.1',
         # nbresuse to show people how much RAM they are using
-        'nbresuse==0.3.0'
+        'nbresuse==0.3.0',
+        # Most people consider ipywidgets to be part of the core notebook experience
+        'ipywidgets==7.4.2',
+        # Pin tornado
+        'tornado<6.0',
     ])
 
     if user_requirements_txt_file:
@@ -263,18 +281,20 @@ def ensure_admins(admins):
     config_path = CONFIG_FILE
     if os.path.exists(config_path):
         with open(config_path, 'r') as f:
-            config = rt_yaml.load(f)
+            config = yaml.load(f)
     else:
         config = {}
 
     config['users'] = config.get('users', {})
-    config['users']['admin'] = list(admins)
+    # Flatten admin lists
+    config['users']['admin'] = [admin for admin_sublist in admins
+        for admin in admin_sublist]
 
     with open(config_path, 'w+') as f:
-        rt_yaml.dump(config, f)
+        yaml.dump(config, f)
 
 
-def ensure_jupyterhub_running(times=4):
+def ensure_jupyterhub_running(times=20):
     """
     Ensure that JupyterHub is up and running
 
@@ -284,20 +304,24 @@ def ensure_jupyterhub_running(times=4):
     for i in range(times):
         try:
             logger.info('Waiting for JupyterHub to come up ({}/{} tries)'.format(i + 1, times))
-            urlopen('http://127.0.0.1')
+            # Because we don't care at this level that SSL is valid, we can suppress
+            # InsecureRequestWarning for this request.
+            with warnings.catch_warnings():
+                warnings.filterwarnings("ignore", category=InsecureRequestWarning)
+                requests.get('http://127.0.0.1', verify=False)
             return
-        except HTTPError as h:
-            if h.code in [404, 502, 503]:
+        except requests.HTTPError as h:
+            if h.response.status_code in [404, 502, 503]:
                 # May be transient
                 time.sleep(1)
                 continue
             # Everything else should immediately abort
             raise
-        except URLError as e:
-            if isinstance(e.reason, ConnectionRefusedError):
+        except requests.ConnectionError:
                 # Hub isn't up yet, sleep & loop
                 time.sleep(1)
                 continue
+        except Exception:
             # Everything else should immediately abort
             raise
 
@@ -359,21 +383,32 @@ def run_plugin_actions(plugin_manager, plugins):
         ))
         apt.install_packages(apt_packages)
 
+    # Install hub pip packages
+    hub_pip_packages = list(set(itertools.chain(*hook.tljh_extra_hub_pip_packages())))
+    if hub_pip_packages:
+        logger.info('Installing {} hub pip packages collected from plugins: {}'.format(
+            len(hub_pip_packages), ' '.join(hub_pip_packages)
+        ))
+        conda.ensure_pip_packages(HUB_ENV_PREFIX, hub_pip_packages)
+
     # Install conda packages
     conda_packages = list(set(itertools.chain(*hook.tljh_extra_user_conda_packages())))
     if conda_packages:
-        logger.info('Installing {} conda packages collected from plugins: {}'.format(
+        logger.info('Installing {} user conda packages collected from plugins: {}'.format(
             len(conda_packages), ' '.join(conda_packages)
         ))
         conda.ensure_conda_packages(USER_ENV_PREFIX, conda_packages)
 
     # Install pip packages
-    pip_packages = list(set(itertools.chain(*hook.tljh_extra_user_pip_packages())))
-    if pip_packages:
-        logger.info('Installing {} pip packages collected from plugins: {}'.format(
-            len(pip_packages), ' '.join(pip_packages)
+    user_pip_packages = list(set(itertools.chain(*hook.tljh_extra_user_pip_packages())))
+    if user_pip_packages:
+        logger.info('Installing {} user pip packages collected from plugins: {}'.format(
+            len(user_pip_packages), ' '.join(user_pip_packages)
         ))
-        conda.ensure_pip_packages(USER_ENV_PREFIX, pip_packages)
+        conda.ensure_pip_packages(USER_ENV_PREFIX, user_pip_packages)
+
+    # Custom post install actions
+    hook.tljh_post_install()
 
 
 def ensure_config_yaml(plugin_manager):
@@ -388,7 +423,7 @@ def ensure_config_yaml(plugin_manager):
 
     if os.path.exists(CONFIG_FILE):
         with open(CONFIG_FILE, 'r') as f:
-            config = rt_yaml.load(f)
+            config = yaml.load(f)
     else:
         config = {}
 
@@ -396,7 +431,7 @@ def ensure_config_yaml(plugin_manager):
     hook.tljh_config_post_install(config=config)
 
     with open(CONFIG_FILE, 'w+') as f:
-        rt_yaml.dump(config, f)
+        yaml.dump(config, f)
 
 
 def main():
@@ -407,6 +442,7 @@ def main():
     argparser.add_argument(
         '--admin',
         nargs='*',
+        action='append',
         help='List of usernames set to be admin'
     )
     argparser.add_argument(
@@ -431,7 +467,6 @@ def main():
     logger.info("Setting up JupyterHub...")
     ensure_node()
     ensure_jupyterhub_package(HUB_ENV_PREFIX)
-    ensure_chp_package(HUB_ENV_PREFIX)
     ensure_jupyterlab_extensions()
     ensure_jupyterhub_service(HUB_ENV_PREFIX)
     ensure_jupyterhub_running()

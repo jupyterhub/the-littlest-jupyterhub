@@ -1,19 +1,21 @@
 """Traefik installation and setup"""
 import hashlib
 import os
-from urllib.request import urlretrieve
 
 from jinja2 import Template
+from passlib.apache import HtpasswdFile
+import backoff
+import requests
 
 from tljh.configurer import load_config
 
 # FIXME: support more than one platform here
 plat = "linux-amd64"
-traefik_version = "1.6.5"
+traefik_version = "1.7.18"
 
 # record sha256 hashes for supported platforms here
 checksums = {
-    "linux-amd64": "9e77c7664e316953e3f5463c323dffeeecbb35d0b1db7fb49f52e1d9464ca193"
+    "linux-amd64": "3c2d153d80890b6fc8875af9f8ced32c4d684e1eb5a46d9815337cb343dfd92e"
 }
 
 
@@ -25,7 +27,16 @@ def checksum_file(path):
             hasher.update(chunk)
     return hasher.hexdigest()
 
+def fatal_error(e):
+    # Retry only when connection is reset or we think we didn't download entire file
+    return str(e) != "ContentTooShort" and not isinstance(e, ConnectionResetError)
 
+@backoff.on_exception(
+    backoff.expo,
+    Exception,
+    max_tries=2,
+    giveup=fatal_error
+)
 def ensure_traefik_binary(prefix):
     """Download and install the traefik binary"""
     traefik_bin = os.path.join(prefix, "bin", "traefik")
@@ -46,7 +57,11 @@ def ensure_traefik_binary(prefix):
     )
     print(f"Downloading traefik {traefik_version}...")
     # download the file
-    urlretrieve(traefik_url, traefik_bin)
+    response = requests.get(traefik_url)
+    if response.status_code == 206:
+        raise Exception("ContentTooShort")
+    with open(traefik_bin, 'wb') as f:
+        f.write(response.content)
     os.chmod(traefik_bin, 0o755)
 
     # verify that we got what we expected
@@ -55,9 +70,23 @@ def ensure_traefik_binary(prefix):
         raise IOError(f"Checksum failed {traefik_bin}: {checksum} != {checksums[plat]}")
 
 
+def compute_basic_auth(username, password):
+    """Generate hashed HTTP basic auth from traefik_api username+password"""
+    ht = HtpasswdFile()
+    # generate htpassword
+    ht.set_password(username, password)
+    hashed_password = str(ht.to_string()).split(":")[1][:-3]
+    return username + ":" + hashed_password
+
+
 def ensure_traefik_config(state_dir):
     """Render the traefik.toml config file"""
     config = load_config()
+    config['traefik_api']['basic_auth'] = compute_basic_auth(
+        config['traefik_api']['username'],
+        config['traefik_api']['password'],
+    )
+
     with open(os.path.join(os.path.dirname(__file__), "traefik.toml.tpl")) as f:
         template = Template(f.read())
     new_toml = template.render(config)
@@ -75,8 +104,11 @@ def ensure_traefik_config(state_dir):
         ):
             raise ValueError("Both email and domains must be set for letsencrypt")
     with open(os.path.join(state_dir, "traefik.toml"), "w") as f:
-        os.fchmod(f.fileno(), 0o744)
+        os.fchmod(f.fileno(), 0o600)
         f.write(new_toml)
+
+    with open(os.path.join(state_dir, "rules.toml"), "w") as f:
+        os.fchmod(f.fileno(), 0o600)
 
     # ensure acme.json exists and is private
     with open(os.path.join(state_dir, "acme.json"), "a") as f:

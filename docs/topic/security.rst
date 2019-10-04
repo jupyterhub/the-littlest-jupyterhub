@@ -2,9 +2,9 @@
 Security Considerations
 =======================
 
-The Littlest JupyterHub is in pre-alpha state & should not be used in
-security critical situations. We will try to keep things as secure as possible,
-but sometimes trade security for massive gains in convenience. This page contains
+The Littlest JupyterHub is in beta state & should not be used in security
+critical situations. We will try to keep things as secure as possible, but
+sometimes trade security for massive gains in convenience. This page contains
 information about the security model of The Littlest JupyterHub.
 
 System user accounts

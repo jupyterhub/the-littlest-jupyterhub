@@ -51,8 +51,8 @@ By default, ``sudo`` does not respect any custom environments you have activated
 ``tljh-config`` symlink
 ========================
 
-We create a symlink from ``/usr/bin/tljh-config`` to ``/opt/tljh/hub/bin/tljh-cohnfig``, so users
-can run ``sudo tljh-config <somethihng>`` from their terminal. While the user environment is added
+We create a symlink from ``/usr/bin/tljh-config`` to ``/opt/tljh/hub/bin/tljh-config``, so users
+can run ``sudo tljh-config <something>`` from their terminal. While the user environment is added
 to users' ``$PATH`` when they launch through JupyterHub, the hub environment is not. This makes it
 hard to access the ``tljh-config`` command used to change most config parameters. Hence we symlink the
 ``tljh-config`` command to ``/usr/local/bin``, so it is directly accessible with ``sudo tljh-config <command>``.

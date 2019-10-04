@@ -69,7 +69,7 @@ Let's create the server on which we can run JupyterHub.
 #. For **Zone**, pick any of the options. Leaving the default as is is fine.
 
 #. Under **Machine** type, select the amount of CPU / RAM / GPU you want for your
-   server.
+   server. You need at least **768MB** of RAM.
 
    You can select a preset combination in the default **basic view**.
 
@@ -136,7 +136,7 @@ Let's create the server on which we can run JupyterHub.
 
    This displays a lot of advanced options, but we'll be only using one of them.
 
-#. Copy the text below, and paste it into the **Starup script** text box. Replace
+#. Copy the text below, and paste it into the **Startup script** text box. Replace
    ``<admin-user-name>`` with the name of the first **admin user** for this
    JupyterHub. This admin user can log in after the JupyterHub is set up, and
    can configure it to their needs. **Remember to add your username**!

@@ -58,6 +58,57 @@ def test_set_overwrite():
     assert new_conf == {'a': 'hi'}
 
 
+def test_unset_no_mutate():
+    conf = {'a': 'b'}
+
+    new_conf = config.unset_item_from_config(conf, 'a')
+    assert conf == {'a': 'b'}
+
+
+def test_unset_one_level():
+    conf = {'a': 'b'}
+
+    new_conf = config.unset_item_from_config(conf, 'a')
+    assert new_conf == {}
+
+
+def test_unset_multi_level():
+    conf = {
+        'a': {'b': 'c', 'd': 'e'},
+        'f': 'g'
+    }
+
+    new_conf = config.unset_item_from_config(conf, 'a.b')
+    assert new_conf == {
+        'a': {'d': 'e'},
+        'f': 'g'
+    }
+    new_conf = config.unset_item_from_config(new_conf, 'a.d')
+    assert new_conf == {'f': 'g'}
+    new_conf = config.unset_item_from_config(new_conf, 'f')
+    assert new_conf == {}
+
+
+def test_unset_and_clean_empty_configs():
+    conf = {
+        'a': {'b': {'c': {'d': {'e': 'f'}}}}
+    }
+
+    new_conf = config.unset_item_from_config(conf, 'a.b.c.d.e')
+    assert new_conf == {}
+
+
+def test_unset_config_error():
+    with pytest.raises(ValueError):
+        config.unset_item_from_config({}, 'a')
+
+    with pytest.raises(ValueError):
+        config.unset_item_from_config({'a': 'b'}, 'b')
+
+    with pytest.raises(ValueError):
+        config.unset_item_from_config({'a': {'b': 'c'}}, 'a.z')
+
+
 def test_add_to_config_one_level():
     conf = {}
 
@@ -74,6 +125,7 @@ def test_add_to_config_zero_level():
     assert new_conf == {
         'a': ['b']
     }
+
 
 def test_add_to_config_multiple():
     conf = {}
@@ -116,16 +168,21 @@ def test_remove_from_config_error():
 
 
 def test_reload_hub():
-    with mock.patch('tljh.systemd.restart_service') as restart_service:
+    with mock.patch('tljh.systemd.restart_service') as restart_service, mock.patch(
+        'tljh.systemd.check_service_active'
+    ) as check_active, mock.patch('tljh.config.check_hub_ready') as check_ready:
         config.reload_component('hub')
     assert restart_service.called_with('jupyterhub')
+    assert check_active.called_with('jupyterhub')
 
 
 def test_reload_proxy(tljh_dir):
-    with mock.patch('tljh.systemd.restart_service') as restart_service:
+    with mock.patch("tljh.systemd.restart_service") as restart_service, mock.patch(
+        "tljh.systemd.check_service_active"
+    ) as check_active:
         config.reload_component('proxy')
-    assert restart_service.called_with('configurable-http-proxy')
     assert restart_service.called_with('traefik')
+    assert check_active.called_with('traefik')
     assert os.path.exists(os.path.join(config.STATE_DIR, 'traefik.toml'))
 
 
@@ -140,8 +197,8 @@ def test_cli_no_command(capsys):
     "arg, value",
     [
         ("true", True),
-        ("FALSE", False),
-    ],
+        ("FALSE", False)
+    ]
 )
 def test_cli_set_bool(tljh_dir, arg, value):
     config.main(["set", "https.enabled", arg])
@@ -153,6 +210,18 @@ def test_cli_set_int(tljh_dir):
     config.main(["set", "https.port", "123"])
     cfg = configurer.load_config()
     assert cfg['https']['port'] == 123
+
+
+def test_cli_unset(tljh_dir):
+    config.main(["set", "foo.bar", "1"])
+    config.main(["set", "foo.bar2", "2"])
+    cfg = configurer.load_config()
+    assert cfg['foo'] == {'bar': 1, 'bar2': 2}
+
+    config.main(["unset", "foo.bar"])
+    cfg = configurer.load_config()
+
+    assert cfg['foo'] == {'bar2': 2}
 
 
 def test_cli_add_float(tljh_dir):

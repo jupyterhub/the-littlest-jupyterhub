@@ -12,7 +12,7 @@ from tljh.config import (
 )
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("tljh")
 
 
 def migrate_file(old_path, new_path):

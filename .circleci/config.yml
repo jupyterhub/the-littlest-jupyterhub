@@ -57,7 +57,7 @@ jobs:
             - run:
                 name: setup python3
                 command: |
-                    apk add --no-cache python3
+                    apk add --no-cache python3 pytest
 
             - checkout
             - setup_remote_docker
@@ -78,6 +78,12 @@ jobs:
                     .circleci/integration-test.py run-test \
                         --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
                         plugins test_simplest_plugin.py
+
+            - run:
+                name: Run bootstrap checks
+                command: |
+                    py.test integration-tests/test_bootstrap.py
+
 
 
     documentation:
@@ -122,6 +128,10 @@ jobs:
                 command: |
                     cd docs
                     make html
+
+            - store_artifacts:
+                path: docs/_build/html/
+                destination: html
 
 workflows:
     version: 2

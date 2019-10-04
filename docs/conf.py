@@ -34,7 +34,13 @@ intersphinx_cache_limit = 90 # days
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
-html_theme = 'alabaster'
+import alabaster_jupyterhub
+
+html_theme = 'alabaster_jupyterhub'
+html_theme_path = [alabaster_jupyterhub.get_html_theme_path()]
+
+html_logo = 'images/logo/logo.png'
+html_favicon = 'images/logo/favicon.ico'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -50,6 +56,7 @@ if os.path.exists(os.path.join(here, '_static')):
 html_sidebars = {
     '**': [
         'about.html',
+        'globaltoc.html',
         'relations.html',
         'searchbox.html',
         'donate.html',
@@ -65,5 +72,9 @@ html_theme_options = {
     'github_user': 'jupyterhub',
     'github_repo': 'the-littlest-jupyterhub',
     'github_button': True,
-    'github_banner': True,
+    'github_banner': False,
+    'github_type': 'star',
 }
+
+def setup(app):
+    app.add_stylesheet('custom.css')

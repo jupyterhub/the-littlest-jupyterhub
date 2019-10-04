@@ -11,10 +11,13 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'pyyaml==3.*',
         'ruamel.yaml==0.15.*',
         'jinja2',
-        'pluggy>0.7<1.0'
+        'pluggy>0.7<1.0',
+        'passlib',
+        'backoff',
+        'requests',
+        'jupyterhub-traefik-proxy==0.1.*'
     ],
     entry_points={
         'console_scripts': [
