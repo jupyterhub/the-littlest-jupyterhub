@@ -61,7 +61,8 @@ Let's create the server on which we can run JupyterHub.
 #. On the page **Step 1: Choose an Amazon Machine Image (AMI)** you are going 
    to pick the base image your remote server will have. The view will 
    default to the 'Quick-start' tab selected and just a few down the page, select 
-   **Ubuntu Server 18.04 LTS (HVM), SSD Volume Type - ami-XXXXXXXXXXXXXXXXX**.
+   **Ubuntu Server 18.04 LTS (HVM), SSD Volume Type - ami-XXXXXXXXXXXXXXXXX**, 
+   leaving `64-bit (x86)` toggled.
    
    .. image:: ../images/providers/amazon/select_ubuntu_18.png
       :alt: Click Ubuntu server 18.04
