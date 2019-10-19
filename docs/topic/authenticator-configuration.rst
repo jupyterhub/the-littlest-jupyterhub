@@ -16,6 +16,8 @@ can be used with TLJH. A number of them ship by default with TLJH:
    available.
 #. `FirstUseAuthenticator <https://github.com/yuvipanda/jupyterhub-firstuseauthenticator>`_ - Users set
    their password when they log in for the first time. Default authenticator used in TLJH.
+#. `TmpAuthenticator <https://github.com/jupyterhub/tmpauthenticator>`_ - Opens the JupyterHub to the
+   world, makes a new user every time someone logs in.
 #. `NativeAuthenticator <https://native-authenticator.readthedocs.io/en/latest/>`_ - Allow users to signup, add password security verification and block users after failed attempts oflogin. 
 
 We try to have specific how-to guides & tutorials for common authenticators. Since we can not cover
@@ -48,7 +50,7 @@ to some value, you can do that with the following command:
 
 .. code-block:: bash
 
-   sudo tljh-config set auth.LDAPAuthenticator.server_address = 'my-ldap-server'
+   sudo tljh-config set auth.LDAPAuthenticator.server_address 'my-ldap-server'
 
 Most authenticators require you set multiple configuration options before you can
 enable them. Read the authenticator's documentation carefully for more information.

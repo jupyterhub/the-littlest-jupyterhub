@@ -22,8 +22,8 @@ You can run ``tljh-config`` in two ways:
 .. _tljh-set:
 
 
-Set a configuration property
-============================
+Set / Unset a configuration property
+====================================
 
 TLJH's configuration is organized in a nested tree structure. You can
 set a particular property with the following command:
@@ -50,6 +50,17 @@ do so with the following:
 
 This can only set string and numerical properties, not lists.
 
+To unset a configuration property you can use the following command:
+
+.. code-block:: bash
+
+   sudo tljh-config unset <property-path>
+
+Unsetting a configuration property removes the property from the configuration
+file. If what you want is only to change the property's value, you should use
+``set`` and overwrite it with the desired value.
+
+
 Some of the existing ``<property-path>`` are listed below by categories:
 
 
@@ -61,6 +72,23 @@ Authentication
     Use ``auth.type`` to determine authenticator to use. All parameters
     in the config under ``auth.{auth.type}`` will be passed straight to the
     authenticators themselves.
+    
+.. _tljh-set-ports:
+
+Ports
+-----
+
+  Use ``http.port`` and ``https.port`` to set the ports that TLJH will listen on, 
+  which are 80 and 443 by default. However, if you change these, note that 
+  TLJH does a lot of other things to the system (with user accounts and sudo
+  rules primarily) that might break security assumptions your other 
+  applications have, so use with extreme caution.
+  
+  .. code-block:: bash
+
+    sudo tljh-config set http.port 8080
+    sudo tljh-config set https.port 8443
+    sudo tljh-config reload proxy
 
 .. _tljh-set-user-lists:
 
@@ -121,6 +149,34 @@ User Environment
 
        sudo tljh-config set user_environment.default_app jupyterlab
 
+.. _tljh-set-extra-user-groups:
+
+Extra User Groups
+=================
+
+
+``users.extra_user_groups`` is a configuration option that can be used
+to automatically add a user to a specific group. By default, there are
+no extra groups defined.
+
+Users can be "paired" with the desired, **existing** groups using:
+
+* ``tljh-config set``, if only one user is to be added to the
+  desired group:
+
+.. code-block:: bash
+
+  tljh-config set users.extra_user_groups.group1 user1
+
+* ``tljh-config add-item``, if multiple users are to be added to
+  the group:
+
+.. code-block:: bash
+
+  tljh-config add-item users.extra_user_groups.group1 user1
+  tljh-config add-item users.extra_user_groups.group1 user2
+
+
 .. _tljh-view-conf:
 
 View current configuration
@@ -157,6 +213,6 @@ Advanced: ``config.yaml``
 =========================
 
 ``tljh-config`` is a simple program that modifies the contents of the
-``config.yaml`` file located at ``/opt/tljh/config.yaml``. ``tljh-config``
+``config.yaml`` file located at ``/opt/tljh/config/config.yaml``. ``tljh-config``
 is the recommended method of editing / viewing configuration since editing
 YAML by hand in a terminal text editor is a large source of errors.

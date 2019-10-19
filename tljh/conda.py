@@ -7,8 +7,9 @@ import json
 import hashlib
 import contextlib
 import tempfile
-import urllib.request
+import requests
 from distutils.version import LooseVersion as V
+from tljh import utils
 
 
 def md5_file(fname):
@@ -50,7 +51,8 @@ def download_miniconda_installer(version, md5sum):
     """
     with tempfile.NamedTemporaryFile() as f:
         installer_url = "https://repo.continuum.io/miniconda/Miniconda3-{}-Linux-x86_64.sh".format(version)
-        urllib.request.urlretrieve(installer_url, f.name)
+        with open(f.name, 'wb') as f:
+            f.write(requests.get(installer_url).content)
 
         if md5_file(f.name) != md5sum:
             raise Exception('md5 hash mismatch! Downloaded file corrupted')
@@ -67,22 +69,22 @@ def fix_permissions(prefix):
 
     Run after each install command.
     """
-    subprocess.check_call(
+    utils.run_subprocess(
         ["chown", "-R", "{}:{}".format(os.getuid(), os.getgid()), prefix]
     )
-    subprocess.check_call(["chmod", "-R", "o-w", prefix])
+    utils.run_subprocess(["chmod", "-R", "o-w", prefix])
 
 
 def install_miniconda(installer_path, prefix):
     """
     Install miniconda with installer at installer_path under prefix
     """
-    subprocess.check_output([
+    utils.run_subprocess([
         '/bin/bash',
         installer_path,
         '-u', '-b',
         '-p', prefix
-    ], stderr=subprocess.STDOUT)
+    ])
     # fix permissions on initial install
     # a few files have the wrong ownership and permissions initially
     # when the installer is run as root
@@ -127,10 +129,10 @@ def ensure_pip_packages(prefix, packages):
     abspath = os.path.abspath(prefix)
     pip_executable = [os.path.join(abspath, 'bin', 'python'), '-m', 'pip']
 
-    subprocess.check_output(pip_executable + [
+    utils.run_subprocess(pip_executable + [
         'install',
         '--no-cache-dir',
-    ] + packages, stderr=subprocess.STDOUT)
+    ] + packages)
     fix_permissions(prefix)
 
 
@@ -143,9 +145,9 @@ def ensure_pip_requirements(prefix, requirements_path):
     abspath = os.path.abspath(prefix)
     pip_executable = [os.path.join(abspath, 'bin', 'python'), '-m', 'pip']
 
-    subprocess.check_output(pip_executable + [
+    utils.run_subprocess(pip_executable + [
         'install',
         '-r',
         requirements_path
-    ], stderr=subprocess.STDOUT)
+    ])
     fix_permissions(prefix)

@@ -3,6 +3,7 @@ Test configurer
 """
 
 import os
+import sys
 
 from tljh import configurer
 
@@ -66,7 +67,7 @@ def test_default_memory_limit():
     Test default per user memory limit
     """
     c = apply_mock_config({})
-    assert c.SystemdSpawner.mem_limit is None
+    assert c.Spawner.mem_limit is None
 
 
 def test_set_memory_limit():
@@ -74,7 +75,7 @@ def test_set_memory_limit():
     Test setting per user memory limit
     """
     c = apply_mock_config({'limits': {'memory': '42G'}})
-    assert c.SystemdSpawner.mem_limit == '42G'
+    assert c.Spawner.mem_limit == '42G'
 
 
 def test_app_default():
@@ -127,6 +128,24 @@ def test_auth_dummy():
     })
     assert c.JupyterHub.authenticator_class == 'dummyauthenticator.DummyAuthenticator'
     assert c.DummyAuthenticator.password == 'test'
+
+from traitlets import Dict
+def test_user_groups():
+    """
+    Test setting user groups
+    """
+    c = apply_mock_config({
+        'users': {
+            'extra_user_groups': {
+                "g1": ["u1", "u2"],
+                "g2": ["u3", "u4"]
+            },
+        }
+    })
+    assert c.UserCreatingSpawner.user_groups == {
+                "g1": ["u1", "u2"],
+                "g2": ["u3", "u4"]
+            }
 
 
 def test_auth_firstuse():
@@ -185,6 +204,49 @@ def test_set_traefik_api():
     })
     assert c.TraefikTomlProxy.traefik_api_username == 'some_user'
     assert c.TraefikTomlProxy.traefik_api_password == '1234'
+
+
+def test_cull_service_default():
+    """
+    Test default cull service settings with no overrides
+    """
+    c = apply_mock_config({})
+
+    cull_cmd = [
+       sys.executable, '-m', 'tljh.cull_idle_servers',
+       '--timeout=600', '--cull-every=60', '--concurrency=5',
+       '--max-age=0'
+    ]
+    assert c.JupyterHub.services == [{
+        'name': 'cull-idle',
+        'admin': True,
+        'command': cull_cmd,
+    }]
+
+
+def test_set_cull_service():
+    """
+    Test setting cull service options
+    """
+    c = apply_mock_config({
+        'services': {
+            'cull': {
+                'every': 10,
+                'users': True,
+                'max_age': 60
+            }
+        }
+    })
+    cull_cmd = [
+       sys.executable, '-m', 'tljh.cull_idle_servers',
+       '--timeout=600', '--cull-every=10', '--concurrency=5',
+       '--max-age=60', '--cull-users'
+    ]
+    assert c.JupyterHub.services == [{
+        'name': 'cull-idle',
+        'admin': True,
+        'command': cull_cmd,
+    }]
 
 
 def test_load_secrets(tljh_dir):

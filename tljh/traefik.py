@@ -1,20 +1,21 @@
 """Traefik installation and setup"""
 import hashlib
 import os
-from urllib.request import urlretrieve
 
 from jinja2 import Template
 from passlib.apache import HtpasswdFile
+import backoff
+import requests
 
 from tljh.configurer import load_config
 
 # FIXME: support more than one platform here
 plat = "linux-amd64"
-traefik_version = "1.7.5"
+traefik_version = "1.7.18"
 
 # record sha256 hashes for supported platforms here
 checksums = {
-    "linux-amd64": "4417a9d83753e1ad6bdd64bbbeaeb4b279bcc71542e779b7bcb3b027c6e3356e"
+    "linux-amd64": "3c2d153d80890b6fc8875af9f8ced32c4d684e1eb5a46d9815337cb343dfd92e"
 }
 
 
@@ -26,7 +27,16 @@ def checksum_file(path):
             hasher.update(chunk)
     return hasher.hexdigest()
 
+def fatal_error(e):
+    # Retry only when connection is reset or we think we didn't download entire file
+    return str(e) != "ContentTooShort" and not isinstance(e, ConnectionResetError)
 
+@backoff.on_exception(
+    backoff.expo,
+    Exception,
+    max_tries=2,
+    giveup=fatal_error
+)
 def ensure_traefik_binary(prefix):
     """Download and install the traefik binary"""
     traefik_bin = os.path.join(prefix, "bin", "traefik")
@@ -47,7 +57,11 @@ def ensure_traefik_binary(prefix):
     )
     print(f"Downloading traefik {traefik_version}...")
     # download the file
-    urlretrieve(traefik_url, traefik_bin)
+    response = requests.get(traefik_url)
+    if response.status_code == 206:
+        raise Exception("ContentTooShort")
+    with open(traefik_bin, 'wb') as f:
+        f.write(response.content)
     os.chmod(traefik_bin, 0o755)
 
     # verify that we got what we expected

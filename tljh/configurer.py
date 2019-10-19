@@ -9,6 +9,7 @@ FIXME: A strong feeling that JSON Schema should be involved somehow.
 """
 
 import os
+import sys
 
 from .config import CONFIG_FILE, STATE_DIR
 from .yaml import yaml
@@ -26,6 +27,7 @@ default = {
         'allowed': [],
         'banned': [],
         'admin': [],
+        'extra_user_groups': {}
     },
     'limits': {
         'memory': None,
@@ -55,6 +57,16 @@ default = {
     'user_environment': {
         'default_app': 'classic',
     },
+    'services': {
+        'cull': {
+            'enabled': True,
+            'timeout': 600,
+            'every': 60,
+            'concurrency': 5,
+            'users': False,
+            'max_age': 0
+        }
+    }
 }
 
 def load_config(config_file=CONFIG_FILE):
@@ -82,10 +94,12 @@ def apply_config(config_overrides, c):
 
     update_auth(c, tljh_config)
     update_userlists(c, tljh_config)
+    update_usergroups(c, tljh_config)
     update_limits(c, tljh_config)
     update_user_environment(c, tljh_config)
     update_user_account_config(c, tljh_config)
     update_traefik_api(c, tljh_config)
+    update_services(c, tljh_config)
 
 
 def set_if_not_none(parent, key, value):
@@ -156,14 +170,22 @@ def update_userlists(c, config):
     c.Authenticator.admin_users = set(users['admin'])
 
 
+def update_usergroups(c, config):
+    """
+    Set user groups
+    """
+    users = config['users']
+    c.UserCreatingSpawner.user_groups = users['extra_user_groups']
+
+
 def update_limits(c, config):
     """
     Set user server limits
     """
     limits = config['limits']
 
-    c.SystemdSpawner.mem_limit = limits['memory']
-    c.SystemdSpawner.cpu_limit = limits['cpu']
+    c.Spawner.mem_limit = limits['memory']
+    c.Spawner.cpu_limit = limits['cpu']
 
 
 def update_user_environment(c, config):
@@ -189,6 +211,38 @@ def update_traefik_api(c, config):
     """
     c.TraefikTomlProxy.traefik_api_username = config['traefik_api']['username']
     c.TraefikTomlProxy.traefik_api_password = config['traefik_api']['password']
+
+
+def set_cull_idle_service(config):
+    """
+    Set Idle Culler service
+    """
+    cull_cmd = [
+       sys.executable, '-m', 'tljh.cull_idle_servers'
+    ]
+    cull_config = config['services']['cull']
+    print()
+
+    cull_cmd += ['--timeout=%d' % cull_config['timeout']]
+    cull_cmd += ['--cull-every=%d' % cull_config['every']]
+    cull_cmd += ['--concurrency=%d' % cull_config['concurrency']]
+    cull_cmd += ['--max-age=%d' % cull_config['max_age']]
+    if cull_config['users']:
+        cull_cmd += ['--cull-users']
+
+    cull_service = {
+        'name': 'cull-idle',
+        'admin': True,
+        'command': cull_cmd,
+    }
+
+    return cull_service
+
+
+def update_services(c, config):
+    c.JupyterHub.services = []
+    if config['services']['cull']['enabled']:
+        c.JupyterHub.services.append(set_cull_idle_service(config))
 
 
 def _merge_dictionaries(a, b, path=None, update=True):

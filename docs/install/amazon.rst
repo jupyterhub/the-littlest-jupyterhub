@@ -78,7 +78,8 @@ Let's create the server on which we can run JupyterHub.
    `Next: Configure Instance Details` in the lower right corner.  
    
    Check out our guide on How To :ref:`howto/admin/resource-estimation` to help pick
-   how much Memory / CPU your server needs.
+   how much Memory / CPU your server needs. You need to have at least **768MB** of
+   RAM.
    
    You may wish to consult the listing `here <https://www.ec2instances.info/>`_ 
    because it shows cost per hour. The **On Demand** price is the pertinent cost.
@@ -138,7 +139,7 @@ Let's create the server on which we can run JupyterHub.
 
 #. Under **Step 6: Configure Security Group**, you'll set the firewall rules 
    that control the traffic for your instance. Specifically you'll want to add 
-   rules can add rules to allow both **HTTP Traffic** and **HTTPS Traffic**. For 
+   rules to allow both **HTTP Traffic** and **HTTPS Traffic**. For 
    advanced troubleshooting, it will be helpful to set rules so you can use 
    SSH to connect (port 22). 
    
@@ -181,7 +182,7 @@ Let's create the server on which we can run JupyterHub.
    triggered, you need to choose what to do about an identifying key pair and 
    acknowledge your choice in order to proceed. If you already have a key pair you 
    can select to associate it with this instance, otherwise you need to 
-   **Create a new key pair**. Choosing to `Proceed with a key pair` is not 
+   **Create a new key pair**. Choosing to `Proceed without a key pair` is not 
    recommended as you'll have no way to access your server via SSH if anything
    goes wrong with the Jupyterhub and have no way to recover files via download.
    

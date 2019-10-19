@@ -30,9 +30,11 @@ We have a bunch of tutorials to get you started.
      :caption: Installation
 
      install/digitalocean
+     install/ovh
      install/jetstream
      install/google
      install/amazon
+     install/azure
      install/custom-server
 
 Once you are ready to run your server for real,
@@ -78,6 +80,7 @@ with your JupyterHub. For more information on Authentication, see
 
    howto/auth/dummy
    howto/auth/github
+   howto/auth/google
    howto/auth/firstuse
    howto/auth/nativeauth
 
@@ -103,6 +106,7 @@ Cloud provider configuration
    :caption: Cloud provider configuration
 
    howto/providers/digitalocean
+   howto/providers/azure
 
 Topic Guides
 ============
@@ -121,6 +125,7 @@ Topic guides provide in-depth explanations of specific topics.
    topic/tljh-config
    topic/authenticator-configuration
    topic/escape-hatch
+   topic/idle-culler
 
 
 Troubleshooting

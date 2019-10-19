@@ -8,10 +8,11 @@ import secrets
 import subprocess
 import sys
 import time
-from urllib.error import HTTPError
-from urllib.request import urlopen, URLError
+import warnings
 
 import pluggy
+import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 from tljh import (
     apt,
@@ -21,6 +22,7 @@ from tljh import (
     systemd,
     traefik,
     user,
+    utils
 )
 from .config import (
     CONFIG_DIR,
@@ -33,7 +35,6 @@ from .config import (
 from .yaml import yaml
 
 HERE = os.path.abspath(os.path.dirname(__file__))
-
 
 logger = logging.getLogger("tljh")
 
@@ -171,7 +172,7 @@ def ensure_jupyterlab_extensions():
         '@jupyterlab/hub-extension',
         '@jupyter-widgets/jupyterlab-manager'
     ]
-    subprocess.check_output([
+    utils.run_subprocess([
         os.path.join(USER_ENV_PREFIX, 'bin/jupyter'),
         'labextension',
         'install'
@@ -188,14 +189,27 @@ def ensure_jupyterhub_package(prefix):
     hub environment be installed with pip prevents accidental mixing of python
     and conda packages!
     """
+    # Install pycurl. JupyterHub prefers pycurl over SimpleHTTPClient automatically
+    # pycurl is generally more bugfree - see https://github.com/jupyterhub/the-littlest-jupyterhub/issues/289
+    # build-essential is also generally useful to everyone involved, and required for pycurl
+    apt.install_packages([
+        'libssl-dev',
+        'libcurl4-openssl-dev',
+        'build-essential'
+    ])
     conda.ensure_pip_packages(prefix, [
-        'jupyterhub==0.9.6',
+        'pycurl==7.43.*'
+    ])
+
+    conda.ensure_pip_packages(prefix, [
+        'jupyterhub==1.0.0',
         'jupyterhub-dummyauthenticator==0.3.1',
         'jupyterhub-systemdspawner==0.13',
         'jupyterhub-firstuseauthenticator==0.12',
         'jupyterhub-nativeauthenticator==0.0.4',
         'jupyterhub-ldapauthenticator==1.2.2',
-        'oauthenticator==0.8.1'
+        'jupyterhub-tmpauthenticator==0.6',
+        'oauthenticator==0.8.2',
     ])
     traefik.ensure_traefik_binary(prefix)
 
@@ -230,11 +244,6 @@ def ensure_user_environment(user_requirements_txt_file):
         with conda.download_miniconda_installer(miniconda_version, miniconda_installer_md5) as installer_path:
             conda.install_miniconda(installer_path, USER_ENV_PREFIX)
 
-    # nbresuse needs psutil, which requires gcc
-    apt.install_packages([
-        'gcc'
-    ])
-
     conda.ensure_conda_packages(USER_ENV_PREFIX, [
         # Conda's latest version is on conda much more so than on PyPI.
         'conda==4.5.8'
@@ -242,7 +251,7 @@ def ensure_user_environment(user_requirements_txt_file):
 
     conda.ensure_pip_packages(USER_ENV_PREFIX, [
         # JupyterHub + notebook package are base requirements for user environment
-        'jupyterhub==0.9.6',
+        'jupyterhub==1.0.0',
         'notebook==5.7.8',
         # Install additional notebook frontends!
         'jupyterlab==0.35.4',
@@ -254,7 +263,7 @@ def ensure_user_environment(user_requirements_txt_file):
         # Most people consider ipywidgets to be part of the core notebook experience
         'ipywidgets==7.4.2',
         # Pin tornado
-        'tornado<6.0'
+        'tornado<6.0',
     ])
 
     if user_requirements_txt_file:
@@ -277,7 +286,9 @@ def ensure_admins(admins):
         config = {}
 
     config['users'] = config.get('users', {})
-    config['users']['admin'] = list(admins)
+    # Flatten admin lists
+    config['users']['admin'] = [admin for admin_sublist in admins
+        for admin in admin_sublist]
 
     with open(config_path, 'w+') as f:
         yaml.dump(config, f)
@@ -293,20 +304,24 @@ def ensure_jupyterhub_running(times=20):
     for i in range(times):
         try:
             logger.info('Waiting for JupyterHub to come up ({}/{} tries)'.format(i + 1, times))
-            urlopen('http://127.0.0.1')
+            # Because we don't care at this level that SSL is valid, we can suppress
+            # InsecureRequestWarning for this request.
+            with warnings.catch_warnings():
+                warnings.filterwarnings("ignore", category=InsecureRequestWarning)
+                requests.get('http://127.0.0.1', verify=False)
             return
-        except HTTPError as h:
-            if h.code in [404, 502, 503]:
+        except requests.HTTPError as h:
+            if h.response.status_code in [404, 502, 503]:
                 # May be transient
                 time.sleep(1)
                 continue
             # Everything else should immediately abort
             raise
-        except URLError as e:
-            if isinstance(e.reason, ConnectionRefusedError):
+        except requests.ConnectionError:
                 # Hub isn't up yet, sleep & loop
                 time.sleep(1)
                 continue
+        except Exception:
             # Everything else should immediately abort
             raise
 
@@ -368,21 +383,32 @@ def run_plugin_actions(plugin_manager, plugins):
         ))
         apt.install_packages(apt_packages)
 
+    # Install hub pip packages
+    hub_pip_packages = list(set(itertools.chain(*hook.tljh_extra_hub_pip_packages())))
+    if hub_pip_packages:
+        logger.info('Installing {} hub pip packages collected from plugins: {}'.format(
+            len(hub_pip_packages), ' '.join(hub_pip_packages)
+        ))
+        conda.ensure_pip_packages(HUB_ENV_PREFIX, hub_pip_packages)
+
     # Install conda packages
     conda_packages = list(set(itertools.chain(*hook.tljh_extra_user_conda_packages())))
     if conda_packages:
-        logger.info('Installing {} conda packages collected from plugins: {}'.format(
+        logger.info('Installing {} user conda packages collected from plugins: {}'.format(
             len(conda_packages), ' '.join(conda_packages)
         ))
         conda.ensure_conda_packages(USER_ENV_PREFIX, conda_packages)
 
     # Install pip packages
-    pip_packages = list(set(itertools.chain(*hook.tljh_extra_user_pip_packages())))
-    if pip_packages:
-        logger.info('Installing {} pip packages collected from plugins: {}'.format(
-            len(pip_packages), ' '.join(pip_packages)
+    user_pip_packages = list(set(itertools.chain(*hook.tljh_extra_user_pip_packages())))
+    if user_pip_packages:
+        logger.info('Installing {} user pip packages collected from plugins: {}'.format(
+            len(user_pip_packages), ' '.join(user_pip_packages)
         ))
-        conda.ensure_pip_packages(USER_ENV_PREFIX, pip_packages)
+        conda.ensure_pip_packages(USER_ENV_PREFIX, user_pip_packages)
+
+    # Custom post install actions
+    hook.tljh_post_install()
 
 
 def ensure_config_yaml(plugin_manager):
@@ -416,6 +442,7 @@ def main():
     argparser.add_argument(
         '--admin',
         nargs='*',
+        action='append',
         help='List of usernames set to be admin'
     )
     argparser.add_argument(

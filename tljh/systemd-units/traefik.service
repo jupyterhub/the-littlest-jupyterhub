@@ -7,7 +7,8 @@ After=network.target
 [Service]
 User=root
 Restart=always
-ProtectHome=tmpfs
+# traefik process should have no access to home directories
+ProtectHome=yes
 ProtectSystem=strict
 PrivateTmp=yes
 PrivateDevices=yes

@@ -4,11 +4,21 @@
 Installing on your own server
 =============================
 
+
+Follow this guide if your cloud provider doesn't have a direct tutorial, or
+you are setting this up on a bare metal server.
+
+.. warning::
+
+   Do **not** install TLJH directly on your laptop or personal computer!
+   It will most likely open up exploitable security holes when run directly
+   on your personal computer.
+
 .. note::
 
-    You should use this if your cloud provider does not already have a direct tutorial,
-    or if you have experience setting up servers.
-
+   Running TLJH *inside* a docker container is not supported, since we depend
+   on systemd. If you want to run TLJH locally for development, see
+   :ref:`contributing/dev-setup`.
 
 Goal
 ====
@@ -22,6 +32,7 @@ Pre-requisites
 
 #. Some familiarity with the command line.
 #. A server running Ubuntu 18.04 where you have root access.
+#. At least **768MB** of RAM on your server.
 #. Ability to ``ssh`` into the server & run commands from the prompt.
 #. A **IP address** where the server can be reached from the browsers of your target audience.
 
@@ -34,15 +45,15 @@ Step 1: Installing The Littlest JupyterHub
 #. Using a terminal program, SSH into your server. This should give you a prompt where you can
    type commands.
 
-#. Make sure you have ``Python3``, ``curl`` and ``git``  installed. On latest Ubuntu you can get all of these with:
+#. Make sure you have ``python3``, ``curl`` and ``git`` installed.
 
    .. code::
 
-      apt-get install python3 git curl
+      sudo apt install python3 git curl
 
 #. Copy the text below, and paste it into the terminal. Replace
    ``<admin-user-name>`` with the name of the first **admin user** for this
-   JupyterHub. Choose any name you like (don't forget to replace the brackets!).
+   JupyterHub. Choose any name you like (don't forget to remove the brackets!).
    This admin user can log in after the JupyterHub is set up, and
    can configure it to their needs. **Remember to add your username**!
 
