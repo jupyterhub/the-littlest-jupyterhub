@@ -29,7 +29,7 @@ Step 1: Installing The Littlest JupyterHub
 We will start by creating the Virtual Machine in which we can run TLJH (The Littlest JupyterHub).
 
 #. Go to `Azure portal <https://portal.azure.com/>`_  and login with your Azure account.
-#. Expand the left-hand panel, find the Virtual Machines tab and click on it.
+#. Expand the left-hand panel by clicking on the ">>" button on the top left corner of your dashboard. Find the Virtual Machines tab and click on it.
 
 .. image:: ../images/providers/azure/azure-vms.png
     :alt: Virtual machines on Azure portal
@@ -39,7 +39,7 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
     .. image:: ../images/providers/azure/add-vm.png
         :alt: Add a new virtual machine
 
-#. Select **Create VM from Marketplace** in the next sreen. This will display a new screen with all the optiond for Virtual Machines in Azure.
+#. Select **Create VM from Marketplace** in the next sreen. This will display a new screen with all the options for Virtual Machines in Azure.
     .. image:: ../images/providers/azure/create-vm.png
         :alt: Create VM from the marketplace
 
@@ -80,7 +80,7 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
 
     .. note:: For more information about estimating memory, CPU and disk needs check `The memory section in the TLJH documentation <https://tljh.jupyter.org/en/latest/howto/admin/resource-estimation.html>`_ 
 
-    * Select a suitable image (to check available images and prices in your region `click on this link <https://azuremarketplace.microsoft.com/en-gb/marketplace/apps/Canonical.UbuntuServer?tab=PlansAndPrice/?wt.mc_id=TLJH-github-taallard>`_.    
+    * Select a suitable image (to check available images and prices in your region `click on this link <https://azuremarketplace.microsoft.com/en-gb/marketplace/apps/Canonical.UbuntuServer?tab=PlansAndPrice/?wt.mc_id=TLJH-github-taallard>`_).    
     
 #. Disks (Storage):
     * **Disk options**: select the OS disk type there are options for SDD and HDD. **SSD persistent disk** gives you a faster but more expensive disk than HDD. 
