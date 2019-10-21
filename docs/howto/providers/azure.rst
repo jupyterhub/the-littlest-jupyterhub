@@ -28,11 +28,11 @@ To do either of this:
         :alt: Delete vm
 
 .. note:: It is important to mention that even if you stop the machine you will still be charged for the use of the data disk.
-If you no longer need the data storeg you can delete the resource group.
 
+If you no longer need any of your resources you can delete the entire resource group.
 
 * Go to "Reosurce groups" on the left hand panel
 * Click on your resource group
-* Click on "Delete resource group" you will then be asked to confirm the operation. 
+* Click on "Delete resource group" you will then be asked to confirm the operation.  This operation will take between 5 and 10 minutes.
 
 
