@@ -53,7 +53,9 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
 #. Customise the Virtual Machine basics:
     * **Subscription**. Choose the "Free Trial" if this is what you're using. Otherwise, choose a different plan. This is the billing account that will be charged.
     * **Resource group**. Resource groups let you keep your Azure tools/resources together in an availability region (e.g. WestEurope). If you already have one you'd like to use it select that resource.
+
     .. note:: If you have never created a Resource Group, click  on **Create new**
+
     .. image:: ../images/providers/azure/new-rg.png
             :alt: Create new resource group
 
@@ -88,10 +90,10 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
     * Click "Next"
 
     .. image:: ../images/providers/azure/create-disk.png
-            :alt:: Create and attach disk
+            :alt: Create and attach disk
 
     .. image:: ../images/providers/azure/disk-vm.png
-            :alt: Choose disk size  
+            :alt: Choose disk size
 
 #. Networking
     * **Virtual network**. Leave the default values selected.
