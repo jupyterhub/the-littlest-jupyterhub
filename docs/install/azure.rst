@@ -29,7 +29,7 @@ Step 1: Installing The Littlest JupyterHub
 We will start by creating the Virtual Machine in which we can run TLJH (The Littlest JupyterHub).
 
 #. Go to `Azure portal <https://portal.azure.com/>`_  and login with your Azure account.
-#. Expand the left-hand panel, find the Virtual Machines tab and click on it.
+#. Expand the left-hand panel by clicking on the ">>" button on the top left corner of your dashboard. Find the Virtual Machines tab and click on it.
 
 .. image:: ../images/providers/azure/azure-vms.png
     :alt: Virtual machines on Azure portal
@@ -39,7 +39,7 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
     .. image:: ../images/providers/azure/add-vm.png
         :alt: Add a new virtual machine
 
-#. Select **Create VM from Marketplace** in the next sreen. This will display a new screen with all the optiond for Virtual Machines in Azure.
+#. Select **Create VM from Marketplace** in the next sreen. This will display a new screen with all the options for Virtual Machines in Azure.
     .. image:: ../images/providers/azure/create-vm.png
         :alt: Create VM from the marketplace
 
@@ -52,7 +52,13 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
 
 #. Customise the Virtual Machine basics:
     * **Subscription**. Choose the "Free Trial" if this is what you're using. Otherwise, choose a different plan. This is the billing account that will be charged.
-    * **Resource group**. Resource groups let you bundle components that you request from Azure. If you already have one you'd like to use it select that resource.
+    * **Resource group**. Resource groups let you keep your Azure tools/resources together in an availability region (e.g. WestEurope). If you already have one you'd like to use it select that resource.
+
+    .. note:: If you have never created a Resource Group, click  on **Create new**
+
+    .. image:: ../images/providers/azure/new-rg.png
+            :alt: Create new resource group
+
     * **Name**. Use a descriptive name for your virtual machine (note that you cannot use spaces or special characters).
     * **Region**. Choose a location near where you expect your users to be located.
     * **Availability options**. Choose "No infrastructure redundancy required".
@@ -76,15 +82,18 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
 
     .. note:: For more information about estimating memory, CPU and disk needs check `The memory section in the TLJH documentation <https://tljh.jupyter.org/en/latest/howto/admin/resource-estimation.html>`_ 
 
-    * Select a suitable image (to check available images and prices in your region `click on this link <https://azuremarketplace.microsoft.com/en-gb/marketplace/apps/Canonical.UbuntuServer?tab=PlansAndPrice/?wt.mc_id=TLJH-github-taallard>`_.    
+    * Select a suitable image (to check available images and prices in your region `click on this link <https://azuremarketplace.microsoft.com/en-gb/marketplace/apps/Canonical.UbuntuServer?tab=PlansAndPrice/?wt.mc_id=TLJH-github-taallard>`_).    
     
 #. Disks (Storage):
-    * **Disk options**: slect the OS disk type there are options for SDD and HDD. **SSD persistent disk** gives you a faster but more expensive disk than HDD. 
+    * **Disk options**: select the OS disk type there are options for SDD and HDD. **SSD persistent disk** gives you a faster but more expensive disk than HDD. 
     * **Data disk**. Click on create and attach a new disk. Select an appropriate type and size and click ok.
     * Click "Next"
 
+    .. image:: ../images/providers/azure/create-disk.png
+            :alt: Create and attach disk
+
     .. image:: ../images/providers/azure/disk-vm.png
-            :alt: Choose disk size  
+            :alt: Choose disk size
 
 #. Networking
     * **Virtual network**. Leave the default values selected.
