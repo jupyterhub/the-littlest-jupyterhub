@@ -69,3 +69,11 @@ def tljh_post_install():
     This can be arbitrary Python code.
     """
     pass
+
+@hookspec
+def tljh_new_user_create(username):
+    """
+    Script to be executed after a new user has been added.
+    This can be arbitrary Python code.
+    """
+    pass
