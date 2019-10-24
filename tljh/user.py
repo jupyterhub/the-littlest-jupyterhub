@@ -3,10 +3,19 @@ User management for tljh.
 
 Supports minimal user & group management
 """
-import pwd
 import grp
+import pwd
 import subprocess
 from os.path import expanduser
+
+import pluggy
+
+from tljh import hooks
+
+# Set up plugin infrastructure
+pm = pluggy.PluginManager('tljh')
+pm.add_hookspecs(hooks)
+pm.load_setuptools_entrypoints('tljh')
 
 
 def ensure_user(username):
@@ -28,9 +37,11 @@ def ensure_user(username):
         username
     ])
 
+    pm.hook.tljh_new_user_create(username=username)
+
     subprocess.check_call([
         'chmod',
-        'o-rwx', 
+        'o-rwx',
         expanduser('~{username}'.format(username=username))
     ])
 
