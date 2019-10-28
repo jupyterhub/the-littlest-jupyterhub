@@ -47,6 +47,7 @@ We start by creating the Virtual Machine in which we can run TLJH (The Littlest 
 
 #. Select **Create VM from Marketplace** in the next screen.
 A new screen with all the options for Virtual Machines in Azure will displayed.
+
     .. image:: ../images/providers/azure/create-vm.png
         :alt: Create VM from the marketplace
 
