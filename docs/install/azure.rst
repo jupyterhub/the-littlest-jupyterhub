@@ -11,6 +11,12 @@ By the end of this tutorial, you should have a JupyterHub with some admin
 users and a user environment with packages you want to be installed running on
 `Microsoft Azure <https://azure.microsoft.com>`_.
 
+This tutorial leads you step-by-step for you to manually deploy your own JupyterHub on Azure cloud.
+
+.. note:: ✨ The ``Deploy to Azure button`` project allows you  to deploy your own JupyterHub with minimal manual configuration steps. The deploy to Azure button allows you  to have a vanilla configuration in just one-click and by assigning some variables. 
+    
+    Check it out at `https://github.com/trallard/TLJH-azure-button <https://github.com/trallard/TLJH-azure-button>`_.
+
 Prerequisites
 ==============
 
