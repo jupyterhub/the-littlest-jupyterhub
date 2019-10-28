@@ -1,0 +1,17 @@
+# FIXME: a frozen version of this file should be used
+# pinning only direct dependencies is a recipe for broken environments!
+
+# JupyterHub + notebook package are base requirements for user environment
+jupyterhub==1.0.*
+notebook==6.0.*
+# Install additional notebook frontends!
+jupyterlab==1.1.*
+nteract-on-jupyter==2.1.*
+# nbgitpuller for easily pulling in Git repositories
+nbgitpuller==0.7.*
+# nbresuse to show people how much RAM they are using
+nbresuse==0.3.*
+# Most people consider ipywidgets to be part of the core notebook experience
+ipywidgets==7.5.*
+# Pin tornado
+tornado<6
