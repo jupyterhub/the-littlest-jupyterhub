@@ -37,13 +37,13 @@ def ensure_user(username):
         username
     ])
 
-    pm.hook.tljh_new_user_create(username=username)
-
     subprocess.check_call([
         'chmod',
         'o-rwx',
         expanduser('~{username}'.format(username=username))
     ])
+
+    pm.hook.tljh_new_user_create(username=username)
 
 
 def remove_user(username):
