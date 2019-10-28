@@ -8,14 +8,8 @@ import pwd
 import subprocess
 from os.path import expanduser
 
-import pluggy
-
-from tljh import hooks
-
 # Set up plugin infrastructure
-pm = pluggy.PluginManager('tljh')
-pm.add_hookspecs(hooks)
-pm.load_setuptools_entrypoints('tljh')
+from tljh.utils import get_plugin_manager
 
 
 def ensure_user(username):
@@ -30,6 +24,8 @@ def ensure_user(username):
     except KeyError:
         # User doesn't exist, time to create!
         pass
+
+    pm = get_plugin_manager()
 
     subprocess.check_call([
         'useradd',

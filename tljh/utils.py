@@ -1,11 +1,15 @@
 """
-Miscelaneous functions useful in at least two places unrelated to each other
+Miscellaneous functions useful in at least two places unrelated to each other
 """
-import subprocess
 import logging
-
+import subprocess
 
 # Copied into bootstrap/bootstrap.py. Make sure these two copies are exactly the same!
+import pluggy
+
+from tljh import hooks
+
+
 def run_subprocess(cmd, *args, **kwargs):
     """
     Run given cmd with smart output behavior.
@@ -34,3 +38,15 @@ def run_subprocess(cmd, *args, **kwargs):
         # This produces multi line log output, unfortunately. Not sure how to fix.
         # For now, prioritizing human readability over machine readability.
         logger.debug(proc.stdout.decode())
+
+
+def get_plugin_manager():
+    """
+    Return plugin manager instance
+    """
+    # Set up plugin infrastructure
+    pm = pluggy.PluginManager('tljh')
+    pm.add_hookspecs(hooks)
+    pm.load_setuptools_entrypoints('tljh')
+
+    return pm
