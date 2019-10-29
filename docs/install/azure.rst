@@ -11,6 +11,12 @@ By the end of this tutorial, you should have a JupyterHub with some admin
 users and a user environment with packages you want to be installed running on
 `Microsoft Azure <https://azure.microsoft.com>`_.
 
+This tutorial leads you step-by-step for you to manually deploy your own JupyterHub on Azure cloud.
+
+.. note:: ✨ The ``Deploy to Azure button`` project allows you  to deploy your own JupyterHub with minimal manual configuration steps. The deploy to Azure button allows you  to have a vanilla configuration in just one-click and by assigning some variables. 
+    
+    Check it out at `https://github.com/trallard/TLJH-azure-button <https://github.com/trallard/TLJH-azure-button>`_.
+
 Prerequisites
 ==============
 
@@ -26,7 +32,7 @@ your JupyterHub and configuring it, see `The Littlest JupyterHub guide <https://
 Step 1: Installing The Littlest JupyterHub
 ==========================================
 
-We will start by creating the Virtual Machine in which we can run TLJH (The Littlest JupyterHub).
+We start by creating the Virtual Machine in which we can run TLJH (The Littlest JupyterHub).
 
 #. Go to `Azure portal <https://portal.azure.com/>`_  and login with your Azure account.
 #. Expand the left-hand panel by clicking on the ">>" button on the top left corner of your dashboard. Find the Virtual Machines tab and click on it.
@@ -39,12 +45,14 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
     .. image:: ../images/providers/azure/add-vm.png
         :alt: Add a new virtual machine
 
-#. Select **Create VM from Marketplace** in the next sreen. This will display a new screen with all the options for Virtual Machines in Azure.
+#. Select **Create VM from Marketplace** in the next screen.
+A new screen with all the options for Virtual Machines in Azure will displayed.
+
     .. image:: ../images/providers/azure/create-vm.png
         :alt: Create VM from the marketplace
 
 #. **Choose an Ubuntu server for your VM**: 
-    * Click `Ubuntu Server 18.04 LTS`
+    * Click `Ubuntu Server 18.04 LTS.`
     * Make sure `Resource Manager` is selected in the next screen and click **Create**
 
     .. image:: ../images/providers/azure/ubuntu-vm.png
@@ -57,21 +65,21 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
     .. note:: If you have never created a Resource Group, click  on **Create new**
 
     .. image:: ../images/providers/azure/new-rg.png
-            :alt: Create new resource group
+            :alt: Create a new resource group
 
     * **Name**. Use a descriptive name for your virtual machine (note that you cannot use spaces or special characters).
     * **Region**. Choose a location near where you expect your users to be located.
     * **Availability options**. Choose "No infrastructure redundancy required".
     * **Image**. Make sure "Ubuntu Server 18.04 LTS" is selected (from the previous step).
     * **Authentication type**. Change authentication type to "password".
-    * **Username**. Choose a memorable username, this will be your "root" user and you'll need it later on.
+    * **Username**. Choose a memorable username, this will be your "root" user, and you'll need it later on.
     * **Password**. Type in a password, this will be used later for admin access so make sure it is something memorable.
 
     .. image:: ../images/providers/azure/password-vm.png
             :alt: Add password to VM
 
     * **Login with Azure Active Directory**. Choose "Off" (usually the default)
-    * **Inbound port rules**. Leave the defaults for now and we will update these later on in the Network configuration step.
+    * **Inbound port rules**. Leave the defaults for now, and we will update these later on in the Network configuration step.
 
 #. Before clicking on "Next" we need to select the RAM size for the image.
     * For this we need to make sure we have enough RAM to accommodate your users. For example, if each user needs 2GB of RAM, and you have 10 total users, you need at least 20GB of RAM on the machine. It's also good to have a few GB of "buffer" RAM beyond what you think you'll need.
@@ -87,13 +95,13 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
 #. Disks (Storage):
     * **Disk options**: select the OS disk type there are options for SDD and HDD. **SSD persistent disk** gives you a faster but more expensive disk than HDD. 
     * **Data disk**. Click on create and attach a new disk. Select an appropriate type and size and click ok.
-    * Click "Next"
+    * Click "Next".
 
     .. image:: ../images/providers/azure/create-disk.png
             :alt: Create and attach disk
 
     .. image:: ../images/providers/azure/disk-vm.png
-            :alt: Choose disk size
+            :alt: Choose a disk size
 
 #. Networking
     * **Virtual network**. Leave the default values selected.
@@ -143,7 +151,7 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
 
 #. Check the summary and confirm the creation of your Virtual Machine.
 
-#. Check that the creation of your Virtual Machine worked
+#. Check that the creation of your Virtual Machine worked.
     * Wait for the virtual machine to be created. This might take about 5-10 minutes.
     * After completion, you should see a similar screen to the one below:
 
@@ -157,7 +165,7 @@ We will start by creating the Virtual Machine in which we can run TLJH (The Litt
     .. image:: ../images/providers/azure/goto-vm.png
         :alt: Go to VM
 
-#. Check if the installation is complete by **copying** the **Public IP address** of your virtual machine, and trying to access it with a browser. 
+#. Check if the installation is completed by **copying** the **Public IP address** of your virtual machine, and trying to access it with a browser. 
 
     .. image:: ../images/providers/azure/ip-vm.png
         :alt: Public IP address
