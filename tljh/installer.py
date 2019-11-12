@@ -209,7 +209,7 @@ def ensure_jupyterhub_package(prefix):
         'jupyterhub-nativeauthenticator==0.0.4',
         'jupyterhub-ldapauthenticator==1.2.2',
         'jupyterhub-tmpauthenticator==0.6',
-        'oauthenticator==0.8.2',
+        'oauthenticator==0.9.0',
     ])
     traefik.ensure_traefik_binary(prefix)
 
@@ -236,8 +236,8 @@ def ensure_user_environment(user_requirements_txt_file):
     Set up user conda environment with required packages
     """
     logger.info("Setting up user environment...")
-    miniconda_version = '4.5.4'
-    miniconda_installer_md5 = "a946ea1d0c4a642ddf0c3a26a18bb16d"
+    miniconda_version = '4.7.10'
+    miniconda_installer_md5 = "1c945f2b3335c7b2b15130b1b2dc5cf4"
 
     if not conda.check_miniconda_version(USER_ENV_PREFIX, miniconda_version):
         logger.info('Downloading & setting up user environment...')
@@ -246,22 +246,22 @@ def ensure_user_environment(user_requirements_txt_file):
 
     conda.ensure_conda_packages(USER_ENV_PREFIX, [
         # Conda's latest version is on conda much more so than on PyPI.
-        'conda==4.5.8'
+        'conda==4.7.12'
     ])
 
     conda.ensure_pip_packages(USER_ENV_PREFIX, [
         # JupyterHub + notebook package are base requirements for user environment
         'jupyterhub==1.0.0',
-        'notebook==5.7.8',
+        'notebook==6.0.0',
         # Install additional notebook frontends!
-        'jupyterlab==0.35.4',
-        'nteract-on-jupyter==2.0.7',
+        'jupyterlab==1.2.1',
+        'nteract-on-jupyter==2.1.3',
         # nbgitpuller for easily pulling in Git repositories
-        'nbgitpuller==0.6.1',
+        'nbgitpuller==0.7.2',
         # nbresuse to show people how much RAM they are using
-        'nbresuse==0.3.0',
+        'nbresuse==0.3.*',
         # Most people consider ipywidgets to be part of the core notebook experience
-        'ipywidgets==7.4.2',
+        'ipywidgets==7.5.1',
         # Pin tornado
         'tornado<6.0',
     ])
