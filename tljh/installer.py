@@ -38,6 +38,7 @@ HERE = os.path.abspath(os.path.dirname(__file__))
 
 logger = logging.getLogger("tljh")
 
+
 def ensure_node():
     """
     Ensure nodejs from nodesource is installed
@@ -100,6 +101,7 @@ sckuXINIU3DFWzZGr0QrqkuE/jyr7FXeUJj9B7cLo+s/TXo+RaVfi3kOc9BoxIvy
     apt.add_source('nodesource', 'https://deb.nodesource.com/node_10.x', 'main')
     apt.install_packages(['nodejs'])
 
+
 def remove_chp():
     """
     Ensure CHP is not running
@@ -134,11 +136,15 @@ def ensure_jupyterhub_service(prefix):
     with open(os.path.join(HERE, 'systemd-units', 'jupyterhub.service')) as f:
         hub_unit_template = f.read()
 
-
     with open(os.path.join(HERE, 'systemd-units', 'traefik.service')) as f:
         traefik_unit_template = f.read()
 
-    #Set up proxy / hub secret token if it is not already setup
+    # Get the default locale setting
+    with open(os.path.join(HERE, 'environment_for_system_service.conf'), 'a+', encoding='utf-8') as f:
+        r = os.popen("locale").read()
+        f.write(r)
+
+    # Set up proxy / hub secret token if it is not already setup
     proxy_secret_path = os.path.join(STATE_DIR, 'traefik-api.secret')
     if not os.path.exists(proxy_secret_path):
         with open(proxy_secret_path, 'w') as f:
@@ -149,6 +155,7 @@ def ensure_jupyterhub_service(prefix):
     unit_params = dict(
         python_interpreter_path=sys.executable,
         jupyterhub_config_path=os.path.join(HERE, 'jupyterhub_config.py'),
+        env_conf=os.path.join(HERE, 'environment_for_system_service.conf'),
         install_prefix=INSTALL_PREFIX,
     )
     systemd.install_unit('jupyterhub.service', hub_unit_template.format(**unit_params))
@@ -173,10 +180,10 @@ def ensure_jupyterlab_extensions():
         '@jupyter-widgets/jupyterlab-manager'
     ]
     utils.run_subprocess([
-        os.path.join(USER_ENV_PREFIX, 'bin/jupyter'),
-        'labextension',
-        'install'
-    ] + extensions)
+                             os.path.join(USER_ENV_PREFIX, 'bin/jupyter'),
+                             'labextension',
+                             'install'
+                         ] + extensions)
 
 
 def ensure_jupyterhub_package(prefix):
@@ -318,9 +325,9 @@ def ensure_jupyterhub_running(times=20):
             # Everything else should immediately abort
             raise
         except requests.ConnectionError:
-                # Hub isn't up yet, sleep & loop
-                time.sleep(1)
-                continue
+            # Hub isn't up yet, sleep & loop
+            time.sleep(1)
+            continue
         except Exception:
             # Everything else should immediately abort
             raise
