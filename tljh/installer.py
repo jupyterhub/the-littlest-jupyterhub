@@ -169,7 +169,6 @@ def ensure_jupyterlab_extensions():
     Install the JupyterLab extensions we want.
     """
     extensions = [
-        '@jupyterlab/hub-extension',
         '@jupyter-widgets/jupyterlab-manager'
     ]
     utils.run_subprocess([

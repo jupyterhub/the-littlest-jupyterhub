@@ -14,7 +14,7 @@ def prefix():
     Provide a temporary directory with a conda environment
     """
     miniconda_version = '4.7.10'
-    miniconda_installer_md5 = "a946ea1d0c4a642ddf0c3a26a18bb16d"
+    miniconda_installer_md5 = "1c945f2b3335c7b2b15130b1b2dc5cf4"
     with tempfile.TemporaryDirectory() as tmpdir:
         with conda.download_miniconda_installer(miniconda_version, miniconda_installer_md5) as installer_path:
             conda.install_miniconda(installer_path, tmpdir)
