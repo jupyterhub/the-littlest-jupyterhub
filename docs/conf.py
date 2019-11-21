@@ -36,8 +36,7 @@ pygments_style = 'sphinx'
 
 import alabaster_jupyterhub
 
-html_theme = 'alabaster_jupyterhub'
-html_theme_path = [alabaster_jupyterhub.get_html_theme_path()]
+html_theme = 'pandas_sphinx_theme'
 
 html_logo = 'images/logo/logo.png'
 html_favicon = 'images/logo/favicon.ico'
@@ -62,19 +61,3 @@ html_sidebars = {
         'donate.html',
     ]
 }
-# Custom Alabaster theme options
-html_theme_options = {
-    'description': """
-    A simple JupyterHub distribution for 1-100 users
-    <br /> <br />
-    <strong>Documentation confusing?</strong> <a href="https://github.com/jupyterhub/the-littlest-jupyterhub/issues">File an issue!</a>
-    """,
-    'github_user': 'jupyterhub',
-    'github_repo': 'the-littlest-jupyterhub',
-    'github_button': True,
-    'github_banner': False,
-    'github_type': 'star',
-}
-
-def setup(app):
-    app.add_stylesheet('custom.css')
