@@ -34,8 +34,6 @@ intersphinx_cache_limit = 90 # days
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
-import alabaster_jupyterhub
-
 html_theme = 'pandas_sphinx_theme'
 
 html_logo = 'images/logo/logo.png'
