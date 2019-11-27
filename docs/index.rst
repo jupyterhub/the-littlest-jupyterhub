@@ -27,15 +27,9 @@ We have a bunch of tutorials to get you started.
 
   .. toctree::
      :titlesonly:
-     :caption: Installation
+     :maxdepth: 2
 
-     install/digitalocean
-     install/ovh
-     install/jetstream
-     install/google
-     install/amazon
-     install/azure
-     install/custom-server
+     install/index
 
 Once you are ready to run your server for real,
 it's a good idea to proceed directly to :doc:`howto/admin/https`.
@@ -45,68 +39,10 @@ How-To Guides
 
 How-To guides answer the question 'How do I...?' for a lot of topics.
 
-Content and Data
-----------------
-
 .. toctree::
-   :titlesonly:
-   :caption: Content and data
+   :maxdepth: 2
 
-   howto/content/nbgitpuller
-   howto/content/add-data
-   howto/content/share-data
-
-The user environment
---------------------
-
-.. toctree::
-   :titlesonly:
-   :caption: The user environment
-
-   howto/env/user-environment
-   howto/env/notebook-interfaces
-   howto/env/server-resources
-
-Authentication
---------------
-
-We have a special set of How-To Guides on using various forms of authentication
-with your JupyterHub. For more information on Authentication, see
-:ref:`topic/authenticator-configuration`
-
-.. toctree::
-   :titlesonly:
-   :caption: Authentication
-
-   howto/auth/dummy
-   howto/auth/github
-   howto/auth/google
-   howto/auth/firstuse
-   howto/auth/nativeauth
-
-Administration and security
----------------------------
-
-.. toctree::
-   :titlesonly:
-   :caption: Administration and security
-
-   howto/admin/admin-users
-   howto/admin/resource-estimation
-   howto/admin/resize
-   howto/admin/nbresuse
-   howto/admin/https
-   howto/admin/enable-extensions
-
-Cloud provider configuration
-----------------------------
-
-.. toctree::
-   :titlesonly:
-   :caption: Cloud provider configuration
-
-   howto/providers/digitalocean
-   howto/providers/azure
+   howto/index
 
 Topic Guides
 ============
@@ -115,17 +51,9 @@ Topic guides provide in-depth explanations of specific topics.
 
 .. toctree::
    :titlesonly:
-   :caption: Topic guides
+   :maxdepth: 2
 
-   topic/whentouse
-   topic/requirements
-   topic/security
-   topic/customizing-installer
-   topic/installer-actions
-   topic/tljh-config
-   topic/authenticator-configuration
-   topic/escape-hatch
-   topic/idle-culler
+   topic/index
 
 
 Troubleshooting
@@ -136,21 +64,9 @@ guides help you find what is broken & hopefully fix it.
 
 .. toctree::
    :titlesonly:
-   :caption: Troubleshooting
+   :maxdepth: 2
 
-   troubleshooting/logs
-
-Often, your issues are not related to TLJH itself but to the cloud provider
-your server is running on. We have some documentation on common issues you
-might run into with various providers and how to fix them. We welcome contributions
-here to better support your favorite provider!
-
-.. toctree::
-   :titlesonly:
-
-   troubleshooting/providers/google
-   troubleshooting/providers/amazon
-   troubleshooting/providers/custom
+   troubleshooting/index
 
 Contributing
 ============
@@ -161,11 +77,6 @@ to people contributing in various ways.
 
 .. toctree::
    :titlesonly:
-   :caption: Contributing
+   :maxdepth: 2
 
-   contributing/docs
-   contributing/code-review
-   contributing/dev-setup
-   contributing/tests
-   contributing/plugins
-   contributing/packages
+   contributing/index
