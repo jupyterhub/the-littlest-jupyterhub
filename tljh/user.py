@@ -25,8 +25,6 @@ def ensure_user(username):
         # User doesn't exist, time to create!
         pass
 
-    pm = get_plugin_manager()
-
     subprocess.check_call([
         'useradd',
         '--create-home',
@@ -39,6 +37,7 @@ def ensure_user(username):
         expanduser('~{username}'.format(username=username))
     ])
 
+    pm = get_plugin_manager()
     pm.hook.tljh_new_user_create(username=username)
 
 
