@@ -5,7 +5,7 @@ Authenticate using AWS Cognito
 ==============================
 
 The **AWS Cognitor Authenticator** lets users log into your JupyterHub using
-a cognito user pools. To do so, you'll first need to register configure a 
+cognito user pools. To do so, you'll first need to register and configure a 
 cognito user pool and app, and then provide information about this
 application to your ``tljh`` configuration.
 
