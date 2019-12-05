@@ -27,7 +27,7 @@ Create an AWS Cognito application
 
         http(s)://<my-tljh-ip-address>
 
-    * **Auth Domain** Create an auth domain and e.g. <my_jupyter_hub>.::
+    * **Auth Domain** Create an auth domain e.g. <my_jupyter_hub>::
 
         https://<<my_jupyter_hub>.auth.eu-west-1.amazoncognito.com
 
