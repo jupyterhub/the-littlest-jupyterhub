@@ -23,7 +23,7 @@ Create an AWS Cognito application
 
          http(s)://<my-tljh-ip-address>/hub/oauth_callback
 
-   * **Signout URL** This s the landing page for a user when they are no logged on::
+   * **Signout URL**: This is the landing page for a user when they are not logged on::
 
         http(s)://<my-tljh-ip-address>
 
