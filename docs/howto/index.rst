@@ -36,6 +36,7 @@ with your JupyterHub. For more information on Authentication, see
    auth/dummy
    auth/github
    auth/google
+   auth/awscognito
    auth/firstuse
    auth/nativeauth
 
