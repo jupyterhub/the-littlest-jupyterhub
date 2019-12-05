@@ -79,7 +79,7 @@ the AWS Cognito domain in via systemd we can do this by creating a systemd servi
 
         /etc/systemd/system/jupyterhub.service.d/jupyterhub.conf with the contents
 
-Add the following contents::
+and add the following::
 
         [Service]
         Environment=AWSCOGNITO_DOMAIN=https://<<my_jupyter_hub>.auth.eu-west-1.amazoncognito.com
