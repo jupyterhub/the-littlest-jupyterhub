@@ -4,13 +4,12 @@ JupyterHub config for the littlest jupyterhub.
 
 from glob import glob
 import os
-import pluggy
 
 from systemdspawner import SystemdSpawner
-from tljh import configurer, user, hooks
+from tljh import configurer, user
 from tljh.config import INSTALL_PREFIX, USER_ENV_PREFIX, CONFIG_DIR
 from tljh.normalize import generate_system_username
-from tljh.yaml import yaml
+from tljh.utils import get_plugin_manager
 from jupyterhub_traefik_proxy import TraefikTomlProxy
 
 from traitlets import Dict, Unicode, List
@@ -68,11 +67,8 @@ configurer.apply_config(tljh_config, c)
 
 # Let TLJH hooks modify `c` if they want
 
-# Set up plugin infrastructure
-pm = pluggy.PluginManager('tljh')
-pm.add_hookspecs(hooks)
-pm.load_setuptools_entrypoints('tljh')
 # Call our custom configuration plugin
+pm = get_plugin_manager()
 pm.hook.tljh_custom_jupyterhub_config(c=c)
 
 # Load arbitrary .py config files if they exist.

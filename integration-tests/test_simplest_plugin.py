@@ -72,3 +72,13 @@ def test_post_install_hook():
         content = f.read()
 
     assert content == "123456789"
+
+
+def test_tljh_new_user_create():
+    """
+    Test that plugin receives username as arg
+    """
+    with open("test_new_user_create") as f:
+        content = f.read()
+
+    assert content == "a new userfile"

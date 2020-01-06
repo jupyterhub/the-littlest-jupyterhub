@@ -46,3 +46,9 @@ def tljh_custom_jupyterhub_config(c):
 def tljh_post_install():
     with open('test_post_install', 'w') as f:
         f.write('123456789')
+
+
+@hookimpl
+def tljh_new_user_create(username):
+    with open('test_new_user_create', 'w') as f:
+        f.write("a new userfile")

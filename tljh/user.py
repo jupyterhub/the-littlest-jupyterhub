@@ -3,10 +3,13 @@ User management for tljh.
 
 Supports minimal user & group management
 """
-import pwd
 import grp
+import pwd
 import subprocess
 from os.path import expanduser
+
+# Set up plugin infrastructure
+from tljh.utils import get_plugin_manager
 
 
 def ensure_user(username):
@@ -30,9 +33,12 @@ def ensure_user(username):
 
     subprocess.check_call([
         'chmod',
-        'o-rwx', 
+        'o-rwx',
         expanduser('~{username}'.format(username=username))
     ])
+
+    pm = get_plugin_manager()
+    pm.hook.tljh_new_user_create(username=username)
 
 
 def remove_user(username):
