@@ -51,4 +51,4 @@ def tljh_post_install():
 @hookimpl
 def tljh_new_user_create(username):
     with open('test_new_user_create', 'w') as f:
-        f.write("a new userfile")
+        f.write(username)
