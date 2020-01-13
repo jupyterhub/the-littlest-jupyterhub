@@ -32,7 +32,7 @@ def run_systemd_image(image_name, container_name):
         # This is the minimum VM size we support. JupyterLab extensions seem
         # to need at least this much RAM to build. Boo?
         # If we change this, need to change all other references to this number.
-        '--memory', '768M',
+        '--memory', '1G',
         image_name
     ])
 
