@@ -5,7 +5,9 @@ from ruamel.yaml import YAML
 import requests
 import os
 import subprocess
+
 from tljh.config import CONFIG_FILE, USER_ENV_PREFIX, HUB_ENV_PREFIX
+from tljh import user
 
 yaml = YAML(typ='rt')
 
@@ -74,11 +76,15 @@ def test_post_install_hook():
     assert content == "123456789"
 
 
-def test_tljh_new_user_create():
+def test_new_user_create():
     """
     Test that plugin receives username as arg
     """
-    with open("test_new_user_create") as f:
+    username="user1"
+    # Call ensure_user to make sure the user plugin gets called
+    user.ensure_user(username)
+
+    with open(f"test_new_user_create") as f:
         content = f.read()
 
-    assert content == "a new userfile"
+    assert content == username
