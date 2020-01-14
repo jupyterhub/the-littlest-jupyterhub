@@ -476,9 +476,7 @@ def main():
     pm = setup_plugins(args.plugin)
 
     ensure_config_yaml(pm)
-
     ensure_admins(args.admin)
-
     ensure_usergroups()
     ensure_user_environment(args.user_requirements_txt_url)
 
