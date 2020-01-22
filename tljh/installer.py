@@ -238,7 +238,7 @@ def ensure_user_environment(user_requirements_txt_file):
     """
     logger.info("Setting up user environment...")
     if "python3.7" in sys.executable:
-        conda_version = '4.7.10'
+        conda_version = '4.8.1'
         miniconda_version = '4.7.10'
         miniconda_installer_md5 = "1c945f2b3335c7b2b15130b1b2dc5cf4"
     else:
