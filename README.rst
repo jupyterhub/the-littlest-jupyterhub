@@ -24,7 +24,7 @@ for more information on using The Littlest JupyterHub.
 
 For support questions please search or post to `our forum <https://discourse.jupyter.org/c/jupyterhub/>`_.
 
-See the `contributing guide <https://the-littlest-jupyterhub.readthedocs.io/en/latest/contributing/index.html>`_`
+See the `contributing guide <https://the-littlest-jupyterhub.readthedocs.io/en/latest/contributing/index.html>`_
 for information on the different ways of contributing to the littlest JupyterHub.
 
 See `this blog post <http://words.yuvi.in/post/the-littlest-jupyterhub/>`_ for
