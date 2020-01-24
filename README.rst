@@ -14,13 +14,22 @@ The Littlest JupyterHub
 **The Littlest JupyterHub** (TLJH) distribution helps you provide Jupyter Notebooks
 to 1-50 users on a single server.
 
-Administrators who do not consider themselves 'system administrators' but would
-like to provide hosted Jupyter Notebooks for their students / users are the
-primary audience. All users are provided with the same environment, and administrators
+The primary audience are people who do not consider themselves 'system administrators'
+but would like to provide hosted Jupyter Notebooks for their students or users.
+All users are provided with the same environment, and administrators
 can easily install libraries into this environment without any specialized knowledge.
+
+See the `latest documentation <https://the-littlest-jupyterhub.readthedocs.io>`_
+for more information on using The Littlest JupyterHub.
+
+For support questions please search or post to `our forum <https://discourse.jupyter.org/c/jupyterhub/>`_.
+
+See the `contributing guide <https://the-littlest-jupyterhub.readthedocs.io/en/latest/contributing/index.html>`_`
+for information on the different ways of contributing to the littlest JupyterHub.
 
 See `this blog post <http://words.yuvi.in/post/the-littlest-jupyterhub/>`_ for
 more information.
+
 
 Development Status
 ==================
@@ -34,7 +43,7 @@ Installation
 
 The Littlest JupyterHub (TLJH) can run on any server that is running at least
 **Ubuntu 18.04**. Earlier versions of Ubuntu are not supported.
-We have a bunch of tutorials to get you started.
+We have several tutorials to get you started.
 
 - Tutorials to create a new server from scratch on a cloud provider & run TLJH
   on it. These are **recommended** if you do not have much experience setting up
