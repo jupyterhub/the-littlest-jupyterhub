@@ -207,6 +207,7 @@ def test_pip_upgrade(group, allowed):
                 "-m",
                 "pip",
                 "install",
+                "--no-user",
                 "--ignore-installed",
                 "--no-deps",
                 "testpath==0.3.0",
@@ -218,6 +219,7 @@ def test_pip_upgrade(group, allowed):
             [python, "-m", "pip", "install", "--upgrade", "testpath"],
             preexec_fn=partial(setgroup, group),
         )
+
 
 def test_symlinks():
     """
