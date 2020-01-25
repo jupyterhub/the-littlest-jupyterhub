@@ -10,6 +10,8 @@ The Littlest JupyterHub
    :target: https://the-littlest-jupyterhub.readthedocs.io
 .. image:: https://badges.gitter.im/jupyterhub/jupyterhub.svg
    :target: https://gitter.im/jupyterhub/jupyterhub
+.. image:: https://img.shields.io/badge/I_want_to_contribute!-grey?logo=jupyter
+   :target: https://the-littlest-jupyterhub.readthedocs.io/en/latest/contributing/index.html
 
 **The Littlest JupyterHub** (TLJH) distribution helps you provide Jupyter Notebooks
 to 1-50 users on a single server.
@@ -25,7 +27,7 @@ for more information on using The Littlest JupyterHub.
 For support questions please search or post to `our forum <https://discourse.jupyter.org/c/jupyterhub/>`_.
 
 See the `contributing guide <https://the-littlest-jupyterhub.readthedocs.io/en/latest/contributing/index.html>`_
-for information on the different ways of contributing to the littlest JupyterHub.
+for information on the different ways of contributing to The Littlest JupyterHub.
 
 See `this blog post <http://words.yuvi.in/post/the-littlest-jupyterhub/>`_ for
 more information.
