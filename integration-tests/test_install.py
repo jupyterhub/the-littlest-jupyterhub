@@ -123,6 +123,7 @@ def test_installer_log_readable():
     assert file_stat.st_uid == 0
     assert file_stat.st_mode == 0o100500
 
+
 @pytest.mark.parametrize("group", [ADMIN_GROUP, USER_GROUP])
 def test_user_env_readable(group):
     # every file in user env should be readable by everyone
@@ -163,8 +164,15 @@ def test_pip_install(group, allowed):
     python = os.path.join(USER_PREFIX, "bin", "python")
 
     with context:
+        # we explicitly add `--no-user` here even though a real user wouldn't
+        # With this test we want to check that a user can't install to the
+        # global site-packages directory. In new versions of pip the default
+        # behaviour is to install to a user location when a global install
+        # isn't possible. By using --no-user we disable this behaviour and
+        # get a failure if the user can't install to the global site. Which is
+        # what we wanted to test for here.
         subprocess.check_call(
-            [python, "-m", "pip", "install", "--ignore-installed", "--no-deps", "flit"],
+            [python, "-m", "pip", "install", "--no-user", "--ignore-installed", "--no-deps", "flit"],
             preexec_fn=partial(setgroup, group),
         )
     if allowed:
@@ -199,6 +207,7 @@ def test_pip_upgrade(group, allowed):
                 "-m",
                 "pip",
                 "install",
+                "--no-user",
                 "--ignore-installed",
                 "--no-deps",
                 "testpath==0.3.0",
@@ -210,6 +219,7 @@ def test_pip_upgrade(group, allowed):
             [python, "-m", "pip", "install", "--upgrade", "testpath"],
             preexec_fn=partial(setgroup, group),
         )
+
 
 def test_symlinks():
     """
