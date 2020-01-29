@@ -1,6 +1,7 @@
 """Installation logic for TLJH"""
 
 import argparse
+import dbm
 import itertools
 import logging
 import os
@@ -10,9 +11,11 @@ import sys
 import time
 import warnings
 
+import bcrypt
 import pluggy
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
+from getpass import getpass
 
 from tljh import (
     apt,
@@ -125,8 +128,6 @@ def ensure_jupyterhub_service(prefix):
     """
     Ensure JupyterHub Services are set up properly
     """
-
-    os.makedirs(STATE_DIR, mode=0o700, exist_ok=True)
 
     remove_chp()
     systemd.reload_daemon()
@@ -271,11 +272,13 @@ def ensure_user_environment(user_requirements_txt_file):
         conda.ensure_pip_requirements(USER_ENV_PREFIX, user_requirements_txt_file)
 
 
-def ensure_admins(admins):
+def ensure_admins(admin_password_list):
     """
     Setup given list of users as admins.
     """
-    if not admins:
+    os.makedirs(STATE_DIR, mode=0o700, exist_ok=True)
+
+    if not admin_password_list:
         return
     logger.info("Setting up admin users")
     config_path = CONFIG_FILE
@@ -286,9 +289,22 @@ def ensure_admins(admins):
         config = {}
 
     config['users'] = config.get('users', {})
-    # Flatten admin lists
-    config['users']['admin'] = [admin for admin_sublist in admins
-        for admin in admin_sublist]
+
+    db_passw = os.path.join(STATE_DIR, 'passwords.dbm')
+
+    admins = []
+    for admin_password_entry in admin_password_list:
+        for admin_password_pair in admin_password_entry:
+            if ":" in admin_password_pair:
+                admin, password = admin_password_pair.split(':')
+                admins.append(admin)
+                # Add admin:password to the db
+                password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+                with dbm.open(db_passw, 'c', 0o600) as db:
+                    db[admin] = password
+            else:
+                admins.append(admin_password_pair)
+    config['users']['admin'] = admins
 
     with open(config_path, 'w+') as f:
         yaml.dump(config, f)

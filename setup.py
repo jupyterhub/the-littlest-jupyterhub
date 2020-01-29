@@ -17,6 +17,7 @@ setup(
         'passlib',
         'backoff',
         'requests',
+        'bcrypt',
         'jupyterhub-traefik-proxy==0.1.*'
     ],
     entry_points={

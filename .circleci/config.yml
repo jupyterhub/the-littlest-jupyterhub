@@ -73,6 +73,12 @@ jobs:
                     .circleci/integration-test.py run-test basic-tests test_hub.py test_install.py test_extensions.py
 
             - run:
+                name: Run admin tests
+                command: |
+                    .circleci/integration-test.py run-test --installer-args "--admin admin:admin" basic-tests test_admin_installer.py
+
+
+            - run:
                 name: Run plugin tests
                 command: |
                     .circleci/integration-test.py run-test \
