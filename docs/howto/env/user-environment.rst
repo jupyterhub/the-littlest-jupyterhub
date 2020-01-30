@@ -153,3 +153,57 @@ The most common & portable way to fix this when using ``ssh`` is:
 .. code-block:: bash
 
    sudo PATH=${PATH} conda install -c conda-forge gdal
+
+
+Upgrade to a newer Python version
+=================================
+
+All new TLJH installs use miniconda 4.7.10, which comes with a Python 3.7
+environment for the users. The previously TLJH installs came with miniconda 4.5.4,
+which meant a Python 3.6 environment.
+
+To upgrade the Python version of the user environment, one can:
+
+*  **Start fresh on a machine that doesn't have TLJH already installed.**
+
+   See the :ref:`installation guide <install/installing>` section about how to install TLJH.
+
+*  **Upgrade Python manually.**
+
+   Because upgrading Python for existing installs can break packages alaredy installed
+   under the old Python, upgrading your current TLJH installation, will NOT upgrade
+   the Python version of the user environment, but you may do so manually.
+
+   **Steps:**
+
+   1. Activate the user environment, if using ssh.
+      If the terminal was started with JupyterHub, this step can be skipped:
+
+      .. code-block:: console
+
+         source /opt/tljh/user/bin/activate
+
+   2. Get the list of currently installed pip packages (so you can later install them under the
+      new Python):
+
+      .. code-block:: console
+
+         pip freeze > pip_pkgs.txt
+
+   3. Update all conda installed packages in the environment:
+
+      .. code-block:: console
+
+         sudo conda update --all
+
+   4. Update Python version:
+
+      .. code-block:: console
+
+         conda install python=3.7
+
+   5. Install the pip packages previously saved:
+
+      .. code-block:: console
+
+         pip install pip_pkgs.txt
