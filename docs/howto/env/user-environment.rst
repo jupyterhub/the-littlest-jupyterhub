@@ -179,31 +179,31 @@ To upgrade the Python version of the user environment, one can:
    1. Activate the user environment, if using ssh.
       If the terminal was started with JupyterHub, this step can be skipped:
 
-      .. code-block:: console
+      .. code-block:: bash
 
          source /opt/tljh/user/bin/activate
 
    2. Get the list of currently installed pip packages (so you can later install them under the
       new Python):
 
-      .. code-block:: console
+      .. code-block:: bash
 
          pip freeze > pip_pkgs.txt
 
    3. Update all conda installed packages in the environment:
 
-      .. code-block:: console
+      .. code-block:: bash
 
-         sudo conda update --all
+         sudo PATH=${PATH} conda update --all
 
    4. Update Python version:
 
-      .. code-block:: console
+      .. code-block:: bash
 
-         conda install python=3.7
+         sudo PATH=${PATH} conda install python=3.7
 
    5. Install the pip packages previously saved:
 
-      .. code-block:: console
+      .. code-block:: bash
 
          pip install pip_pkgs.txt
