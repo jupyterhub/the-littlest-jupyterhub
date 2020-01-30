@@ -242,7 +242,8 @@ def ensure_user_environment(user_requirements_txt_file):
     conda_version = '4.5.8'
 
     # If no prior miniconda installation is found, we can install a newer version
-    if not conda.check_miniconda_version(USER_ENV_PREFIX, miniconda_old_version):
+    if not conda.check_miniconda_version(USER_ENV_PREFIX, miniconda_old_version) and
+       not conda.check_miniconda_version(USER_ENV_PREFIX, miniconda_version):
         miniconda_version = '4.7.10'
         miniconda_installer_md5 = "1c945f2b3335c7b2b15130b1b2dc5cf4"
         conda_version = '4.8.1'
