@@ -69,7 +69,7 @@ def test_letsencrypt_config(tljh_dir):
 
     assert cfg["entryPoints"] == {
         "http": {"address": ":80", "redirect": {"entryPoint": "https"}},
-        "https": {"address": ":443", "tls": {}},
+        "https": {"address": ":443", "tls": {"minVersion": "VersionTLS12"}},
         "auth_api": {
             "address": "127.0.0.1:8099",
             "auth": {
@@ -110,6 +110,7 @@ def test_manual_ssl_config(tljh_dir):
         "https": {
             "address": ":443",
             "tls": {
+                "minVersion": "VersionTLS12",
                 "certificates": [
                     {"certFile": "/path/to/ssl.cert", "keyFile": "/path/to/ssl.key"}
                 ]
