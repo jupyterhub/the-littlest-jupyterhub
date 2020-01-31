@@ -206,4 +206,4 @@ To upgrade the Python version of the user environment, one can:
 
       .. code-block:: bash
 
-         pip install pip_pkgs.txt
+         pip install -r pip_pkgs.txt
