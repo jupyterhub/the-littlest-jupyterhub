@@ -34,6 +34,7 @@ idleTimeout = "10m0s"
   [entryPoints.https]
   address = ":{{https['port']}}"
   [entryPoints.https.tls]
+  minVersion = "VersionTLS12"
   {% if https['tls']['cert'] %}
     [[entryPoints.https.tls.certificates]]
       certFile = "{{https['tls']['cert']}}"
