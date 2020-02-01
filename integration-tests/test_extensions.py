@@ -13,7 +13,7 @@ def test_serverextensions():
     ], stderr=subprocess.PIPE)
 
     extensions = [
-        'jupyterlab 0.35.4',
+        'jupyterlab 1.2.6',
         'nbgitpuller 0.6.1',
         'nteract_on_jupyter 2.0.7',
         'nbresuse '
@@ -51,3 +51,4 @@ def test_labextensions():
     """
     # Currently we only install jupyterhub
     assert os.path.exists('/opt/tljh/user/bin/jupyter-labhub')
+    
