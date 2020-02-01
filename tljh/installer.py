@@ -170,14 +170,13 @@ def ensure_jupyterlab_extensions():
     Install the JupyterLab extensions we want.
     """
     extensions = [
-        '@jupyterlab/hub-extension',
-        '@jupyter-widgets/jupyterlab-manager'
+        '@jupyter-widgets/jupyterlab-manager@1.1' # for jupyterlab 1.2.x
     ]
     utils.run_subprocess([
         os.path.join(USER_ENV_PREFIX, 'bin/jupyter'),
         'labextension',
         'install'
-    ] + extensions)
+    ] + extensions + ['--minimize=False']) # webpack minimization might cause flaky test build
 
 
 def ensure_jupyterhub_package(prefix):
@@ -263,7 +262,7 @@ def ensure_user_environment(user_requirements_txt_file):
         'jupyterhub==1.0.0',
         'notebook==5.7.8',
         # Install additional notebook frontends!
-        'jupyterlab==0.35.4',
+        'jupyterlab==1.2.6',
         'nteract-on-jupyter==2.0.7',
         # nbgitpuller for easily pulling in Git repositories
         'nbgitpuller==0.6.1',
