@@ -172,11 +172,26 @@ def ensure_jupyterlab_extensions():
     extensions = [
         '@jupyter-widgets/jupyterlab-manager@1.1' # for jupyterlab 1.2.x
     ]
+    install_options = [
+        '--no-build'   # do not build extension at install time. Will build later
+    ]
     utils.run_subprocess([
         os.path.join(USER_ENV_PREFIX, 'bin/jupyter'),
         'labextension',
         'install'
-    ] + extensions + ['--minimize=False']) # webpack minimization might cause flaky test build
+    ] + extensions + install_options)
+    
+    # Build all the lab extensions in one go using jupyter lab build command
+    build_options = [
+        '--minimize=False',
+        '--dev-build=False'
+    ]
+
+    utils.run_subprocess([
+        os.path.join(USER_ENV_PREFIX, 'bin/jupyter'),
+        'lab',
+        'build'
+    ] + build_options)
 
 
 def ensure_jupyterhub_package(prefix):
