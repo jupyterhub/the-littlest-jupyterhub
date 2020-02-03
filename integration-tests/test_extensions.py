@@ -13,14 +13,14 @@ def test_serverextensions():
     ], stderr=subprocess.PIPE)
 
     extensions = [
-        'jupyterlab 1.2.6',
-        'nbgitpuller 0.6.1',
-        'nteract_on_jupyter 2.0.7',
+        'jupyterlab 1.2.',
+        'nbgitpuller 0.7.',
+        'nteract_on_jupyter 2.1.',
         'nbresuse '
     ]
 
     for e in extensions:
-        assert '{} \x1b[32mOK\x1b[0m'.format(e) in proc.stderr.decode()
+        assert e in proc.stderr.decode()
 
 def test_nbextensions():
     """
