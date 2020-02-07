@@ -59,7 +59,7 @@ jobs:
                 command: |
                     apk add --no-cache python3 pytest
 
-            - checkout
+            # - checkout
             - setup_remote_docker
 
             - run:
