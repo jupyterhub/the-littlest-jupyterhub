@@ -95,7 +95,7 @@ jobs:
                 name: Run plugin tests
                 command: |
                     .circleci/integration-test.py run-test \
-                        --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
+                        --installer-args "--plugin /srv/src/plugins/simplest" \
                         plugins test_simplest_plugin.py
 
             - run:
