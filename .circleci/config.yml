@@ -1,4 +1,12 @@
 version: 2.1
+executors:
+    ubuntu_docker:
+        docker:
+            # Match target OS of TLJH
+            - image: ubuntu:18.04
+        working_directory: ~/repo
+
+
 commands:
     setup_venv:
         description: Setup hub venv
@@ -19,12 +27,7 @@ commands:
 
 jobs:
     unit-test:
-        docker:
-            # Match target OS of TLJH
-            - image: ubuntu:18.04
-
-        working_directory: ~/repo
-
+        executor: ubuntu_docker
         steps:
             - checkout
 
@@ -103,12 +106,7 @@ jobs:
 
 
     documentation:
-        docker:
-            # Match target OS of TLJH
-            - image: ubuntu:18.04
-
-        working_directory: ~/repo
-
+        executor: ubuntu_docker
         steps:
             - checkout
 
