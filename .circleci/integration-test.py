@@ -86,19 +86,21 @@ def run_test(image_name, test_name, test_files, installer_args):
     )
 
     copy_to_container(test_name, os.path.join(source_path, 'bootstrap/'), '/srv/src')
+    copy_to_container(test_name, os.path.join(source_path, 'integration-tests/'), '/srv/src')
     run_container_command(
         test_name,
         f'python3 /srv/src/bootstrap.py {installer_args}'
     )
-    copy_to_container(test_name, os.path.join(source_path, 'integration-tests/'), '/srv/src')
+    # Install pkgs from requirements in hub's pip, where
+    # the bootstrap script installed the others
     run_container_command(
         test_name,
-        'python3 -m pip install -r /srv/src/requirements.txt'
+        '/opt/tljh/hub/bin/python3 -m pip install -r /srv/src/integration-tests/requirements.txt'
     )
     run_container_command(
         test_name,
-        'python3 -m pytest -v {}'.format(
-            ' '.join([os.path.join('/srv/src/', f) for f in test_files])
+        '/opt/tljh/hub/bin/python3 -m pytest -v {}'.format(
+            ' '.join([os.path.join('/srv/src/integration-tests/', f) for f in test_files])
         )
     )
 
