@@ -1,2 +1,3 @@
 include tljh/systemd-units/*
 include tljh/*.tpl
+include tljh/requirements-base.txt
