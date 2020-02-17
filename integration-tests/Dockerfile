@@ -20,7 +20,7 @@ RUN systemctl set-default multi-user.target
 
 STOPSIGNAL SIGRTMIN+3
 
-# Set up image to be useful out of the box for development & CI
+# Uncomment these lines for a development install
 #ENV TLJH_BOOTSTRAP_DEV=yes
 #ENV TLJH_BOOTSTRAP_PIP_SPEC=/srv/src
 #ENV PATH=/opt/tljh/hub/bin:${PATH}
