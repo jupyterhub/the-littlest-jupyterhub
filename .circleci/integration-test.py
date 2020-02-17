@@ -85,7 +85,7 @@ def run_test(image_name, test_name, test_files, installer_args):
         os.path.join(os.path.dirname(__file__), os.pardir)
     )
 
-    copy_to_container(test_name, os.path.join(source_path, 'bootstrap/'), '/srv/src')
+    copy_to_container(test_name, os.path.join(source_path, 'bootstrap/.'), '/srv/src')
     copy_to_container(test_name, os.path.join(source_path, 'integration-tests/'), '/srv/src')
     run_container_command(
         test_name,
