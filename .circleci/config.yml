@@ -25,6 +25,61 @@ commands:
                 command: |
                     apt-get update --yes && apt-get install --yes python3 python3-venv git make
 
+    build_systemd_image:
+        steps:
+            - run:
+                name: build systemd image
+                command: |
+                    .circleci/integration-test.py build-image
+
+    basic_tests:
+        parameters:
+            upgrade:
+                type: string
+                default: ""
+        steps:
+            - run:
+                name: Run basic tests
+                command: |
+                    .circleci/integration-test.py run-test basic-tests \
+                    test_hub.py test_install.py test_extensions.py \
+                    << parameters.upgrade >>
+
+    admin_tests:
+        parameters:
+            upgrade:
+                type: string
+                default: ""
+        steps:
+            - run:
+                name: Run admin tests
+                command: |
+                    .circleci/integration-test.py run-test \
+                    --installer-args "--admin admin:admin" \
+                    basic-tests test_admin_installer.py \
+                    << parameters.upgrade >>
+
+    plugin_tests:
+        parameters:
+            upgrade:
+                type: string
+                default: ""
+        steps:
+            - run:
+                name: Run plugin tests
+                command: |
+                    .circleci/integration-test.py run-test \
+                        --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
+                        plugins test_simplest_plugin.py \
+                        << parameters.upgrade >>
+
+    bootstrap_checks:
+        steps:
+            - run:
+                name: Run bootstrap checks
+                command: |
+                    py.test integration-tests/test_bootstrap.py
+
 jobs:
     unit-test:
         executor: ubuntu_docker
@@ -73,36 +128,44 @@ jobs:
                     apk add --no-cache python3 pytest
 
             - checkout
+
             - setup_remote_docker
 
+            - build_systemd_image
+
+            - basic-tests
+
+            - admin_tests
+
+            - plugin_tests
+
+            - bootstrap_checks
+
+
+    upgrade-test:
+        docker:
+            - image: docker:18.05.0-ce-git
+
+        steps:
             - run:
-                name: build systemd image
+                name: setup python3
                 command: |
-                    .circleci/integration-test.py build-image
+                    apk add --no-cache python3 pytest
 
-            - run:
-                name: Run basic tests
-                command: |
-                    .circleci/integration-test.py run-test basic-tests test_hub.py test_install.py test_extensions.py
+            - checkout
 
-            - run:
-                name: Run admin tests
-                command: |
-                    .circleci/integration-test.py run-test --installer-args "--admin admin:admin" basic-tests test_admin_installer.py
+            - setup_remote_docker
 
+            - build_systemd_image
 
-            - run:
-                name: Run plugin tests
-                command: |
-                    .circleci/integration-test.py run-test \
-                        --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
-                        plugins test_simplest_plugin.py
+            - basic-tests:
+                upgrade: "--upgrade"
 
-            - run:
-                name: Run bootstrap checks
-                command: |
-                    py.test integration-tests/test_bootstrap.py
+            - admin_tests:
+                upgrade: "--upgrade"
 
+            - plugin_tests:
+                upgrade: "--upgrade"
 
 
     documentation:
