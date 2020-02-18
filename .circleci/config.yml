@@ -45,9 +45,10 @@ commands:
                 name: Run basic tests
                 command: |
                     CIRCLE_PR_BRANCH=`curl -s https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls/$CIRCLE_PR_NUMBER | grep '"ref":' | grep -v "master" | cut -d '"' -f4`
+                    BRANCH=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_PR_BRANCH
                     .circleci/integration-test.py run-test basic-tests \
                     test_hub.py test_install.py test_extensions.py \
-                    << parameters.upgrade >> $CIRCLE_PR_BRANCH
+                    << parameters.upgrade >> $BRANCH
 
     admin_tests:
         parameters:
@@ -141,6 +142,10 @@ jobs:
                 name: setup python3
                 command: |
                     apk add --no-cache python3 pytest
+            - run:
+                name: install curl
+                command: |
+                    apk add curl curl-dev
 
             - checkout
 
@@ -149,26 +154,17 @@ jobs:
             - build_systemd_image
 
             - basic_tests:
-                branch_path: $CIRCLE_PR_BRANCH
 
             - admin_tests:
-                branch_path: 'git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_PR_BRANCH'
 
             - plugin_tests:
-                branch_path: 'git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_PR_BRANCH'
 
             - bootstrap_checks:
-                branch_path: 'git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_PR_BRANCH'
 
 
     upgrade-test:
         docker:
             - image: docker:18.05.0-ce-git
-
-        environment:
-            CIRCLE_PR_BRANCH: |
-                $(curl -s https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls/$CIRCLE_PR_NUMBER \
-                | grep '"ref":' | grep -v "master" | cut -d '"' -f4)
 
         steps:
             - run:
@@ -184,15 +180,12 @@ jobs:
 
             - basic_tests:
                 upgrade: "--upgrade"
-                branch_path: 'git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_PR_BRANCH'
 
             - admin_tests:
                 upgrade: "--upgrade"
-                branch_path: "git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_PR_BRANCH"
 
             - plugin_tests:
                 upgrade: "--upgrade"
-                branch_path: "git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_PR_BRANCH"
 
 
     documentation:
