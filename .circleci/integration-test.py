@@ -15,7 +15,7 @@ def build_systemd_image(image_name, source_path):
     ])
 
 
-def run_systemd_image(image_name, container_name):
+def run_systemd_image(image_name, container_name, branch_path):
     """
     Run docker image with systemd
 
@@ -23,7 +23,7 @@ def run_systemd_image(image_name, container_name):
 
     Container named container_name will be started.
     """
-    subprocess.check_call([
+    cmd = [
         'docker', 'run',
         '--privileged',
         '--mount', 'type=bind,source=/sys/fs/cgroup,target=/sys/fs/cgroup',
@@ -34,7 +34,12 @@ def run_systemd_image(image_name, container_name):
         # If we change this, need to change all other references to this number.
         '--memory', '1G',
         image_name
-    ])
+    ]
+
+    if branch_path:
+        cmd.append('-e', f'TLJH_BOOTSTRAP_PIP_SPEC="{branch_path}"')
+
+    subprocess.check_call(cmd)
 
 
 def stop_container(container_name):
@@ -74,12 +79,12 @@ def copy_to_container(container_name, src_path, dest_path):
     ])
 
 
-def run_test(image_name, test_name, test_files, installer_args):
+def run_test(image_name, test_name, branch_path, test_files, upgrade, installer_args):
     """
     Wrapper that sets up tljh with installer_args & runs test_name
     """
     stop_container(test_name)
-    run_systemd_image(image_name, test_name)
+    run_systemd_image(image_name, test_name, branch_path)
 
     source_path = os.path.abspath(
         os.path.join(os.path.dirname(__file__), os.pardir)
@@ -87,10 +92,20 @@ def run_test(image_name, test_name, test_files, installer_args):
 
     copy_to_container(test_name, os.path.join(source_path, 'bootstrap/.'), '/srv/src')
     copy_to_container(test_name, os.path.join(source_path, 'integration-tests/'), '/srv/src')
+
+
+    # Install TLJH master first to test upgrades
+    if upgrade:
+        run_container_command(
+            test_name,
+            f'curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py | python3 -'
+        )
+
     run_container_command(
         test_name,
         f'python3 /srv/src/bootstrap.py {installer_args}'
     )
+
     # Install pkgs from requirements in hub's pip, where
     # the bootstrap script installed the others
     run_container_command(
@@ -140,7 +155,9 @@ def main():
 
     run_test_parser = subparsers.add_parser('run-test')
     run_test_parser.add_argument('--installer-args', default='')
+    run_test_parser.add_argument('--upgrade', action='store_true')
     run_test_parser.add_argument('test_name')
+    run_test_parser.add_argument('branch_path')
     run_test_parser.add_argument('test_files', nargs='+')
 
     show_logs_parser = subparsers.add_parser('show-logs')
@@ -151,7 +168,7 @@ def main():
     image_name = 'tljh-systemd'
 
     if args.action == 'run-test':
-        run_test(image_name, args.test_name, args.test_files, args.installer_args)
+        run_test(image_name, args.test_name, args.branch_path, args.test_files, args.upgrade, args.installer_args)
     elif args.action == 'show-logs':
         show_logs(args.container_name)
     elif args.action == 'run':
@@ -159,7 +176,7 @@ def main():
     elif args.action == 'copy':
         copy_to_container(args.container_name, args.src, args.dest)
     elif args.action == 'start-container':
-        run_systemd_image(image_name, args.container_name)
+        run_systemd_image(image_name, args.container_name, args.branch_path)
     elif args.action == 'stop-container':
         stop_container(args.container_name)
     elif args.action == 'build-image':

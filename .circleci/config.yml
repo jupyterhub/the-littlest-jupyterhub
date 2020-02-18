@@ -37,19 +37,27 @@ commands:
             upgrade:
                 type: string
                 default: ""
+            branch_path:
+                type: string
+                default: ""
+
         steps:
             - run:
                 name: Run basic tests
                 command: |
                     .circleci/integration-test.py run-test basic-tests \
                     test_hub.py test_install.py test_extensions.py \
-                    << parameters.upgrade >>
+                    << parameters.upgrade >> << parameters.branch_path >>
 
     admin_tests:
         parameters:
             upgrade:
                 type: string
                 default: ""
+            branch_path:
+                    type: string
+                    default: ""
+
         steps:
             - run:
                 name: Run admin tests
@@ -57,13 +65,17 @@ commands:
                     .circleci/integration-test.py run-test \
                     --installer-args "--admin admin:admin" \
                     basic-tests test_admin_installer.py \
-                    << parameters.upgrade >>
+                    << parameters.upgrade >> << parameters.branch_path >>
 
     plugin_tests:
         parameters:
             upgrade:
                 type: string
                 default: ""
+            branch_path:
+                type: string
+                default: ""
+
         steps:
             - run:
                 name: Run plugin tests
@@ -79,6 +91,15 @@ commands:
                 name: Run bootstrap checks
                 command: |
                     py.test integration-tests/test_bootstrap.py
+
+    get_pr_branch:
+        steps:
+            - run:
+                name: Get PR branch
+                command: |
+                    CIRCLE_PR_BRANCH=`curl -s https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pulls/${CIRCLE_PR_NUMBER} \
+                    | grep '"ref":' | grep -v "master" | cut -d '"' -f4'
+
 
 jobs:
     unit-test:
@@ -127,19 +148,25 @@ jobs:
                 command: |
                     apk add --no-cache python3 pytest
 
+            - get_pr_branch
+
             - checkout
 
             - setup_remote_docker
 
             - build_systemd_image
 
-            - basic-tests
+            - basic-tests:
+                branch_path: "git+https://github.com/{CIRCLE_PROJECT_USERNAME}/the-littlest-jupyterhub.git@${CIRCLE_PR_BRANCH}"
 
-            - admin_tests
+            - admin_tests:
+                branch_path: "git+https://github.com/{CIRCLE_PROJECT_USERNAME}/the-littlest-jupyterhub.git@${CIRCLE_PR_BRANCH}"
 
-            - plugin_tests
+            - plugin_tests:
+                branch_path: "git+https://github.com/{CIRCLE_PROJECT_USERNAME}/the-littlest-jupyterhub.git@${CIRCLE_PR_BRANCH}"
 
-            - bootstrap_checks
+            - bootstrap_checks:
+                branch_path: "git+https://github.com/{CIRCLE_PROJECT_USERNAME}/the-littlest-jupyterhub.git@${CIRCLE_PR_BRANCH}"
 
 
     upgrade-test:
@@ -152,6 +179,8 @@ jobs:
                 command: |
                     apk add --no-cache python3 pytest
 
+            - get_pr_branch
+
             - checkout
 
             - setup_remote_docker
@@ -160,12 +189,15 @@ jobs:
 
             - basic-tests:
                 upgrade: "--upgrade"
+                branch_path: "git+https://github.com/{CIRCLE_PROJECT_USERNAME}/the-littlest-jupyterhub.git@${CIRCLE_PR_BRANCH}"
 
             - admin_tests:
                 upgrade: "--upgrade"
+                branch_path: "git+https://github.com/{CIRCLE_PROJECT_USERNAME}/the-littlest-jupyterhub.git@${CIRCLE_PR_BRANCH}"
 
             - plugin_tests:
                 upgrade: "--upgrade"
+                branch_path: "git+https://github.com/{CIRCLE_PROJECT_USERNAME}/the-littlest-jupyterhub.git@${CIRCLE_PR_BRANCH}"
 
 
     documentation:
