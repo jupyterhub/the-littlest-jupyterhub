@@ -37,58 +37,61 @@ commands:
             upgrade:
                 type: string
                 default: ""
-            branch_path:
-                type: string
-                default: ""
         steps:
             - run:
                 name: Run basic tests
                 command: |
-                    CIRCLE_PR_BRANCH=`curl -s https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls/$CIRCLE_PR_NUMBER | grep '"ref":' | grep -v "master" | cut -d '"' -f4`
-                    BRANCH=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_PR_BRANCH
-                    .circleci/integration-test.py run-test basic-tests \
-                    test_hub.py test_install.py test_extensions.py \
-                    << parameters.upgrade >> $BRANCH
+                    PR_BRANCH=`(curl -s https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls/$CIRCLE_PR_NUMBER | jq -r ".head.ref")`
+                    if [ "$PR_BRANCH" == "null" ];then
+                        PR_BRANCH=$CIRCLE_BRANCH
+                    fi
+                    BRANCH=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$PR_BRANCH
 
+                    .circleci/integration-test.py run-test basic-tests \
+                    "$BRANCH" test_hub.py test_install.py test_extensions.py \
+                    << parameters.upgrade >>
     admin_tests:
         parameters:
             upgrade:
                 type: string
                 default: ""
-            branch_path:
-                    type: string
-                    default: ""
         steps:
             - run:
                 name: Run admin tests
                 command: |
+                    PR_BRANCH=`(curl -s https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls/$CIRCLE_PR_NUMBER | jq -r ".head.ref")`
+                    if [ "$PR_BRANCH" == "null" ];then
+                        PR_BRANCH=$CIRCLE_BRANCH
+                    fi
+                    BRANCH=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$PR_BRANCH
+
                     .circleci/integration-test.py run-test \
                     --installer-args "--admin admin:admin" \
-                    basic-tests test_admin_installer.py \
-                    << parameters.upgrade >> << parameters.branch_path >>
+                    basic-tests $BRANCH test_admin_installer.py \
+                    << parameters.upgrade >>
 
     plugin_tests:
         parameters:
             upgrade:
                 type: string
                 default: ""
-            branch_path:
-                type: string
-                default: ""
         steps:
             - run:
                 name: Run plugin tests
                 command: |
+                    PR_BRANCH=`(curl -s https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls/$CIRCLE_PR_NUMBER | jq -r ".head.ref")`
+                    if [ "$PR_BRANCH" == "null" ];then
+                        PR_BRANCH=$CIRCLE_BRANCH
+                    fi
+                    BRANCH=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$PR_BRANCH
+
                     .circleci/integration-test.py run-test \
                         --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
-                        plugins test_simplest_plugin.py \
+                        plugins $BRANCH test_simplest_plugin.py \
                         << parameters.upgrade >>
 
     bootstrap_checks:
         parameters:
-            branch_path:
-                type: string
-                default: ""
         steps:
             - run:
                 name: Run bootstrap checks
@@ -143,9 +146,10 @@ jobs:
                 command: |
                     apk add --no-cache python3 pytest
             - run:
-                name: install curl
+                name: install curl and jq
                 command: |
                     apk add curl curl-dev
+                    apk add jq
 
             - checkout
 
@@ -153,13 +157,13 @@ jobs:
 
             - build_systemd_image
 
-            - basic_tests:
+            - basic_tests
 
-            - admin_tests:
+            - admin_tests
 
-            - plugin_tests:
+            - plugin_tests
 
-            - bootstrap_checks:
+            - bootstrap_checks
 
 
     upgrade-test:

@@ -33,11 +33,13 @@ def run_systemd_image(image_name, container_name, branch_path):
         # to need at least this much RAM to build. Boo?
         # If we change this, need to change all other references to this number.
         '--memory', '1G',
-        image_name
     ]
 
     if branch_path:
-        cmd.append('-e', f'TLJH_BOOTSTRAP_PIP_SPEC="{branch_path}"')
+        cmd.append('-e')
+        cmd.append(f'TLJH_BOOTSTRAP_PIP_SPEC={branch_path}')
+
+    cmd.append(image_name)
 
     subprocess.check_call(cmd)
 
