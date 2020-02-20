@@ -33,6 +33,7 @@ commands:
                 command: |
                     apk add --no-cache python3 pytest
             - run:
+                # Need this to indentify the circle pr branch
                 name: install curl and jq
                 command: |
                     apk add curl curl-dev
@@ -48,6 +49,7 @@ commands:
 
     basic_tests:
         parameters:
+            # Whether or not we should run update tests
             upgrade:
                 type: string
                 default: ""
@@ -55,14 +57,15 @@ commands:
             - run:
                 name: Run basic tests
                 command: |
-                    PR_BRANCH=`(curl -s https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls/$CIRCLE_PR_NUMBER | jq -r ".head.ref")`
+                    PR_INFO_URL=https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls/$CIRCLE_PR_NUMBER
+                    PR_BRANCH=`(curl -s $PR_INFO_URL | jq -r ".head.ref")`
                     if [ "$PR_BRANCH" == "null" ];then
                         PR_BRANCH=$CIRCLE_BRANCH
                     fi
-                    BRANCH=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$PR_BRANCH
+                    BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$PR_BRANCH
 
                     .circleci/integration-test.py run-test basic-tests \
-                    "$BRANCH" test_hub.py test_install.py test_extensions.py \
+                    "$BOOTSTRAP_PIP_SPEC" test_hub.py test_install.py test_extensions.py \
                     << parameters.upgrade >>
     admin_tests:
         parameters:
@@ -73,15 +76,16 @@ commands:
             - run:
                 name: Run admin tests
                 command: |
-                    PR_BRANCH=`(curl -s https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls/$CIRCLE_PR_NUMBER | jq -r ".head.ref")`
+                    PR_INFO_URL=https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls/$CIRCLE_PR_NUMBER
+                    PR_BRANCH=`(curl -s $PR_INFO_URL | jq -r ".head.ref")`
                     if [ "$PR_BRANCH" == "null" ];then
                         PR_BRANCH=$CIRCLE_BRANCH
                     fi
-                    BRANCH=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$PR_BRANCH
+                    BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$PR_BRANCH
 
                     .circleci/integration-test.py run-test \
                     --installer-args "--admin admin:admin" \
-                    basic-tests $BRANCH test_admin_installer.py \
+                    basic-tests $BOOTSTRAP_PIP_SPEC test_admin_installer.py \
                     << parameters.upgrade >>
 
     plugin_tests:
@@ -93,15 +97,16 @@ commands:
             - run:
                 name: Run plugin tests
                 command: |
-                    PR_BRANCH=`(curl -s https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls/$CIRCLE_PR_NUMBER | jq -r ".head.ref")`
+                    PR_INFO_URL=https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls/$CIRCLE_PR_NUMBER
+                    PR_BRANCH=`(curl -s $PR_INFO_URL | jq -r ".head.ref")`
                     if [ "$PR_BRANCH" == "null" ];then
                         PR_BRANCH=$CIRCLE_BRANCH
                     fi
-                    BRANCH=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$PR_BRANCH
+                    BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$PR_BRANCH
 
                     .circleci/integration-test.py run-test \
                         --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
-                        plugins $BRANCH test_simplest_plugin.py \
+                        plugins $BOOTSTRAP_PIP_SPEC test_simplest_plugin.py \
                         << parameters.upgrade >>
 
     bootstrap_checks:
