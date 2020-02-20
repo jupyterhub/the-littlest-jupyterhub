@@ -8,7 +8,7 @@ Looking at Logs
 They contain a forensic record of what individual pieces of software were doing
 before things went bad, and can help us understand the problem so we can fix it.
 
-TLJH collects logs from JupyterHub, Configurable HTTP Proxy, & from each individual
+TLJH collects logs from JupyterHub, Traefik Proxy, & from each individual
 user's notebook server. All the logs are accessible via `journalctl <https://www.freedesktop.org/software/systemd/man/journalctl.html>`_.
 The installer also writes logs to disk, to help with cases where the
 installer did not succeed.
