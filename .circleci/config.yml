@@ -182,6 +182,16 @@ jobs:
             - image: docker:18.05.0-ce-git
 
         steps:
+            - run:
+                name: Check upgrade testing
+                command: |
+                    if [ "$CIRCLE_BRANCH" == "master" ]; then
+                        echo "On master, no upgrade to test..."
+                        circleci-agent step halt
+                    else
+                        echo "PR detected, testing upgrade..."
+                    fi
+
             - setup_pkgs
 
             - checkout
