@@ -25,21 +25,6 @@ commands:
                 command: |
                     apt-get update --yes && apt-get install --yes python3 python3-venv git make
 
-    setup_pkgs:
-        description: Setup pkgs for integration and upgrade tests
-        steps:
-            - run:
-                name: setup python3
-                command: |
-                    apk add --no-cache python3 pytest
-            - run:
-                # Need this to indentify the circle pr branch
-                name: install curl and jq
-                command: |
-                    apk add curl curl-dev
-                    apk add jq
-
-
     build_systemd_image:
         steps:
             - run:
@@ -145,7 +130,10 @@ jobs:
             - image: docker:18.05.0-ce-git
 
         steps:
-            - setup_pkgs
+            - run:
+                name: setup python3
+                command: |
+                    apk add --no-cache python3 pytest
 
             - checkout
 
@@ -177,7 +165,10 @@ jobs:
                         echo "PR detected, testing upgrade..."
                     fi
 
-            - setup_pkgs
+            - run:
+                name: setup python3
+                command: |
+                    apk add --no-cache python3 pytest
 
             - checkout
 
