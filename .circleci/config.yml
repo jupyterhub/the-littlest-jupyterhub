@@ -57,12 +57,7 @@ commands:
             - run:
                 name: Run basic tests
                 command: |
-                    PR_INFO_URL=https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls/$CIRCLE_PR_NUMBER
-                    PR_BRANCH=`(curl -s $PR_INFO_URL | jq -r ".head.ref")`
-                    if [ "$PR_BRANCH" == "null" ];then
-                        PR_BRANCH=$CIRCLE_BRANCH
-                    fi
-                    BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$PR_BRANCH
+                    BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_SHA1
 
                     .circleci/integration-test.py run-test basic-tests \
                     "$BOOTSTRAP_PIP_SPEC" test_hub.py test_install.py test_extensions.py \
@@ -76,12 +71,7 @@ commands:
             - run:
                 name: Run admin tests
                 command: |
-                    PR_INFO_URL=https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls/$CIRCLE_PR_NUMBER
-                    PR_BRANCH=`(curl -s $PR_INFO_URL | jq -r ".head.ref")`
-                    if [ "$PR_BRANCH" == "null" ];then
-                        PR_BRANCH=$CIRCLE_BRANCH
-                    fi
-                    BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$PR_BRANCH
+                    BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_SHA1
 
                     .circleci/integration-test.py run-test \
                     --installer-args "--admin admin:admin" \
@@ -97,12 +87,7 @@ commands:
             - run:
                 name: Run plugin tests
                 command: |
-                    PR_INFO_URL=https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls/$CIRCLE_PR_NUMBER
-                    PR_BRANCH=`(curl -s $PR_INFO_URL | jq -r ".head.ref")`
-                    if [ "$PR_BRANCH" == "null" ];then
-                        PR_BRANCH=$CIRCLE_BRANCH
-                    fi
-                    BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$PR_BRANCH
+                    BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_SHA1
 
                     .circleci/integration-test.py run-test \
                         --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
