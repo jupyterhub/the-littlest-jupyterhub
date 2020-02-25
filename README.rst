@@ -14,7 +14,7 @@ The Littlest JupyterHub
    :target: https://the-littlest-jupyterhub.readthedocs.io/en/latest/contributing/index.html
 
 **The Littlest JupyterHub** (TLJH) distribution helps you provide Jupyter Notebooks
-to 1-50 users on a single server.
+to 1-100 users on a single server.
 
 The primary audience are people who do not consider themselves 'system administrators'
 but would like to provide hosted Jupyter Notebooks for their students or users.
