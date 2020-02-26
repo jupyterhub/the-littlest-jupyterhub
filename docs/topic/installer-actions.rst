@@ -18,10 +18,8 @@ Hub environment
 ===============
 
 JupyterHub is run from a python3 virtual environment located in ``/opt/tljh/hub``. It
-uses the system's installed python and is owned by root. It also contains a ``npm``
-install of `configurable-http-proxy <https://github.com/jupyterhub/configurable-http-proxy>`_
-and a binary install of `traefik <http://traefik.io/>`_. This virtual environment is
-completely managed by TLJH.
+uses the system's installed python and is owned by root. It also contains a binary install 
+of `traefik <http://traefik.io/>`_. This virtual environment is completely managed by TLJH.
 
 User environment
 ================
@@ -60,10 +58,9 @@ hard to access the ``tljh-config`` command used to change most config parameters
 Systemd Units
 =============
 
-TLJH places 3 systemd units on your computer. They all start on system startup.
+TLJH places 2 systemd units on your computer. They all start on system startup.
 
 #. ``jupyterhub.service`` - starts the JupyterHub service.
-#. ``configurable-http-proxy.service`` - starts the nodejs based proxy that is used by JupyterHub.
 #. ``traefik.service`` - starts traefik proxy that manages HTTPS
 
 In addition, each running Jupyter user gets their own systemd unit of the name ``jupyter-<username>``.
