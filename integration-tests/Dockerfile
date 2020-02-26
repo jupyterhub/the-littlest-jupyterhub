@@ -1,5 +1,5 @@
 # Systemd inside a Docker container, for CI only
-ARG UBUNTU_VERSION=19.04
+ARG UBUNTU_VERSION=18.04
 FROM ubuntu:${UBUNTU_VERSION}
 
 RUN apt-get update --yes

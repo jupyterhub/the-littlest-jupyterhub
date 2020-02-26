@@ -34,6 +34,10 @@ commands:
                     python3 -m pip install -U pip==20.0.*
 
     build_systemd_image:
+        parameters:
+            ubuntu_version:
+                type: string
+                default: "18.04"
         steps:
             - run:
                 name: build systemd image
@@ -164,19 +168,30 @@ jobs:
                     apk add --no-cache python3 pytest
 
             - checkout
-
             - setup_remote_docker
-
             - build_systemd_image
-
             - basic_tests
-
             - admin_tests
-
             - plugin_tests
-
             - bootstrap_checks
 
+    integration-test-latest:
+        docker:
+            - image: docker:18.05.0-ce-git
+
+        steps:
+            - run:
+                name: setup python3
+                command: |
+                    apk add --no-cache python3 pytest
+
+            - checkout
+            - setup_remote_docker
+            - build_systemd_image:
+                ubuntu_version: "19.10"
+            - basic_tests
+            - admin_tests
+            - plugin_tests
 
     upgrade-test:
         docker:
@@ -219,4 +234,5 @@ workflows:
         jobs:
             - unit-test
             - integration-test
+            - integration-test-latest
             - upgrade-test

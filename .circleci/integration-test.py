@@ -4,15 +4,18 @@ import subprocess
 import os
 
 
-def build_systemd_image(image_name, source_path):
+def build_systemd_image(image_name, source_path, ubuntu_version=None):
     """
     Build docker image with systemd at source_path.
 
     Built image is tagged with image_name
     """
-    subprocess.check_call([
-        'docker', 'build', '-t', image_name, source_path
-    ])
+    extra_args = []
+    if ubuntu_version:
+        extra_args.extend(["--build-arg", "UBUNTU_VERSION={}".format(ubuntu_version)])
+    subprocess.check_call(
+        ['docker', 'build', '-t', image_name] + extra_args + [source_path]
+    )
 
 
 def run_systemd_image(image_name, container_name, bootstrap_pip_spec):
@@ -24,15 +27,19 @@ def run_systemd_image(image_name, container_name, bootstrap_pip_spec):
     Container named container_name will be started.
     """
     cmd = [
-        'docker', 'run',
+        'docker',
+        'run',
         '--privileged',
-        '--mount', 'type=bind,source=/sys/fs/cgroup,target=/sys/fs/cgroup',
+        '--mount',
+        'type=bind,source=/sys/fs/cgroup,target=/sys/fs/cgroup',
         '--detach',
-        '--name', container_name,
+        '--name',
+        container_name,
         # This is the minimum VM size we support. JupyterLab extensions seem
         # to need at least this much RAM to build. Boo?
         # If we change this, need to change all other references to this number.
-        '--memory', '1.15G',
+        '--memory',
+        '1.15G',
     ]
 
     if bootstrap_pip_spec:
@@ -49,52 +56,46 @@ def stop_container(container_name):
     Stop & remove docker container if it exists.
     """
     try:
-        subprocess.check_output([
-            'docker', 'inspect', container_name
-        ], stderr=subprocess.STDOUT)
+        subprocess.check_output(
+            ['docker', 'inspect', container_name], stderr=subprocess.STDOUT
+        )
     except subprocess.CalledProcessError:
         # No such container exists, nothing to do
         return
-    subprocess.check_call([
-        'docker', 'rm', '-f', container_name
-    ])
+    subprocess.check_call(['docker', 'rm', '-f', container_name])
 
 
 def run_container_command(container_name, cmd):
     """
     Run cmd in a running container with a bash shell
     """
-    proc = subprocess.run([
-        'docker', 'exec',
-        '-it', container_name,
-        '/bin/bash', '-c', cmd
-    ], check=True)
+    proc = subprocess.run(
+        ['docker', 'exec', '-it', container_name, '/bin/bash', '-c', cmd], check=True
+    )
 
 
 def copy_to_container(container_name, src_path, dest_path):
     """
     Copy files from src_path to dest_path inside container_name
     """
-    subprocess.check_call([
-        'docker', 'cp',
-        src_path, f'{container_name}:{dest_path}'
-    ])
+    subprocess.check_call(['docker', 'cp', src_path, f'{container_name}:{dest_path}'])
 
 
-def run_test(image_name, test_name, bootstrap_pip_spec, test_files, upgrade, installer_args):
+def run_test(
+    image_name, test_name, bootstrap_pip_spec, test_files, upgrade, installer_args
+):
     """
     Wrapper that sets up tljh with installer_args & runs test_name
     """
     stop_container(test_name)
     run_systemd_image(image_name, test_name, bootstrap_pip_spec)
 
-    source_path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), os.pardir)
-    )
+    source_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 
     copy_to_container(test_name, os.path.join(source_path, 'bootstrap/.'), '/srv/src')
-    copy_to_container(test_name, os.path.join(source_path, 'integration-tests/'), '/srv/src')
-
+    copy_to_container(
+        test_name, os.path.join(source_path, 'integration-tests/'), '/srv/src'
+    )
 
     # Install TLJH master first to test upgrades
     if upgrade:
@@ -103,22 +104,21 @@ def run_test(image_name, test_name, bootstrap_pip_spec, test_files, upgrade, ins
             f'curl -L https://tljh.jupyter.org/bootstrap.py | python3 -'
         )
 
-    run_container_command(
-        test_name,
-        f'python3 /srv/src/bootstrap.py {installer_args}'
-    )
+    run_container_command(test_name, f'python3 /srv/src/bootstrap.py {installer_args}')
 
     # Install pkgs from requirements in hub's pip, where
     # the bootstrap script installed the others
     run_container_command(
         test_name,
-        '/opt/tljh/hub/bin/python3 -m pip install -r /srv/src/integration-tests/requirements.txt'
+        '/opt/tljh/hub/bin/python3 -m pip install -r /srv/src/integration-tests/requirements.txt',
     )
     run_container_command(
         test_name,
         '/opt/tljh/hub/bin/python3 -m pytest -v {}'.format(
-            ' '.join([os.path.join('/srv/src/integration-tests/', f) for f in test_files])
-        )
+            ' '.join(
+                [os.path.join('/srv/src/integration-tests/', f) for f in test_files]
+            )
+        ),
     )
 
 
@@ -126,26 +126,20 @@ def show_logs(container_name):
     """
     Print logs from inside container to stdout
     """
+    run_container_command(container_name, 'journalctl --no-pager')
     run_container_command(
-        container_name,
-        'journalctl --no-pager'
+        container_name, 'systemctl --no-pager status jupyterhub traefik'
     )
-    run_container_command(
-        container_name,
-        'systemctl --no-pager status jupyterhub traefik'
-    )
+
 
 def main():
     argparser = argparse.ArgumentParser()
     subparsers = argparser.add_subparsers(dest='action')
 
-    subparsers.add_parser('build-image')
-    subparsers.add_parser('stop-container').add_argument(
-        'container_name'
-    )
-    subparsers.add_parser('start-container').add_argument(
-        'container_name'
-    )
+    build_image = subparsers.add_parser('build-image')
+    build_image.add_argument("--ubuntu-version", default=None)
+    subparsers.add_parser('stop-container').add_argument('container_name')
+    subparsers.add_parser('start-container').add_argument('container_name')
     run_parser = subparsers.add_parser('run')
     run_parser.add_argument('container_name')
     run_parser.add_argument('command')
@@ -170,7 +164,14 @@ def main():
     image_name = 'tljh-systemd'
 
     if args.action == 'run-test':
-        run_test(image_name, args.test_name, args.bootstrap_pip_spec, args.test_files, args.upgrade, args.installer_args)
+        run_test(
+            image_name,
+            args.test_name,
+            args.bootstrap_pip_spec,
+            args.test_files,
+            args.upgrade,
+            args.installer_args,
+        )
     elif args.action == 'show-logs':
         show_logs(args.container_name)
     elif args.action == 'run':
@@ -182,7 +183,7 @@ def main():
     elif args.action == 'stop-container':
         stop_container(args.container_name)
     elif args.action == 'build-image':
-        build_systemd_image(image_name, 'integration-tests')
+        build_systemd_image(image_name, 'integration-tests', args.ubuntu_version)
 
 
 if __name__ == '__main__':
