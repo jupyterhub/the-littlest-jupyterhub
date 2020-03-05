@@ -479,6 +479,12 @@ def main():
         help='URL to a requirements.txt file that should be installed in the user environment'
     )
     argparser.add_argument(
+        '--no-user-env',
+        action='store_true',
+        default=False,
+        help='Skip the creation of the user environment'
+    )
+    argparser.add_argument(
         '--plugin',
         nargs='*',
         help='Plugin pip-specs to install'
@@ -491,12 +497,15 @@ def main():
     ensure_config_yaml(pm)
     ensure_admins(args.admin)
     ensure_usergroups()
-    ensure_user_environment(args.user_requirements_txt_url)
 
     logger.info("Setting up JupyterHub...")
-    ensure_node()
     ensure_jupyterhub_package(HUB_ENV_PREFIX)
-    ensure_jupyterlab_extensions()
+
+    if not args.no_user_env:
+        ensure_user_environment(args.user_requirements_txt_url)
+        ensure_node()
+        ensure_jupyterlab_extensions()
+
     ensure_jupyterhub_service(HUB_ENV_PREFIX)
     ensure_jupyterhub_running()
     ensure_symlinks(HUB_ENV_PREFIX)
