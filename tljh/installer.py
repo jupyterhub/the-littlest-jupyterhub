@@ -180,7 +180,7 @@ def ensure_jupyterlab_extensions():
         'labextension',
         'install'
     ] + extensions + install_options)
-    
+
     # Build all the lab extensions in one go using jupyter lab build command
     build_options = [
         '--minimize=False',
@@ -194,7 +194,7 @@ def ensure_jupyterlab_extensions():
     ] + build_options)
 
 
-def ensure_jupyterhub_package(prefix):
+def ensure_jupyterhub_package(prefix, hub_requirements_txt_file):
     """
     Install JupyterHub into our conda environment if needed.
 
@@ -212,6 +212,7 @@ def ensure_jupyterhub_package(prefix):
         'libcurl4-openssl-dev',
         'build-essential'
     ])
+
     conda.ensure_pip_packages(prefix, [
         'pycurl==7.43.*'
     ])
@@ -226,6 +227,10 @@ def ensure_jupyterhub_package(prefix):
         'jupyterhub-tmpauthenticator==0.6',
         'oauthenticator==0.10.0',
     ])
+
+    if hub_requirements_txt_file:
+        conda.ensure_pip_requirements(prefix, hub_requirements_txt_file)
+
     traefik.ensure_traefik_binary(prefix)
 
 
@@ -472,6 +477,10 @@ def main():
         help='List of usernames set to be admin'
     )
     argparser.add_argument(
+        '--hub-requirements-txt-url',
+        help='URL to a requirements.txt file that should be installed in the hub environment'
+    )
+    argparser.add_argument(
         '--user-requirements-txt-url',
         help='URL to a requirements.txt file that should be installed in the user enviornment'
     )
@@ -492,7 +501,7 @@ def main():
 
     logger.info("Setting up JupyterHub...")
     ensure_node()
-    ensure_jupyterhub_package(HUB_ENV_PREFIX)
+    ensure_jupyterhub_package(HUB_ENV_PREFIX, args.hub_requirements_txt_url)
     ensure_jupyterlab_extensions()
     ensure_jupyterhub_service(HUB_ENV_PREFIX)
     ensure_jupyterhub_running()
