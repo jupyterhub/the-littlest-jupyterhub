@@ -78,6 +78,19 @@ will fail.
    When pointing to a file on GitHub, make sure to use the 'Raw' version. It should point to
    ``raw.githubusercontent.com``, not ``github.com``.
 
+Installing without a user environment
+=====================================
+
+Some TLJH setups take different approaches for managing user environments, for example by using ``DockerSpawner`` as a spawner
+to start user servers. In this case, user environments are externally managed in Docker images.
+
+``--no-user-env`` skips the creation of the user environment and installs the hub component only.
+
+.. code-block:: bash
+
+    curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
+     | sudo python3 - --no-user-env
+
 Installing TLJH plugins
 =======================
 
