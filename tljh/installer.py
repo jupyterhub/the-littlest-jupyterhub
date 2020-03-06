@@ -501,7 +501,9 @@ def main():
     logger.info("Setting up JupyterHub...")
     ensure_jupyterhub_package(HUB_ENV_PREFIX)
 
-    if not args.no_user_env:
+    if args.no_user_env:
+        logger.info("Skipping user environment...")
+    else:
         ensure_user_environment(args.user_requirements_txt_url)
         ensure_node()
         ensure_jupyterlab_extensions()
