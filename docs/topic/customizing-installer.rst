@@ -53,7 +53,7 @@ during install you would:
      | sudo python3 - \
        --admin admin-user1:password-user1 --admin admin-user2
 
-Installing python packages in the user environment
+Installing Python packages in the user environment
 ==================================================
 
 ``--user-requirements-txt-url <url-to-requirements.txt>`` installs packages specified
@@ -78,6 +78,21 @@ will fail.
    When pointing to a file on GitHub, make sure to use the 'Raw' version. It should point to
    ``raw.githubusercontent.com``, not ``github.com``.
 
+Installing extra Python packages in the hub environment
+=======================================================
+
+It is also possible to install extra packages in the hub environment.
+
+This makes it possible to install additional spawners and authenticators that are not part of TLJH by default.
+
+For example, to install ``dockerspawner`` and ``jhub_cas_authenticator`` in the hub environment:
+
+.. code-block:: bash
+
+    curl https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/bootstrap.py \
+     | sudo python3 - \
+       --hub-requirements-txt-url https://gist.githubusercontent.com/jtpio/1473a908e53a39cf695ff9fccbfcf665/raw/e02e9f1280a9826fc8950e7df3b606aca19edf1b/requirements.txt
+
 Installing TLJH plugins
 =======================
 
@@ -87,7 +102,7 @@ the `PANGEO Stack <https://github.com/yuvipanda/tljh-pangeo>`_ for earth science
 research, a stack for a particular class, etc.
 
 ``--plugin <plugin-to-install>`` installs and activates a plugin. You can pass it
-however many times you want. Since plugins are distributed as python packages,
+however many times you want. Since plugins are distributed as Python packages,
 ``<plugin-to-install>`` can be anything that can be passed to ``pip install`` -
 ``plugin-name-on-pypi==<version>`` and ``git+https://github.com/user/repo@tag``
 are the most popular ones. Specifying a version or tag is highly recommended.
