@@ -20,6 +20,13 @@ method.
    You *must* have a domain name set up to point to the IP address on
    which TLJH is accessible before you can set up HTTPS.
 
+   To do that, you would have to log in to the website of your registrar
+   and go to the DNS records section. The interface will look like something
+   similar to this:
+
+    .. image:: ../../images/dns.png
+       :alt: Adding an entry to the DNS records
+
 .. _howto/admin/https/letsencrypt:
 
 Automatic HTTPS with Let's Encrypt
