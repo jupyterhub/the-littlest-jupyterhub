@@ -42,7 +42,11 @@ commands:
             - run:
                 name: Run basic tests
                 command: |
-                    BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_SHA1
+                    if [ $CIRCLE_PR_USERNAME ]; then
+                        BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PR_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_SHA1
+                    else
+                        BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_SHA1
+                    fi
 
                     .circleci/integration-test.py run-test basic-tests \
                     "$BOOTSTRAP_PIP_SPEC" test_hub.py test_install.py test_extensions.py \
@@ -56,7 +60,11 @@ commands:
             - run:
                 name: Run admin tests
                 command: |
-                    BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_SHA1
+                    if [ $CIRCLE_PR_USERNAME ]; then
+                        BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PR_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_SHA1
+                    else
+                        BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_SHA1
+                    fi
 
                     .circleci/integration-test.py run-test \
                     --installer-args "--admin admin:admin" \
@@ -72,7 +80,11 @@ commands:
             - run:
                 name: Run plugin tests
                 command: |
-                    BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_SHA1
+                    if [ $CIRCLE_PR_USERNAME ]; then
+                        BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PR_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_SHA1
+                    else
+                        BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_SHA1
+                    fi
 
                     .circleci/integration-test.py run-test \
                         --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
