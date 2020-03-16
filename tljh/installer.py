@@ -473,7 +473,7 @@ def main():
     )
     argparser.add_argument(
         '--user-requirements-txt-url',
-        help='URL to a requirements.txt file that should be installed in the user enviornment'
+        help='URL to a requirements.txt file that should be installed in the user environment'
     )
     argparser.add_argument(
         '--plugin',
