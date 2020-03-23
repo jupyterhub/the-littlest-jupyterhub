@@ -180,7 +180,7 @@ def ensure_jupyterlab_extensions():
         'labextension',
         'install'
     ] + extensions + install_options)
-    
+
     # Build all the lab extensions in one go using jupyter lab build command
     build_options = [
         '--minimize=False',
@@ -217,12 +217,12 @@ def ensure_jupyterhub_package(prefix):
     ])
 
     conda.ensure_pip_packages(prefix, [
-        'jupyterhub==1.0.0',
+        'jupyterhub==1.1.0',
         'jupyterhub-dummyauthenticator==0.3.1',
         'jupyterhub-systemdspawner==0.13',
-        'jupyterhub-firstuseauthenticator==0.13.0',
-        'jupyterhub-nativeauthenticator==0.0.4',
-        'jupyterhub-ldapauthenticator==1.2.2',
+        'jupyterhub-firstuseauthenticator==0.14.1',
+        'jupyterhub-nativeauthenticator==0.0.5',
+        'jupyterhub-ldapauthenticator==1.3.0',
         'jupyterhub-tmpauthenticator==0.6',
         'oauthenticator==0.10.0',
     ])
