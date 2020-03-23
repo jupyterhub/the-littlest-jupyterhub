@@ -71,8 +71,8 @@ able to configure the instance automatically, replace relevant config variables:
 Manual configuration to use the AWS Cognito Oauthenticator
 ============================================================
 
-Assuming tljh has already been installed, we need to make sure the oautheneticator module is at 0.10.0 and if not 
-do a pip install oauthenticator>=0.10.0
+Assuming tljh has already been installed, we need to make sure the oauthenticator module is at 0.10.0 and if not 
+do a pip install oauthenticator==0.10.0
 
 Because the AWS Congito authenticator uses environment variables and the systemd script we need to pass the 
 the AWS Cognito domain in via systemd we can do this by creating a systemd service overide file::
