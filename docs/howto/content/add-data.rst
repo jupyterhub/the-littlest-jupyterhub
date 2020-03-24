@@ -85,7 +85,9 @@ time. You can download it from your browser `at this link <https://swcarpentry.g
 
 #. Finally, unzip the file:
 
-   unzip python-novice-gapminder-data.zip
+   .. code-block:: bash
+
+      unzip python-novice-gapminder-data.zip
 
 #. Confirm that your data was unzipped. It could be in a folder called ``data/``.
 
