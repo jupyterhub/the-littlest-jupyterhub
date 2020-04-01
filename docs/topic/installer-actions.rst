@@ -21,6 +21,15 @@ JupyterHub is run from a python3 virtual environment located in ``/opt/tljh/hub`
 uses the system's installed python and is owned by root. It also contains a binary install 
 of `traefik <http://traefik.io/>`_. This virtual environment is completely managed by TLJH.
 
+.. note::
+	If you try to remove TLJH, revert this action using:
+
+	.. code-block:: bash
+
+		/opt/tljh/hub/bin/pip freeze | xargs sudo /opt/tljh/hub/bin/pip uninstall -y
+		sudo rm -rf /opt/tljh/hub
+
+
 User environment
 ================
 
@@ -46,6 +55,14 @@ This should let you run various ``conda`` and ``pip`` commands. If  you run into
 By default, ``sudo`` does not respect any custom environments you have activated. The ``PATH=${PATH}``
 'fixes' that.
 
+.. note::
+	If you try to remove TLJH, revert this action using:
+
+	.. code-block:: bash
+
+		/opt/tljh/user/bin/pip freeze | xargs sudo /opt/tljh/user/bin/pip uninstall -y
+		sudo rm -rf /opt/tljh/user
+
 ``tljh-config`` symlink
 ========================
 
@@ -53,7 +70,28 @@ We create a symlink from ``/usr/bin/tljh-config`` to ``/opt/tljh/hub/bin/tljh-co
 can run ``sudo tljh-config <something>`` from their terminal. While the user environment is added
 to users' ``$PATH`` when they launch through JupyterHub, the hub environment is not. This makes it
 hard to access the ``tljh-config`` command used to change most config parameters. Hence we symlink the
-``tljh-config`` command to ``/usr/local/bin``, so it is directly accessible with ``sudo tljh-config <command>``.
+``tljh-config`` command to ``/usr/bin``, so it is directly accessible with ``sudo tljh-config <command>``.
+
+.. note::
+	If you try to remove TLJH, revert this action using:
+
+	.. code-block:: bash
+
+		sudo unlink /usr/bin/tljh-config
+
+``jupyterhub_config.d`` directory for custom configuration snippets
+===================================================================
+
+Any files in /opt/tljh/config/jupyterhub_config.d that end in .py and are a valid
+JupyterHub configuration will be loaded after any of the config options specified
+with tljh-config are loaded.
+
+.. note::
+	If you try to remove TLJH, revert this action using:
+
+	.. code-block:: bash
+
+		sudo rm -rf /opt/tljh/config
 
 Systemd Units
 =============
@@ -64,6 +102,43 @@ TLJH places 2 systemd units on your computer. They all start on system startup.
 #. ``traefik.service`` - starts traefik proxy that manages HTTPS
 
 In addition, each running Jupyter user gets their own systemd unit of the name ``jupyter-<username>``.
+
+.. note::
+	If you try to remove TLJH, revert this action using:
+
+	.. code-block:: bash
+
+		# stop the services
+		systemctl stop jupyterhub.service
+		systemctl stop traefik.service
+		systemctl stop jupyter-<username>
+
+		# disable the services
+		systemctl disable jupyterhub.service
+		systemctl disable traefik.service
+		systemctl disable jupyter-<username>
+
+		# remove the systemd unit
+		rm /etc/systemd/system/jupyterhub.service
+		rm /etc/systemd/system/traefik.service
+
+		# reset the state of all units
+		systemctl daemon-reload
+		systemctl reset-failed
+
+State files
+===========
+
+TLJH places 3 `jupyterhub.service` and 4 `traefik.service` state files in `/opt/tljh/state`.
+These files save the state of JupyterHub and Traefik services and are meant
+to be used and modified solely by these services.
+
+.. note::
+	If you try to remove TLJH, revert this action using:
+
+	.. code-block:: bash
+
+		sudo rm -rf /opt/tljh/state
 
 User groups
 ===========
@@ -81,9 +156,44 @@ If you uninstall TLJH, you should probably remove all user accounts associated w
 user groups, and then remove the groups themselves. You might have to archive or delete the home
 directories of these users under ``/home/``.
 
+.. note::
+	If you try to remove TLJH, in order to remove a user and its home directory, use:
+
+	.. code-block:: bash
+
+		sudo userdel -r <user>
+
+Keep in mind that the files located in other file systems
+will have to be searched for and deleted manually.
+
+.. note::
+	To remove the user groups units:
+
+	.. code-block:: bash
+
+		sudo delgroup jupyterhub-users
+		sudo delgroup jupyterhub-admins
+		# remove jupyterhub-admins from the sudoers group
+		sudo rm /etc/sudoers.d/jupyterhub-admins
+
 Passwordless ``sudo`` for JupyterHub admins
 ============================================
 
 ``/etc/sudoers.d/jupyterhub-admins`` is created to provide passwordless sudo for all JupyterHub
 admins. We also set it up to inherit ``$PATH`` with ``sudo -E``, to more easily call ``conda``,
 ``pip``, etc.
+
+
+Removing TLJH
+=============
+
+If trying to wipe out a fresh TLJH installation, follow the instructions on how to revert
+each specific modification the TLJH installer does to the system.
+
+.. note::
+	If using a VM, the recommended way to remove TLJH is destroying the VM and start fresh.
+
+.. warning::
+	Completly uninstalling TLJH after it has been used it's a difficult task because it's
+	highly coupled to how the system changed after it has been used and modified by the users.
+	Thus, we cannot provide instructions on how to proceed in this case.
