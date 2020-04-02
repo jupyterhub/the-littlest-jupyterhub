@@ -26,7 +26,6 @@ of `traefik <http://traefik.io/>`_. This virtual environment is completely manag
 
 	.. code-block:: bash
 
-		/opt/tljh/hub/bin/pip freeze | xargs sudo /opt/tljh/hub/bin/pip uninstall -y
 		sudo rm -rf /opt/tljh/hub
 
 
@@ -60,7 +59,6 @@ By default, ``sudo`` does not respect any custom environments you have activated
 
 	.. code-block:: bash
 
-		/opt/tljh/user/bin/pip freeze | xargs sudo /opt/tljh/user/bin/pip uninstall -y
 		sudo rm -rf /opt/tljh/user
 
 ``tljh-config`` symlink
@@ -116,6 +114,7 @@ In addition, each running Jupyter user gets their own systemd unit of the name `
 		# disable the services
 		systemctl disable jupyterhub.service
 		systemctl disable traefik.service
+		# run this command for all the Jupyter users
 		systemctl disable jupyter-<username>
 
 		# remove the systemd unit
@@ -163,7 +162,7 @@ directories of these users under ``/home/``.
 
 		sudo userdel -r <user>
 
-Keep in mind that the files located in other file systems
+Keep in mind that the files located in other parts of the file system
 will have to be searched for and deleted manually.
 
 .. note::
