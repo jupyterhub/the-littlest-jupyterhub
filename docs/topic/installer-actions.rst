@@ -193,6 +193,6 @@ each specific modification the TLJH installer does to the system.
 	If using a VM, the recommended way to remove TLJH is destroying the VM and start fresh.
 
 .. warning::
-	Completly uninstalling TLJH after it has been used it's a difficult task because it's
+	Completely uninstalling TLJH after it has been used is a difficult task because it's
 	highly coupled to how the system changed after it has been used and modified by the users.
 	Thus, we cannot provide instructions on how to proceed in this case.
