@@ -127,4 +127,9 @@ If you are looking for a way to extend or customize your TLJH deployment, you mi
 Here is a non-exhaustive list of known TLJH plugins:
 
 - `tljh-pangeo <https://github.com/yuvipanda/tljh-pangeo>`_: TLJH Plugin for setting up the Pangeo Stack
-- `tljh-voila-gallery <https://github.com/voila-dashboards/tljh-voila-gallery>`_: TLJH plugin that installs a Voilà Gallery
+- `tljh-voila-gallery <https://github.com/voila-dashboards/tljh-voila-gallery>`_: TLJH plugin that installs a gallery of Voilà dashboards
+
+If you have authored a plugin, please open a PR to add it to this list!
+
+We also recommend adding the ``tljh-plugin`` topic to the GitHub repository to make it more discoverable:
+`https://github.com/topics/tljh-plugin <https://github.com/topics/tljh-plugin>`_
