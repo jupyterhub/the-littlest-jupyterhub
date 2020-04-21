@@ -34,7 +34,7 @@ Let's create the server on which we can run JupyterHub.
    navigation bar across the top of the window. Adjust the region to match the
    closest one to the majority of your users.
 
-#. On the screen listing all the availabe services, pick **EC2** under **Compute** 
+#. On the screen listing all the available services, pick **EC2** under **Compute** 
    on the left side at the top of the first column. 
    
    .. image:: ../images/providers/amazon/compute_services.png
