@@ -92,6 +92,7 @@ def validate_host():
 
 def main():
     validate_host()
+    os.umask(0o022)
     install_prefix = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
     hub_prefix = os.path.join(install_prefix, 'hub')
 
