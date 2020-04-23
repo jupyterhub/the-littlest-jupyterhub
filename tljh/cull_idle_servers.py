@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """script to monitor and cull idle single-user servers
 
-Imported from https://github.com/jupyterhub/jupyterhub/blob/6b1046697/examples/cull-idle/cull_idle_servers.py
+Imported from https://github.com/jupyterhub/jupyterhub/blob/8d505548494ad629cc9501f084c6ec4d7646cf98/examples/cull-idle/cull_idle_servers.py
 
 Caveats:
 
@@ -18,20 +18,26 @@ You can run this as a service managed by JupyterHub with this in your config::
         {
             'name': 'cull-idle',
             'admin': True,
-            'command': 'python cull_idle_servers.py --timeout=3600'.split(),
+            'command': [sys.executable, 'cull_idle_servers.py', '--timeout=3600'],
         }
     ]
 
 Or run it manually by generating an API token and storing it in `JUPYTERHUB_API_TOKEN`:
 
-    export JUPYTERHUB_API_TOKEN=`jupyterhub token`
-    python cull_idle_servers.py [--timeout=900] [--url=http://127.0.0.1:8081/hub/api]
-"""
+    export JUPYTERHUB_API_TOKEN=$(jupyterhub token)
+    python3 cull_idle_servers.py [--timeout=900] [--url=http://127.0.0.1:8081/hub/api]
 
-from datetime import datetime, timezone
-from functools import partial
+This script uses the same ``--timeout`` and ``--max-age`` values for
+culling users and users' servers.  If you want a different value for
+users and servers, you should add this script to the services list
+twice, just with different ``name``s, different values, and one with
+the ``--cull-users`` option.
+"""
 import json
 import os
+from datetime import datetime
+from datetime import timezone
+from functools import partial
 
 try:
     from urllib.parse import quote
@@ -57,7 +63,7 @@ def parse_date(date_string):
     """
     dt = dateutil.parser.parse(date_string)
     if not dt.tzinfo:
-        # assume naïve timestamps are UTC
+        # assume naive timestamps are UTC
         dt = dt.replace(tzinfo=timezone.utc)
     return dt
 
@@ -77,27 +83,25 @@ def format_td(td):
     seconds = seconds % 3600
     m = seconds // 60
     seconds = seconds % 60
-    return f"{h:02}:{m:02}:{seconds:02}"
+    return "{h:02}:{m:02}:{seconds:02}".format(h=h, m=m, seconds=seconds)
 
 
 @coroutine
-def cull_idle(url, api_token, inactive_limit, cull_users=False, max_age=0, concurrency=10):
+def cull_idle(
+    url, api_token, inactive_limit, cull_users=False, max_age=0, concurrency=10
+):
     """Shutdown idle single-user servers
 
     If cull_users, inactive *users* will be deleted as well.
     """
-    auth_header = {
-        'Authorization': 'token %s' % api_token,
-    }
-    req = HTTPRequest(
-        url=url + '/users',
-        headers=auth_header,
-    )
+    auth_header = {'Authorization': 'token %s' % api_token}
+    req = HTTPRequest(url=url + '/users', headers=auth_header)
     now = datetime.now(timezone.utc)
     client = AsyncHTTPClient()
 
     if concurrency:
         semaphore = Semaphore(concurrency)
+
         @coroutine
         def fetch(req):
             """client.fetch wrapped in a semaphore to limit concurrency"""
@@ -106,6 +110,7 @@ def cull_idle(url, api_token, inactive_limit, cull_users=False, max_age=0, concu
                 return (yield client.fetch(req))
             finally:
                 yield semaphore.release()
+
     else:
         fetch = client.fetch
 
@@ -114,8 +119,10 @@ def cull_idle(url, api_token, inactive_limit, cull_users=False, max_age=0, concu
     futures = []
 
     @coroutine
-    def handle_server(user, server_name, server):
+    def handle_server(user, server_name, server, max_age, inactive_limit):
         """Handle (maybe) culling a single server
+
+        "server" is the entire server model from the API.
 
         Returns True if server is now stopped (user removable),
         False otherwise.
@@ -125,8 +132,21 @@ def cull_idle(url, api_token, inactive_limit, cull_users=False, max_age=0, concu
             log_name = '%s/%s' % (user['name'], server_name)
         if server.get('pending'):
             app_log.warning(
-                "Not culling server %s with pending %s",
-                log_name, server['pending'])
+                "Not culling server %s with pending %s", log_name, server['pending']
+            )
+            return False
+
+        # jupyterhub < 0.9 defined 'server.url' once the server was ready
+        # as an *implicit* signal that the server was ready.
+        # 0.9 adds a dedicated, explicit 'ready' field.
+        # By current (0.9) definitions, servers that have no pending
+        # events and are not ready shouldn't be in the model,
+        # but let's check just to be safe.
+
+        if not server.get('ready', bool(server['url'])):
+            app_log.warning(
+                "Not culling not-ready not-pending server %s: %s", log_name, server
+            )
             return False
 
         if server.get('started'):
@@ -146,12 +166,27 @@ def cull_idle(url, api_token, inactive_limit, cull_users=False, max_age=0, concu
             # for running servers
             inactive = age
 
-        should_cull = (inactive is not None and
-                       inactive.total_seconds() >= inactive_limit)
+        # CUSTOM CULLING TEST CODE HERE
+        # Add in additional server tests here.  Return False to mean "don't
+        # cull", True means "cull immediately", or, for example, update some
+        # other variables like inactive_limit.
+        #
+        # Here, server['state'] is the result of the get_state method
+        # on the spawner.  This does *not* contain the below by
+        # default, you may have to modify your spawner to make this
+        # work.  The `user` variable is the user model from the API.
+        #
+        # if server['state']['profile_name'] == 'unlimited'
+        #     return False
+        # inactive_limit = server['state']['culltime']
+
+        should_cull = (
+            inactive is not None and inactive.total_seconds() >= inactive_limit
+        )
         if should_cull:
             app_log.info(
-                "Culling server %s (inactive for %s)",
-                log_name, format_td(inactive))
+                "Culling server %s (inactive for %s)", log_name, format_td(inactive)
+            )
 
         if max_age and not should_cull:
             # only check started if max_age is specified
@@ -160,26 +195,34 @@ def cull_idle(url, api_token, inactive_limit, cull_users=False, max_age=0, concu
             if age is not None and age.total_seconds() >= max_age:
                 app_log.info(
                     "Culling server %s (age: %s, inactive for %s)",
-                    log_name, format_td(age), format_td(inactive))
+                    log_name,
+                    format_td(age),
+                    format_td(inactive),
+                )
                 should_cull = True
 
         if not should_cull:
             app_log.debug(
                 "Not culling server %s (age: %s, inactive for %s)",
-                log_name, format_td(age), format_td(inactive))
+                log_name,
+                format_td(age),
+                format_td(inactive),
+            )
             return False
 
-        req = HTTPRequest(
-            url=url + '/users/%s/server' % quote(user['name']),
-            method='DELETE',
-            headers=auth_header,
-        )
+        if server_name:
+            # culling a named server
+            delete_url = url + "/users/%s/servers/%s" % (
+                quote(user['name']),
+                quote(server['name']),
+            )
+        else:
+            delete_url = url + '/users/%s/server' % quote(user['name'])
+
+        req = HTTPRequest(url=delete_url, method='DELETE', headers=auth_header)
         resp = yield fetch(req)
         if resp.code == 202:
-            app_log.warning(
-                "Server %s is slow to stop",
-                log_name,
-            )
+            app_log.warning("Server %s is slow to stop", log_name)
             # return False to prevent culling user with pending shutdowns
             return False
         return True
@@ -194,22 +237,24 @@ def cull_idle(url, api_token, inactive_limit, cull_users=False, max_age=0, concu
         """
         # shutdown servers first.
         # Hub doesn't allow deleting users with running servers.
-        # named servers contain the 'servers' dict
+        # jupyterhub 0.9 always provides a 'servers' model.
+        # 0.8 only does this when named servers are enabled.
         if 'servers' in user:
             servers = user['servers']
-        # Otherwise, server data is intermingled in with the user
-        # model
         else:
+            # jupyterhub < 0.9 without named servers enabled.
+            # create servers dict with one entry for the default server
+            # from the user model.
+            # only if the server is running.
             servers = {}
             if user['server']:
                 servers[''] = {
-                    'started': user.get('started'),
                     'last_activity': user['last_activity'],
                     'pending': user['pending'],
                     'url': user['server'],
                 }
         server_futures = [
-            handle_server(user, server_name, server)
+            handle_server(user, server_name, server, max_age, inactive_limit)
             for server_name, server in servers.items()
         ]
         results = yield multi(server_futures)
@@ -220,7 +265,9 @@ def cull_idle(url, api_token, inactive_limit, cull_users=False, max_age=0, concu
         if still_alive:
             app_log.debug(
                 "Not culling user %s with %i servers still alive",
-                user['name'], still_alive)
+                user['name'],
+                still_alive,
+            )
             return False
 
         should_cull = False
@@ -240,12 +287,11 @@ def cull_idle(url, api_token, inactive_limit, cull_users=False, max_age=0, concu
             # which introduces the 'created' field which is never None
             inactive = age
 
-        should_cull = (inactive is not None and
-                       inactive.total_seconds() >= inactive_limit)
+        should_cull = (
+            inactive is not None and inactive.total_seconds() >= inactive_limit
+        )
         if should_cull:
-            app_log.info(
-                "Culling user %s (inactive for %s)",
-                user['name'], inactive)
+            app_log.info("Culling user %s (inactive for %s)", user['name'], inactive)
 
         if max_age and not should_cull:
             # only check created if max_age is specified
@@ -254,19 +300,23 @@ def cull_idle(url, api_token, inactive_limit, cull_users=False, max_age=0, concu
             if age is not None and age.total_seconds() >= max_age:
                 app_log.info(
                     "Culling user %s (age: %s, inactive for %s)",
-                    user['name'], format_td(age), format_td(inactive))
+                    user['name'],
+                    format_td(age),
+                    format_td(inactive),
+                )
                 should_cull = True
 
         if not should_cull:
             app_log.debug(
                 "Not culling user %s (created: %s, last active: %s)",
-                user['name'], format_td(age), format_td(inactive))
+                user['name'],
+                format_td(age),
+                format_td(inactive),
+            )
             return False
 
         req = HTTPRequest(
-            url=url + '/users/%s' % user['name'],
-            method='DELETE',
-            headers=auth_header,
+            url=url + '/users/%s' % user['name'], method='DELETE', headers=auth_header
         )
         yield fetch(req)
         return True
@@ -290,22 +340,32 @@ if __name__ == '__main__':
         default=os.environ.get('JUPYTERHUB_API_URL'),
         help="The JupyterHub API URL",
     )
-    define('timeout', type=int, default=600, help="The idle timeout (in seconds)")
-    define('cull_every', type=int, default=0,
-           help="The interval (in seconds) for checking for idle servers to cull")
-    define('max_age', type=int, default=0,
-           help="The maximum age (in seconds) of servers that should be culled even if they are active")
-    define('cull_users', type=bool, default=False,
-           help="""Cull users in addition to servers.
+    define('timeout', default=600, help="The idle timeout (in seconds)")
+    define(
+        'cull_every',
+        default=0,
+        help="The interval (in seconds) for checking for idle servers to cull",
+    )
+    define(
+        'max_age',
+        default=0,
+        help="The maximum age (in seconds) of servers that should be culled even if they are active",
+    )
+    define(
+        'cull_users',
+        default=False,
+        help="""Cull users in addition to servers.
                 This is for use in temporary-user cases such as tmpnb.""",
-           )
-    define('concurrency', type=int, default=10,
-           help="""Limit the number of concurrent requests made to the Hub.
+    )
+    define(
+        'concurrency',
+        default=10,
+        help="""Limit the number of concurrent requests made to the Hub.
 
                 Deleting a lot of users at the same time can slow down the Hub,
                 so limit the number of API requests we have outstanding at any given time.
-                """
-           )
+                """,
+    )
 
     parse_command_line()
     if not options.cull_every:
@@ -318,7 +378,8 @@ if __name__ == '__main__':
         app_log.warning(
             "Could not load pycurl: %s\n"
             "pycurl is recommended if you have a large number of users.",
-            e)
+            e,
+        )
 
     loop = IOLoop.current()
     cull = partial(
