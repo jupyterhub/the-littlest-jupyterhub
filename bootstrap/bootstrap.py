@@ -153,6 +153,15 @@ def main():
         'git+https://github.com/jupyterhub/the-littlest-jupyterhub.git'
     )
 
+    # Upgrade pip
+    run_subprocess([
+        os.path.join(hub_prefix, 'bin', 'pip'),
+        'install',
+        '--upgrade',
+        'pip==20.0.*'
+    ])
+    logger.info('Upgraded pip')
+
     run_subprocess([
         os.path.join(hub_prefix, 'bin', 'pip'),
         'install'

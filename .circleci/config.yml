@@ -25,6 +25,14 @@ commands:
                 command: |
                     apt-get update --yes && apt-get install --yes python3 python3-venv git make
 
+    upgrade_pip:
+        description: Upgrade the pip version to 20.0.*
+        steps:
+            - run:
+                name: upgrade pip
+                command: |
+                    python3 -m pip install -U pip==20.0.*
+
     build_systemd_image:
         steps:
             - run:
@@ -116,6 +124,9 @@ jobs:
                     - v1-dependencies-py3.6-
 
             - setup_venv
+
+            - upgrade_pip
+
             - run:
                 name: install dependencies
                 command: |
@@ -211,6 +222,7 @@ jobs:
                 key: v1-dependencies-py3.6-sphinx
 
             - setup_venv
+
             - run:
                 name: install dependencies
                 command: |
