@@ -3,4 +3,3 @@ pytest-cov
 pytest-mock
 codecov
 pytoml
-grpcio==1.27.*
