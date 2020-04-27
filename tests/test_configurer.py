@@ -213,7 +213,7 @@ def test_cull_service_default():
     c = apply_mock_config({})
 
     cull_cmd = [
-       sys.executable, '-m', 'tljh.cull_idle_servers',
+       sys.executable, '-m', 'jupyterhub_idle_culler',
        '--timeout=600', '--cull-every=60', '--concurrency=5',
        '--max-age=0'
     ]
@@ -238,7 +238,7 @@ def test_set_cull_service():
         }
     })
     cull_cmd = [
-       sys.executable, '-m', 'tljh.cull_idle_servers',
+       sys.executable, '-m', 'jupyterhub_idle_culler',
        '--timeout=600', '--cull-every=10', '--concurrency=5',
        '--max-age=60', '--cull-users'
     ]
@@ -261,7 +261,7 @@ def test_load_secrets(tljh_dir):
     c = apply_mock_config(tljh_config)
     assert c.TraefikTomlProxy.traefik_api_password == "traefik-password"
 
-    
+
 def test_auth_native():
     """
     Test setting Native Authenticator
