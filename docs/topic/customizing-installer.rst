@@ -102,6 +102,10 @@ you would use:
       --plugin git+https://github.com/yuvipanda/tljh-pangeo@v0.1
 
 
+Multiple plugins can be installed at once with: ``--plugin <first-plugin-to-install> <second-plugin-to-install>``.
+
+See :ref:`contributing/plugins` for more information about plugins.
+
 .. note::
 
    Plugins are extremely powerful and can do a large number of arbitrary things.
