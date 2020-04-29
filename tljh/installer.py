@@ -396,7 +396,7 @@ def setup_plugins(plugins=None):
     return pm
 
 
-def run_plugin_actions(plugin_manager, plugins):
+def run_plugin_actions(plugin_manager):
     """
     Run installer hooks defined in plugins
     """
@@ -499,7 +499,7 @@ def main():
     ensure_symlinks(HUB_ENV_PREFIX)
 
     # Run installer plugins last
-    run_plugin_actions(pm, args.plugin)
+    run_plugin_actions(pm)
 
     logger.info("Done!")
 
