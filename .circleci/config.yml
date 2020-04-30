@@ -56,8 +56,9 @@ commands:
                         BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_SHA1
                     fi
 
-                    .circleci/integration-test.py run-test basic-tests \
-                    "$BOOTSTRAP_PIP_SPEC" test_hub.py test_install.py test_extensions.py \
+                    .circleci/integration-test.py run-test \
+                    --bootstrap_pip_spec "$BOOTSTRAP_PIP_SPEC" \
+                    basic-tests test_hub.py test_install.py test_extensions.py \
                     << parameters.upgrade >>
     admin_tests:
         parameters:
@@ -76,7 +77,8 @@ commands:
 
                     .circleci/integration-test.py run-test \
                     --installer-args "--admin admin:admin" \
-                    basic-tests $BOOTSTRAP_PIP_SPEC test_admin_installer.py \
+                    --bootstrap_pip_spec $BOOTSTRAP_PIP_SPEC \
+                    basic-tests test_admin_installer.py \
                     << parameters.upgrade >>
 
     plugin_tests:
@@ -95,8 +97,9 @@ commands:
                     fi
 
                     .circleci/integration-test.py run-test \
+                        --bootstrap_pip_spec $BOOTSTRAP_PIP_SPEC \
                         --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
-                        plugins $BOOTSTRAP_PIP_SPEC test_simplest_plugin.py \
+                        plugins test_simplest_plugin.py \
                         << parameters.upgrade >>
 
     bootstrap_checks:
