@@ -158,8 +158,8 @@ def main():
     run_test_parser = subparsers.add_parser('run-test')
     run_test_parser.add_argument('--installer-args', default='')
     run_test_parser.add_argument('--upgrade', action='store_true')
+    run_test_parser.add_argument('--bootstrap_pip_spec', nargs='?', default="", type=str)
     run_test_parser.add_argument('test_name')
-    run_test_parser.add_argument('bootstrap_pip_spec')
     run_test_parser.add_argument('test_files', nargs='+')
 
     show_logs_parser = subparsers.add_parser('show-logs')
