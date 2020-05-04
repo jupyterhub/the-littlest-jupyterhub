@@ -225,6 +225,7 @@ def ensure_jupyterhub_package(prefix):
         'jupyterhub-ldapauthenticator==1.3.0',
         'jupyterhub-tmpauthenticator==0.6',
         'oauthenticator==0.10.0',
+        'jupyterhub-idle-culler==1.0'
     ])
     traefik.ensure_traefik_binary(prefix)
 

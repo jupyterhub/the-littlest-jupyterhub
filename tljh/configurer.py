@@ -218,7 +218,7 @@ def set_cull_idle_service(config):
     Set Idle Culler service
     """
     cull_cmd = [
-       sys.executable, '-m', 'tljh.cull_idle_servers'
+       sys.executable, '-m', 'jupyterhub_idle_culler'
     ]
     cull_config = config['services']['cull']
     print()
