@@ -57,7 +57,7 @@ commands:
                     fi
 
                     .circleci/integration-test.py run-test \
-                    --bootstrap_pip_spec "$BOOTSTRAP_PIP_SPEC" \
+                    --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
                     basic-tests test_hub.py test_install.py test_extensions.py \
                     << parameters.upgrade >>
     admin_tests:
@@ -77,7 +77,7 @@ commands:
 
                     .circleci/integration-test.py run-test \
                     --installer-args "--admin admin:admin" \
-                    --bootstrap_pip_spec $BOOTSTRAP_PIP_SPEC \
+                    --bootstrap-pip-spec $BOOTSTRAP_PIP_SPEC \
                     basic-tests test_admin_installer.py \
                     << parameters.upgrade >>
 
@@ -97,7 +97,7 @@ commands:
                     fi
 
                     .circleci/integration-test.py run-test \
-                        --bootstrap_pip_spec $BOOTSTRAP_PIP_SPEC \
+                        --bootstrap-pip-spec $BOOTSTRAP_PIP_SPEC \
                         --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
                         plugins test_simplest_plugin.py \
                         << parameters.upgrade >>

@@ -56,10 +56,10 @@ For example, to run all the basic tests, you would write:
 This will run the tests in the three files against the same installation
 of TLJH and report errors.
 
-If you would like to run the tests with a custom pip spec for the bootstrap script, you can use the ``--bootstrap_pip_spec``
+If you would like to run the tests with a custom pip spec for the bootstrap script, you can use the ``--bootstrap-pip-spec``
 parameter:
 
 .. code-block:: bash
 
    .circleci/integration-test.py run-test <name-of-run> <test-file-names> \
-      --bootstrap_pip_spec="git+https://github.com/your-username/the-littlest-jupyterhub.git@branch-name"
+      --bootstrap-pip-spec="git+https://github.com/your-username/the-littlest-jupyterhub.git@branch-name"
