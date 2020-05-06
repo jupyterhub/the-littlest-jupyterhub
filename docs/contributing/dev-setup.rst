@@ -9,7 +9,7 @@ The easiest & safest way to develop & test TLJH is with `Docker <https://www.doc
 #. Install Docker Community Edition by following the instructions on
    `their website <https://www.docker.com/community-edition>`_.
 
-#. Clone the git repo (or your fork of it).
+#. Clone the [git repo](https://github.com/jupyterhub/the-littlest-jupyterhub) (or your fork of it).
 #. Build a docker image that has a functional systemd in it.
 
    .. code-block:: bash

@@ -13,7 +13,7 @@ Admin users in TLJH have the following powers:
 #. Change configuration of TLJH
 
 This is a lot of power, so make sure you know who you are giving it
-to. Admin users should have decent passwords / secure logni mechanisms,
+to. Admin users should have decent passwords / secure login mechanisms,
 so attackers can not easily gain control of the system.
 
 .. important::
