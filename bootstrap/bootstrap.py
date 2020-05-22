@@ -70,11 +70,14 @@ def validate_host():
     # Support only Ubuntu 18.04+
     distro = get_os_release_variable('ID')
     version = float(get_os_release_variable('VERSION_ID'))
-    if distro != 'ubuntu':
-        print('The Littlest JupyterHub currently supports Ubuntu Linux only')
+    if distro != 'ubuntu' and distro != 'debian':
+        print('The Littlest JupyterHub currently supports Ubuntu and Debian Linux only')
         sys.exit(1)
-    elif float(version) < 18.04:
+    elif distro == 'ubuntu' and float(version) < 18.04:
         print('The Littlest JupyterHub requires Ubuntu 18.04 or higher')
+        sys.exit(1)
+    elif distro == 'debian' and float(version) < 10:
+        print('The Littlest JupyterHub requires Debian 10 or higher')
         sys.exit(1)
 
     if sys.version_info < (3, 5):
@@ -126,9 +129,12 @@ def main():
         # causing bootstrapping to fail.
         run_subprocess(['apt-get', 'update', '--yes'])
         run_subprocess(['apt-get', 'install', '--yes', 'software-properties-common'])
-        run_subprocess(['add-apt-repository', 'universe'])
+        distro = get_os_release_variable('ID')
+        if distro == 'ubuntu':
+            # universe repo isn't available on Debian, these packages are in main
+            run_subprocess(['add-apt-repository', 'universe'])
+            run_subprocess(['apt-get', 'update', '--yes'])
 
-        run_subprocess(['apt-get', 'update', '--yes'])
         run_subprocess(['apt-get', 'install', '--yes', 
             'python3',
             'python3-venv',
