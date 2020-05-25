@@ -94,7 +94,7 @@ def validate_host():
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--unsupported-os', action='store_true', help='Allow installation on an unsupported OS')
-    args = parser.parse_args()
+    args,installer_args = parser.parse_known_args()
 
     if not args.unsupported_os:
         validate_host()
@@ -182,7 +182,7 @@ def main():
             os.path.join(hub_prefix, 'bin', 'python3'),
             '-m',
             'tljh.installer',
-        ] + sys.argv[1:]
+        ] + installer_args
     )
 
 
