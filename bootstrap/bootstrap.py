@@ -74,7 +74,7 @@ def validate_host():
     if distro != 'ubuntu':
         print('The Littlest JupyterHub currently supports Ubuntu Linux only')
         sys.exit(1)
-    elif distro == 'ubuntu' and float(version) < 18.04:
+    elif float(version) < 18.04:
         print('The Littlest JupyterHub requires Ubuntu 18.04 or higher')
         sys.exit(1)
 
