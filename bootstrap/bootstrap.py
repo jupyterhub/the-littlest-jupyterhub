@@ -17,6 +17,7 @@ import subprocess
 import sys
 import logging
 import shutil
+import argparse
 
 logger = logging.getLogger(__name__)
 
@@ -70,14 +71,11 @@ def validate_host():
     # Support only Ubuntu 18.04+
     distro = get_os_release_variable('ID')
     version = float(get_os_release_variable('VERSION_ID'))
-    if distro != 'ubuntu' and distro != 'debian':
-        print('The Littlest JupyterHub currently supports Ubuntu and Debian Linux only')
+    if distro != 'ubuntu':
+        print('The Littlest JupyterHub currently supports Ubuntu Linux only')
         sys.exit(1)
     elif distro == 'ubuntu' and float(version) < 18.04:
         print('The Littlest JupyterHub requires Ubuntu 18.04 or higher')
-        sys.exit(1)
-    elif distro == 'debian' and float(version) < 10:
-        print('The Littlest JupyterHub requires Debian 10 or higher')
         sys.exit(1)
 
     if sys.version_info < (3, 5):
@@ -94,7 +92,12 @@ def validate_host():
         sys.exit(1)
 
 def main():
-    validate_host()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--unsupported-os', action='store_true', help='Allow installation on an unsupported OS')
+    args = parser.parse_args()
+
+    if not args.unsupported_os:
+        validate_host()
     install_prefix = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
     hub_prefix = os.path.join(install_prefix, 'hub')
 
@@ -122,26 +125,24 @@ def main():
     else:
         logger.info('Setting up hub environment')
         initial_setup = True
-        # Install software-properties-common, so we can get add-apt-repository
-        # That helps us make sure the universe repository is enabled, since
-        # that's where the python3-pip package lives. In some very minimal base
-        # VM images, it looks like the universe repository is disabled by default,
-        # causing bootstrapping to fail.
-        run_subprocess(['apt-get', 'update', '--yes'])
-        run_subprocess(['apt-get', 'install', '--yes', 'software-properties-common'])
-        distro = get_os_release_variable('ID')
-        if distro == 'ubuntu':
-            # universe repo isn't available on Debian, these packages are in main
+        if not args.unsupported_os:
+            # Install software-properties-common, so we can get add-apt-repository
+            # That helps us make sure the universe repository is enabled, since
+            # that's where the python3-pip package lives. In some very minimal base
+            # VM images, it looks like the universe repository is disabled by default,
+            # causing bootstrapping to fail.
+            run_subprocess(['apt-get', 'update', '--yes'])
+            run_subprocess(['apt-get', 'install', '--yes', 'software-properties-common'])
             run_subprocess(['add-apt-repository', 'universe'])
             run_subprocess(['apt-get', 'update', '--yes'])
 
-        run_subprocess(['apt-get', 'install', '--yes', 
-            'python3',
-            'python3-venv',
-            'python3-pip',
-            'git'
-        ])
-        logger.info('Installed python & virtual environment')
+            run_subprocess(['apt-get', 'install', '--yes',
+                'python3',
+                'python3-venv',
+                'python3-pip',
+                'git'
+            ])
+            logger.info('Installed python & virtual environment')
         os.makedirs(hub_prefix, exist_ok=True)
         run_subprocess(['python3', '-m', 'venv', hub_prefix])
         logger.info('Set up hub virtual environment')
