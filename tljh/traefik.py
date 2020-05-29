@@ -1,12 +1,15 @@
 """Traefik installation and setup"""
 import hashlib
 import os
+from glob import glob
 
 from jinja2 import Template
 from passlib.apache import HtpasswdFile
 import backoff
 import requests
+import toml
 
+from .config import CONFIG_DIR
 from tljh.configurer import load_config
 
 # FIXME: support more than one platform here
@@ -18,6 +21,7 @@ checksums = {
     "linux-amd64": "3c2d153d80890b6fc8875af9f8ced32c4d684e1eb5a46d9815337cb343dfd92e"
 }
 
+traefik_extra_config_dir = "traefik_config.d"
 
 def checksum_file(path):
     """Compute the sha256 checksum of a path"""
@@ -78,6 +82,10 @@ def compute_basic_auth(username, password):
     hashed_password = str(ht.to_string()).split(":")[1][:-3]
     return username + ":" + hashed_password
 
+def load_extra_config(std_toml):
+    extra_configs = sorted(glob(os.path.join(CONFIG_DIR, traefik_extra_config_dir, '*.py')))
+    config = toml.load(extra_configs + [std_toml])
+    return config
 
 def ensure_traefik_config(state_dir):
     """Render the traefik.toml config file"""
@@ -103,9 +111,18 @@ def ensure_traefik_config(state_dir):
             letsencrypt["domains"] and not letsencrypt["email"]
         ):
             raise ValueError("Both email and domains must be set for letsencrypt")
+
+     # Ensure extra config dir exists and is private
+    for path in [CONFIG_DIR, os.path.join(CONFIG_DIR, traefik_extra_config_dir)]:
+        os.makedirs(path, mode=0o700, exist_ok=True)
+
+    traefik_toml = load_extra_config(new_toml)
+
+    print(f"Writing traefik config {traefik_toml}...")
+
     with open(os.path.join(state_dir, "traefik.toml"), "w") as f:
         os.fchmod(f.fileno(), 0o600)
-        f.write(new_toml)
+        f.write(traefik_toml)
 
     with open(os.path.join(state_dir, "rules.toml"), "w") as f:
         os.fchmod(f.fileno(), 0o600)
