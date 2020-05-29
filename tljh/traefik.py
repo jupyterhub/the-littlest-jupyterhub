@@ -116,13 +116,16 @@ def ensure_traefik_config(state_dir):
     for path in [CONFIG_DIR, os.path.join(CONFIG_DIR, traefik_extra_config_dir)]:
         os.makedirs(path, mode=0o700, exist_ok=True)
 
-    traefik_toml = load_extra_config(new_toml)
-
-    print(f"Writing traefik config {traefik_toml}...")
-
     with open(os.path.join(state_dir, "traefik.toml"), "w") as f:
         os.fchmod(f.fileno(), 0o600)
-        f.write(traefik_toml)
+        f.write(new_toml)
+
+    traefik_toml = load_extra_config(os.path.join(state_dir, "traefik.toml"))
+
+    print(f"Writing traefik config {traefik_toml}...")
+    with open(os.path.join(state_dir, "traefik.toml"), "w") as f:
+        os.fchmod(f.fileno(), 0o600)
+        toml.dump(traefik_toml, f)
 
     with open(os.path.join(state_dir, "rules.toml"), "w") as f:
         os.fchmod(f.fileno(), 0o600)
