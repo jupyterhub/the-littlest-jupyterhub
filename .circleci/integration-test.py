@@ -32,7 +32,7 @@ def run_systemd_image(image_name, container_name, bootstrap_pip_spec):
         # This is the minimum VM size we support. JupyterLab extensions seem
         # to need at least this much RAM to build. Boo?
         # If we change this, need to change all other references to this number.
-        '--memory', '1.0G',
+        '--memory', '1.15G',
     ]
 
     if bootstrap_pip_spec:

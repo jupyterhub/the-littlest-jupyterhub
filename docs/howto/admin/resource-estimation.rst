@@ -12,7 +12,7 @@ Memory
 ======
 
 Memory is usually the biggest determinant of server size in most JupyterHub
-installations. At minimum, your server must have at least **1GB** of RAM
+installations. At minimum, your server must have at least **1.15GB** of RAM
 for TLJH to install.
 
 .. math::
