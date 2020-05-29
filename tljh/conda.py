@@ -12,17 +12,17 @@ from distutils.version import LooseVersion as V
 from tljh import utils
 
 
-def md5_file(fname):
+def sha256_file(fname):
     """
-    Return md5 of a given filename
+    Return sha256 of a given filename
 
     Copied from https://stackoverflow.com/a/3431838
     """
-    hash_md5 = hashlib.md5()
+    hash_sha256 = hashlib.sha256()
     with open(fname, "rb") as f:
         for chunk in iter(lambda: f.read(4096), b""):
-            hash_md5.update(chunk)
-    return hash_md5.hexdigest()
+            hash_sha256.update(chunk)
+    return hash_sha256.hexdigest()
 
 
 def check_miniconda_version(prefix, version):
@@ -41,21 +41,20 @@ def check_miniconda_version(prefix, version):
 
 
 @contextlib.contextmanager
-def download_miniconda_installer(version, md5sum):
+def download_miniconda_installer(installer_url, sha256sum):
     """
-    Context manager to download miniconda installer of given version.
+    Context manager to download miniconda installer from a given URL
 
     This should be used as a contextmanager. It downloads miniconda installer
-    of given version, verifies the md5sum & provides path to it to the `with`
+    of given version, verifies the sha256sum & provides path to it to the `with`
     block to run.
     """
     with tempfile.NamedTemporaryFile() as f:
-        installer_url = "https://repo.continuum.io/miniconda/Miniconda3-{}-Linux-x86_64.sh".format(version)
         with open(f.name, 'wb') as f:
             f.write(requests.get(installer_url).content)
 
-        if md5_file(f.name) != md5sum:
-            raise Exception('md5 hash mismatch! Downloaded file corrupted')
+        if sha256_file(f.name) != sha256sum:
+            raise Exception('sha256sum hash mismatch! Downloaded file corrupted')
 
         yield f.name
 
