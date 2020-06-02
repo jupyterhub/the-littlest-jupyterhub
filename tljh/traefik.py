@@ -126,7 +126,6 @@ def ensure_traefik_config(state_dir):
     traefik_toml = load_extra_config(traefik_std_config_file, traefik_extra_config_dir)
 
     # Dump the dict into a toml-formatted string and write it to file
-    print(f"Writing traefik config {traefik_toml}...")
     with open(traefik_std_config_file, "w") as f:
         os.fchmod(f.fileno(), 0o600)
         toml.dump(traefik_toml, f)
