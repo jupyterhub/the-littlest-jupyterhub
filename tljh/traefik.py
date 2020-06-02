@@ -21,8 +21,6 @@ checksums = {
     "linux-amd64": "3c2d153d80890b6fc8875af9f8ced32c4d684e1eb5a46d9815337cb343dfd92e"
 }
 
-traefik_extra_config_dir = "traefik_config.d"
-
 def checksum_file(path):
     """Compute the sha256 checksum of a path"""
     hasher = hashlib.sha256()
@@ -82,13 +80,17 @@ def compute_basic_auth(username, password):
     hashed_password = str(ht.to_string()).split(":")[1][:-3]
     return username + ":" + hashed_password
 
-def load_extra_config(std_toml):
-    extra_configs = sorted(glob(os.path.join(CONFIG_DIR, traefik_extra_config_dir, '*.py')))
-    config = toml.load(extra_configs + [std_toml])
+def load_extra_config(std_toml, extra_config_dir):
+    extra_configs = sorted(glob(os.path.join(extra_config_dir, '*.py')))
+    # Load the toml list of files into dicts and merge them
+    config = toml.load([std_toml] + extra_configs)
     return config
 
 def ensure_traefik_config(state_dir):
     """Render the traefik.toml config file"""
+    traefik_std_config_file = os.path.join(state_dir, "traefik.toml")
+    traefik_extra_config_dir = os.path.join(CONFIG_DIR, "traefik_config.d")
+
     config = load_config()
     config['traefik_api']['basic_auth'] = compute_basic_auth(
         config['traefik_api']['username'],
@@ -112,18 +114,20 @@ def ensure_traefik_config(state_dir):
         ):
             raise ValueError("Both email and domains must be set for letsencrypt")
 
-     # Ensure extra config dir exists and is private
-    for path in [CONFIG_DIR, os.path.join(CONFIG_DIR, traefik_extra_config_dir)]:
-        os.makedirs(path, mode=0o700, exist_ok=True)
+    # Ensure extra config dir exists and is private
+    os.makedirs(traefik_extra_config_dir, mode=0o700, exist_ok=True)
 
-    with open(os.path.join(state_dir, "traefik.toml"), "w") as f:
+    # Write standard config to file
+    with open(traefik_std_config_file, "w") as f:
         os.fchmod(f.fileno(), 0o600)
         f.write(new_toml)
 
-    traefik_toml = load_extra_config(os.path.join(state_dir, "traefik.toml"))
+    # Load standard config file and extra config files into a dict
+    traefik_toml = load_extra_config(traefik_std_config_file, traefik_extra_config_dir)
 
+    # Dump the dict into a toml-formatted string and write it to file
     print(f"Writing traefik config {traefik_toml}...")
-    with open(os.path.join(state_dir, "traefik.toml"), "w") as f:
+    with open(traefik_std_config_file, "w") as f:
         os.fchmod(f.fileno(), 0o600)
         toml.dump(traefik_toml, f)
 
