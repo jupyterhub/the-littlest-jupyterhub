@@ -22,4 +22,5 @@ def tljh_dir(tmpdir):
         assert tljh.config.INSTALL_PREFIX == tljh_dir
         os.makedirs(tljh.config.STATE_DIR)
         os.makedirs(tljh.config.CONFIG_DIR)
+        os.makedirs(os.path.join(tljh.config.CONFIG_DIR, "traefik_config.d"))
         yield tljh_dir

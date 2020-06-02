@@ -2,7 +2,7 @@
 import os
 from unittest import mock
 
-import pytoml as toml
+import toml
 
 from tljh import config
 from tljh import traefik
@@ -124,3 +124,33 @@ def test_manual_ssl_config(tljh_dir):
             "whiteList": {"sourceRange": ["127.0.0.1"]}
         },
     }
+
+def test_extra_config(tmpdir, tljh_dir):
+    extra_config_dir = os.path.join(tljh_dir, config.CONFIG_DIR, "traefik_config.d")
+
+    state_dir = tmpdir.mkdir("state")
+
+    extra_config = {
+        # modify existing value
+        "dashboard": True,
+        # modify existing value with multiple levels
+        "entryPoints": {
+            "auth_api": {
+                "address": "127.0.0.1:9999"
+            }
+        },
+        # add new setting
+        "checkNewVersion": False
+    }
+
+    with open(os.path.join(extra_config_dir, "extra.py"), "w+") as extra_config_file:
+        toml.dump(extra_config, extra_config_file)
+
+    # This merges the 2 configs
+    traefik.ensure_traefik_config(str(state_dir))
+    traefik_toml = os.path.join(state_dir, "traefik.toml")
+
+    # Read back the merged config
+    toml_cfg = toml.load(traefik_toml)
+
+    assert extra_config.items() <= toml_cfg.items()
