@@ -81,7 +81,7 @@ def compute_basic_auth(username, password):
     return username + ":" + hashed_password
 
 def load_extra_config(std_toml, extra_config_dir):
-    extra_configs = sorted(glob(os.path.join(extra_config_dir, '*.py')))
+    extra_configs = sorted(glob(os.path.join(extra_config_dir, '*.toml')))
     # Load the toml list of files into dicts and merge them
     config = toml.load([std_toml] + extra_configs)
     return config

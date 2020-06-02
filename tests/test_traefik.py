@@ -143,7 +143,7 @@ def test_extra_config(tmpdir, tljh_dir):
         "checkNewVersion": False
     }
 
-    with open(os.path.join(extra_config_dir, "extra.py"), "w+") as extra_config_file:
+    with open(os.path.join(extra_config_dir, "extra.toml"), "w+") as extra_config_file:
         toml.dump(extra_config, extra_config_file)
 
     # This merges the 2 configs
