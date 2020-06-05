@@ -132,7 +132,7 @@ def test_extra_config(tmpdir, tljh_dir):
 
     extra_config = {
         # modify existing value
-        "dashboard": True,
+        "logLevel": "ERROR",
         # modify existing value with multiple levels
         "entryPoints": {
             "auth_api": {
