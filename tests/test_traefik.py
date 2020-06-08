@@ -3,6 +3,7 @@ import os
 from unittest import mock
 
 import toml
+import pytest
 
 from tljh import config
 from tljh import traefik
@@ -127,8 +128,20 @@ def test_manual_ssl_config(tljh_dir):
 
 def test_extra_config(tmpdir, tljh_dir):
     extra_config_dir = os.path.join(tljh_dir, config.CONFIG_DIR, "traefik_config.d")
-
     state_dir = tmpdir.mkdir("state")
+    traefik_toml = os.path.join(state_dir, "traefik.toml")
+
+    # Generate default config
+    traefik.ensure_traefik_config(str(state_dir))
+
+    # Read the default config
+    toml_cfg = toml.load(traefik_toml)
+
+    # Make sure the defaults are what we expect
+    assert toml_cfg["logLevel"] == "INFO"
+    with pytest.raises(KeyError):
+        toml_cfg["checkNewVersion"]
+    assert toml_cfg["entryPoints"]["auth_api"]["address"] == "127.0.0.1:8099"
 
     extra_config = {
         # modify existing value
@@ -146,11 +159,13 @@ def test_extra_config(tmpdir, tljh_dir):
     with open(os.path.join(extra_config_dir, "extra.toml"), "w+") as extra_config_file:
         toml.dump(extra_config, extra_config_file)
 
-    # This merges the 2 configs
+    # Merge the extra config with the defaults
     traefik.ensure_traefik_config(str(state_dir))
-    traefik_toml = os.path.join(state_dir, "traefik.toml")
 
     # Read back the merged config
     toml_cfg = toml.load(traefik_toml)
 
-    assert extra_config.items() <= toml_cfg.items()
+    # Check that the defaults were updated by the extra config
+    assert toml_cfg["logLevel"] == "ERROR"
+    assert toml_cfg["checkNewVersion"] == False
+    assert toml_cfg["entryPoints"]["auth_api"]["address"] == "127.0.0.1:9999"

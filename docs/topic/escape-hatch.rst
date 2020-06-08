@@ -63,3 +63,5 @@ proxy for the new configuration to take effect:
 .. code-block:: bash
 
 	sudo tljh-config reload proxy
+
+.. warning:: This instructions might change when TLJH will switch to Traefik > 2.0
