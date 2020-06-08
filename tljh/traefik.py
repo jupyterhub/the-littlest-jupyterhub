@@ -10,7 +10,7 @@ import requests
 import toml
 
 from .config import CONFIG_DIR
-from tljh.configurer import load_config
+from tljh.configurer import load_config, _merge_dictionaries
 
 # FIXME: support more than one platform here
 plat = "linux-amd64"
