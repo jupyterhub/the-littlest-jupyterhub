@@ -80,11 +80,13 @@ def compute_basic_auth(username, password):
     hashed_password = str(ht.to_string()).split(":")[1][:-3]
     return username + ":" + hashed_password
 
-def load_extra_config(std_toml, extra_config_dir):
+
+def load_extra_config(extra_config_dir):
     extra_configs = sorted(glob(os.path.join(extra_config_dir, '*.toml')))
     # Load the toml list of files into dicts and merge them
-    config = toml.load([std_toml] + extra_configs)
+    config = toml.load(extra_configs)
     return config
+
 
 def ensure_traefik_config(state_dir):
     """Render the traefik.toml config file"""
@@ -99,7 +101,7 @@ def ensure_traefik_config(state_dir):
 
     with open(os.path.join(os.path.dirname(__file__), "traefik.toml.tpl")) as f:
         template = Template(f.read())
-    new_toml = template.render(config)
+    std_config = template.render(config)
     https = config["https"]
     letsencrypt = https["letsencrypt"]
     tls = https["tls"]
@@ -117,18 +119,17 @@ def ensure_traefik_config(state_dir):
     # Ensure extra config dir exists and is private
     os.makedirs(traefik_extra_config_dir, mode=0o700, exist_ok=True)
 
-    # Write standard config to file
-    with open(traefik_std_config_file, "w") as f:
-        os.fchmod(f.fileno(), 0o600)
-        f.write(new_toml)
-
-    # Load standard config file and extra config files into a dict
-    traefik_toml = load_extra_config(traefik_std_config_file, traefik_extra_config_dir)
+    try:
+        # Load standard config file merge it with the extra config files into a dict
+        extra_config = load_extra_config(traefik_extra_config_dir)
+        new_toml = _merge_dictionaries(toml.loads(std_config), extra_config)
+    except FileNotFoundError:
+        new_toml = toml.loads(std_config)
 
     # Dump the dict into a toml-formatted string and write it to file
     with open(traefik_std_config_file, "w") as f:
         os.fchmod(f.fileno(), 0o600)
-        toml.dump(traefik_toml, f)
+        toml.dump(new_toml, f)
 
     with open(os.path.join(state_dir, "rules.toml"), "w") as f:
         os.fchmod(f.fileno(), 0o600)
