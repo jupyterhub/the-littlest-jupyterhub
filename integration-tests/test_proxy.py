@@ -9,7 +9,7 @@ import toml
 from tornado.httpclient import HTTPClient, HTTPRequest, HTTPClientError
 import pytest
 
-from tljh.config import reload_component, set_config_value, CONFIG_FILE
+from tljh.config import reload_component, set_config_value, CONFIG_FILE, CONFIG_DIR
 
 
 def test_manual_https(preserve_config):
