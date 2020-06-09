@@ -12,7 +12,7 @@ The two main TLJH components are **JupyterHub** and **Traefik**.
 
 These files are created by TLJH during installation and can be edited by the
 user only through ``tljh-config``. Any direct modification to these files,
-will have no effect.
+is unsupported, and will cause hard to debug issues.
 
 But because sometimes TLJH needs to be customized in ways that are not officially
 supported, an escape hatch has been introduced to allow easily extending the
