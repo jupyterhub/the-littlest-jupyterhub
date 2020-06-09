@@ -11,7 +11,7 @@ The two main TLJH components are **JupyterHub** and **Traefik**.
 * Traefik takes its configuration from the ``traefik.toml`` file.
 
 These files are created by TLJH during installation and can be edited by the
-user only through ``tljh-config``. Any direct modification to these files,
+user only through ``tljh-config``. Any direct modification to these files
 is unsupported, and will cause hard to debug issues.
 
 But because sometimes TLJH needs to be customized in ways that are not officially
