@@ -1,13 +1,16 @@
 """Traefik installation and setup"""
 import hashlib
 import os
+from glob import glob
 
 from jinja2 import Template
 from passlib.apache import HtpasswdFile
 import backoff
 import requests
+import toml
 
-from tljh.configurer import load_config
+from .config import CONFIG_DIR
+from tljh.configurer import load_config, _merge_dictionaries
 
 # FIXME: support more than one platform here
 plat = "linux-amd64"
@@ -17,7 +20,6 @@ traefik_version = "1.7.18"
 checksums = {
     "linux-amd64": "3c2d153d80890b6fc8875af9f8ced32c4d684e1eb5a46d9815337cb343dfd92e"
 }
-
 
 def checksum_file(path):
     """Compute the sha256 checksum of a path"""
@@ -79,8 +81,18 @@ def compute_basic_auth(username, password):
     return username + ":" + hashed_password
 
 
+def load_extra_config(extra_config_dir):
+    extra_configs = sorted(glob(os.path.join(extra_config_dir, '*.toml')))
+    # Load the toml list of files into dicts and merge them
+    config = toml.load(extra_configs)
+    return config
+
+
 def ensure_traefik_config(state_dir):
     """Render the traefik.toml config file"""
+    traefik_std_config_file = os.path.join(state_dir, "traefik.toml")
+    traefik_extra_config_dir = os.path.join(CONFIG_DIR, "traefik_config.d")
+
     config = load_config()
     config['traefik_api']['basic_auth'] = compute_basic_auth(
         config['traefik_api']['username'],
@@ -89,7 +101,7 @@ def ensure_traefik_config(state_dir):
 
     with open(os.path.join(os.path.dirname(__file__), "traefik.toml.tpl")) as f:
         template = Template(f.read())
-    new_toml = template.render(config)
+    std_config = template.render(config)
     https = config["https"]
     letsencrypt = https["letsencrypt"]
     tls = https["tls"]
@@ -103,9 +115,21 @@ def ensure_traefik_config(state_dir):
             letsencrypt["domains"] and not letsencrypt["email"]
         ):
             raise ValueError("Both email and domains must be set for letsencrypt")
-    with open(os.path.join(state_dir, "traefik.toml"), "w") as f:
+
+    # Ensure extra config dir exists and is private
+    os.makedirs(traefik_extra_config_dir, mode=0o700, exist_ok=True)
+
+    try:
+        # Load standard config file merge it with the extra config files into a dict
+        extra_config = load_extra_config(traefik_extra_config_dir)
+        new_toml = _merge_dictionaries(toml.loads(std_config), extra_config)
+    except FileNotFoundError:
+        new_toml = toml.loads(std_config)
+
+    # Dump the dict into a toml-formatted string and write it to file
+    with open(traefik_std_config_file, "w") as f:
         os.fchmod(f.fileno(), 0o600)
-        f.write(new_toml)
+        toml.dump(new_toml, f)
 
     with open(os.path.join(state_dir, "rules.toml"), "w") as f:
         os.fchmod(f.fileno(), 0o600)

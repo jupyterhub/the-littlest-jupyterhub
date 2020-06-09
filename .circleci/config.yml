@@ -58,8 +58,10 @@ commands:
 
                     .circleci/integration-test.py run-test \
                     --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
-                    basic-tests test_hub.py test_install.py test_extensions.py \
+                    basic-tests test_hub.py test_proxy.py \
+                    test_install.py test_extensions.py \
                     << parameters.upgrade >>
+
     admin_tests:
         parameters:
             upgrade:
