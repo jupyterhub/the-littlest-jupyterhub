@@ -92,6 +92,7 @@ def ensure_traefik_config(state_dir):
     """Render the traefik.toml config file"""
     traefik_std_config_file = os.path.join(state_dir, "traefik.toml")
     traefik_extra_config_dir = os.path.join(CONFIG_DIR, "traefik_config.d")
+    traefik_dynamic_config_dir = os.path.join(state_dir, "rules")
 
     config = load_config()
     config['traefik_api']['basic_auth'] = compute_basic_auth(
@@ -116,8 +117,11 @@ def ensure_traefik_config(state_dir):
         ):
             raise ValueError("Both email and domains must be set for letsencrypt")
 
-    # Ensure extra config dir exists and is private
+    # Ensure traefik extra static config dir exists and is private
     os.makedirs(traefik_extra_config_dir, mode=0o700, exist_ok=True)
+
+    # Ensure traefik dynamic config dir exists and is private
+    os.makedirs(traefik_dynamic_config_dir, mode=0o700, exist_ok=True)
 
     try:
         # Load standard config file merge it with the extra config files into a dict
@@ -131,7 +135,7 @@ def ensure_traefik_config(state_dir):
         os.fchmod(f.fileno(), 0o600)
         toml.dump(new_toml, f)
 
-    with open(os.path.join(state_dir, 'rules', "rules.toml"), "w") as f:
+    with open(os.path.join(traefik_dynamic_config_dir, "rules.toml"), "w") as f:
         os.fchmod(f.fileno(), 0o600)
 
     # ensure acme.json exists and is private
