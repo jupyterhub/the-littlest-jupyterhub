@@ -9,7 +9,13 @@ import toml
 from tornado.httpclient import HTTPClient, HTTPRequest, HTTPClientError
 import pytest
 
-from tljh.config import reload_component, set_config_value, CONFIG_FILE, CONFIG_DIR
+from tljh.config import (
+    reload_component,
+    set_config_value,
+    CONFIG_FILE,
+    CONFIG_DIR,
+    STATE_DIR,
+)
 
 
 def test_manual_https(preserve_config):
@@ -72,7 +78,7 @@ def test_manual_https(preserve_config):
     shutil.rmtree(ssl_dir)
 
 
-def test_extra_traefik_config():
+def test_extra_traefik_static_config():
     extra_config_dir = os.path.join(CONFIG_DIR, "traefik_config.d")
     os.makedirs(extra_config_dir, exist_ok=True)
 
@@ -116,3 +122,36 @@ def test_extra_traefik_config():
     # cleanup
     os.remove(os.path.join(extra_config_dir, "extra.toml"))
     reload_component("proxy")
+
+
+def test_extra_traefik_dynamic_config():
+    dynamic_config_dir = os.path.join(STATE_DIR, "rules")
+    os.makedirs(dynamic_config_dir, exist_ok=True)
+
+    extra_config = {
+        "frontends": {
+            "test": {
+                "backend": "test",
+                "routes": {"rule1": {"rule": "Path: /test/proxy"}},
+            }
+        },
+        "backends": {
+            "test": {"servers": {"server1": {"url": "https://mybinder.org/"}}}
+        },
+    }
+
+    # Load the extra config
+    with open(
+        os.path.join(dynamic_config_dir, "extra_rules.toml"), "w+"
+    ) as extra_config_file:
+        toml.dump(extra_config, extra_config_file)
+    reload_component("proxy")
+
+    req = HTTPRequest("http://127.0.0.1/test/", method="GET")
+    resp = HTTPClient().fetch(req)
+    print(resp)
+    assert resp.code == 200
+
+    # cleanup
+    # os.remove(os.path.join(dynamic_config_dir, "extra_rules.toml"))
+    # reload_component("proxy")

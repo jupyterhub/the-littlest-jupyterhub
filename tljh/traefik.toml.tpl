@@ -70,5 +70,5 @@ entryPoint = "https"
 {% endif %}
 
 [file]
-filename = "rules.toml"
+directory = "rules"
 watch = true
