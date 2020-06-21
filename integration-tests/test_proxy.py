@@ -99,14 +99,34 @@ def test_manual_https(preserve_config):
     reload_component("proxy")
 
 
-def test_extra_traefik_static_config():
+def test_extra_traefik_config():
     extra_static_config_dir = os.path.join(CONFIG_DIR, "traefik_config.d")
     os.makedirs(extra_static_config_dir, exist_ok=True)
+
+    dynamic_config_dir = os.path.join(STATE_DIR, "rules")
+    os.makedirs(dynamic_config_dir, exist_ok=True)
+
 
     extra_static_config = {
         "entryPoints": {"no_auth_api": {"address": "127.0.0.1:9999"}},
         "api": {"dashboard": True, "entrypoint": "no_auth_api"},
     }
+
+    extra_dynamic_config = {
+        "frontends": {
+            "test": {
+                "backend": "test",
+                "routes": {
+                    "rule1": {"rule": "PathPrefixStrip: /the/hub/runs/here/too"}
+                },
+            }
+        },
+        "backends": {
+            # redirect to hub
+            "test": {"servers": {"server1": {"url": "http://127.0.0.1:15001"}}}
+        },
+    }
+
 
     success = False
     for i in range(5):
@@ -129,38 +149,6 @@ def test_extra_traefik_static_config():
     ) as extra_config_file:
         toml.dump(extra_static_config, extra_config_file)
 
-    # load the extra config
-    reload_component("proxy")
-
-    # the new dashboard entrypoint shouldn't require authentication anymore
-    resp = send_request(url="http://127.0.0.1:9999/dashboard/", max_sleep=5)
-    assert resp.code == 200
-
-    # cleanup
-    os.remove(os.path.join(extra_static_config_dir, "extra.toml"))
-    open(os.path.join(STATE_DIR, "traefik.toml"), "w").close()
-    reload_component("proxy")
-
-
-def test_extra_traefik_dynamic_config():
-    dynamic_config_dir = os.path.join(STATE_DIR, "rules")
-    os.makedirs(dynamic_config_dir, exist_ok=True)
-
-    extra_dynamic_config = {
-        "frontends": {
-            "test": {
-                "backend": "test",
-                "routes": {
-                    "rule1": {"rule": "PathPrefixStrip: /the/hub/runs/here/too"}
-                },
-            }
-        },
-        "backends": {
-            # redirect to hub
-            "test": {"servers": {"server1": {"url": "http://127.0.0.1:15001"}}}
-        },
-    }
-
     # write the extra dynamic config
     with open(
         os.path.join(dynamic_config_dir, "extra_rules.toml"), "w+"
@@ -170,10 +158,16 @@ def test_extra_traefik_dynamic_config():
     # load the extra config
     reload_component("proxy")
 
+    # the new dashboard entrypoint shouldn't require authentication anymore
+    resp = send_request(url="http://127.0.0.1:9999/dashboard/", max_sleep=5)
+    assert resp.code == 200
+
     # test extra dynamic config
     resp = send_request(url="http://127.0.0.1/the/hub/runs/here/too", max_sleep=5)
     assert resp.code == 200
     assert resp.effective_url == "http://127.0.0.1/hub/login"
 
     # cleanup
+    os.remove(os.path.join(extra_static_config_dir, "extra.toml"))
     os.remove(os.path.join(dynamic_config_dir, "extra_rules.toml"))
+    open(os.path.join(STATE_DIR, "traefik.toml"), "w").close()
