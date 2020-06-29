@@ -101,7 +101,7 @@ Let's create the server on which we can run JupyterHub.
    .. code-block:: bash
 
        #!/bin/bash
-       curl https://tljh.jupyter.org/bootstrap.py \
+       curl -L https://tljh.jupyter.org/bootstrap.py \
          | sudo python3 - \
            --admin <admin-user-name>
 
