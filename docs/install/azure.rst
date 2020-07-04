@@ -135,7 +135,7 @@ A new screen with all the options for Virtual Machines in Azure will displayed.
       .. code:: bash
 
          #!/bin/bash
-         curl https://tljh.jupyter.org/bootstrap.py \
+         curl -L https://tljh.jupyter.org/bootstrap.py \
            | sudo python3 - \
              --admin <admin-user-name>
 
