@@ -9,7 +9,7 @@ is executed as:
 
 .. code-block:: bash
 
-    curl https://tljh.jupyter.org/bootstrap.py \
+    curl -L https://tljh.jupyter.org/bootstrap.py \
      | sudo python3 - \
        <parameters>
 
@@ -33,7 +33,7 @@ during install you would:
 
 .. code-block:: bash
 
-    curl https://tljh.jupyter.org/bootstrap.py \
+    curl -L https://tljh.jupyter.org/bootstrap.py \
      | sudo python3 - \
        --admin admin-user1:password-user1 --admin admin-user2:password-user2
 
@@ -41,7 +41,7 @@ during install you would:
 
 .. code-block:: bash
 
-    curl https://tljh.jupyter.org/bootstrap.py \
+    curl -L https://tljh.jupyter.org/bootstrap.py \
      | sudo python3 - \
        --admin admin-user1 --admin admin-user2
 
@@ -49,7 +49,7 @@ during install you would:
 
 .. code-block:: bash
 
-    curl https://tljh.jupyter.org/bootstrap.py \
+    curl -L https://tljh.jupyter.org/bootstrap.py \
      | sudo python3 - \
        --admin admin-user1:password-user1 --admin admin-user2
 
@@ -66,7 +66,7 @@ in your new hub, you would run:
 
 .. code-block:: bash
 
-    curl https://tljh.jupyter.org/bootstrap.py \
+    curl -L https://tljh.jupyter.org/bootstrap.py \
      | sudo python3 - \
        --user-requirements-txt-url https://raw.githubusercontent.com/data-8/materials-sp18/master/requirements.txt
 
@@ -97,7 +97,7 @@ you would use:
 
 .. code-block:: bash
 
-   curl https://tljh.jupyter.org/bootstrap.py \
+   curl -L https://tljh.jupyter.org/bootstrap.py \
     | sudo python3 - \
       --plugin git+https://github.com/yuvipanda/tljh-pangeo@v0.1
 
