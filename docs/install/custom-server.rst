@@ -59,7 +59,7 @@ Step 1: Installing The Littlest JupyterHub
 
    .. code-block:: bash
 
-      curl https://tljh.jupyter.org/bootstrap.py | sudo -E python3 - --admin <admin-user-name>
+      curl -L https://tljh.jupyter.org/bootstrap.py | sudo -E python3 - --admin <admin-user-name>
 
    .. note::
 

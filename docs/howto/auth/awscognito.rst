@@ -50,7 +50,7 @@ able to configure the instance automatically, replace relevant config variables:
         ##############################################
         # Need to ensure oauthenticator is bumped to 0.10.0
         ##############################################
-        curl https://tljh.jupyter.org/bootstrap.py \
+        curl -L https://tljh.jupyter.org/bootstrap.py \
           | sudo python3 - \
             --admin insightadmin
 
