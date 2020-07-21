@@ -17,7 +17,7 @@ async def test_admin_login():
 
     async with User(username, hub_url, partial(login_dummy, password=password)) as u:
             await u.login()
-            await u.ensure_server()
+            await u.ensure_server_simulate()
 
 
 @pytest.mark.asyncio
