@@ -38,7 +38,7 @@ async def test_user_code_execute():
 
     async with User(username, hub_url, partial(login_dummy, password='')) as u:
             await u.login()
-            await u.ensure_server()
+            await u.ensure_server_simulate()
             await u.start_kernel()
             await u.assert_code_output("5 * 4", "20", 5, 5)
 
@@ -62,7 +62,7 @@ async def test_user_admin_add():
 
     async with User(username, hub_url, partial(login_dummy, password='')) as u:
             await u.login()
-            await u.ensure_server()
+            await u.ensure_server_simulate()
 
             # Assert that the user exists
             assert pwd.getpwnam(f'jupyter-{username}') is not None
@@ -91,7 +91,7 @@ async def test_user_admin_remove():
 
     async with User(username, hub_url, partial(login_dummy, password='')) as u:
             await u.login()
-            await u.ensure_server()
+            await u.ensure_server_simulate()
 
             # Assert that the user exists
             assert pwd.getpwnam(f'jupyter-{username}') is not None
@@ -103,7 +103,7 @@ async def test_user_admin_remove():
             assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
 
             await u.stop_server()
-            await u.ensure_server()
+            await u.ensure_server_simulate()
 
             # Assert that the user does *not* have admin rights
             assert f'jupyter-{username}' not in grp.getgrnam('jupyterhub-admins').gr_mem
@@ -125,7 +125,7 @@ async def test_long_username():
     try:
         async with User(username, hub_url, partial(login_dummy, password='')) as u:
                 await u.login()
-                await u.ensure_server()
+                await u.ensure_server_simulate()
 
                 # Assert that the user exists
                 system_username = generate_system_username(f'jupyter-{username}')
@@ -162,7 +162,7 @@ async def test_user_group_adding():
     try:
         async with User(username, hub_url, partial(login_dummy, password='')) as u:
                 await u.login()
-                await u.ensure_server()
+                await u.ensure_server_simulate()
 
                 # Assert that the user exists
                 system_username = generate_system_username(f'jupyter-{username}')
@@ -207,7 +207,7 @@ async def test_idle_server_culled():
     async with User(username, hub_url, partial(login_dummy, password='')) as u:
             await u.login()
             # Start user's server
-            await u.ensure_server()
+            await u.ensure_server_simulate()
             # Assert that the user exists
             assert pwd.getpwnam(f'jupyter-{username}') is not None
 
@@ -252,7 +252,7 @@ async def test_active_server_not_culled():
     async with User(username, hub_url, partial(login_dummy, password='')) as u:
             await u.login()
             # Start user's server
-            await u.ensure_server()
+            await u.ensure_server_simulate()
             # Assert that the user exists
             assert pwd.getpwnam(f'jupyter-{username}') is not None
 
