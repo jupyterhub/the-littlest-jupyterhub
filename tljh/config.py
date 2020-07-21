@@ -239,8 +239,10 @@ def remove_config_value(config_path, key_path, value):
         yaml.dump(config, f)
 
 def check_hub_ready():
+    from .configurer import load_config
+    http_port = load_config()['http']['port']
     try:
-        r = requests.get('http://127.0.0.1:80/hub/api', verify=False)
+        r = requests.get('http://127.0.0.1:%d/hub/api' % http_port, verify=False)
         return r.status_code == 200
     except:
         return False
