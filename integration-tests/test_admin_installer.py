@@ -16,9 +16,9 @@ async def test_admin_login():
     password = "admin"
 
     async with User(username, hub_url, partial(login_dummy, password=password)) as u:
-            await u.login()
-            await u.ensure_server()
-
+        await u.login()
+        # If user is not logged in, this will raise an exception
+        await u.ensure_server_simulate()
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
@@ -35,11 +35,7 @@ async def test_unsuccessful_login(username, password):
     """
     hub_url = 'http://localhost'
 
-    try:
-        async with User(username, hub_url, partial(login_dummy, password="")) as u:
-                await u.login()
-    except Exception:
-        # This is what we except to happen
-        pass
-    else:
-        raise
+    async with User(username, hub_url, partial(login_dummy, password="")) as u:
+        user_logged_in = await u.login()
+
+    assert user_logged_in == False
