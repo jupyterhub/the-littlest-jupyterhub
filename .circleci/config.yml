@@ -213,42 +213,6 @@ jobs:
             - plugin_tests:
                 upgrade: "--upgrade"
 
-
-    documentation:
-        executor: ubuntu_docker
-        steps:
-            - checkout
-
-            # Setup Python
-            - install_python
-
-            # Download and cache dependencies
-            - restore_cache:
-                key: v1-dependencies-py3.6-sphinx
-
-            - setup_venv
-
-            - run:
-                name: install dependencies
-                command: |
-                    pip install sphinx
-                    pip install -r docs/requirements.txt
-
-            - save_cache:
-                paths:
-                    - /srv/venv/
-                key: v1-dependencies-py3.6-sphinx
-
-            - run:
-                name: build documentation
-                command: |
-                    cd docs
-                    make html
-
-            - store_artifacts:
-                path: docs/_build/html/
-                destination: html
-
 workflows:
     version: 2
     all-tests:
@@ -256,4 +220,3 @@ workflows:
             - unit-test
             - integration-test
             - upgrade-test
-            - documentation
