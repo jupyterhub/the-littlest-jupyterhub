@@ -5,7 +5,7 @@
 jupyterhub==1.0.*
 notebook==6.0.*
 # Install additional notebook frontends!
-jupyterlab==1.2.*
+jupyterlab==2.*
 nteract-on-jupyter==2.1.*
 # nbgitpuller for easily pulling in Git repositories
 nbgitpuller==0.7.*

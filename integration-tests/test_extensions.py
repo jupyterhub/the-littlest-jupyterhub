@@ -13,7 +13,7 @@ def test_serverextensions():
     ], stderr=subprocess.PIPE)
 
     extensions = [
-        'jupyterlab 1.2.',
+        'jupyterlab 2.',
         'nbgitpuller 0.7.',
         'nteract_on_jupyter 2.1.',
         'nbresuse '
@@ -43,12 +43,3 @@ def test_nbextensions():
 
     # Ensure we have 'OK' messages in our stdout, to make sure everything is importable
     assert proc.stderr.decode() == '      - Validating: \x1b[32mOK\x1b[0m\n' * len(extensions)
-
-
-def test_labextensions():
-    """
-    Validate labextensions we want installed
-    """
-    # Currently we only install jupyterhub
-    assert os.path.exists('/opt/tljh/user/bin/jupyter-labhub')
-    

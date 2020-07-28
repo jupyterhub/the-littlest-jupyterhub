@@ -170,7 +170,9 @@ def ensure_jupyterlab_extensions():
     Install the JupyterLab extensions we want.
     """
     extensions = [
-        '@jupyter-widgets/jupyterlab-manager@1.1' # for jupyterlab 1.2.x
+        # We don't pin versions here, since labextension will find something
+        # appropriate for our version of jupyterlab
+        '@jupyter-widgets/jupyterlab-manager'
     ]
     install_options = [
         '--no-build'   # do not build extension at install time. Will build later
