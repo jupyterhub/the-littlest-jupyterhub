@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <body>
+    <meta http-equiv="refresh" content="20"/>
+    <img style="width: 150px; height: auto;" src="https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/docs/images/logo/logo.png">
+    <div class="loader"></div>
+    <div class="message">Please wait while your TLJH is building...</div>
+    <div class="logs_info">Click the button below to see the logs</div>
+    <button class="logs_button" onclick="window.location.href='/logs'">View logs</button>
+  </body>
+
+  <style>
+    button:hover {
+      background: grey;
+    }
+
+    .message {
+      position: absolute;
+      top: 35%;
+      left: 30%;
+      font-size: 30px;
+      font-weight: bold;
+      color: grey;
+     }
+
+    .loader {
+      position: absolute;
+      top: 11%;
+      left: 46%;
+      width: 150px;
+      height: 150px;
+      border-radius: 90%;
+      border: 7px solid transparent;
+      animation: spin 2s infinite ease;
+      animation-direction: alternate; 
+    }
+    @keyframes spin {
+      0% {
+        transform: rotateZ(0deg);
+        border-top-color: #f17c0e
+      }
+      100% {
+        transform: rotateZ(360deg);
+        border-top-color: #fce5cf;
+      }
+    }
+    .logs_info {
+      position: absolute;
+      top: 45%;
+      left: 42%;
+      font-size: 15px;
+      color: grey;
+     }
+    .logs_button {
+      position: absolute;
+      top: 50%;
+      left: 46%;
+      border: 0;
+      color: white;
+      padding: 15px 32px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #f5a252;
+    }
+  </style>
+</head>

@@ -6,6 +6,7 @@ import itertools
 import logging
 import os
 import secrets
+import signal
 import subprocess
 import sys
 import time
@@ -499,6 +500,18 @@ def main():
     ensure_node()
     ensure_jupyterhub_package(HUB_ENV_PREFIX)
     ensure_jupyterlab_extensions()
+
+    # Stop the http server with the loading page before traefik starts
+    try:
+        with open(pidfile, "r") as f:
+            pid = f.read()
+        os.kill(int(pid), signal.SIGINT)
+        # Remove the pid file and the temporary html page
+        os.remove('/loading.pid')
+        os.remove('/index.html')
+    except:
+        pass
+
     ensure_jupyterhub_service(HUB_ENV_PREFIX)
     ensure_jupyterhub_running()
     ensure_symlinks(HUB_ENV_PREFIX)

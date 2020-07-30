@@ -13,10 +13,13 @@ Constraints:
   - Use stdlib modules only
 """
 import os
+from http.server import SimpleHTTPRequestHandler, HTTPServer
+import multiprocessing
 import subprocess
 import sys
 import logging
 import shutil
+import urllib.request
 
 logger = logging.getLogger(__name__)
 
@@ -90,7 +93,38 @@ def validate_host():
             print("For local development, see http://tljh.jupyter.org/en/latest/contributing/dev-setup.html")
         sys.exit(1)
 
+class LoaderPageRequestHandler(SimpleHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == "/logs":
+            with open("/opt/tljh/installer.log", "rb") as log_file:
+                content = log_file.read()
+                self.wfile.write(content)
+        else:
+            self.path = '/index.html'
+            return SimpleHTTPRequestHandler.do_GET(self)
+
+def serve_forever(server):
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+
 def main():
+    # Serve the loading page until TLJH builds
+    url="https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/index.html"
+    urllib.request.urlretrieve(url, "index.html")
+
+    # If the bootstrap is run to upgrade TLJH, then this will raise an "Address already in use" error
+    try:
+        loading_page_server = HTTPServer(("", 80), LoaderPageRequestHandler)
+        p = multiprocessing.Process(target=serve_forever, args=(loading_page_server,))
+        p.start()
+        with open('/loading.pid', 'w+') as f:
+            f.write(str(p.pid))
+    except OSError:
+        # Only serve the loading page when installing TLJH
+        pass
+
     validate_host()
     install_prefix = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
     hub_prefix = os.path.join(install_prefix, 'hub')
@@ -177,7 +211,6 @@ def main():
             'tljh.installer',
         ] + sys.argv[1:]
     )
-
 
 if __name__ == '__main__':
     main()
