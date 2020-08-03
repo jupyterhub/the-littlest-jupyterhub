@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <head>
   <body>
+    <meta http-equiv="refresh" content="30" >
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width">
     <img style="width: 150px; height: auto;" src="https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/docs/images/logo/logo.png">
     <div class="loader center"></div>
     <div class="center" style="font-size: 30px; font-weight: bold; color: grey; text-align:center;">Please wait while your TLJH is building...</div>
     <div class="center" style="font-size: 15px; color: grey;">Click the button below to see the logs</div>
+    <div class="center" style="font-size: 13px; color: grey; margin-top: 10px; font-style: italic;">Tip: to update the logs, refresh the page</div>
     <button class="logs-button center" onclick="window.location.href='/logs'">View logs</button>
-    <script type="text/javascript">
-        setInterval('window.location.reload()', 10000);
-    </script>
   </body>
 
   <style>
