@@ -6,9 +6,9 @@ RUN apt-get update --yes
 
 # To fix issue in Ubuntu 20.04 that hangs when
 # configuring timezones.
-RUN DEBIAN_FRONTEND=noninteractive
-
-RUN apt-get install --yes systemd curl git sudo
+# https://anonoz.github.io/tech/2020/04/24/docker-build-stuck-tzdata.html
+RUN DEBIAN_FRONTEND=noninteractive \
+	apt-get install --yes systemd curl git sudo
 
 # Kill all the things we don't need
 RUN find /etc/systemd/system \
