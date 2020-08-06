@@ -42,7 +42,7 @@ commands:
             - run:
                 name: build systemd image
                 command: |
-                    .circleci/integration-test.py build-image
+                    .circleci/integration-test.py build-image --ubuntu-version << parameters.ubuntu_version >>
 
     basic_tests:
         parameters:
@@ -157,7 +157,7 @@ jobs:
                 command: |
                     codecov
 
-    integration-test:
+    integration-test-min-version:
         docker:
             - image: docker:18.05.0-ce-git
 
@@ -188,7 +188,25 @@ jobs:
             - checkout
             - setup_remote_docker
             - build_systemd_image:
-                ubuntu_version: "19.10"
+                ubuntu_version: "latest"
+            - basic_tests
+            - admin_tests
+            - plugin_tests
+
+    integration-test-rolling:
+        docker:
+            - image: docker:18.05.0-ce-git
+
+        steps:
+            - run:
+                name: setup python3
+                command: |
+                    apk add --no-cache python3 pytest
+
+            - checkout
+            - setup_remote_docker
+            - build_systemd_image:
+                ubuntu_version: "rolling"
             - basic_tests
             - admin_tests
             - plugin_tests
@@ -233,6 +251,7 @@ workflows:
     all-tests:
         jobs:
             - unit-test
-            - integration-test
+            - integration-test-min-version
             - integration-test-latest
+            - integration-test-rolling
             - upgrade-test

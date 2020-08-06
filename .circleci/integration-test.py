@@ -13,6 +13,7 @@ def build_systemd_image(image_name, source_path, ubuntu_version=None):
     extra_args = []
     if ubuntu_version:
         extra_args.extend(["--build-arg", "UBUNTU_VERSION={}".format(ubuntu_version)])
+
     subprocess.check_call(
         ['docker', 'build', '-t', image_name] + extra_args + [source_path]
     )
