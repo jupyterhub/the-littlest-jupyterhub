@@ -4,6 +4,10 @@ FROM ubuntu:${UBUNTU_VERSION}
 
 RUN apt-get update --yes
 
+# To fix issue in Ubuntu 20.04 that hangs when
+# configuring timezones.
+RUN DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get install --yes systemd curl git sudo
 
 # Kill all the things we don't need
