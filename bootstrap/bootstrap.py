@@ -102,7 +102,7 @@ class LoaderPageRequestHandler(SimpleHTTPRequestHandler):
         elif self.path == "/index.html" or self.path == "/favicon.ico":
             return SimpleHTTPRequestHandler.do_GET(self)
         elif self.path == "/":
-            self.send_response(301)
+            self.send_response(302)
             self.send_header('Location','/index.html')
             self.end_headers()
         else:
@@ -115,7 +115,8 @@ def serve_forever(server):
         pass
 
 def main():
-    if "--temporary-page" in sys.argv:
+    temp_page_flag = "--temporary-page"
+    if temp_page_flag in sys.argv:
         # Serve the loading page until TLJH builds
         index_url="https://raw.githubusercontent.com/GeorgianaElena/the-littlest-jupyterhub/in-progress-page/bootstrap/index.html"
         favicon_url="https://raw.githubusercontent.com/jupyterhub/jupyterhub/master/share/jupyterhub/static/favicon.ico"
@@ -127,8 +128,8 @@ def main():
             loading_page_server = HTTPServer(("", 80), LoaderPageRequestHandler)
             p = multiprocessing.Process(target=serve_forever, args=(loading_page_server,))
             p.start()
-            with open('/loading.pid', 'w+') as f:
-                f.write(str(p.pid))
+            # Put the pid after the temp page flag to be passed to the istaller
+            sys.argv.insert(sys.argv.index(temp_page_flag)+1, str(p.pid))
         except OSError:
             # Only serve the loading page when installing TLJH
             pass

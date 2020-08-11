@@ -488,8 +488,6 @@ def main():
     )
     argparser.add_argument(
         '--temporary-page',
-        action='store_true',
-        default=False,
         help='Serve a temporary page while TLJH is building'
     )
 
@@ -509,13 +507,9 @@ def main():
 
     # Stop the http server with the loading page before traefik starts
     if args.temporary_page:
-        pidfile = "/loading.pid"
         try:
-            with open(pidfile, "r") as f:
-                pid = f.read()
-            os.kill(int(pid), signal.SIGINT)
+            os.kill(int(args.temporary_page), signal.SIGINT)
             # Remove the pid file and the temporary html page
-            os.remove(pidfile)
             os.remove('/index.html')
             os.remove('/favicon.ico')
         except Exception as e:
