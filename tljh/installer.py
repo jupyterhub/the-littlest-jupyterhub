@@ -509,6 +509,7 @@ def main():
         # Remove the pid file and the temporary html page
         os.remove('/loading.pid')
         os.remove('/index.html')
+        os.remove('/favicon.ico')
     except:
         pass
 

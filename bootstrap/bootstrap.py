@@ -99,9 +99,14 @@ class LoaderPageRequestHandler(SimpleHTTPRequestHandler):
             with open("/opt/tljh/installer.log", "rb") as log_file:
                 content = log_file.read()
                 self.wfile.write(content)
-        else:
-            self.path = '/index.html'
+        elif self.path == "/index.html" or self.path == "/favicon.ico":
             return SimpleHTTPRequestHandler.do_GET(self)
+        elif self.path == "/":
+            self.send_response(301)
+            self.send_header('Location','/index.html')
+            self.end_headers()
+        else:
+            SimpleHTTPRequestHandler.send_error(self, code=403)
 
 def serve_forever(server):
     try:
@@ -111,8 +116,11 @@ def serve_forever(server):
 
 def main():
     # Serve the loading page until TLJH builds
-    url="https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/bootstrap/index.html"
-    urllib.request.urlretrieve(url, "index.html")
+    index_url="https://raw.githubusercontent.com/GeorgianaElena/the-littlest-jupyterhub/in-progress-page/bootstrap/index.html"
+    favicon_url="https://raw.githubusercontent.com/jupyterhub/jupyterhub/master/share/jupyterhub/static/favicon.ico"
+    urllib.request.urlretrieve(index_url, "index.html")
+    urllib.request.urlretrieve(favicon_url, "favicon.ico")
+
 
     # If the bootstrap is run to upgrade TLJH, then this will raise an "Address already in use" error
     try:
