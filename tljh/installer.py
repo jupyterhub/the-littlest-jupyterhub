@@ -486,6 +486,12 @@ def main():
         nargs='*',
         help='Plugin pip-specs to install'
     )
+    argparser.add_argument(
+        '--temporary-page',
+        action='store_true',
+        default=False,
+        help='Serve a temporary page while TLJH is building'
+    )
 
     args = argparser.parse_args()
 
@@ -502,16 +508,18 @@ def main():
     ensure_jupyterlab_extensions()
 
     # Stop the http server with the loading page before traefik starts
-    try:
-        with open(pidfile, "r") as f:
-            pid = f.read()
-        os.kill(int(pid), signal.SIGINT)
-        # Remove the pid file and the temporary html page
-        os.remove('/loading.pid')
-        os.remove('/index.html')
-        os.remove('/favicon.ico')
-    except:
-        pass
+    if args.temporary_page:
+        pidfile = "/loading.pid"
+        try:
+            with open(pidfile, "r") as f:
+                pid = f.read()
+            os.kill(int(pid), signal.SIGINT)
+            # Remove the pid file and the temporary html page
+            os.remove(pidfile)
+            os.remove('/index.html')
+            os.remove('/favicon.ico')
+        except Exception as e:
+            pass
 
     ensure_jupyterhub_service(HUB_ENV_PREFIX)
     ensure_jupyterhub_running()

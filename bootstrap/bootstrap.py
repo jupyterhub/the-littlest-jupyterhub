@@ -115,23 +115,23 @@ def serve_forever(server):
         pass
 
 def main():
-    # Serve the loading page until TLJH builds
-    index_url="https://raw.githubusercontent.com/GeorgianaElena/the-littlest-jupyterhub/in-progress-page/bootstrap/index.html"
-    favicon_url="https://raw.githubusercontent.com/jupyterhub/jupyterhub/master/share/jupyterhub/static/favicon.ico"
-    urllib.request.urlretrieve(index_url, "index.html")
-    urllib.request.urlretrieve(favicon_url, "favicon.ico")
+    if "--temporary-page" in sys.argv:
+        # Serve the loading page until TLJH builds
+        index_url="https://raw.githubusercontent.com/GeorgianaElena/the-littlest-jupyterhub/in-progress-page/bootstrap/index.html"
+        favicon_url="https://raw.githubusercontent.com/jupyterhub/jupyterhub/master/share/jupyterhub/static/favicon.ico"
+        urllib.request.urlretrieve(index_url, "index.html")
+        urllib.request.urlretrieve(favicon_url, "favicon.ico")
 
-
-    # If the bootstrap is run to upgrade TLJH, then this will raise an "Address already in use" error
-    try:
-        loading_page_server = HTTPServer(("", 80), LoaderPageRequestHandler)
-        p = multiprocessing.Process(target=serve_forever, args=(loading_page_server,))
-        p.start()
-        with open('/loading.pid', 'w+') as f:
-            f.write(str(p.pid))
-    except OSError:
-        # Only serve the loading page when installing TLJH
-        pass
+        # If the bootstrap is run to upgrade TLJH, then this will raise an "Address already in use" error
+        try:
+            loading_page_server = HTTPServer(("", 80), LoaderPageRequestHandler)
+            p = multiprocessing.Process(target=serve_forever, args=(loading_page_server,))
+            p.start()
+            with open('/loading.pid', 'w+') as f:
+                f.write(str(p.pid))
+        except OSError:
+            # Only serve the loading page when installing TLJH
+            pass
 
     validate_host()
     install_prefix = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
