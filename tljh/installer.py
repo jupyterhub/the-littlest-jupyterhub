@@ -507,10 +507,9 @@ def main():
     ensure_jupyterlab_extensions()
 
     # Stop the http server with the loading page before traefik starts
-    if args.temporary_page:
+    if args.progress_page_server_pid:
         try:
-            os.kill(int(args.temporary_page), signal.SIGINT)
-            # Remove the pid file and the temporary html page
+            os.kill(args.progress_page_server_pid, signal.SIGINT)
         except Exception as e:
             pass
 

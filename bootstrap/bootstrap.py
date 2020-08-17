@@ -177,9 +177,13 @@ def validate_host():
 class LoaderPageRequestHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path == "/logs":
-            with open("/opt/tljh/installer.log", "rb") as log_file:
-                content = log_file.read()
-                self.wfile.write(content)
+            with open("/opt/tljh/installer.log", "r") as log_file:
+                logs = log_file.read()
+
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/plain; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(logs.encode('utf-8'))
         elif self.path == "/index.html":
             self.path = "/var/run/index.html"
             return SimpleHTTPRequestHandler.do_GET(self)
@@ -203,8 +207,10 @@ def main():
     flags = sys.argv[1:]
     temp_page_flag = "--show-progress-page"
 
+    # Check for flag in the argv list. This doesn't use argparse
+    # because it's the only argument that's meant for the boostrap script.
+    # All the other flags will be passed to and parsed by the installer.
     if temp_page_flag in flags:
-        # Serve the loading page until TLJH builds
         with open("/var/run/index.html", "w+") as f:
             f.write(html)
         favicon_url="https://raw.githubusercontent.com/jupyterhub/jupyterhub/master/share/jupyterhub/static/favicon.ico"
@@ -214,9 +220,13 @@ def main():
         try:
             loading_page_server = HTTPServer(("", 80), LoaderPageRequestHandler)
             p = multiprocessing.Process(target=serve_forever, args=(loading_page_server,))
+            # Serves the loading page until TLJH builds
             p.start()
+
+            # Remove the flag from the args list, since it was only relevant to this script.
+            flags.remove("--show-progress-page")
+
             # Pass the server's pid as a flag to the istaller
-            flags.remove(temp_page_flag)
             pid_flag = "--progress-page-server-pid"
             flags.extend([pid_flag, str(p.pid)])
         except OSError:
