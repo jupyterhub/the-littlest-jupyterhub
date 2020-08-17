@@ -30,7 +30,7 @@ html = """
   <meta http-equiv="refresh" content="30" >
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width">
-  <img class= "logo" src="https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/docs/images/logo/logo.png">
+  <img class="logo" src="https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/docs/images/logo/logo.png">
   <div class="loader center"></div>
   <div class="center main-msg">Please wait while your TLJH is building...</div>
   <div class="center logs-msg">Click the button below to see the logs</div>
@@ -200,8 +200,10 @@ def serve_forever(server):
         pass
 
 def main():
-    temp_page_flag = "--temporary-page"
-    if temp_page_flag in sys.argv:
+    flags = sys.argv[1:]
+    temp_page_flag = "--show-progress-page"
+
+    if temp_page_flag in flags:
         # Serve the loading page until TLJH builds
         with open("/var/run/index.html", "w+") as f:
             f.write(html)
@@ -213,8 +215,10 @@ def main():
             loading_page_server = HTTPServer(("", 80), LoaderPageRequestHandler)
             p = multiprocessing.Process(target=serve_forever, args=(loading_page_server,))
             p.start()
-            # Put the pid after the temp page flag to be passed to the istaller
-            sys.argv.insert(sys.argv.index(temp_page_flag)+1, str(p.pid))
+            # Pass the server's pid as a flag to the istaller
+            flags.remove(temp_page_flag)
+            pid_flag = "--progress-page-server-pid"
+            flags.extend([pid_flag, str(p.pid)])
         except OSError:
             # Only serve the loading page when installing TLJH
             pass
@@ -303,7 +307,7 @@ def main():
             os.path.join(hub_prefix, 'bin', 'python3'),
             '-m',
             'tljh.installer',
-        ] + sys.argv[1:]
+        ] + flags
     )
 
 if __name__ == '__main__':

@@ -487,8 +487,9 @@ def main():
         help='Plugin pip-specs to install'
     )
     argparser.add_argument(
-        '--temporary-page',
-        help='Serve a temporary page while TLJH is building'
+        '--progress-page-server-pid',
+        type=int,
+        help='The pid of the progress page server'
     )
 
     args = argparser.parse_args()
@@ -510,8 +511,6 @@ def main():
         try:
             os.kill(int(args.temporary_page), signal.SIGINT)
             # Remove the pid file and the temporary html page
-            os.remove('/index.html')
-            os.remove('/favicon.ico')
         except Exception as e:
             pass
 
