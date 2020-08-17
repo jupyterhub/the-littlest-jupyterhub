@@ -21,6 +21,87 @@ import logging
 import shutil
 import urllib.request
 
+html = """
+<html>
+<head>
+    <title>The Littlest Jupyterhub</title>
+</head>
+<body>
+  <meta http-equiv="refresh" content="30" >
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <img class= "logo" src="https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/docs/images/logo/logo.png">
+  <div class="loader center"></div>
+  <div class="center main-msg">Please wait while your TLJH is building...</div>
+  <div class="center logs-msg">Click the button below to see the logs</div>
+  <div class="center tip" >Tip: to update the logs, refresh the page</div>
+  <button class="logs-button center" onclick="window.location.href='/logs'">View logs</button>
+</body>
+
+  <style>
+    button:hover {
+      background: grey;
+    }
+
+    .logo {
+      width: 150px;
+      height: auto;
+    }
+    .center {
+      margin: 0 auto;
+      margin-top: 50px;
+      text-align:center;
+      display: block;
+    }
+    .main-msg {
+      font-size: 30px;
+      font-weight: bold;
+      color: grey;
+      text-align:center;
+    }
+    .logs-msg {
+      font-size: 15px;
+      color: grey;
+    }
+    .tip {
+      font-size: 13px;
+      color: grey;
+      margin-top: 10px;
+      font-style: italic;
+    }
+    .logs-button {
+      margin-top:15px;
+      border: 0;
+      color: white;
+      padding: 15px 32px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #f5a252;
+    }
+    .loader {
+      width: 150px;
+      height: 150px;
+      border-radius: 90%;
+      border: 7px solid transparent;
+      animation: spin 2s infinite ease;
+      animation-direction: alternate;
+    }
+    @keyframes spin {
+      0% {
+        transform: rotateZ(0deg);
+        border-top-color: #f17c0e
+      }
+      100% {
+        transform: rotateZ(360deg);
+        border-top-color: #fce5cf;
+      }
+    }
+  </style>
+</head>
+<html>
+
+"""
+
 logger = logging.getLogger(__name__)
 
 def get_os_release_variable(key):
@@ -99,7 +180,11 @@ class LoaderPageRequestHandler(SimpleHTTPRequestHandler):
             with open("/opt/tljh/installer.log", "rb") as log_file:
                 content = log_file.read()
                 self.wfile.write(content)
-        elif self.path == "/index.html" or self.path == "/favicon.ico":
+        elif self.path == "/index.html":
+            self.path = "/var/run/index.html"
+            return SimpleHTTPRequestHandler.do_GET(self)
+        elif self.path == "/favicon.ico":
+            self.path = "/var/run/favicon.ico"
             return SimpleHTTPRequestHandler.do_GET(self)
         elif self.path == "/":
             self.send_response(302)
@@ -118,10 +203,10 @@ def main():
     temp_page_flag = "--temporary-page"
     if temp_page_flag in sys.argv:
         # Serve the loading page until TLJH builds
-        index_url="https://raw.githubusercontent.com/GeorgianaElena/the-littlest-jupyterhub/in-progress-page/bootstrap/index.html"
+        with open("/var/run/index.html", "w+") as f:
+            f.write(html)
         favicon_url="https://raw.githubusercontent.com/jupyterhub/jupyterhub/master/share/jupyterhub/static/favicon.ico"
-        urllib.request.urlretrieve(index_url, "index.html")
-        urllib.request.urlretrieve(favicon_url, "favicon.ico")
+        urllib.request.urlretrieve(favicon_url, "/var/run/favicon.ico")
 
         # If the bootstrap is run to upgrade TLJH, then this will raise an "Address already in use" error
         try:
