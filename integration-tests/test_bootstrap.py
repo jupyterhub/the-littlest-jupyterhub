@@ -23,6 +23,7 @@ def run_bootstrap(container_name, image, flags=None):
     subprocess.check_output([
         'docker', 'exec', container_name, 'apt-get', 'update'
     ])
+
     if flags:
         pkgs = ['python3', 'systemd', 'git']
     else:
@@ -63,27 +64,35 @@ def test_inside_no_systemd_docker():
     assert output.returncode == 1
 
 
-def verify_progress_page(expected_status_code):
+def verify_progress_page(expected_status_code, timeout):
     progress_page_status = False
-    while True:
+    start = time.time()
+    print("in verify_progress_page")
+    while not progress_page_status and (time.time() - start < timeout):
         try:
-            r = requests.get('http://127.0.0.1:12000/index.html')
-            status = r.status_code
-            if status == expected_status_code:
+            resp = requests.get('http://127.0.0.1:12000/index.html')
+            if resp.status_code == expected_status_code:
                 progress_page_status = True
                 break;
         except Exception as e:
-            time.sleep(5)
+            time.sleep(2)
             continue;
 
     return progress_page_status
 
 def test_progress_page():
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        future = executor.submit(run_bootstrap, 'progress-page', 'ubuntu:18.04', ['--show-progress-page'])
+        installer = executor.submit(run_bootstrap, 'progress-page', 'ubuntu:18.04', ['--show-progress-page'])
+        print("started installer")
 
         # Check if progress page started
-        started = verify_progress_page(200)
+        started = verify_progress_page(expected_status_code=200, timeout=120)
+        print("started")
         assert started
 
-        return_value = future.result()
+        return_value = installer.result()
+        print("return value")
+
+        # Check if progress page stopped
+        stopped = verify_progress_page(expected_status_code=404, timeout=120)
+        assert stopped
