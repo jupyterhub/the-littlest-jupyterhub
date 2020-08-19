@@ -67,7 +67,6 @@ def test_inside_no_systemd_docker():
 def verify_progress_page(expected_status_code, timeout):
     progress_page_status = False
     start = time.time()
-    print("in verify_progress_page")
     while not progress_page_status and (time.time() - start < timeout):
         try:
             resp = requests.get('http://127.0.0.1:12000/index.html')
@@ -83,15 +82,12 @@ def verify_progress_page(expected_status_code, timeout):
 def test_progress_page():
     with concurrent.futures.ThreadPoolExecutor() as executor:
         installer = executor.submit(run_bootstrap, 'progress-page', 'ubuntu:18.04', ['--show-progress-page'])
-        print("started installer")
 
         # Check if progress page started
         started = verify_progress_page(expected_status_code=200, timeout=120)
-        print("started")
         assert started
 
         return_value = installer.result()
-        print("return value")
 
         # Check if progress page stopped
         stopped = verify_progress_page(expected_status_code=404, timeout=120)
