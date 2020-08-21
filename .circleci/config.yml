@@ -110,7 +110,7 @@ commands:
             - run:
                 name: Run bootstrap checks
                 command: |
-                    pip install requests
+                    python3 -m pip install requests
                     py.test integration-tests/test_bootstrap.py
 
 
@@ -170,14 +170,13 @@ jobs:
 
             - build_systemd_image
 
+            - bootstrap_checks
+
             - basic_tests
 
             - admin_tests
 
             - plugin_tests
-
-            - bootstrap_checks
-
 
     upgrade-test:
         docker:
