@@ -506,11 +506,14 @@ def main():
     ensure_jupyterhub_package(HUB_ENV_PREFIX)
     ensure_jupyterlab_extensions()
 
-    # Stop the http server with the loading page before traefik starts
+    # Stop the http server with the progress page before traefik starts
     if args.progress_page_server_pid:
         try:
             os.kill(args.progress_page_server_pid, signal.SIGINT)
+            # Log and print the message to make testing easier
+            print("Progress page server stopped successfully.")
         except Exception as e:
+            logger.error(f"Couldn't stop the progress page server. Exception was {e}.")
             pass
 
     ensure_jupyterhub_service(HUB_ENV_PREFIX)
