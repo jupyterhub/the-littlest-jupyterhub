@@ -71,7 +71,7 @@ def run_bootstrap(container_name, image, show_progress_page=False):
     exec_flags = ["-i", container_name, "python3", bootstrap_script]
     if show_progress_page:
         exec_flags = (
-            ["-e", "TLJH_BOOTSTRAP_DEV=yes, TLJH_BOOTSTRAP_PIP_SPEC=/srv/src"]
+            ["-e", "TLJH_BOOTSTRAP_DEV=yes", "-e", "TLJH_BOOTSTRAP_PIP_SPEC=/srv/src"]
             + exec_flags
             + ["--show-progress-page"]
         )

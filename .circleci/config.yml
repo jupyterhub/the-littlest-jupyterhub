@@ -111,7 +111,7 @@ commands:
                 name: Run bootstrap checks
                 command: |
                     python3 -m pip install requests
-                    py.test integration-tests/test_bootstrap.py
+                    py.test integration-tests/test_bootstrap.py -s
 
 
 jobs:
