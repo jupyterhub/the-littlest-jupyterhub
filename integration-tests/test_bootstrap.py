@@ -120,6 +120,7 @@ def verify_progress_page(expected_status_code, timeout):
                 progress_page_status = True
                 break
         except Exception as e:
+            print(e)
             time.sleep(2)
             continue
 
