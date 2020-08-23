@@ -13,6 +13,10 @@ JupyterHub pings the user's notebook server at certain time intervals. If no res
 is received from the server during this checks and the timeout expires, the server is
 considered to be *inactive (idle)* and will be culled.
 
+The idle culler is maintained as
+`a separate project <https://github.com/jupyterhub/jupyterhub-idle-culler>`_.
+For advanced users, the code leaves the option for direct adjustment, e.g.  to add 
+features such as purging old user data.
 
 Default settings
 ================
