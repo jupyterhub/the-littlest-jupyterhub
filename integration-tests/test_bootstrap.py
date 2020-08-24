@@ -3,28 +3,9 @@ Test running bootstrap script in different circumstances
 """
 import concurrent.futures
 import os
-import requests
 import subprocess
 from textwrap import dedent
 import time
-
-
-def start_container(container_name, image, show_progress_page):
-    run_flags = [
-        "--detach",
-        "--name",
-        container_name,
-        image,
-        "/bin/bash",
-        "-c",
-        "sleep 1000s",
-    ]
-    if show_progress_page:
-        # Use port-forwarding to be able to access the progress page when it starts
-        run_flags = ["--publish", "12000:80"] + run_flags
-
-    # Start a detached container
-    subprocess.check_call(["docker", "run"] + run_flags)
 
 
 def install_pkgs(container_name, show_progress_page):
@@ -32,7 +13,7 @@ def install_pkgs(container_name, show_progress_page):
     # There is no trusted Ubuntu+Python3 container we can use
     pkgs = ["python3"]
     if show_progress_page:
-        pkgs += ["systemd", "git"]
+        pkgs += ["systemd", "git", "curl"]
         # Create the sudoers dir, so that the installer succesfully gets to the
         # point of starting jupyterhub and stopping the progress page server.
         subprocess.check_output(
@@ -63,7 +44,21 @@ def run_bootstrap(container_name, image, show_progress_page=False):
     # stop container if it is already running
     subprocess.run(["docker", "rm", "-f", container_name])
 
-    start_container(container_name, image, show_progress_page)
+    # Start a detached container
+    subprocess.check_call(
+        [
+            "docker",
+            "run",
+            "--detach",
+            "--name",
+            container_name,
+            image,
+            "/bin/bash",
+            "-c",
+            "sleep 1000s",
+        ]
+    )
+
     install_pkgs(container_name, show_progress_page)
 
     bootstrap_script = get_bootstrap_script_location(container_name, show_progress_page)
@@ -115,12 +110,20 @@ def verify_progress_page(expected_status_code, timeout):
     start = time.time()
     while not progress_page_status and (time.time() - start < timeout):
         try:
-            resp = requests.get("http://127.0.0.1:12000/index.html")
-            if resp.status_code == expected_status_code:
+            resp = subprocess.check_output(
+                [
+                    "docker",
+                    "exec",
+                    "progress-page",
+                    "curl",
+                    "-i",
+                    "http://localhost/index.html",
+                ]
+            )
+            if b"HTTP/1.0 200 OK" in resp:
                 progress_page_status = True
                 break
         except Exception as e:
-            print(e)
             time.sleep(2)
             continue
 
