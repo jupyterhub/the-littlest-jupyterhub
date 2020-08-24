@@ -139,6 +139,24 @@ to be used and modified solely by these services.
 
 		sudo rm -rf /opt/tljh/state
 
+Progress page files
+===================
+
+If you ran the TLJH installer with the `--show-progress-page` flag, then two files have been
+added to your system to help serving the progress page:
+
+* ``/var/run/index.html`` - the main progress page
+* ``/var/run/favicon.ico`` - the JupyterHub icon
+
+.. note::
+	If you try to remove TLJH, revert this action using:
+
+	.. code-block:: bash
+
+		sudo rm /var/run/index.html
+		sudo rm /var/run/favicon.ico
+
+
 User groups
 ===========
 

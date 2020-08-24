@@ -17,6 +17,35 @@ This page documents the various options you can pass as commandline parameters t
 
 .. _topic/customizing-installer/admin:
 
+Serving a temporary "TLJH is building" page
+===========================================
+``--show-progress-page`` serves a temporary "TLJH is building" progress page while TLJH is building.
+
+.. image:: ../images/tljh-is-building-page.gif
+  :alt: Temporary progress page while TLJH is building
+
+* The page will be accessible at ``http://<tljh-public-ip>/index.html`` in your browser.
+  When TLJH installation is complete, the progress page page will stop and you will be able
+  to access TLJH as usually at ``http://<tljh-public-ip>/index.html``.
+* From the progress page, you will also be able to access the installation logs, by clicking the
+  **Logs** button or by going directly to ``http://<tljh-public-ip>/logs`` in your browser.
+  To update the logs, refresh the page.
+
+.. note::
+
+  The ``http://<tljh-public-ip>/index.html`` page refreshes itself automatically every 30s.
+  When JupyterHub starts, a JupyterHub 404 HTTP error message (*Jupyter has lots of moons, but this is not one...*)
+  will be shown instead of the progress page. This means JupyterHub was started succesfully and you can access it
+  either by clicking the `Control Panel` button or by going to ``http://<tljh-public-ip>/`` directly.
+
+For example, to enable the progress page and add the first *admin* user, you would run:
+
+.. code-block:: bash
+
+  curl -L https://tljh.jupyter.org/bootstrap.py \
+  | sudo python3 - \
+   --admin admin --showprogress-page
+
 Adding admin users
 ===================
 
