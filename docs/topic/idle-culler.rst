@@ -8,10 +8,14 @@ The idle culler automatically shuts down user notebook servers when they have
 not been used for a certain time period, in order to reduce the total resource
 usage on your JupyterHub.
 
-
 JupyterHub pings the user's notebook server at certain time intervals. If no response
 is received from the server during this checks and the timeout expires, the server is
 considered to be *inactive (idle)* and will be culled.
+
+The `idle culler <https://github.com/jupyterhub/jupyterhub-idle-culler>`_ is a JupyterHub service that is installed and enabled by default in TLJH.
+It can be configured using tljh-config. For advanced use-cases, like purging old user data,
+the idle culler configuration can be extended beyond tljh-config options, using custom 
+`jupyterhub_config.py snippets <https://tljh.jupyter.org/en/latest/topic/escape-hatch.html?highlight=escape-hatch#extending-jupyterhub-config-py>`__.
 
 
 Default settings
