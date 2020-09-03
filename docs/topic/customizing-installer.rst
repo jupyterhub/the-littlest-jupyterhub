@@ -26,7 +26,7 @@ Serving a temporary "TLJH is building" page
 
 * The page will be accessible at ``http://<tljh-public-ip>/index.html`` in your browser.
   When TLJH installation is complete, the progress page page will stop and you will be able
-  to access TLJH as usually at ``http://<tljh-public-ip>/index.html``.
+  to access TLJH as usually at ``http://<tljh-public-ip>``.
 * From the progress page, you will also be able to access the installation logs, by clicking the
   **Logs** button or by going directly to ``http://<tljh-public-ip>/logs`` in your browser.
   To update the logs, refresh the page.
