@@ -6,6 +6,7 @@ import itertools
 import logging
 import os
 import secrets
+import signal
 import subprocess
 import sys
 import time
@@ -485,6 +486,11 @@ def main():
         nargs='*',
         help='Plugin pip-specs to install'
     )
+    argparser.add_argument(
+        '--progress-page-server-pid',
+        type=int,
+        help='The pid of the progress page server'
+    )
 
     args = argparser.parse_args()
 
@@ -499,6 +505,17 @@ def main():
     ensure_node()
     ensure_jupyterhub_package(HUB_ENV_PREFIX)
     ensure_jupyterlab_extensions()
+
+    # Stop the http server with the progress page before traefik starts
+    if args.progress_page_server_pid:
+        try:
+            os.kill(args.progress_page_server_pid, signal.SIGINT)
+            # Log and print the message to make testing easier
+            print("Progress page server stopped successfully.")
+        except Exception as e:
+            logger.error(f"Couldn't stop the progress page server. Exception was {e}.")
+            pass
+
     ensure_jupyterhub_service(HUB_ENV_PREFIX)
     ensure_jupyterhub_running()
     ensure_symlinks(HUB_ENV_PREFIX)

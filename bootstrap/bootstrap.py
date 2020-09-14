@@ -13,10 +13,94 @@ Constraints:
   - Use stdlib modules only
 """
 import os
+from http.server import SimpleHTTPRequestHandler, HTTPServer
+import multiprocessing
 import subprocess
 import sys
 import logging
 import shutil
+import urllib.request
+
+html = """
+<html>
+<head>
+    <title>The Littlest Jupyterhub</title>
+</head>
+<body>
+  <meta http-equiv="refresh" content="30" >
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width">
+  <img class="logo" src="https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/master/docs/images/logo/logo.png">
+  <div class="loader center"></div>
+  <div class="center main-msg">Please wait while your TLJH is building...</div>
+  <div class="center logs-msg">Click the button below to see the logs</div>
+  <div class="center tip" >Tip: to update the logs, refresh the page</div>
+  <button class="logs-button center" onclick="window.location.href='/logs'">View logs</button>
+</body>
+
+  <style>
+    button:hover {
+      background: grey;
+    }
+
+    .logo {
+      width: 150px;
+      height: auto;
+    }
+    .center {
+      margin: 0 auto;
+      margin-top: 50px;
+      text-align:center;
+      display: block;
+    }
+    .main-msg {
+      font-size: 30px;
+      font-weight: bold;
+      color: grey;
+      text-align:center;
+    }
+    .logs-msg {
+      font-size: 15px;
+      color: grey;
+    }
+    .tip {
+      font-size: 13px;
+      color: grey;
+      margin-top: 10px;
+      font-style: italic;
+    }
+    .logs-button {
+      margin-top:15px;
+      border: 0;
+      color: white;
+      padding: 15px 32px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #f5a252;
+    }
+    .loader {
+      width: 150px;
+      height: 150px;
+      border-radius: 90%;
+      border: 7px solid transparent;
+      animation: spin 2s infinite ease;
+      animation-direction: alternate;
+    }
+    @keyframes spin {
+      0% {
+        transform: rotateZ(0deg);
+        border-top-color: #f17c0e
+      }
+      100% {
+        transform: rotateZ(360deg);
+        border-top-color: #fce5cf;
+      }
+    }
+  </style>
+</head>
+<html>
+
+"""
 
 logger = logging.getLogger(__name__)
 
@@ -90,7 +174,65 @@ def validate_host():
             print("For local development, see http://tljh.jupyter.org/en/latest/contributing/dev-setup.html")
         sys.exit(1)
 
+class LoaderPageRequestHandler(SimpleHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == "/logs":
+            with open("/opt/tljh/installer.log", "r") as log_file:
+                logs = log_file.read()
+
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/plain; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(logs.encode('utf-8'))
+        elif self.path == "/index.html":
+            self.path = "/var/run/index.html"
+            return SimpleHTTPRequestHandler.do_GET(self)
+        elif self.path == "/favicon.ico":
+            self.path = "/var/run/favicon.ico"
+            return SimpleHTTPRequestHandler.do_GET(self)
+        elif self.path == "/":
+            self.send_response(302)
+            self.send_header('Location','/index.html')
+            self.end_headers()
+        else:
+            SimpleHTTPRequestHandler.send_error(self, code=403)
+
+def serve_forever(server):
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+
 def main():
+    flags = sys.argv[1:]
+    temp_page_flag = "--show-progress-page"
+
+    # Check for flag in the argv list. This doesn't use argparse
+    # because it's the only argument that's meant for the boostrap script.
+    # All the other flags will be passed to and parsed by the installer.
+    if temp_page_flag in flags:
+        with open("/var/run/index.html", "w+") as f:
+            f.write(html)
+        favicon_url="https://raw.githubusercontent.com/jupyterhub/jupyterhub/master/share/jupyterhub/static/favicon.ico"
+        urllib.request.urlretrieve(favicon_url, "/var/run/favicon.ico")
+
+        # If the bootstrap is run to upgrade TLJH, then this will raise an "Address already in use" error
+        try:
+            loading_page_server = HTTPServer(("", 80), LoaderPageRequestHandler)
+            p = multiprocessing.Process(target=serve_forever, args=(loading_page_server,))
+            # Serves the loading page until TLJH builds
+            p.start()
+
+            # Remove the flag from the args list, since it was only relevant to this script.
+            flags.remove("--show-progress-page")
+
+            # Pass the server's pid as a flag to the istaller
+            pid_flag = "--progress-page-server-pid"
+            flags.extend([pid_flag, str(p.pid)])
+        except OSError:
+            # Only serve the loading page when installing TLJH
+            pass
+
     validate_host()
     install_prefix = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
     hub_prefix = os.path.join(install_prefix, 'hub')
@@ -175,9 +317,8 @@ def main():
             os.path.join(hub_prefix, 'bin', 'python3'),
             '-m',
             'tljh.installer',
-        ] + sys.argv[1:]
+        ] + flags
     )
-
 
 if __name__ == '__main__':
     main()
