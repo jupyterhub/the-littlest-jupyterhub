@@ -2,6 +2,7 @@
 Test configurer
 """
 
+from traitlets import Dict
 import os
 import sys
 
@@ -60,6 +61,22 @@ def apply_mock_config(overrides):
     c = MockConfigurer()
     configurer.apply_config(overrides, c)
     return c
+
+
+def test_default_base_url():
+    """
+    Test default JupyterHub base_url
+    """
+    c = apply_mock_config({})
+    assert c.JupyterHub.base_url == '/'
+
+
+def test_set_base_url():
+    """
+    Test set JupyterHub base_url
+    """
+    c = apply_mock_config({'base_url': '/custom-base'})
+    assert c.JupyterHub.base_url == '/custom-base'
 
 
 def test_default_memory_limit():
@@ -129,7 +146,7 @@ def test_auth_dummy():
     assert c.JupyterHub.authenticator_class == 'dummyauthenticator.DummyAuthenticator'
     assert c.DummyAuthenticator.password == 'test'
 
-from traitlets import Dict
+
 def test_user_groups():
     """
     Test setting user groups
@@ -143,9 +160,9 @@ def test_user_groups():
         }
     })
     assert c.UserCreatingSpawner.user_groups == {
-                "g1": ["u1", "u2"],
-                "g2": ["u3", "u4"]
-            }
+        "g1": ["u1", "u2"],
+        "g2": ["u3", "u4"]
+    }
 
 
 def test_auth_firstuse():
@@ -213,9 +230,9 @@ def test_cull_service_default():
     c = apply_mock_config({})
 
     cull_cmd = [
-       sys.executable, '-m', 'jupyterhub_idle_culler',
-       '--timeout=600', '--cull-every=60', '--concurrency=5',
-       '--max-age=0'
+        sys.executable, '-m', 'jupyterhub_idle_culler',
+        '--timeout=600', '--cull-every=60', '--concurrency=5',
+        '--max-age=0'
     ]
     assert c.JupyterHub.services == [{
         'name': 'cull-idle',
@@ -238,9 +255,9 @@ def test_set_cull_service():
         }
     })
     cull_cmd = [
-       sys.executable, '-m', 'jupyterhub_idle_culler',
-       '--timeout=600', '--cull-every=10', '--concurrency=5',
-       '--max-age=60', '--cull-users'
+        sys.executable, '-m', 'jupyterhub_idle_culler',
+        '--timeout=600', '--cull-every=10', '--concurrency=5',
+        '--max-age=60', '--cull-users'
     ]
     assert c.JupyterHub.services == [{
         'name': 'cull-idle',
@@ -276,4 +293,3 @@ def test_auth_native():
     })
     assert c.JupyterHub.authenticator_class == 'nativeauthenticator.NativeAuthenticator'
     assert c.NativeAuthenticator.open_signup == True
-
