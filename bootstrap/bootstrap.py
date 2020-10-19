@@ -98,7 +98,7 @@ html = """
     }
   </style>
 </head>
-<html>
+</html>
 
 """
 
@@ -271,7 +271,7 @@ def main():
         run_subprocess(['add-apt-repository', 'universe'])
 
         run_subprocess(['apt-get', 'update', '--yes'])
-        run_subprocess(['apt-get', 'install', '--yes', 
+        run_subprocess(['apt-get', 'install', '--yes',
             'python3',
             'python3-venv',
             'python3-pip',
