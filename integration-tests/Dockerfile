@@ -1,7 +1,9 @@
 # Systemd inside a Docker container, for CI only
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 RUN apt-get update --yes
+
+RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install tzdata
 
 RUN apt-get install --yes systemd curl git sudo
 
@@ -25,4 +27,8 @@ STOPSIGNAL SIGRTMIN+3
 #ENV TLJH_BOOTSTRAP_PIP_SPEC=/srv/src
 #ENV PATH=/opt/tljh/hub/bin:${PATH}
 
-CMD ["/bin/bash", "-c", "exec /sbin/init --log-target=journal 3>&1"]
+SHELL ["/bin/bash", "-c"]
+
+RUN ln -s /lib/systemd/systemd /sbin/init
+
+CMD exec /sbin/init --log-target=journal 3>&1

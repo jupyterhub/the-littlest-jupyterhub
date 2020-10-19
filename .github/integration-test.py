@@ -92,8 +92,13 @@ def run_test(image_name, test_name, bootstrap_pip_spec, test_files, upgrade, ins
         os.path.join(os.path.dirname(__file__), os.pardir)
     )
 
-    copy_to_container(test_name, os.path.join(source_path, 'bootstrap/.'), '/srv/src')
-    copy_to_container(test_name, os.path.join(source_path, 'integration-tests/'), '/srv/src')
+    if bootstrap_pip_spec == "/srv/src":
+        copy_to_container(test_name, source_path, '/srv/src')
+        bootstrap_script = "/srv/src/bootstrap/bootstrap.py"
+    else:
+        copy_to_container(test_name, os.path.join(source_path, 'bootstrap/.'), '/srv/src')
+        copy_to_container(test_name, os.path.join(source_path, 'integration-tests/'), '/srv/src')
+        bootstrap_script = "/srv/src/bootstrap.py"
 
 
     # Install TLJH master first to test upgrades
@@ -105,7 +110,7 @@ def run_test(image_name, test_name, bootstrap_pip_spec, test_files, upgrade, ins
 
     run_container_command(
         test_name,
-        f'python3 /srv/src/bootstrap.py {installer_args}'
+        f'python3 {bootstrap_script} {installer_args}'
     )
 
     # Install pkgs from requirements in hub's pip, where

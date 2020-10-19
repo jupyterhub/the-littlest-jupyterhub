@@ -8,7 +8,7 @@ This script is run as:
     curl <script-url> | sudo python3 -
 
 Constraints:
-  - Entire script should be compatible with Python 3.6 (We run on Ubuntu 18.04+)
+  - Entire script should be compatible with Python 3.8 (We run on Ubuntu 20.04+)
   - Script should parse in Python 3.4 (since we exit with useful error message on Ubuntu 14.04+)
   - Use stdlib modules only
 """
@@ -151,14 +151,14 @@ def validate_host():
     """
     Make sure TLJH is installable in current host
     """
-    # Support only Ubuntu 18.04+
+    # Support only Ubuntu 20.04+
     distro = get_os_release_variable('ID')
     version = float(get_os_release_variable('VERSION_ID'))
     if distro != 'ubuntu':
         print('The Littlest JupyterHub currently supports Ubuntu Linux only')
         sys.exit(1)
-    elif float(version) < 18.04:
-        print('The Littlest JupyterHub requires Ubuntu 18.04 or higher')
+    elif float(version) < 20.04:
+        print('The Littlest JupyterHub requires Ubuntu 20.04 or higher')
         sys.exit(1)
 
     if sys.version_info < (3, 5):
@@ -294,15 +294,6 @@ def main():
         'TLJH_BOOTSTRAP_PIP_SPEC',
         'git+https://github.com/jupyterhub/the-littlest-jupyterhub.git'
     )
-
-    # Upgrade pip
-    run_subprocess([
-        os.path.join(hub_prefix, 'bin', 'pip'),
-        'install',
-        '--upgrade',
-        'pip==20.0.*'
-    ])
-    logger.info('Upgraded pip')
 
     run_subprocess([
         os.path.join(hub_prefix, 'bin', 'pip'),
