@@ -240,9 +240,12 @@ def remove_config_value(config_path, key_path, value):
 
 def check_hub_ready():
     from .configurer import load_config
+
+    base_url = load_config()['base_url']
+    base_url = base_url[:-1] if base_url[-1] == '/' else base_url
     http_port = load_config()['http']['port']
     try:
-        r = requests.get('http://127.0.0.1:%d/hub/api' % http_port, verify=False)
+        r = requests.get('http://127.0.0.1:%d%s/hub/api' % (http_port, base_url), verify=False)
         return r.status_code == 200
     except:
         return False
