@@ -292,7 +292,7 @@ def main():
         pip_flags.append('--editable')
     tljh_repo_path = os.environ.get(
         'TLJH_BOOTSTRAP_PIP_SPEC',
-        'git+https://github.com/jeanmarcalkazzi/the-littlest-jupyterhub'
+        'git+https://github.com/jupyterhub/the-littlest-jupyterhub.git'
     )
 
     # Upgrade pip
