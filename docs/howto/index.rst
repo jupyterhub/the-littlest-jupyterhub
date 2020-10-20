@@ -1,6 +1,30 @@
 How-To Guides
 =============
 
+.. toctree::
+   :hidden:
+
+   content/nbgitpuller
+   content/add-data
+   content/share-data
+   env/user-environment
+   env/notebook-interfaces
+   env/server-resources
+   auth/dummy
+   auth/github
+   auth/google
+   auth/awscognito
+   auth/firstuse
+   auth/nativeauth
+   admin/admin-users
+   admin/resource-estimation
+   admin/resize
+   admin/nbresuse
+   admin/https
+   admin/enable-extensions
+   providers/digitalocean
+   providers/azure
+
 How-To guides answer the question 'How do I...?' for a lot of topics.
 
 Content and Data
