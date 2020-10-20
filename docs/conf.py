@@ -46,17 +46,3 @@ html_favicon = 'images/logo/favicon.ico'
 here = os.path.dirname(os.path.abspath(__file__))
 if os.path.exists(os.path.join(here, '_static')):
     html_static_path = ['_static']
-
-# Configure the sidebar to be how we want it to be
-# We don't have 'navigation' here, since it is very cluttered
-# and seems to be hard to control.
-html_sidebars = {
-    '**': [
-        # from pydata_sphinx_theme
-        'sidebar-nav-bs.html',
-        'sidebar-search-bs.html',
-        # from sphinx builtins
-        'globaltoc.html',
-        'relations.html',
-    ]
-}
