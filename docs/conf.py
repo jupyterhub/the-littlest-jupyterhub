@@ -52,10 +52,11 @@ if os.path.exists(os.path.join(here, '_static')):
 # and seems to be hard to control.
 html_sidebars = {
     '**': [
-        'about.html',
+        # from pydata_sphinx_theme
+        'sidebar-nav-bs.html',
+        'sidebar-search-bs.html'
+        # from sphinx builtins
         'globaltoc.html',
         'relations.html',
-        'searchbox.html',
-        'donate.html',
     ]
 }
