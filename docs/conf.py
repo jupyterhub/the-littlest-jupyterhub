@@ -54,7 +54,7 @@ html_sidebars = {
     '**': [
         # from pydata_sphinx_theme
         'sidebar-nav-bs.html',
-        'sidebar-search-bs.html'
+        'sidebar-search-bs.html',
         # from sphinx builtins
         'globaltoc.html',
         'relations.html',
