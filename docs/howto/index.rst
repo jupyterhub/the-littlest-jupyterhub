@@ -7,6 +7,7 @@ How-To Guides
    content/nbgitpuller
    content/add-data
    content/share-data
+   content/shared-directory
    env/user-environment
    env/notebook-interfaces
    env/server-resources
@@ -36,6 +37,7 @@ Content and Data
    content/nbgitpuller
    content/add-data
    content/share-data
+   content/shared-directory
 
 The user environment
 --------------------

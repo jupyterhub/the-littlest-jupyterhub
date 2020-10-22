@@ -54,7 +54,6 @@ and User C cannot edit the Notebook.  Only User A can make changes.
       sudo ln -s /srv/scratch /etc/skel/scratch
    
 
-=======================
 Shared-directory plugin
 =======================
 
