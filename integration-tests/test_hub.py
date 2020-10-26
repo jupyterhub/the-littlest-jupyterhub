@@ -54,21 +54,17 @@ async def test_user_code_execute_with_custom_base_url():
     """
     # This *must* be localhost, not an IP
     # aiohttp throws away cookies if we are connecting to an IP!
-    hub_url = 'http://localhost'
+    base_url = "/custom-base"
+    hub_url = f"http://localhost{base_url}"
     username = secrets.token_hex(8)
 
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummyauthenticator.DummyAuthenticator')).wait()
-    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'base_url', '/custom-base')).wait()
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'base_url', base_url)).wait()
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
 
     async with User(username, hub_url, partial(login_dummy, password='')) as u:
         await u.login()
         await u.ensure_server_simulate()
-        await u.start_kernel()
-        await u.assert_code_output("5 * 4", "20", 5, 5)
-
-        # Assert that the user exists
-        assert pwd.getpwnam(f'jupyter-{username}') is not None
 
         # unset base_url to avoid problems with other tests
         assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'unset', 'base_url')).wait()
