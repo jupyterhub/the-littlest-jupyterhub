@@ -48,7 +48,7 @@ async def test_user_code_execute():
 
 
 @pytest.mark.asyncio
-async def test_user_code_execute_with_custom_base_url():
+async def test_user_server_started_with_custom_base_url():
     """
     User logs in, starts a server with a custom base_url & executes code
     """
