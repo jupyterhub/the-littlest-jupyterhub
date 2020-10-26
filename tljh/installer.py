@@ -173,11 +173,10 @@ def ensure_user_environment(user_requirements_txt_file):
     miniforge_installer_sha256 = "67e15be1628cfc191d95f84b7de4db82d11f32953245c913c7846a85fdbe68bc"
 
 
-    if not conda.check_miniconda_version(USER_ENV_PREFIX, miniconda_version):
+    if not conda.check_miniconda_version(USER_ENV_PREFIX, "4.8.5"):
         logger.info('Downloading & setting up user environment...')
         # Conda 4.8.5 and Python 3.8.6
-        installer_url = "https://github.com/conda-forge/miniforge/releases/download/{}/Miniforge3-{}-Linux-x86_64.sh".format(miniforge_version, miniforge_version)
-
+        installer_url = "https://github.com/conda-forge/miniforge/releases/download/{miniforge_version}/Miniforge3-{miniforge_version}-Linux-x86_64.sh"
         with conda.download_miniconda_installer(installer_url, miniforge_installer_sha256) as installer_path:
             conda.install_miniconda(installer_path, USER_ENV_PREFIX)
 
@@ -242,7 +241,7 @@ def ensure_jupyterhub_running(times=20):
 
     for i in range(times):
         try:
-            logger.info('Waiting for JupyterHub to come up ({}/{} tries)'.format(i + 1, times))
+            logger.info(f'Waiting for JupyterHub to come up ({i + 1}/{tries} tries)')
             # Because we don't care at this level that SSL is valid, we can suppress
             # InsecureRequestWarning for this request.
             with warnings.catch_warnings():
@@ -264,7 +263,7 @@ def ensure_jupyterhub_running(times=20):
             # Everything else should immediately abort
             raise
 
-    raise Exception("Installation failed: JupyterHub did not start in {}s".format(times))
+    raise Exception(f"Installation failed: JupyterHub did not start in {times}s")
 
 
 def ensure_symlinks(prefix):
@@ -317,33 +316,25 @@ def run_plugin_actions(plugin_manager):
     # Install apt packages
     apt_packages = list(set(itertools.chain(*hook.tljh_extra_apt_packages())))
     if apt_packages:
-        logger.info('Installing {} apt packages collected from plugins: {}'.format(
-            len(apt_packages), ' '.join(apt_packages)
-        ))
+        logger.info(f'Installing {len(apt_packages)} apt packages collected from plugins: {" ".join(apt_packages)}')
         apt.install_packages(apt_packages)
 
     # Install hub pip packages
     hub_pip_packages = list(set(itertools.chain(*hook.tljh_extra_hub_pip_packages())))
     if hub_pip_packages:
-        logger.info('Installing {} hub pip packages collected from plugins: {}'.format(
-            len(hub_pip_packages), ' '.join(hub_pip_packages)
-        ))
+        logger.info(f'Installing {len(hub_pip_packages)} hub pip packages collected from plugins: {" ".join(hub_pip_packages)}')
         conda.ensure_pip_packages(HUB_ENV_PREFIX, hub_pip_packages)
 
     # Install conda packages
     conda_packages = list(set(itertools.chain(*hook.tljh_extra_user_conda_packages())))
     if conda_packages:
-        logger.info('Installing {} user conda packages collected from plugins: {}'.format(
-            len(conda_packages), ' '.join(conda_packages)
-        ))
+        logger.info(f'Installing {len(conda_packages)} user conda packages collected from plugins: {" ".join(conda_packages)}')
         conda.ensure_conda_packages(USER_ENV_PREFIX, conda_packages)
 
     # Install pip packages
     user_pip_packages = list(set(itertools.chain(*hook.tljh_extra_user_pip_packages())))
     if user_pip_packages:
-        logger.info('Installing {} user pip packages collected from plugins: {}'.format(
-            len(user_pip_packages), ' '.join(user_pip_packages)
-        ))
+        logger.info(f'Installing {len(user_pip_packages)} user pip packages collected from plugins: {" ".join(user_pip_packages)}')
         conda.ensure_pip_packages(USER_ENV_PREFIX, user_pip_packages)
 
     # Custom post install actions

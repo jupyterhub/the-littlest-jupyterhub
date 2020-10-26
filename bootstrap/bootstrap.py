@@ -131,18 +131,15 @@ def run_subprocess(cmd, *args, **kwargs):
     logger = logging.getLogger('tljh')
     proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, *args, **kwargs)
     printable_command = ' '.join(cmd)
-    if proc.returncode != 0:
+    code=proc.returncode
+    if code != 0:
         # Our process failed! Show output to the user
-        logger.error('Ran {command} with exit code {code}'.format(
-            command=printable_command, code=proc.returncode
-        ))
+        logger.error(f"Ran {printable_command} with exit code {code}")
         logger.error(proc.stdout.decode())
         raise subprocess.CalledProcessError(cmd=cmd, returncode=proc.returncode)
     else:
         # This goes into installer.log
-        logger.debug('Ran {command} with exit code {code}'.format(
-            command=printable_command, code=proc.returncode
-        ))
+        logger.debug(f"Ran {printable_command} with exit code {code}")
         # This produces multi line log output, unfortunately. Not sure how to fix.
         # For now, prioritizing human readability over machine readability.
         logger.debug(proc.stdout.decode())
