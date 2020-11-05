@@ -63,6 +63,13 @@ file. If what you want is only to change the property's value, you should use
 
 Some of the existing ``<property-path>`` are listed below by categories:
 
+.. _tljh-base_url:
+
+Base URL
+--------
+
+    Use ``base_url`` to determine the base URL used by JupyterHub. This parameter will 
+    be passed straight to ``c.JupyterHub.base_url``.
 
 .. _tljh-set-auth:
 

@@ -61,6 +61,7 @@ def set_item_in_config(config, property_path, value):
 
     return config_copy
 
+
 def unset_item_from_config(config, property_path):
     """
     Unset key at property_path in config & return new config.
@@ -104,6 +105,7 @@ def unset_item_from_config(config, property_path):
             cur_part = cur_part[cur_path]
 
     return config_copy
+
 
 def add_item_to_config(config, property_path, value):
     """
@@ -238,14 +240,19 @@ def remove_config_value(config_path, key_path, value):
     with open(config_path, 'w') as f:
         yaml.dump(config, f)
 
+
 def check_hub_ready():
     from .configurer import load_config
+
+    base_url = load_config()['base_url']
+    base_url = base_url[:-1] if base_url[-1] == '/' else base_url
     http_port = load_config()['http']['port']
     try:
-        r = requests.get('http://127.0.0.1:%d/hub/api' % http_port, verify=False)
+        r = requests.get('http://127.0.0.1:%d%s/hub/api' % (http_port, base_url), verify=False)
         return r.status_code == 200
     except:
         return False
+
 
 def reload_component(component):
     """
@@ -389,13 +396,16 @@ def main(argv=None):
     if args.action == 'show':
         show_config(args.config_path)
     elif args.action == 'set':
-        set_config_value(args.config_path, args.key_path, parse_value(args.value))
+        set_config_value(args.config_path, args.key_path,
+                         parse_value(args.value))
     elif args.action == 'unset':
         unset_config_value(args.config_path, args.key_path)
     elif args.action == 'add-item':
-        add_config_value(args.config_path, args.key_path, parse_value(args.value))
+        add_config_value(args.config_path, args.key_path,
+                         parse_value(args.value))
     elif args.action == 'remove-item':
-        remove_config_value(args.config_path, args.key_path, parse_value(args.value))
+        remove_config_value(args.config_path, args.key_path,
+                            parse_value(args.value))
     elif args.action == 'reload':
         reload_component(args.component)
     else:

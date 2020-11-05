@@ -17,6 +17,7 @@ from .yaml import yaml
 # Default configuration for tljh
 # User provided config is merged into this
 default = {
+    'base_url': '/',
     'auth': {
         'type': 'firstuseauthenticator.FirstUseAuthenticator',
         'FirstUseAuthenticator': {
@@ -69,6 +70,7 @@ default = {
     }
 }
 
+
 def load_config(config_file=CONFIG_FILE):
     """Load the current config as a dictionary
 
@@ -92,6 +94,7 @@ def apply_config(config_overrides, c):
     """
     tljh_config = _merge_dictionaries(dict(default), config_overrides)
 
+    update_base_url(c, tljh_config)
     update_auth(c, tljh_config)
     update_userlists(c, tljh_config)
     update_usergroups(c, tljh_config)
@@ -115,7 +118,7 @@ def load_traefik_api_credentials():
     proxy_secret_path = os.path.join(STATE_DIR, 'traefik-api.secret')
     if not os.path.exists(proxy_secret_path):
         return {}
-    with open(proxy_secret_path,'r') as f:
+    with open(proxy_secret_path, 'r') as f:
         password = f.read()
     return {
         'traefik_api': {
@@ -132,6 +135,13 @@ def load_secrets():
     config = {}
     config = _merge_dictionaries(config, load_traefik_api_credentials())
     return config
+
+
+def update_base_url(c, config):
+    """
+    Update base_url of JupyterHub through tljh config
+    """
+    c.JupyterHub.base_url = config['base_url']
 
 
 def update_auth(c, config):
@@ -218,7 +228,7 @@ def set_cull_idle_service(config):
     Set Idle Culler service
     """
     cull_cmd = [
-       sys.executable, '-m', 'jupyterhub_idle_culler'
+        sys.executable, '-m', 'jupyterhub_idle_culler'
     ]
     cull_config = config['services']['cull']
     print()
