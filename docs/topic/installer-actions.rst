@@ -49,9 +49,9 @@ This should let you run various ``conda`` and ``pip`` commands. If  you run into
 
 .. code-block:: bash
 
-   sudo PATH=${PATH} <command> 
+   sudo env PATH=${PATH} <command> 
 
-By default, ``sudo`` does not respect any custom environments you have activated. The ``PATH=${PATH}``
+By default, ``sudo`` does not respect any custom environments you have activated. The ``env PATH=${PATH}``
 'fixes' that.
 
 .. note::
