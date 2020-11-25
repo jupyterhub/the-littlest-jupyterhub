@@ -67,5 +67,7 @@ their new password.
    If there is a confirmation dialog, confirm the deletion. This will also log the
    user out if they were currently running.
 
+#. Re-create the user whose password needs resetting within that same dialog.
+
 #. Ask the user to log in again with their new password as usual. This will be their
    new password going forward.
