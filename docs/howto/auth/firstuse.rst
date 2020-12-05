@@ -23,6 +23,12 @@ Users who are currently logged in will continue to be logged in. When they
 log out and try to log back in, they will be asked to provide a username and
 password.
 
+Users changing their own password
+=================================
+
+Users can change their password by first logging into their account and then visiting 
+the url ``<your_server_ip>/hub/auth/change-password``.
+
 Allowing anyone to log in to your JupyterHub
 ============================================
 
@@ -39,7 +45,7 @@ the JupyterHub, run the following command.
 Resetting user password
 =======================
 
-You can reset user passwords by *deleting* the user from the JupyterHub admin
+The admin can reset user passwords by *deleting* the user from the JupyterHub admin
 page. This logs the user out, but does **not** remove any of their data or
 home directories. The user can then set a new password by logging in again with
 their new password.
