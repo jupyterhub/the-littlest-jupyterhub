@@ -219,17 +219,20 @@ def ensure_jupyterhub_package(prefix):
         'pycurl==7.43.*'
     ])
 
-    conda.ensure_pip_packages(prefix, [
-        'jupyterhub==1.1.0',
-        'jupyterhub-dummyauthenticator==0.3.1',
-        'jupyterhub-systemdspawner==0.14',
-        'jupyterhub-firstuseauthenticator==0.14.1',
-        'jupyterhub-nativeauthenticator==0.0.5',
-        'jupyterhub-ldapauthenticator==1.3.0',
-        'jupyterhub-tmpauthenticator==0.6',
-        'oauthenticator==0.10.0',
-        'jupyterhub-idle-culler==1.0'
-    ])
+    conda.ensure_pip_packages(
+        prefix,
+        [
+            "jupyterhub==1.1.0",
+            "jupyterhub-dummyauthenticator==0.3.1",
+            "jupyterhub-systemdspawner==0.15",
+            "jupyterhub-firstuseauthenticator==0.14.1",
+            "jupyterhub-nativeauthenticator==0.0.5",
+            "jupyterhub-ldapauthenticator==1.3.0",
+            "jupyterhub-tmpauthenticator==0.6",
+            "oauthenticator==0.10.0",
+            "jupyterhub-idle-culler==1.0",
+        ],
+    )
     traefik.ensure_traefik_binary(prefix)
 
 
