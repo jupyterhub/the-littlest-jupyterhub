@@ -14,7 +14,7 @@ def test_serverextensions():
 
     extensions = [
         'jupyterlab 2.',
-        'nbgitpuller 0.7.',
+        'nbgitpuller 0.9.',
         'nteract_on_jupyter 2.1.',
         'nbresuse '
     ]
