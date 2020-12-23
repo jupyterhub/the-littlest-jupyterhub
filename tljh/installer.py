@@ -222,7 +222,7 @@ def ensure_jupyterhub_package(prefix):
     conda.ensure_pip_packages(
         prefix,
         [
-            "jupyterhub==1.2.0",
+            "jupyterhub==1.2.2",
             "jupyterhub-dummyauthenticator==0.3.1",
             "jupyterhub-systemdspawner==0.15",
             "jupyterhub-firstuseauthenticator==0.14.1",
@@ -231,6 +231,7 @@ def ensure_jupyterhub_package(prefix):
             "jupyterhub-tmpauthenticator==0.6",
             "oauthenticator==0.10.0",
             "jupyterhub-idle-culler==1.0",
+            "chardet==3.0.4",
         ],
     )
     traefik.ensure_traefik_binary(prefix)
