@@ -131,10 +131,12 @@ def run_subprocess(cmd, *args, **kwargs):
     logger = logging.getLogger('tljh')
     proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, *args, **kwargs)
     printable_command = ' '.join(cmd)
-    code=proc.returncode
+    code = proc.returncode
     if code != 0:
         # Our process failed! Show output to the user
-        logger.error(f"Ran {printable_command} with exit code {code}")
+        logger.error('Ran {command} with exit code {code}'.format(
+            command=printable_command, code=conde
+        ))
         logger.error(proc.stdout.decode())
         raise subprocess.CalledProcessError(cmd=cmd, returncode=proc.returncode)
     else:
