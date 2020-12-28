@@ -165,7 +165,7 @@ def test_extra_traefik_config():
     # test extra dynamic config
     resp = send_request(url="http://127.0.0.1/the/hub/runs/here/too", max_sleep=5)
     assert resp.code == 200
-    assert resp.effective_url == "http://127.0.0.1/hub/login"
+    assert "http://127.0.0.1/hub/login" in resp.effective_url
 
     # cleanup
     os.remove(os.path.join(extra_static_config_dir, "extra.toml"))
