@@ -166,36 +166,6 @@ def ensure_jupyterhub_service(prefix):
     systemd.enable_service('traefik')
 
 
-def ensure_jupyterlab_extensions():
-    """
-    Install the JupyterLab extensions we want.
-    """
-    extensions = [
-        # We don't pin versions here, since labextension will find something
-        # appropriate for our version of jupyterlab
-        '@jupyter-widgets/jupyterlab-manager'
-    ]
-    install_options = [
-        '--no-build'   # do not build extension at install time. Will build later
-    ]
-    utils.run_subprocess([
-        os.path.join(USER_ENV_PREFIX, 'bin/jupyter'),
-        'labextension',
-        'install'
-    ] + extensions + install_options)
-
-    # Build all the lab extensions in one go using jupyter lab build command
-    build_options = [
-        '--minimize=False',
-        '--dev-build=False'
-    ]
-
-    utils.run_subprocess([
-        os.path.join(USER_ENV_PREFIX, 'bin/jupyter'),
-        'lab',
-        'build'
-    ] + build_options)
-
 
 def ensure_jupyterhub_package(prefix):
     """
@@ -508,7 +478,6 @@ def main():
     logger.info("Setting up JupyterHub...")
     ensure_node()
     ensure_jupyterhub_package(HUB_ENV_PREFIX)
-    ensure_jupyterlab_extensions()
 
     # Stop the http server with the progress page before traefik starts
     if args.progress_page_server_pid:
