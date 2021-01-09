@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  hub:
+    build: ./integration-tests
+    privileged: true
+    volumes:
+      - type: bind
+        source: .
+        target: /srv/src
+    ports:
+      - "12000:80"
