@@ -26,4 +26,4 @@ about how to get HTTP traffic from the world into your server.
 CPU / Memory / Disk Space
 =========================
 
-See how to ref:`howto/admin/resource-estimation`
+See how to :ref:`howto/admin/resource-estimation`
