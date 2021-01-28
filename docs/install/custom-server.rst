@@ -75,7 +75,7 @@ Step 1: Installing The Littlest JupyterHub
    .. image:: ../images/first-login.png
       :alt: JupyterHub log-in page
 
-#. Login using the **admin user name** you used in step 2. You can choose any
+#. Login using the **admin user name** you used in step 3. You can choose any
    password that you wish. Use a
    strong password & note it down somewhere, since this will be the password for
    the admin user account from now on.
