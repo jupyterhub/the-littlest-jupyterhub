@@ -40,9 +40,7 @@ Apt packages
 ============
 
 Base operating system packages, including Python itself, are installed
-via ``apt`` from the base Ubuntu repositories. The one exception to this
-is nodejs, which is installed from the `nodesource <https://github.com/nodesource/distributions>`_
-apt repository. The Ubuntu provided version of nodejs is usually too old.
+via ``apt`` from the base Ubuntu repositories.
 
 We generally do not pin versions of packages provided by apt, instead
 just using the latest versions provided by Ubuntu.
