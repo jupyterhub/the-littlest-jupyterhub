@@ -76,6 +76,7 @@ Administration and security
    admin/nbresuse
    admin/https
    admin/enable-extensions
+   admin/systemd
 
 Cloud provider configuration
 ----------------------------
