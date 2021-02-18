@@ -41,7 +41,7 @@ and prevent users from accessing the shared volumes.
 Overriding settings with ``override.conf``
 ==========================================
 
-To override the settings, it is possible to provide a custom ``/etc/systemd/system/jupyterhub.service.d/override.conf`` file
+To override the ``jupyterhub`` settings, it is possible to provide a custom ``/etc/systemd/system/jupyterhub.service.d/override.conf`` file
 with the following content:
 
 .. code-block:: bash
