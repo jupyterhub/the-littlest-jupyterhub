@@ -34,15 +34,16 @@ They look like the following:
 
 However in some cases, admins might want to have better control on these settings.
 
-For example when mounting shared volumes over the network using Samba, these namespacing settings might be a bit too strict
-and prevent users from accessing the shared volumes.
+For example when mounting shared volumes over the network using `Samba <https://en.wikipedia.org/wiki/Samba_(software)>`_,
+these namespacing settings might be a bit too strict and prevent users from accessing the shared volumes.
 
 
 Overriding settings with ``override.conf``
 ==========================================
 
-To override the ``jupyterhub`` settings, it is possible to provide a custom ``/etc/systemd/system/jupyterhub.service.d/override.conf`` file
-with the following content:
+To override the ``jupyterhub`` settings, it is possible to provide a custom ``/etc/systemd/system/jupyterhub.service.d/override.conf`` file.
+
+Here is an example for the content of the file:
 
 .. code-block:: bash
 
@@ -52,6 +53,10 @@ with the following content:
     ProtectKernelTunables=no
     ProtectKernelModules=no
 
+This example should be useful in the case of mounting volumes using Samba and sharing them with the JupyterHub users.
+You might also want to provide your own options, which are listed in the
+`systemd documentation <https://www.freedesktop.org/software/systemd/man/systemd.exec.html>`_.
+
 Then make sure to reload the daemon and the ``jupyterhub`` service:
 
 .. code-block:: bash
@@ -59,7 +64,13 @@ Then make sure to reload the daemon and the ``jupyterhub`` service:
     sudo systemctl daemon-reload
     sudo systemctl restart jupyterhub
 
-Checking the status should look like the following:
+Then check the status with:
+
+.. code-block:: bash
+
+    sudo systemctl status jupyterhub
+
+The output should look like the following:
 
 .. image:: ../../images/admin/jupyterhub-systemd-status.png
   :alt: Checking the status of the JupyterHub systemd service
