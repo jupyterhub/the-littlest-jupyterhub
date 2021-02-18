@@ -16,6 +16,8 @@ Enabling the authenticator
 
 #. Enable the authenticator and reload config to apply the configuration:
 
+.. code-block:: bash
+
    sudo tljh-config set auth.type firstuseauthenticator.FirstUseAuthenticator
    sudo tljh-config reload
 
@@ -26,7 +28,7 @@ password.
 Users changing their own password
 =================================
 
-Users can change their password by first logging into their account and then visiting 
+Users can change their password by first logging into their account and then visiting
 the url ``<your_server_ip>/hub/auth/change-password``.
 
 Allowing anyone to log in to your JupyterHub
