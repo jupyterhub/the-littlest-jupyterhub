@@ -22,6 +22,7 @@ How-To Guides
    admin/nbresuse
    admin/https
    admin/enable-extensions
+   admin/systemd
    providers/digitalocean
    providers/azure
 
@@ -76,6 +77,7 @@ Administration and security
    admin/nbresuse
    admin/https
    admin/enable-extensions
+   admin/systemd
 
 Cloud provider configuration
 ----------------------------
