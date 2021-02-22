@@ -10,6 +10,7 @@ guides help you find what is broken & hopefully fix it.
    :caption: Troubleshooting
 
    logs
+   restart
 
 Often, your issues are not related to TLJH itself but to the cloud provider
 your server is running on. We have some documentation on common issues you
