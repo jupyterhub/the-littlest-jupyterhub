@@ -2,3 +2,4 @@ pytest
 pytest-cov
 pytest-mock
 codecov
+chardet==3.0.4
