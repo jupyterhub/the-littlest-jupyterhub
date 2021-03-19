@@ -1,0 +1,29 @@
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+
+jobs:
+  integration-test:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
+      - name: Build systemd image
+        run: |
+          .github/integration-test.py build-image
+      - name: Run bootstrap checks
+        run: |
+          python3 -m pip install pytest
+          pytest integration-tests/test_bootstrap.py -s
+      - name: Run basic tests
+        run: |
+          BOOTSTRAP_PIP_SPEC=git+https://github.com/$GITHUB_ACTOR/the-littlest-jupyterhub.git@$GITHUB_SHA
+          echo $BOOTSTRAP_PIP_SPEC
+
+          .github/integration-test.py run-test \
+          --bootstrap-pip-spec $BOOTSTRAP_PIP_SPEC \
+          basic-tests test_hub.py test_proxy.py \
+          test_install.py test_extensions.py
