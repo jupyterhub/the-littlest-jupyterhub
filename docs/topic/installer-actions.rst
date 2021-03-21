@@ -4,21 +4,19 @@
 What does the installer do?
 ===========================
 
-This document details what exactly the installer does to the machine it is 
+This document details what exactly the installer does to the machine it is
 run on.
 
 ``apt`` Packages installed
 ==========================
 
 The packages ``python3`` and ``python3-venv`` are installed from the apt repositories.
-Since we need an recent & supported version of ``nodejs``, we install it from 
-`nodesource <https://github.com/nodesource/distributions>`_.
 
 Hub environment
 ===============
 
 JupyterHub is run from a python3 virtual environment located in ``/opt/tljh/hub``. It
-uses the system's installed python and is owned by root. It also contains a binary install 
+uses the system's installed python and is owned by root. It also contains a binary install
 of `traefik <http://traefik.io/>`_. This virtual environment is completely managed by TLJH.
 
 .. note::
@@ -34,7 +32,7 @@ User environment
 
 By default, a ``miniconda`` environment is installed in ``/opt/tljh/user``. This contains
 the notebook interface used to launch all users, and the various packages available to all
-users. The environment is owned by the ``root`` user. JupyterHub admins may use 
+users. The environment is owned by the ``root`` user. JupyterHub admins may use
 to ``sudo -E conda install`` or ``sudo -E pip install`` packages into this environment.
 
 This conda environment is added to ``$PATH`` for all users started with JupyterHub. If you
@@ -49,7 +47,7 @@ This should let you run various ``conda`` and ``pip`` commands. If  you run into
 
 .. code-block:: bash
 
-   sudo env PATH=${PATH} <command> 
+   sudo env PATH=${PATH} <command>
 
 By default, ``sudo`` does not respect any custom environments you have activated. The ``env PATH=${PATH}``
 'fixes' that.

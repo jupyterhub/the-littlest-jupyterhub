@@ -13,10 +13,10 @@ def test_serverextensions():
     ], stderr=subprocess.PIPE)
 
     extensions = [
-        'jupyterlab 2.',
+        'jupyterlab 3.',
         'nbgitpuller 0.9.',
         'nteract_on_jupyter 2.1.',
-        'nbresuse '
+        'jupyter_resource_usage'
     ]
 
     for e in extensions:
@@ -33,7 +33,7 @@ def test_nbextensions():
     ], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
 
     extensions = [
-        'nbresuse/main',
+        'jupyter_resource_usage/main',
         # This is what ipywidgets nbextension is called
         'jupyter-js-widgets/extension'
     ]

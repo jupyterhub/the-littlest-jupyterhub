@@ -5,13 +5,14 @@
 jupyterhub==1.2.*
 notebook==6.1.5
 # Install additional notebook frontends!
-jupyterlab==2.*
+jupyterlab==3.*
 nteract-on-jupyter==2.1.*
+# Install jupyterlab extensions from PyPI
 # nbgitpuller for easily pulling in Git repositories
 nbgitpuller==0.9.*
-# nbresuse to show people how much RAM they are using
-nbresuse==0.3.*
+# jupyter-resource-usage to show people how much RAM they are using
+jupyter-resource-usage==0.5.*
 # Most people consider ipywidgets to be part of the core notebook experience
-ipywidgets==7.5.*
+ipywidgets==7.6.*
 # Pin tornado
-tornado<6
+tornado>=6.1

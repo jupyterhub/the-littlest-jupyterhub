@@ -8,11 +8,6 @@ from tljh import installer
 from tljh.yaml import yaml
 
 
-def test_ensure_node():
-    installer.ensure_node()
-    assert os.path.exists('/usr/bin/node')
-
-
 def test_ensure_config_yaml(tljh_dir):
     pm = installer.setup_plugins()
     installer.ensure_config_yaml(pm)
