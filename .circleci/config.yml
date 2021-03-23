@@ -145,6 +145,5 @@ workflows:
     version: 2
     all-tests:
         jobs:
-            - unit-test
             - integration-test
             - upgrade-test
