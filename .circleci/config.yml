@@ -1,38 +1,6 @@
 version: 2.1
-executors:
-    ubuntu_docker:
-        docker:
-            # Match target OS of TLJH
-            - image: ubuntu:18.04
-        working_directory: ~/repo
-
 
 commands:
-    setup_venv:
-        description: Setup hub venv
-        steps:
-            - run:
-                name: Setup venv
-                command: |
-                    python3 -m venv /srv/venv
-                    echo 'export PATH=/srv/venv/bin:$PATH' >> $BASH_ENV
-
-    install_python:
-        description: Install python3, venv, git and make
-        steps:
-            - run:
-                name: install python
-                command: |
-                    apt-get update --yes && apt-get install --yes python3 python3-venv git make
-
-    upgrade_pip:
-        description: Upgrade the pip version to 20.0.*
-        steps:
-            - run:
-                name: upgrade pip
-                command: |
-                    python3 -m pip install -U pip==20.0.*
-
     build_systemd_image:
         steps:
             - run:
@@ -114,45 +82,6 @@ commands:
 
 
 jobs:
-    unit-test:
-        executor: ubuntu_docker
-        steps:
-            - checkout
-
-            # Setup Python
-            - install_python
-
-            # Download and cache dependencies
-            - restore_cache:
-                keys:
-                    - v1-dependencies-py3.6-{{ checksum "setup.py" }}-{{ checksum "dev-requirements.txt" }}
-                    - v1-dependencies-py3.6-
-
-            - setup_venv
-
-            - upgrade_pip
-
-            - run:
-                name: install dependencies
-                command: |
-                    pip install -r dev-requirements.txt
-                    pip install -e .
-
-            - save_cache:
-                paths:
-                    - /srv/venv/
-                key: v1-dependencies-py3.6-{{ checksum "setup.py" }}-{{ checksum "dev-requirements.txt" }}
-
-            - run:
-                name: run unit tests
-                command: |
-                    py.test --cov=tljh tests/
-
-            - run:
-                name: upload code coverage stats
-                command: |
-                    codecov
-
     integration-test:
         docker:
             - image: docker:18.05.0-ce-git
