@@ -82,6 +82,7 @@ commands:
 
 
 jobs:
+<<<<<<< HEAD
     integration-test:
         docker:
             - image: docker:18.05.0-ce-git
@@ -145,5 +146,4 @@ workflows:
     version: 2
     all-tests:
         jobs:
-            - integration-test
             - upgrade-test
