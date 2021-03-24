@@ -11,6 +11,9 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.6
+      - name: Set BOOTSTRAP_PIP_SPEC value
+        run: |
+          echo "BOOTSTRAP_PIP_SPEC=git+https://github.com/$GITHUB_ACTOR/the-littlest-jupyterhub.git@$GITHUB_SHA" >> $GITHUB_ENV
       - name: Build systemd image
         run: |
           .github/integration-test.py build-image
@@ -20,10 +23,19 @@ jobs:
           pytest integration-tests/test_bootstrap.py -s
       - name: Run basic tests
         run: |
-          BOOTSTRAP_PIP_SPEC=git+https://github.com/$GITHUB_ACTOR/the-littlest-jupyterhub.git@$GITHUB_SHA
-          echo $BOOTSTRAP_PIP_SPEC
-
           .github/integration-test.py run-test \
-          --bootstrap-pip-spec $BOOTSTRAP_PIP_SPEC \
-          basic-tests test_hub.py test_proxy.py \
-          test_install.py test_extensions.py
+            --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
+            basic-tests test_hub.py test_proxy.py \
+            test_install.py test_extensions.py
+      - name: Run admin tests
+        run: |
+          .github/integration-test.py run-test \
+            --installer-args "--admin admin:admin" \
+            --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
+            basic-tests test_admin_installer.py \
+      - name: Run plugin tests
+        run: |
+          .github/integration-test.py run-test \
+            --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
+            --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
+            plugins test_simplest_plugin.py \
