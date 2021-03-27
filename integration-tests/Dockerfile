@@ -1,9 +1,9 @@
 # Systemd inside a Docker container, for CI only
-FROM ubuntu:18.04
+FROM arm64v8/ubuntu:focal
 
-RUN apt-get update --yes
+ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get install --yes systemd curl git sudo
+RUN apt-get update > /dev/null && apt install --yes systemd curl git sudo > /dev/null
 
 # Kill all the things we don't need
 RUN find /etc/systemd/system \
@@ -21,8 +21,8 @@ RUN systemctl set-default multi-user.target
 STOPSIGNAL SIGRTMIN+3
 
 # Uncomment these lines for a development install
-#ENV TLJH_BOOTSTRAP_DEV=yes
-#ENV TLJH_BOOTSTRAP_PIP_SPEC=/srv/src
-#ENV PATH=/opt/tljh/hub/bin:${PATH}
+ENV TLJH_BOOTSTRAP_DEV=yes
+ENV TLJH_BOOTSTRAP_PIP_SPEC=/srv/src
+ENV PATH=/opt/tljh/hub/bin:${PATH}
 
-CMD ["/bin/bash", "-c", "exec /sbin/init --log-target=journal 3>&1"]
+CMD ["/bin/bash", "-c", "exec /lib/systemd/systemd --log-target=journal 3>&1"]
