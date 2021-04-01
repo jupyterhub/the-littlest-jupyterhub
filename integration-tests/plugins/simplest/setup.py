@@ -5,5 +5,3 @@ setup(
     entry_points={"tljh": ["simplest = tljh_simplest"]},
     py_modules=["tljh_simplest"],
 )
-
-
