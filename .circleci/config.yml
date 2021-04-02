@@ -1,0 +1,149 @@
+version: 2.1
+
+commands:
+    build_systemd_image:
+        steps:
+            - run:
+                name: build systemd image
+                command: |
+                    .circleci/integration-test.py build-image
+
+    basic_tests:
+        parameters:
+            # Whether or not we should run update tests
+            upgrade:
+                type: string
+                default: ""
+        steps:
+            - run:
+                name: Run basic tests
+                command: |
+                    if [ $CIRCLE_PR_USERNAME ]; then
+                        BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PR_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_SHA1
+                    else
+                        BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_SHA1
+                    fi
+
+                    .circleci/integration-test.py run-test \
+                    --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
+                    basic-tests test_hub.py test_proxy.py \
+                    test_install.py test_extensions.py \
+                    << parameters.upgrade >>
+
+    admin_tests:
+        parameters:
+            upgrade:
+                type: string
+                default: ""
+        steps:
+            - run:
+                name: Run admin tests
+                command: |
+                    if [ $CIRCLE_PR_USERNAME ]; then
+                        BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PR_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_SHA1
+                    else
+                        BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_SHA1
+                    fi
+
+                    .circleci/integration-test.py run-test \
+                    --installer-args "--admin admin:admin" \
+                    --bootstrap-pip-spec $BOOTSTRAP_PIP_SPEC \
+                    basic-tests test_admin_installer.py \
+                    << parameters.upgrade >>
+
+    plugin_tests:
+        parameters:
+            upgrade:
+                type: string
+                default: ""
+        steps:
+            - run:
+                name: Run plugin tests
+                command: |
+                    if [ $CIRCLE_PR_USERNAME ]; then
+                        BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PR_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_SHA1
+                    else
+                        BOOTSTRAP_PIP_SPEC=git+https://github.com/$CIRCLE_PROJECT_USERNAME/the-littlest-jupyterhub.git@$CIRCLE_SHA1
+                    fi
+
+                    .circleci/integration-test.py run-test \
+                        --bootstrap-pip-spec $BOOTSTRAP_PIP_SPEC \
+                        --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
+                        plugins test_simplest_plugin.py \
+                        << parameters.upgrade >>
+
+    bootstrap_checks:
+        parameters:
+        steps:
+            - run:
+                name: Run bootstrap checks
+                command: |
+                    py.test integration-tests/test_bootstrap.py -s
+
+
+jobs:
+    integration-test:
+        docker:
+            - image: docker:18.05.0-ce-git
+
+        steps:
+            - run:
+                name: setup python3
+                command: |
+                    apk add --no-cache python3 pytest
+
+            - checkout
+
+            - setup_remote_docker
+
+            - build_systemd_image
+
+            - bootstrap_checks
+
+            - basic_tests
+
+            - admin_tests
+
+            - plugin_tests
+
+    upgrade-test:
+        docker:
+            - image: docker:18.05.0-ce-git
+
+        steps:
+            - run:
+                name: Check upgrade testing
+                command: |
+                    if [ "$CIRCLE_BRANCH" == "master" ]; then
+                        echo "On master, no upgrade to test..."
+                        circleci-agent step halt
+                    else
+                        echo "PR detected, testing upgrade..."
+                    fi
+
+            - run:
+                name: setup python3
+                command: |
+                    apk add --no-cache python3 pytest
+
+            - checkout
+
+            - setup_remote_docker
+
+            - build_systemd_image
+
+            - basic_tests:
+                upgrade: "--upgrade"
+
+            - admin_tests:
+                upgrade: "--upgrade"
+
+            - plugin_tests:
+                upgrade: "--upgrade"
+
+workflows:
+    version: 2
+    all-tests:
+        jobs:
+            - integration-test
+            - upgrade-test
