@@ -66,7 +66,7 @@ def run_container_command(container_name, cmd):
     """
     proc = subprocess.run([
         'docker', 'exec',
-        '-it', container_name,
+        '-t', container_name,
         '/bin/bash', '-c', cmd
     ], check=True)
 
