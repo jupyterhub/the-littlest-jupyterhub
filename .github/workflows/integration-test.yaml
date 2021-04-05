@@ -11,10 +11,17 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.6
+      - name: Checkout some env vars
+        run: |
+          echo $GITHUB_ACTOR
+          echo $GITHUB_SHA
+          echo $GITHUB_REPOSITORY
+          echo $GITHUB_REF
+          echo $GITHUB_HEAD_REF
+          echo $GITHUB_BASE_REF
       - name: Set BOOTSTRAP_PIP_SPEC value
         run: |
-          echo "BOOTSTRAP_PIP_SPEC=git+https://github.com/$GITHUB_REPOSITORY.git@$GITHUB_SHA" >> $GITHUB_ENV
-          echo $BOOTSTRAP_PIP_SPEC
+          echo "BOOTSTRAP_PIP_SPEC=git+https://github.com/$GITHUB_REPOSITORY.git@$GITHUB_REF" >> $GITHUB_ENV
       - name: Build systemd image
         run: |
           .github/integration-test.py build-image
