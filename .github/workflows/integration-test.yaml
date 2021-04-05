@@ -13,7 +13,11 @@ jobs:
           python-version: 3.6
       - name: Set BOOTSTRAP_PIP_SPEC value
         run: |
-          echo "BOOTSTRAP_PIP_SPEC=git+https://github.com/$GITHUB_ACTOR/the-littlest-jupyterhub.git@$GITHUB_SHA" >> $GITHUB_ENV
+          if ${{ github.event_name != 'pull_request }}; then
+            echo "BOOTSTRAP_PIP_SPEC=git+https://github.com/$GITHUB_REPOSITORY.git@$GITHUB_SHA" >> $GITHUB_ENV
+          else
+            echo "BOOTSTRAP_PIP_SPEC=git+https://github.com/$GITHUB_ACTOR/the-littlest-jupyterhub.git@$GITHUB_SHA" >> $GITHUB_ENV
+          fi
       - name: Build systemd image
         run: |
           .github/integration-test.py build-image
