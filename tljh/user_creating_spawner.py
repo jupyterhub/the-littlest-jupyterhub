@@ -1,10 +1,10 @@
 from tljh.normalize import generate_system_username
 from tljh import user
+from tljh import configurer
 from systemdspawner import SystemdSpawner
 from traitlets import Dict, Unicode, List
-from jupyterhub_configurator.mixins import ConfiguratorSpawnerMixin
 
-class UserCreatingSpawner(ConfiguratorSpawnerMixin, SystemdSpawner):
+class CustomSpawner(SystemdSpawner):
     """
     SystemdSpawner with user creation on spawn.
 
@@ -33,3 +33,8 @@ class UserCreatingSpawner(ConfiguratorSpawnerMixin, SystemdSpawner):
                     user.ensure_user_group(system_username, group)
         return super().start()
 
+cfg = configurer.load_config()
+if cfg['services']['configurator']['enabled']:
+    UserCreatingSpawner = type('UserCreatingSpawner', (ConfiguratorSpawnerMixin, CustomSpawner), {})
+else:
+    UserCreatingSpawner = type('UserCreatingSpawner', (CustomSpawner,), {})

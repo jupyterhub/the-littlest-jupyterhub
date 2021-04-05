@@ -68,7 +68,7 @@ default = {
             'max_age': 0
         },
         'configurator': {
-            'enabled': True
+            'enabled': False
         }
     }
 }
