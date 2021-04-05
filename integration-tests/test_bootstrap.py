@@ -84,13 +84,13 @@ def test_ubuntu_too_old():
     """
     Error with a useful message when running in older Ubuntu
     """
-    output = run_bootstrap("old-distro-test", "ubuntu:16.04")
-    assert output.stdout == "The Littlest JupyterHub requires Ubuntu 18.04 or higher\n"
+    output = run_bootstrap("old-distro-test", "ubuntu:18.04")
+    assert output.stdout == "The Littlest JupyterHub requires Ubuntu 20.04 or higher\n"
     assert output.returncode == 1
 
 
 def test_inside_no_systemd_docker():
-    output = run_bootstrap("plain-docker-test", "ubuntu:18.04")
+    output = run_bootstrap("plain-docker-test", "ubuntu:20.04")
     assert (
         output.stdout.strip()
         == dedent(
@@ -133,7 +133,7 @@ def verify_progress_page(expected_status_code, timeout):
 def test_progress_page():
     with concurrent.futures.ThreadPoolExecutor() as executor:
         installer = executor.submit(
-            run_bootstrap, "progress-page", "ubuntu:18.04", True
+            run_bootstrap, "progress-page", "ubuntu:20.04", True
         )
 
         # Check if progress page started

@@ -9,7 +9,7 @@ This script is run as:
 
 Constraints:
   - Entire script should be compatible with Python 3.8 (We run on Ubuntu 20.04+)
-  - Script should parse in Python 3.4 (since we exit with useful error message on Ubuntu 14.04+)
+  - Script should parse in Python 3.6 (since we exit with useful error message on Ubuntu 18.04+)
   - Use stdlib modules only
 """
 import os
