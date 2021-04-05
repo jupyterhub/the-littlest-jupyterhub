@@ -12,9 +12,9 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.6
-      - name: Install and setup venv
+      - name: Install venv, git and setup venv
         run: |
-          apt-get update --yes && apt-get install --yes python3-venv
+          apt-get update --yes && apt-get install --yes python3-venv git
           python3 -m venv /srv/venv
           echo '/srv/venv/bin' >> $GITHUB_PATH
       - name: Cache pip deps
