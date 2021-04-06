@@ -19,12 +19,8 @@ setup(
         'requests',
         'bcrypt',
         'jupyterhub-traefik-proxy==0.2.*',
-        'jupyterhub-configurator @ git+https://github.com/yuvipanda/jupyterhub-configurator@ecca97e016e9a939dd48c6c0e66c40e4e2951fa7',
     ],
     entry_points={
-        'jupyterhub_configurator': [
-            'schema = tljh.schemas.tljh_configurator',
-        ],
         'console_scripts': [
             'tljh-config = tljh.config:main',
         ]

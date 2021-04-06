@@ -3,6 +3,7 @@ from tljh import user
 from tljh import configurer
 from systemdspawner import SystemdSpawner
 from traitlets import Dict, Unicode, List
+from jupyterhub_configurator.mixins import ConfiguratorSpawnerMixin
 
 class CustomSpawner(SystemdSpawner):
     """
