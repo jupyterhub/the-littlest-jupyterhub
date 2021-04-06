@@ -169,14 +169,14 @@ def ensure_user_environment(user_requirements_txt_file):
     """
     logger.info("Setting up user environment...")
 
-    miniforge_version = '4.8.5-2'
-    miniforge_installer_sha256 = "67e15be1628cfc191d95f84b7de4db82d11f32953245c913c7846a85fdbe68bc"
+    miniforge_version = '4.10.0-0'
+    miniforge_installer_sha256 = "9c81d4dd830991374d8041f6b835920cf7ad355ea3ae80c236cd74237d5315a1"
 
 
     if not conda.check_miniconda_version(USER_ENV_PREFIX, "4.8.5"):
         logger.info('Downloading & setting up user environment...')
-        # Conda 4.8.5 and Python 3.8.6
-        installer_url = "https://github.com/conda-forge/miniforge/releases/download/{miniforge_version}/Miniforge3-{miniforge_version}-Linux-x86_64.sh"
+        # Conda 4.8.5 and Python 3.8.8
+        installer_url = f"https://github.com/conda-forge/miniforge/releases/download/{miniforge_version}/Miniforge3-{miniforge_version}-Linux-x86_64.sh"
         with conda.download_miniconda_installer(installer_url, miniforge_installer_sha256) as installer_path:
             conda.install_miniconda(installer_path, USER_ENV_PREFIX)
 
@@ -241,7 +241,7 @@ def ensure_jupyterhub_running(times=20):
 
     for i in range(times):
         try:
-            logger.info(f'Waiting for JupyterHub to come up ({i + 1}/{tries} tries)')
+            logger.info(f'Waiting for JupyterHub to come up ({i + 1}/{times} tries)')
             # Because we don't care at this level that SSL is valid, we can suppress
             # InsecureRequestWarning for this request.
             with warnings.catch_warnings():
