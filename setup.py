@@ -18,11 +18,11 @@ setup(
         'backoff',
         'requests',
         'bcrypt',
-        'jupyterhub-traefik-proxy==0.2.*'
+        'jupyterhub-traefik-proxy==0.2.*',
     ],
     entry_points={
         'console_scripts': [
             'tljh-config = tljh.config:main',
-        ],
+        ]
     },
 )

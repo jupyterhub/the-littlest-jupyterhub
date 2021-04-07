@@ -141,6 +141,7 @@ def ensure_jupyterhub_package(prefix):
             "oauthenticator==0.10.0",
             "jupyterhub-idle-culler==1.0",
             "chardet==3.0.4",
+            "git+https://github.com/yuvipanda/jupyterhub-configurator@317759e17c8e48de1b1352b836dac2a230536dba"
         ],
     )
     traefik.ensure_traefik_binary(prefix)

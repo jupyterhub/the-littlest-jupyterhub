@@ -17,3 +17,4 @@ Topic guides provide in-depth explanations of specific topics.
    authenticator-configuration
    escape-hatch
    idle-culler
+   jupyterhub-configurator
