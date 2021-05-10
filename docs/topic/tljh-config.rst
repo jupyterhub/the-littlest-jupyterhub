@@ -109,6 +109,14 @@ User Lists
 
 * ``users.admin`` takes in usernames to designate as admins
 
+  .. code-block:: bash
+
+    sudo tljh-config add-item users.allowed good-user_1
+    sudo tljh-config add-item users.allowed good-user_2
+    sudo tljh-config add-item users.banned bad-user_6
+    sudo tljh-config add-item users.admin admin-user_0
+    sudo tljh-config remove-item users.allowed good-user_2
+
 .. _tljh-set-user-limits:
 
 User Server Limits
