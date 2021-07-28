@@ -14,9 +14,6 @@ Prerequisites
 
 #. An Amazon Web Services account.
 
-   The `AWS free tier <https://aws.amazon.com/free/>`_ is fully
-   capable of running a minimal littlest Jupyterhub for testing purposes. 
-
    If asked to choose a default region, choose the one closest to the majority 
    of your users.
 
