@@ -171,21 +171,21 @@ def ensure_user_environment(user_requirements_txt_file):
     logger.info("Setting up user environment...")
 
     miniconda_old_version = '4.5.4'
-    miniconda_new_version = '4.7.10'
-    miniconda_installer_sha256 = "8a324adcc9eaf1c09e22a992bb6234d91a94146840ee6b11c114ecadafc68121"
+    mambaforge_new_version = '4.10.3-3'
+    installer_sha256 = "a012c24e1cc3bcbe74a1e5693e510830e7c2956e85877b08d1e28707a0bd8d75"
 
-    if conda.check_miniconda_version(USER_ENV_PREFIX, miniconda_new_version):
-        conda_version = '4.8.1'
+    if conda.check_miniconda_version(USER_ENV_PREFIX, mambaforge_new_version):
+        conda_version = '4.10.3'
     elif conda.check_miniconda_version(USER_ENV_PREFIX, miniconda_old_version):
         conda_version = '4.5.8'
     # If no prior miniconda installation is found, we can install a newer version
     else:
         logger.info('Downloading & setting up user environment...')
         # FIXME: allow using miniforge
-        installer_url = "https://repo.continuum.io/miniconda/Miniconda3-{}-Linux-x86_64.sh".format(miniconda_new_version)
-        with conda.download_miniconda_installer(installer_url, miniconda_installer_sha256) as installer_path:
+        installer_url = "https://github.com/conda-forge/miniforge/releases/download/{v}/Mambaforge-{v}-Linux-x86_64.sh".format(v=mambaforge_new_version)
+        with conda.download_miniconda_installer(installer_url, installer_sha256) as installer_path:
             conda.install_miniconda(installer_path, USER_ENV_PREFIX)
-        conda_version = '4.8.1'
+        conda_version = '4.10.3'
 
     conda.ensure_conda_packages(USER_ENV_PREFIX, [
         # Conda's latest version is on conda much more so than on PyPI.

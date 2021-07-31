@@ -13,14 +13,14 @@ def prefix():
     """
     Provide a temporary directory with a conda environment
     """
-    miniconda_version = '4.7.10'
-    miniconda_installer_sha256 = "8a324adcc9eaf1c09e22a992bb6234d91a94146840ee6b11c114ecadafc68121"
-    installer_url = "https://repo.continuum.io/miniconda/Miniconda3-{}-Linux-x86_64.sh".format(miniconda_version)
+    mambaforge_version = '4.10.3-3'
+    installer_sha256 = "a012c24e1cc3bcbe74a1e5693e510830e7c2956e85877b08d1e28707a0bd8d75"
+    installer_url = "https://github.com/conda-forge/miniforge/releases/download/{v}/Mambaforge-{v}-Linux-x86_64.sh".format(v=mambaforge_version)
     with tempfile.TemporaryDirectory() as tmpdir:
-        with conda.download_miniconda_installer(installer_url, miniconda_installer_sha256) as installer_path:
+        with conda.download_miniconda_installer(installer_url, installer_sha256) as installer_path:
             conda.install_miniconda(installer_path, tmpdir)
         conda.ensure_conda_packages(tmpdir, [
-            'conda==4.8.1'
+            'conda==4.10.3'
         ])
         yield tmpdir
 
