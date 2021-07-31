@@ -31,7 +31,7 @@ def run_systemd_image(image_name, container_name, bootstrap_pip_spec):
         '--name', container_name,
         # This is the minimum VM size we support.
         # If we change this, need to change all other references to this number.
-        '--memory', '1G',
+        '--memory', '900m',
     ]
 
     if bootstrap_pip_spec:
