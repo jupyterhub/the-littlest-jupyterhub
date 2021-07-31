@@ -171,11 +171,16 @@ def ensure_user_environment(user_requirements_txt_file):
     logger.info("Setting up user environment...")
 
     miniconda_old_version = '4.5.4'
+    miniconda_new_version = '4.7.10'
+    mambaconda_new_version = '4.10.3'
     mambaforge_new_version = '4.10.3-3'
     installer_sha256 = "a012c24e1cc3bcbe74a1e5693e510830e7c2956e85877b08d1e28707a0bd8d75"
+    mamba_version = '0.15.2'
 
-    if conda.check_miniconda_version(USER_ENV_PREFIX, mambaforge_new_version):
+    if conda.check_miniconda_version(USER_ENV_PREFIX, mambaconda_new_version):
         conda_version = '4.10.3'
+    elif conda.check_miniconda_version(USER_ENV_PREFIX, miniconda_new_version):
+        conda_version = '4.8.1'
     elif conda.check_miniconda_version(USER_ENV_PREFIX, miniconda_old_version):
         conda_version = '4.5.8'
     # If no prior miniconda installation is found, we can install a newer version
@@ -189,7 +194,8 @@ def ensure_user_environment(user_requirements_txt_file):
 
     conda.ensure_conda_packages(USER_ENV_PREFIX, [
         # Conda's latest version is on conda much more so than on PyPI.
-        'conda==' + conda_version
+        'conda==' + conda_version,
+        'mamba==' + mamba_version,
     ])
 
     conda.ensure_pip_requirements(
