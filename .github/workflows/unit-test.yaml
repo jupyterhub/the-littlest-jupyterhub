@@ -12,25 +12,30 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.6
+
       - name: Install venv, git and setup venv
         run: |
           apt-get update --yes && apt-get install --yes python3-venv git
           python3 -m venv /srv/venv
           echo '/srv/venv/bin' >> $GITHUB_PATH
+
       - name: Cache pip deps
         uses: actions/cache@v2
         with:
           path: /srv/venv/
           key: ${{ runner.os }}-pip-dependencies-${{ hashFiles('*setup.py', '*dev-requirements.txt') }}
+
       - name: Install Python dependencies
         run: |
           python3 -m pip install -U pip==20.0.*
           python3 -m pip install -r dev-requirements.txt
           python3 -m pip install -e .
           pip freeze
+
       - name: Run unit tests
         run: |
           pytest --cov=tljh tests/
+
       - name: Upload code coverage stats
         run: |
           codecov

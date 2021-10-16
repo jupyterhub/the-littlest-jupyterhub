@@ -12,13 +12,16 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.6
+
       - name: Set BOOTSTRAP_PIP_SPEC value
         run: |
           echo "BOOTSTRAP_PIP_SPEC=git+https://github.com/$GITHUB_REPOSITORY.git@$GITHUB_REF" >> $GITHUB_ENV
           echo $BOOTSTRAP_PIP_SPEC
+
       - name: Build systemd image
         run: |
           .github/integration-test.py build-image
+
       - name: Run basic tests
         run: |
           .github/integration-test.py run-test \
@@ -26,6 +29,7 @@ jobs:
             basic-tests test_hub.py test_proxy.py \
             test_install.py test_extensions.py \
             --upgrade
+
       - name: Run admin tests
         run: |
           .github/integration-test.py run-test \
@@ -33,6 +37,7 @@ jobs:
             --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
             basic-tests test_admin_installer.py \
             --upgrade
+
       - name: Run plugin tests
         run: |
           .github/integration-test.py run-test \
