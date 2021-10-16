@@ -20,12 +20,12 @@ The user may **restart** JupyterHub and Traefik services by running:
 
 .. code-block:: console
 
-     $ tljh-config reload proxy
+     $ sudo tljh-config reload proxy
 
 This calls systemctl and restarts Traefik. The user may call systemctl and restart only the JupyterHub using the command: 
 
 .. code-block:: console
 
-     $ tljh-config reload hub
+     $ sudo tljh-config reload hub
 
 
