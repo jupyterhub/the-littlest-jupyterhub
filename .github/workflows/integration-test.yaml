@@ -37,11 +37,11 @@ jobs:
           .github/integration-test.py run-test \
             --installer-args "--admin admin:admin" \
             --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
-            basic-tests test_admin_installer.py \
+            basic-tests test_admin_installer.py
 
       - name: Run plugin tests
         run: |
           .github/integration-test.py run-test \
             --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
             --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
-            plugins test_simplest_plugin.py \
+            plugins test_simplest_plugin.py
