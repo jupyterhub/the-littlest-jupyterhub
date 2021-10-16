@@ -23,7 +23,7 @@ jobs:
       - name: Run bootstrap checks
         run: |
           python3 -m pip install pytest
-          pytest integration-tests/test_bootstrap.py -s
+          pytest --verbose --maxfail=2 --color=yes --capture=no integration-tests/test_bootstrap.py
 
       - name: Run basic tests
         run: |

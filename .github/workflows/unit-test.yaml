@@ -34,7 +34,7 @@ jobs:
 
       - name: Run unit tests
         run: |
-          pytest --cov=tljh tests/
+          pytest --verbose --maxfail=2 --color=yes --cov=tljh tests/
 
       - name: Upload code coverage stats
         run: |
