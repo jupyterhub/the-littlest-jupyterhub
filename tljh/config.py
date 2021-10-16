@@ -240,7 +240,7 @@ def remove_config_value(config_path, key_path, value):
 
 def check_hub_ready():
     try:
-        r = requests.get('http://127.0.0.1:80/health', verify=False)
+        r = requests.get('http://127.0.0.1:80/hub/health', verify=False)
         return r.status_code == 200
     except:
         return False
