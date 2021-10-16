@@ -24,8 +24,61 @@ on:
   workflow_dispatch:
 
 jobs:
-  integration-test:
-    runs-on: ubuntu-18.04
+
+  # This job is used as a workaround to a limitation when using a matrix of
+  # variations that a job should be executed against. The limitation is that a
+  # matrix once defined can't include any conditions.
+  #
+  # What this job does before our real test job with a matrix of variations run,
+  # is to decide on that matrix of variations a conditional logic of our choice.
+  #
+  # For more details, see this excellent stack overflow answer:
+  # https://stackoverflow.com/a/65434401/2220152
+  #
+  decide-on-test-jobs-to-run:
+    name: Decide on test jobs to run
+    runs-on: ubuntu-latest
+
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+    steps:
+      # Currently, this logic filters out a matrix entry equaling a specific git
+      # reference identified by "dont_run_on_ref".
+      - name: Decide on test jobs to run
+        id: set-matrix
+        run: |
+          matrix_post_filter=$(
+            echo "$matrix_include_pre_filter" \
+              | yq e --output-format=json '.' - \
+              | jq '{"include": map( . | select(.dont_run_on_ref != "${{ github.ref }}" ))}'
+          )
+          echo ::set-output name=matrix::$(echo "$matrix_post_filter")
+
+          echo "The subsequent job's matrix are:"
+          echo $matrix_post_filter | jq '.'
+        env:
+          matrix_include_pre_filter: |
+            - name: "Int. tests: Ubuntu 18.04, Py 3.6"
+              runs_on: ubuntu-18.04
+              extra_flags: ""
+            - name: "Int. tests: Ubuntu 20.04, Py 3.9"
+              runs_on: ubuntu-20.04
+              extra_flags: ""
+            - name: "Int. tests: Ubuntu 20.04, Py 3.9, --upgrade"
+              runs_on: ubuntu-20.04
+              extra_flags: --upgrade
+              dont_run_on_ref: refs/heads/master
+
+  integration-tests:
+    needs: decide-on-test-jobs-to-run
+    runs-on: ${{ matrix.runs_on }}
+
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.decide-on-test-jobs-to-run.outputs.matrix) }}
+
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -51,18 +104,21 @@ jobs:
           .github/integration-test.py run-test \
             --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
             basic-tests test_hub.py test_proxy.py \
-            test_install.py test_extensions.py
+            test_install.py test_extensions.py \
+            ${{ matrix.extra_flags }}
 
       - name: Run admin tests
         run: |
           .github/integration-test.py run-test \
             --installer-args "--admin admin:admin" \
             --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
-            basic-tests test_admin_installer.py
+            basic-tests test_admin_installer.py \
+            ${{ matrix.extra_flags }}
 
       - name: Run plugin tests
         run: |
           .github/integration-test.py run-test \
             --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
             --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
-            plugins test_simplest_plugin.py
+            plugins test_simplest_plugin.py \
+            ${{ matrix.extra_flags }}

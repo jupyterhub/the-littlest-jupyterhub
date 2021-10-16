@@ -25,8 +25,10 @@ on:
 
 jobs:
   unit-test:
+    name: Unit tests
     runs-on: ubuntu-18.04
     container: ubuntu:18.04
+
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
