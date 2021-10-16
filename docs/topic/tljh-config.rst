@@ -161,14 +161,38 @@ Advanced: ``config.yaml``
 is the recommended method of editing / viewing configuration since editing
 YAML by hand in a terminal text editor is a large source of errors.
 
-``Remove configuration values``
----------------------------------
+To learn more, use the ``--help`` flag applied to ``tljh-config`` directly or
+after providing a positional argument as command like ``remove-item`` to learn
+more about those commands specifically.
 
-Use the argument ``remove-item`` to delete a configuration value from the 
-``config.yaml`` file:
+.. code-block:: bash
 
-``tljh-config remove-item <item being removed>``
-		
-After modifying the configuration, reload JupyterHub to apply changes
+   sudo tljh-config --help
 
-``tljh-config reload``
+   usage: tljh-config [-h] [--config-path CONFIG_PATH] {show,set,add-item,remove-item,reload} ...
+
+   positional arguments:
+     {show,set,add-item,remove-item,reload}
+       show                Show current configuration
+       set                 Set a configuration property
+       add-item            Add a value to a list for a configuration property
+       remove-item         Remove a value from a list for a configuration property
+       reload              Reload a component to apply configuration change
+
+   optional arguments:
+     -h, --help            show this help message and exit
+     --config-path CONFIG_PATH
+                           Path to TLJH config.yaml file
+
+.. code-block:: bash
+
+   sudo tljh-config remove-item --help
+
+   usage: tljh-config remove-item [-h] key_path value
+
+   positional arguments:
+     key_path    Dot separated path to configuration key to remove value from
+     value       Value to remove from key_path
+
+   optional arguments:
+     -h, --help  show this help message and exit
