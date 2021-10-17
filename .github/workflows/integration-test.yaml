@@ -61,12 +61,15 @@ jobs:
           matrix_include_pre_filter: |
             - name: "Int. tests: Ubuntu 18.04, Py 3.6"
               runs_on: ubuntu-18.04
+              python_version: 3.6
               extra_flags: ""
             - name: "Int. tests: Ubuntu 20.04, Py 3.9"
               runs_on: ubuntu-20.04
+              python_version: 3.9
               extra_flags: ""
             - name: "Int. tests: Ubuntu 20.04, Py 3.9, --upgrade"
               runs_on: ubuntu-20.04
+              python_version: 3.9
               extra_flags: --upgrade
               dont_run_on_ref: refs/heads/master
 
@@ -83,7 +86,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: 3.6
+          python-version: ${{ matrix.python_version }}
 
       - name: Set BOOTSTRAP_PIP_SPEC value
         run: |
