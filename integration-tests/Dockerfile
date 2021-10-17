@@ -4,7 +4,7 @@ FROM ubuntu:${ubuntu_version}
 
 # DEBIAN_FRONTEND is set to avoid being asked for input and hang during build:
 # https://anonoz.github.io/tech/2020/04/24/docker-build-stuck-tzdata.html
-RUN DEBIAN_FRONTEND=noninteractive \
+RUN export DEBIAN_FRONTEND=noninteractive \
  && apt-get update \
  && apt-get install --yes \
         systemd \

@@ -60,22 +60,31 @@ jobs:
         env:
           matrix_include_pre_filter: |
             - name: "Int. tests: Ubuntu 18.04, Py 3.6"
-              ubuntu_version: 18.04
-              python_version: 3.6
+              ubuntu_version: "18.04"
+              python_version: "3.6"
               extra_flags: ""
             - name: "Int. tests: Ubuntu 20.04, Py 3.9"
-              ubuntu_version: 20.04
-              python_version: 3.9
+              ubuntu_version: "20.04"
+              python_version: "3.9"
               extra_flags: ""
             - name: "Int. tests: Ubuntu 20.04, Py 3.9, --upgrade"
-              ubuntu_version: 20.04
-              python_version: 3.9
+              ubuntu_version: "20.04"
+              python_version: "3.9"
               extra_flags: --upgrade
               dont_run_on_ref: refs/heads/master
 
   integration-tests:
     needs: decide-on-test-jobs-to-run
-    runs-on: ubuntu-${{ matrix.ubuntu_version }}
+
+    # runs-on can only be configured to the LTS releases of ubuntu (18.04,
+    # 20.04, ...), so if we want to test against the latest non-LTS release, we
+    # must compromise when configuring runs-on and configure runs-on to be the
+    # latest LTS release instead.
+    #
+    # This can have consequences because actions like actions/setup-python will
+    # mount cached installations associated with the chosen runs-on environment.
+    #
+    runs-on: ${{ format('ubuntu-{0}', matrix.runs_on || matrix.ubuntu_version) }}
 
     name: ${{ matrix.name }}
     strategy:
@@ -95,36 +104,39 @@ jobs:
 
       - name: Build systemd image
         run: |
-          .github/integration-test.py build-image --build-arg ubuntu_version=${{ matrix.ubuntu_version }}
+          .github/integration-test.py build-image \
+              --build-arg "ubuntu_version=${{ matrix.ubuntu_version }}"
 
       - name: Install pytest
-        run: |
-          python3 -m pip install pytest
+        run: python3 -m pip install pytest
 
       - name: Run bootstrap tests
         run: |
-          pytest --verbose --maxfail=2 --color=yes --capture=no integration-tests/test_bootstrap.py
+          pytest --verbose --maxfail=2 --color=yes --capture=no \
+              integration-tests/test_bootstrap.py
 
       - name: Run basic tests
         run: |
-          .github/integration-test.py run-test \
-            --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
-            basic-tests test_hub.py test_proxy.py \
-            test_install.py test_extensions.py \
-            ${{ matrix.extra_flags }}
+          .github/integration-test.py run-test basic-tests \
+              --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
+              ${{ matrix.extra_flags }} \
+              test_hub.py \
+              test_proxy.py \
+              test_install.py \
+              test_extensions.py
 
       - name: Run admin tests
         run: |
-          .github/integration-test.py run-test \
-            --installer-args "--admin admin:admin" \
-            --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
-            basic-tests test_admin_installer.py \
-            ${{ matrix.extra_flags }}
+          .github/integration-test.py run-test admin-tests \
+              --installer-args "--admin admin:admin" \
+              --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
+              ${{ matrix.extra_flags }} \
+              test_admin_installer.py
 
       - name: Run plugin tests
         run: |
-          .github/integration-test.py run-test \
-            --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
-            --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
-            plugins test_simplest_plugin.py \
-            ${{ matrix.extra_flags }}
+          .github/integration-test.py run-test plugin-tests \
+              --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
+              --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
+              ${{ matrix.extra_flags }} \
+              test_simplest_plugin.py
