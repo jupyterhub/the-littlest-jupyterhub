@@ -4,7 +4,6 @@ Test running bootstrap script in different circumstances
 import concurrent.futures
 import os
 import subprocess
-from textwrap import dedent
 import time
 
 
@@ -91,17 +90,7 @@ def test_ubuntu_too_old():
 
 def test_inside_no_systemd_docker():
     output = run_bootstrap("plain-docker-test", "ubuntu:18.04")
-    assert (
-        output.stdout.strip()
-        == dedent(
-            """
-        Systemd is required to run TLJH
-        Running inside a docker container without systemd isn't supported
-        We recommend against running a production TLJH instance inside a docker container
-        For local development, see http://tljh.jupyter.org/en/latest/contributing/dev-setup.html
-    """
-        ).strip()
-    )
+    assert "Systemd is required to run TLJH" in output.stdout
     assert output.returncode == 1
 
 
