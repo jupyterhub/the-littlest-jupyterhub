@@ -2,9 +2,13 @@
 ARG ubuntu_version=20.04
 FROM ubuntu:${ubuntu_version}
 
-RUN apt-get update --yes
-
-RUN apt-get install --yes systemd curl git sudo
+RUN apt-get update \
+ && apt-get install --yes \
+        systemd \
+        curl \
+        git \
+        sudo \
+ && rm -rf /var/lib/apt/lists/*
 
 # Kill all the things we don't need
 RUN find /etc/systemd/system \
