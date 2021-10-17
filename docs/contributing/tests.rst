@@ -20,7 +20,7 @@ that the various components fit together and work as they should.
 So we write a lot of integration tests, and put in more effort
 towards them than unit tests.
 
-All integration tests are run on `CircleCI <https://circleci.com>`_
+All integration tests are run in `GitHub Actions <https://github.com/jupyterhub/the-littlest-jupyterhub/actions>`_
 for each PR and merge, making sure we don't have broken tests
 for too long.
 
@@ -39,7 +39,7 @@ You can then run the tests with:
 
 .. code-block:: bash
 
-   .circleci/integration-test.py run-test <name-of-run> <test-file-names>
+   .github/integration-test.py run-test <name-of-run> <test-file-names>
 
 - ``<name-of-run>`` is an identifier for the tests - you can choose anything you want
 - ``<test-file-names>>`` is list of test files (under ``integration-tests``) that should be run in one go.
@@ -48,7 +48,7 @@ For example, to run all the basic tests, you would write:
 
 .. code-block:: bash
 
-   .circleci/integration-test.py run-test basic-tests \
+   .github/integration-test.py run-test basic-tests \
                                  test_hub.py \
                                  test_install.py \
                                  test_extensions.py
@@ -61,5 +61,5 @@ parameter:
 
 .. code-block:: bash
 
-   .circleci/integration-test.py run-test <name-of-run> <test-file-names> \
+   .github/integration-test.py run-test <name-of-run> <test-file-names> \
       --bootstrap-pip-spec="git+https://github.com/your-username/the-littlest-jupyterhub.git@branch-name"
