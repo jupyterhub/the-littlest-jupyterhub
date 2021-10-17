@@ -97,9 +97,12 @@ jobs:
         run: |
           .github/integration-test.py build-image --build-arg ubuntu_version=${{ matrix.ubuntu_version }}
 
-      - name: Run bootstrap checks
+      - name: Install pytest
         run: |
           python3 -m pip install pytest
+
+      - name: Run bootstrap tests
+        run: |
           pytest --verbose --maxfail=2 --color=yes --capture=no integration-tests/test_bootstrap.py
 
       - name: Run basic tests
