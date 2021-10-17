@@ -335,7 +335,7 @@ def main():
 
     # Upgrade pip
     logger.info('Upgrading pip...')
-    run_subprocess([pip_bin, 'install', '--upgrade', 'pip==20.0.*'])
+    run_subprocess([pip_bin, 'install', '--upgrade', 'pip'])
 
 
     # Install/upgrade TLJH installer
