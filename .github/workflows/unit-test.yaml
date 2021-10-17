@@ -56,7 +56,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /srv/venv/
-          key: ${{ runner.os }}-pip-dependencies-${{ hashFiles('*setup.py', '*dev-requirements.txt') }}
+          key: pip-${{ matrix.ubuntu_version }}-${{ matrix.python_version }}-${{ hashFiles('*setup.py', '*dev-requirements.txt') }}
 
       - name: Install Python dependencies
         run: |
