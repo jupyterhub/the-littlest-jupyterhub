@@ -60,22 +60,22 @@ jobs:
         env:
           matrix_include_pre_filter: |
             - name: "Int. tests: Ubuntu 18.04, Py 3.6"
-              runs_on: ubuntu-18.04
+              ubuntu_version: 18.04
               python_version: 3.6
               extra_flags: ""
             - name: "Int. tests: Ubuntu 20.04, Py 3.9"
-              runs_on: ubuntu-20.04
+              ubuntu_version: 20.04
               python_version: 3.9
               extra_flags: ""
             - name: "Int. tests: Ubuntu 20.04, Py 3.9, --upgrade"
-              runs_on: ubuntu-20.04
+              ubuntu_version: 20.04
               python_version: 3.9
               extra_flags: --upgrade
               dont_run_on_ref: refs/heads/master
 
   integration-tests:
     needs: decide-on-test-jobs-to-run
-    runs-on: ${{ matrix.runs_on }}
+    runs-on: ubuntu-${{ matrix.ubuntu_version }}
 
     name: ${{ matrix.name }}
     strategy:
@@ -95,7 +95,7 @@ jobs:
 
       - name: Build systemd image
         run: |
-          .github/integration-test.py build-image
+          .github/integration-test.py build-image --build-arg ubuntu_version=${{ matrix.ubuntu_version }}
 
       - name: Run bootstrap checks
         run: |
