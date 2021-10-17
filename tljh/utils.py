@@ -10,6 +10,9 @@ import pluggy
 from tljh import hooks
 
 
+# This function is needed also by the bootstrap script that starts this
+# installer script. Make sure its replica at bootstrap/bootstrap.py stays in
+# sync with this version!
 def run_subprocess(cmd, *args, **kwargs):
     """
     Run given cmd with smart output behavior.
