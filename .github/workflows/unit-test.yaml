@@ -24,16 +24,27 @@ on:
   workflow_dispatch:
 
 jobs:
-  unit-test:
-    name: Unit tests
-    runs-on: ubuntu-18.04
-    container: ubuntu:18.04
+  unit-tests:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-${{ matrix.ubuntu_version }}
+    container: ubuntu:${{ matrix.ubuntu_version }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: "Unit tests: Ubuntu 18.04, Py 3.6"
+            ubuntu_version: 18.04
+            python_version: 3.6
+          - name: "Unit tests: Ubuntu 20.04, Py 3.9"
+            ubuntu_version: 20.04
+            python_version: 3.9
 
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: 3.6
+          python-version: ${{ matrix.python_version }}
 
       - name: Install venv, git and setup venv
         run: |
