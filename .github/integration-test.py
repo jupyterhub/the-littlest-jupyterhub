@@ -95,6 +95,10 @@ def run_test(image_name, test_name, bootstrap_pip_spec, test_files, upgrade, ins
     copy_to_container(test_name, os.path.join(source_path, 'bootstrap/.'), '/srv/src')
     copy_to_container(test_name, os.path.join(source_path, 'integration-tests/'), '/srv/src')
 
+    # These logs can be very relevant to debug a container startup failure
+    print(f"--- Start of logs from the container: {test_name}")
+    print(subprocess.check_output(['docker', 'logs', test_name]).decode())
+    print(f"--- End of logs from the container: {test_name}")
 
     # Install TLJH from the default branch first to test upgrades
     if upgrade:
