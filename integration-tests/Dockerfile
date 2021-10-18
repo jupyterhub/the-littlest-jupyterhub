@@ -33,4 +33,4 @@ STOPSIGNAL SIGRTMIN+3
 #ENV TLJH_BOOTSTRAP_PIP_SPEC=/srv/src
 #ENV PATH=/opt/tljh/hub/bin:${PATH}
 
-CMD ["/bin/bash", "-c", "exec /sbin/init --log-target=journal 3>&1"]
+CMD ["/bin/bash", "-c", "exec /lib/systemd/systemd --log-target=journal 3>&1"]
