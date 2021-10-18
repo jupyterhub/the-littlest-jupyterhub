@@ -334,8 +334,10 @@ def main():
 
 
     # Upgrade pip
+    # Keep pip version pinning in sync with the one in unit-test.yml!
+    # See changelog at https://pip.pypa.io/en/latest/news/#changelog
     logger.info('Upgrading pip...')
-    run_subprocess([pip_bin, 'install', '--upgrade', 'pip'])
+    run_subprocess([pip_bin, 'install', '--upgrade', 'pip==21.3.*'])
 
 
     # Install/upgrade TLJH installer
