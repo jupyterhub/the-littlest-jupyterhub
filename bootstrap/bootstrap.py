@@ -11,8 +11,9 @@ Constraints:
 
     - The entire script should be compatible with Python 3.6, which is the on
       Ubuntu 18.04+.
-    - The script should parse in Python 3.5 as we print error messages on Ubuntu
-      16.04+ that comes with Python 3.5 by default. This means no f-strings.
+    - The script should parse in Python 3.5 as we print error messages for using
+      Ubuntu 16.04+ which comes with Python 3.5 by default. This means no
+      f-strings can be used.
     - The script must depend only on stdlib modules, as no previous installation
       of dependencies can be assumed.
 
@@ -189,6 +190,11 @@ def ensure_host_system_can_install_tljh():
         sys.exit(1)
     elif float(version) < 18.04:
         print('The Littlest JupyterHub requires Ubuntu 18.04 or higher')
+        sys.exit(1)
+
+    # Require Python 3.6+
+    if sys.version_info < (3, 6):
+        print("bootstrap.py must be run with at least Python 3.6")
         sys.exit(1)
 
     # Require systemd (systemctl is a part of systemd)
