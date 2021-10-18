@@ -60,7 +60,6 @@ jobs:
           python-version: ${{ matrix.python_version }}
 
       - name: Install venv, git and setup venv
-        timeout-minutes: 2
         run: |
           export DEBIAN_FRONTEND=noninteractive
           apt-get update
@@ -95,6 +94,7 @@ jobs:
 
       - name: Run unit tests
         run: pytest --verbose --maxfail=2 --color=yes --durations=10 --cov=tljh tests/
+        timeout-minutes: 15
 
       - name: Upload code coverage stats
         run: codecov

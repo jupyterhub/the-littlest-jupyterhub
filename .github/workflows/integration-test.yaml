@@ -119,6 +119,7 @@ jobs:
         run: |
           pytest --verbose --maxfail=2 --color=yes --durations=10 --capture=no \
               integration-tests/test_bootstrap.py
+        timeout-minutes: 15
 
       - name: Run basic tests
         run: |
@@ -129,6 +130,7 @@ jobs:
               test_proxy.py \
               test_install.py \
               test_extensions.py
+        timeout-minutes: 15
 
       - name: Run admin tests
         run: |
@@ -137,6 +139,7 @@ jobs:
               --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
               ${{ matrix.extra_flags }} \
               test_admin_installer.py
+        timeout-minutes: 15
 
       - name: Run plugin tests
         run: |
@@ -145,3 +148,4 @@ jobs:
               --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
               ${{ matrix.extra_flags }} \
               test_simplest_plugin.py
+        timeout-minutes: 15
