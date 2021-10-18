@@ -306,7 +306,9 @@ def _is_list(item):
 
 def main(argv=None):
     if os.geteuid() != 0:
-        print("It looks like this command wasn't run with root privileges. Perhaps you didn't use `sudo -E`?")
+        print("tljh-config needs root privileges to run", file=sys.stderr)
+        print("Try using sudo before the tljh-config command you wanted to run", file=sys.stderr)
+        sys.exit(1)
 
     if argv is None:
         argv = sys.argv[1:]
