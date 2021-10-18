@@ -186,7 +186,6 @@ def ensure_user_environment(user_requirements_txt_file):
     # If no prior miniconda installation is found, we can install a newer version
     else:
         logger.info('Downloading & setting up user environment...')
-        # FIXME: allow using miniforge
         installer_url = "https://github.com/conda-forge/miniforge/releases/download/{v}/Mambaforge-{v}-Linux-x86_64.sh".format(v=mambaforge_new_version)
         with conda.download_miniconda_installer(installer_url, installer_sha256) as installer_path:
             conda.install_miniconda(installer_path, USER_ENV_PREFIX)
