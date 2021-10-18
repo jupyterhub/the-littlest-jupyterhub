@@ -92,6 +92,9 @@ jobs:
           python3 -m pip install -e .
           pip freeze
 
+      # We abort pytest after two failures as a compromise between wanting to
+      # avoid a flood of logs while still understanding if multiple tests would
+      # fail.
       - name: Run unit tests
         run: pytest --verbose --maxfail=2 --color=yes --durations=10 --cov=tljh tests/
         timeout-minutes: 15
