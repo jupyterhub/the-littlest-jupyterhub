@@ -90,7 +90,7 @@ jobs:
           pip freeze
 
       - name: Run unit tests
-        run: pytest --verbose --maxfail=2 --color=yes --cov=tljh tests/
+        run: pytest --verbose --maxfail=2 --color=yes --durations=10 --cov=tljh tests/
 
       - name: Upload code coverage stats
         run: codecov

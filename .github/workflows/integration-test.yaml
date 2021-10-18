@@ -112,7 +112,7 @@ jobs:
 
       - name: Run bootstrap tests
         run: |
-          pytest --verbose --maxfail=2 --color=yes --capture=no \
+          pytest --verbose --maxfail=2 --color=yes --durations=10 --capture=no \
               integration-tests/test_bootstrap.py
 
       - name: Run basic tests

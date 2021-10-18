@@ -116,7 +116,7 @@ def run_test(image_name, test_name, bootstrap_pip_spec, test_files, upgrade, ins
     )
     run_container_command(
         test_name,
-        '/opt/tljh/hub/bin/python3 -m pytest --verbose --maxfail=2 --color=yes --capture=no {}'.format(
+        '/opt/tljh/hub/bin/python3 -m pytest --verbose --maxfail=2 --color=yes --durations=10 --capture=no {}'.format(
             ' '.join([os.path.join('/srv/src/integration-tests/', f) for f in test_files])
         )
     )
