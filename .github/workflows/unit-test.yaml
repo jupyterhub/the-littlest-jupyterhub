@@ -48,6 +48,10 @@ jobs:
           - name: "Unit tests: Ubuntu 20.04, Py 3.9"
             ubuntu_version: "20.04"
             python_version: "3.9"
+          - name: "Unit tests: Ubuntu 21.10, Py 3.9"
+            runs_on: "20.04"
+            ubuntu_version: "21.10"
+            python_version: "3.9"
 
     steps:
       - uses: actions/checkout@v2
