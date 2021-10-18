@@ -49,9 +49,10 @@ For example, to run all the basic tests, you would write:
 .. code-block:: bash
 
    .github/integration-test.py run-test basic-tests \
-                                 test_hub.py \
-                                 test_install.py \
-                                 test_extensions.py
+      test_hub.py \
+      test_proxy.py \
+      test_install.py \
+      test_extensions.py
 
 This will run the tests in the three files against the same installation
 of TLJH and report errors.
