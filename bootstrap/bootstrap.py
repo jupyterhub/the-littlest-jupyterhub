@@ -306,9 +306,10 @@ def main():
 
 
     if not initial_setup:
-        logger.info('TLJH installer is already installed, upgrading...')
+        logger.info('Existing TLJH installation detected, upgrading...')
     else:
-        logger.info("TLJH installer isn't installed, installing...")
+        logger.info('Existing TLJH installation not detected, installing...')
+        logger.info('Setting up hub environment...')
         logger.info('Installing Python, venv, pip, and git via apt-get...')
         # Install software-properties-common, so we can get add-apt-repository
         # That helps us make sure the universe repository is enabled, since
