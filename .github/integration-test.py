@@ -29,9 +29,9 @@ def run_systemd_image(image_name, container_name, bootstrap_pip_spec):
         '--mount', 'type=bind,source=/sys/fs/cgroup,target=/sys/fs/cgroup',
         '--detach',
         '--name', container_name,
-        # This is the minimum VM size we support.
-        # If we change this, need to change all other references to this number.
-        '--memory', '1G',
+        # A bit less than 1GB to ensure TLJH runs on 1GB VMs.
+        # If this is changed all docs references to the required memory must be changed too.
+        '--memory', '900m',
     ]
 
     if bootstrap_pip_spec:

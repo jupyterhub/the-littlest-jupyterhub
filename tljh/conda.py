@@ -94,7 +94,7 @@ def ensure_conda_packages(prefix, packages):
     """
     Ensure packages (from conda-forge) are installed in the conda prefix.
     """
-    conda_executable = [os.path.join(prefix, 'bin', 'python'), '-m', 'conda']
+    conda_executable = [os.path.join(prefix, 'bin', 'mamba')]
     abspath = os.path.abspath(prefix)
     # Let subprocess errors propagate
     # Explicitly do *not* capture stderr, since that's not always JSON!
