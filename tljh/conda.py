@@ -49,9 +49,12 @@ def download_miniconda_installer(installer_url, sha256sum):
     of given version, verifies the sha256sum & provides path to it to the `with`
     block to run.
     """
-    with tempfile.NamedTemporaryFile() as f:
-        with open(f.name, 'wb') as f:
-            f.write(requests.get(installer_url).content)
+    with tempfile.NamedTemporaryFile('wb') as f:
+        f.write(requests.get(installer_url).content)
+        # Remain in the NamedTemporaryFile context, but flush changes, see:
+        # https://docs.python.org/3/library/os.html#os.fsync
+        f.flush()
+        os.fsync(f.fileno())
 
         if sha256_file(f.name) != sha256sum:
             raise Exception('sha256sum hash mismatch! Downloaded file corrupted')
