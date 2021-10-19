@@ -148,13 +148,13 @@ def test_auth_dummy():
     """
     c = apply_mock_config({
         'auth': {
-            'type': 'dummyauthenticator.DummyAuthenticator',
+            'type': 'dummy',
             'DummyAuthenticator': {
                 'password': 'test'
             }
         }
     })
-    assert c.JupyterHub.authenticator_class == 'dummyauthenticator.DummyAuthenticator'
+    assert c.JupyterHub.authenticator_class == 'dummy'
     assert c.DummyAuthenticator.password == 'test'
 
 

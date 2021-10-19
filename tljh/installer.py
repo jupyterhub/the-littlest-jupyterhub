@@ -125,22 +125,21 @@ def ensure_jupyterhub_package(prefix):
         'build-essential'
     ])
     conda.ensure_pip_packages(prefix, [
-        'pycurl==7.43.*'
+        'pycurl==7.*'
     ])
 
     conda.ensure_pip_packages(
         prefix,
         [
-            "jupyterhub==1.4.0",
-            "jupyterhub-dummyauthenticator==0.3.1",
-            "jupyterhub-systemdspawner==0.15",
-            "jupyterhub-firstuseauthenticator==0.14.1",
-            "jupyterhub-nativeauthenticator==0.0.7",
-            "jupyterhub-ldapauthenticator==1.3.0",
-            "jupyterhub-tmpauthenticator==0.6",
-            "oauthenticator==0.10.0",
-            "jupyterhub-idle-culler==1.0",
-            "chardet==3.0.4",
+            "jupyterhub==1.*",
+            "jupyterhub-systemdspawner==0.15.*",
+            "jupyterhub-firstuseauthenticator==0.14.*",
+            "jupyterhub-nativeauthenticator==1.*",
+            "jupyterhub-ldapauthenticator==1.*",
+            "jupyterhub-tmpauthenticator==0.6.*",
+            "oauthenticator==14.*",
+            "jupyterhub-idle-culler==1.*",
+            "chardet==4.*",
             "git+https://github.com/yuvipanda/jupyterhub-configurator@317759e17c8e48de1b1352b836dac2a230536dba"
         ],
     )
