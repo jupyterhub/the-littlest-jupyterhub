@@ -52,7 +52,7 @@ def download_miniconda_installer(installer_url, sha256sum):
     with tempfile.NamedTemporaryFile('wb') as f:
         f.write(requests.get(installer_url).content)
         f.flush()
-        os.fsync()
+        os.fsync(f)
 
         if sha256_file(f.name) != sha256sum:
             raise Exception('sha256sum hash mismatch! Downloaded file corrupted')
