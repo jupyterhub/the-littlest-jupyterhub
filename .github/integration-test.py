@@ -95,7 +95,7 @@ def run_test(image_name, test_name, bootstrap_pip_spec, test_files, upgrade, ins
     copy_to_container(test_name, os.path.join(source_path, 'integration-tests/'), '/srv/src')
 
 
-    # Install TLJH master first to test upgrades
+    # Install TLJH from the default branch first to test upgrades
     if upgrade:
         run_container_command(
             test_name,

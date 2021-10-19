@@ -97,7 +97,7 @@ in your new hub, you would run:
 
     curl -L https://tljh.jupyter.org/bootstrap.py \
      | sudo python3 - \
-       --user-requirements-txt-url https://raw.githubusercontent.com/data-8/materials-sp18/master/requirements.txt
+       --user-requirements-txt-url https://raw.githubusercontent.com/data-8/materials-sp18/HEAD/requirements.txt
 
 The URL **must** point to a working requirements.txt. If there are any errors, the installation
 will fail.

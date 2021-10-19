@@ -16,8 +16,8 @@ extensions = ['sphinx.ext.mathjax',
               'sphinx.ext.intersphinx',
               'sphinx_copybutton']
 
-# The master toctree document.
-master_doc = 'index'
+# The root toctree document.
+root_doc = master_doc = "index"
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
