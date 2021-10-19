@@ -11,9 +11,9 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'ruamel.yaml==0.15.*',
+        'ruamel.yaml==0.17.*',
         'jinja2',
-        'pluggy>0.7<1.0',
+        'pluggy==1.*',
         'passlib',
         'backoff',
         'requests',
