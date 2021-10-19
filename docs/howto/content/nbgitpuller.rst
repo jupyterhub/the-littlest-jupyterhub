@@ -41,7 +41,7 @@ Step 1: Generate nbgitpuller link
 **Generate the link with a Binder app**.
 
 #. The easiest way to generate an nbgitpuller link is to use the
-   `mybinder.org based application <https://mybinder.org/v2/gh/jupyterhub/nbgitpuller/master?urlpath=apps/binder%2Flink_generator.ipynb>`_.
+   `mybinder.org based application <https://mybinder.org/v2/gh/jupyterhub/nbgitpuller/HEAD?urlpath=apps/binder%2Flink_generator.ipynb>`_.
    Open it, and wait for it to load.
 
    .. image:: ../../images/nbgitpuller/binder-progress.png
