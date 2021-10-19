@@ -311,22 +311,23 @@ def main():
         logger.info('Existing TLJH installation not detected, installing...')
         logger.info('Setting up hub environment...')
         logger.info('Installing Python, venv, pip, and git via apt-get...')
-        # Install software-properties-common, so we can get add-apt-repository
-        # That helps us make sure the universe repository is enabled, since
-        # that's where the python3-pip package lives. In some very minimal base
-        # VM images, it looks like the universe repository is disabled by default,
-        # causing bootstrapping to fail.
-        run_subprocess(['apt-get', 'update', '--yes'])
-        run_subprocess(['apt-get', 'install', '--yes', 'software-properties-common'])
-        run_subprocess(['add-apt-repository', 'universe'])
 
-        run_subprocess(['apt-get', 'update', '--yes'])
-        run_subprocess(['apt-get', 'install', '--yes',
-            'python3',
-            'python3-venv',
-            'python3-pip',
-            'git'
-        ])
+        # In some very minimal base VM images, it looks like the "universe" apt
+        # package repository is disabled by default, causing bootstrapping to
+        # fail. We install the software-properties-common package so we can get
+        # the add-apt-repository command to make sure the universe repository is
+        # enabled, since that's where the python3-pip package lives.
+        #
+        # In Ubuntu 21.10 DEBIAN_FRONTEND has found to be needed to avoid
+        # getting stuck on an input prompt during apt-get install.
+        #
+        apt_get_adjusted_env = os.environ.copy()
+        apt_get_adjusted_env["DEBIAN_FRONTEND"] = "noninteractive"
+        run_subprocess(['apt-get', 'update'])
+        run_subprocess(['apt-get', 'install', '--yes', 'software-properties-common'], env=apt_get_adjusted_env)
+        run_subprocess(['add-apt-repository', 'universe'])
+        run_subprocess(['apt-get', 'update'])
+        run_subprocess(['apt-get', 'install', '--yes', 'python3', 'python3-venv', 'python3-pip', 'git'], env=apt_get_adjusted_env)
 
         logger.info('Setting up virtual environment at {}'.format(hub_prefix))
         os.makedirs(hub_prefix, exist_ok=True)

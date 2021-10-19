@@ -76,6 +76,7 @@ def run_bootstrap_after_preparing_container(container_name, image, show_progress
         [
             "docker",
             "run",
+            "--env=DEBIAN_FRONTEND=noninteractive",
             "--detach",
             f"--name={container_name}",
             image,
