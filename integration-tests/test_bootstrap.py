@@ -4,7 +4,6 @@ Test running bootstrap script in different circumstances
 import concurrent.futures
 import os
 import subprocess
-from textwrap import dedent
 import time
 
 
@@ -39,8 +38,43 @@ def get_bootstrap_script_location(container_name, show_progress_page):
     subprocess.check_call(["docker", "cp", source_path, f"{container_name}:/srv/src"])
     return bootstrap_script
 
+# FIXME: Refactor this function to easier to understand using the following
+#        parameters
+#
+# - param: container_apt_packages
+# - param: bootstrap_tljh_source
+#   - local: copies local tljh repo to container and configures bootstrap to
+#            install tljh from copied repo
+#   - github: configures bootstrap to install tljh from the official github repo
+#   - <pip spec>: configures bootstrap to install tljh from any given remote location
+# - param: bootstrap_flags
+#
+# FIXME: Consider stripping logic in this file to only testing if the bootstrap
+#        script successfully detects the too old Ubuntu version and the lack of
+#        systemd. The remaining test named test_progress_page could rely on
+#        running against the systemd container that cab be built by
+#        integration-test.py.
+#
+def run_bootstrap_after_preparing_container(container_name, image, show_progress_page=False):
+    """
+    1. Stops old container
+    2. Starts --detached container
+    3. Installs apt packages in container
+    4. Two situations
 
-def run_bootstrap(container_name, image, show_progress_page=False):
+        A) limited test (--show-progress-page=false)
+        - Copies ./bootstrap/ folder content to container /srv/src
+        - Runs copied bootstrap/bootstrap.py without flags
+
+        B) full test (--show-progress-page=true)
+        - Copies ./ folder content to the container /srv/src
+        - Runs copied bootstrap/bootstrap.py with environment variables
+            - TLJH_BOOTSTRAP_DEV=yes
+              This makes --editable be used when installing the tljh package
+            - TLJH_BOOTSTRAP_PIP_SPEC=/srv/src
+              This makes us install tljh from the given location instead of from
+              github.com/jupyterhub/the-littlest-jupyterhub
+    """
     # stop container if it is already running
     subprocess.run(["docker", "rm", "-f", container_name])
 
@@ -49,9 +83,9 @@ def run_bootstrap(container_name, image, show_progress_page=False):
         [
             "docker",
             "run",
+            "--env=DEBIAN_FRONTEND=noninteractive",
             "--detach",
-            "--name",
-            container_name,
+            f"--name={container_name}",
             image,
             "/bin/bash",
             "-c",
@@ -84,24 +118,17 @@ def test_ubuntu_too_old():
     """
     Error with a useful message when running in older Ubuntu
     """
-    output = run_bootstrap("old-distro-test", "ubuntu:16.04")
+    output = run_bootstrap_after_preparing_container("old-distro-test", "ubuntu:16.04")
     assert output.stdout == "The Littlest JupyterHub requires Ubuntu 18.04 or higher\n"
     assert output.returncode == 1
 
 
 def test_inside_no_systemd_docker():
-    output = run_bootstrap("plain-docker-test", "ubuntu:18.04")
-    assert (
-        output.stdout.strip()
-        == dedent(
-            """
-        Systemd is required to run TLJH
-        Running inside a docker container without systemd isn't supported
-        We recommend against running a production TLJH instance inside a docker container
-        For local development, see http://tljh.jupyter.org/en/latest/contributing/dev-setup.html
-    """
-        ).strip()
+    output = run_bootstrap_after_preparing_container(
+        "plain-docker-test",
+        f"ubuntu:{os.getenv('UBUNTU_VERSION', '20.04')}",
     )
+    assert "Systemd is required to run TLJH" in output.stdout
     assert output.returncode == 1
 
 
@@ -133,7 +160,10 @@ def verify_progress_page(expected_status_code, timeout):
 def test_progress_page():
     with concurrent.futures.ThreadPoolExecutor() as executor:
         installer = executor.submit(
-            run_bootstrap, "progress-page", "ubuntu:18.04", True
+            run_bootstrap_after_preparing_container,
+            "progress-page",
+            f"ubuntu:{os.getenv('UBUNTU_VERSION', '20.04')}",
+            True
         )
 
         # Check if progress page started

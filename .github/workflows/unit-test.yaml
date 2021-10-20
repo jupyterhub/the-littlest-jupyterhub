@@ -1,36 +1,108 @@
+# This is a GitHub workflow defining a set of jobs with a set of steps.
+# ref: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions
+#
+name: Unit tests
+
 on:
   pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "**.md"
+      - "**.rst"
+      - ".github/workflows/*"
+      - "!.github/workflows/unit-test.yaml"
   push:
+    paths-ignore:
+      - "docs/**"
+      - "**.md"
+      - "**.rst"
+      - ".github/workflows/*"
+      - "!.github/workflows/unit-test.yaml"
+    branches-ignore:
+      - "dependabot/**"
+      - "pre-commit-ci-update-config"
   workflow_dispatch:
 
 jobs:
-  unit-test:
-    runs-on: ubuntu-18.04
-    container: ubuntu:18.04
+  unit-tests:
+    name: ${{ matrix.name }}
+
+    # runs-on can only be configured to the LTS releases of ubuntu (18.04,
+    # 20.04, ...), so if we want to test against the latest non-LTS release, we
+    # must compromise when configuring runs-on and configure runs-on to be the
+    # latest LTS release instead.
+    #
+    # This can have consequences because actions like actions/setup-python will
+    # mount cached installations associated with the chosen runs-on environment.
+    #
+    runs-on: ${{ format('ubuntu-{0}', matrix.runs_on || matrix.ubuntu_version) }}
+    container: ubuntu:${{ matrix.ubuntu_version }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: "Unit tests: Ubuntu 18.04, Py 3.6"
+            ubuntu_version: "18.04"
+            python_version: "3.6"
+          - name: "Unit tests: Ubuntu 20.04, Py 3.9"
+            ubuntu_version: "20.04"
+            python_version: "3.9"
+          # Test against Ubuntu 21.10 fails as of 2021-10-18 fail with the error
+          # described in: https://github.com/jupyterhub/the-littlest-jupyterhub/issues/714#issuecomment-945154101
+          #
+          # - name: "Unit tests: Ubuntu 21.10, Py 3.9"
+          #   runs_on: "20.04"
+          #   ubuntu_version: "21.10"
+          #   python_version: "3.9"
+
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: 3.6
+          python-version: ${{ matrix.python_version }}
+
       - name: Install venv, git and setup venv
         run: |
-          apt-get update --yes && apt-get install --yes python3-venv git
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get update
+          apt-get install --yes \
+              python3-venv \
+              git
+
           python3 -m venv /srv/venv
           echo '/srv/venv/bin' >> $GITHUB_PATH
-      - name: Cache pip deps
+
+      # WARNING: This action loads a cache of pip dependencies based on the
+      #          declared key, and it will save a cache for that key on job
+      #          completion. Make sure to update the key to bust the cache
+      #          properly if you make a change that should influence it.
+      - name: Load cached Python dependencies
         uses: actions/cache@v2
         with:
           path: /srv/venv/
-          key: ${{ runner.os }}-pip-dependencies-${{ hashFiles('*setup.py', '*dev-requirements.txt') }}
+          key: >-
+            pip-
+            ${{ matrix.runs_on }}-
+            ${{ matrix.ubuntu_version }}-
+            ${{ matrix.python_version }}-
+            ${{ hashFiles('setup.py', 'dev-requirements.txt', '.github/workflows/unit-test.yaml') }}
+
       - name: Install Python dependencies
+        # Keep pip version pinning in sync with the one in bootstrap.py!
+        # See changelog at https://pip.pypa.io/en/latest/news/#changelog
         run: |
-          python3 -m pip install -U pip==20.0.*
+          python3 -m pip install -U "pip==21.3.*"
           python3 -m pip install -r dev-requirements.txt
           python3 -m pip install -e .
           pip freeze
+
+      # We abort pytest after two failures as a compromise between wanting to
+      # avoid a flood of logs while still understanding if multiple tests would
+      # fail.
       - name: Run unit tests
-        run: |
-          pytest --cov=tljh tests/
+        run: pytest --verbose --maxfail=2 --color=yes --durations=10 --cov=tljh tests/
+        timeout-minutes: 15
+
       - name: Upload code coverage stats
-        run: |
-          codecov
+        run: codecov

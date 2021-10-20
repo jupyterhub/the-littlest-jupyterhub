@@ -4,15 +4,16 @@ import subprocess
 import os
 
 
-def build_systemd_image(image_name, source_path):
+def build_systemd_image(image_name, source_path, build_args=None):
     """
     Build docker image with systemd at source_path.
 
     Built image is tagged with image_name
     """
-    subprocess.check_call([
-        'docker', 'build', '-t', image_name, source_path
-    ])
+    cmd = ['docker', 'build', '-t', image_name, source_path]
+    if build_args:
+        cmd.extend([f"--build-arg={ba}" for ba in build_args])
+    subprocess.check_call(cmd)
 
 
 def run_systemd_image(image_name, container_name, bootstrap_pip_spec):
@@ -94,6 +95,10 @@ def run_test(image_name, test_name, bootstrap_pip_spec, test_files, upgrade, ins
     copy_to_container(test_name, os.path.join(source_path, 'bootstrap/.'), '/srv/src')
     copy_to_container(test_name, os.path.join(source_path, 'integration-tests/'), '/srv/src')
 
+    # These logs can be very relevant to debug a container startup failure
+    print(f"--- Start of logs from the container: {test_name}")
+    print(subprocess.check_output(['docker', 'logs', test_name]).decode())
+    print(f"--- End of logs from the container: {test_name}")
 
     # Install TLJH from the default branch first to test upgrades
     if upgrade:
@@ -115,7 +120,10 @@ def run_test(image_name, test_name, bootstrap_pip_spec, test_files, upgrade, ins
     )
     run_container_command(
         test_name,
-        '/opt/tljh/hub/bin/python3 -m pytest -v {}'.format(
+        # We abort pytest after two failures as a compromise between wanting to
+        # avoid a flood of logs while still understanding if multiple tests
+        # would fail.
+        '/opt/tljh/hub/bin/python3 -m pytest --verbose --maxfail=2 --color=yes --durations=10 --capture=no {}'.format(
             ' '.join([os.path.join('/srv/src/integration-tests/', f) for f in test_files])
         )
     )
@@ -138,13 +146,21 @@ def main():
     argparser = argparse.ArgumentParser()
     subparsers = argparser.add_subparsers(dest='action')
 
-    subparsers.add_parser('build-image')
+    build_image_parser = subparsers.add_parser('build-image')
+    build_image_parser.add_argument(
+        "--build-arg",
+        action="append",
+        dest="build_args",
+    )
+
     subparsers.add_parser('stop-container').add_argument(
         'container_name'
     )
+
     subparsers.add_parser('start-container').add_argument(
         'container_name'
     )
+
     run_parser = subparsers.add_parser('run')
     run_parser.add_argument('container_name')
     run_parser.add_argument('command')
@@ -181,7 +197,7 @@ def main():
     elif args.action == 'stop-container':
         stop_container(args.container_name)
     elif args.action == 'build-image':
-        build_systemd_image(image_name, 'integration-tests')
+        build_systemd_image(image_name, 'integration-tests', args.build_args)
 
 
 if __name__ == '__main__':

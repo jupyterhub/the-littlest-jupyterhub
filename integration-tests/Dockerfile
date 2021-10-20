@@ -1,9 +1,17 @@
 # Systemd inside a Docker container, for CI only
-FROM ubuntu:18.04
+ARG ubuntu_version=20.04
+FROM ubuntu:${ubuntu_version}
 
-RUN apt-get update --yes
-
-RUN apt-get install --yes systemd curl git sudo
+# DEBIAN_FRONTEND is set to avoid being asked for input and hang during build:
+# https://anonoz.github.io/tech/2020/04/24/docker-build-stuck-tzdata.html
+RUN export DEBIAN_FRONTEND=noninteractive \
+ && apt-get update \
+ && apt-get install --yes \
+        systemd \
+        curl \
+        git \
+        sudo \
+ && rm -rf /var/lib/apt/lists/*
 
 # Kill all the things we don't need
 RUN find /etc/systemd/system \
@@ -25,4 +33,4 @@ STOPSIGNAL SIGRTMIN+3
 #ENV TLJH_BOOTSTRAP_PIP_SPEC=/srv/src
 #ENV PATH=/opt/tljh/hub/bin:${PATH}
 
-CMD ["/bin/bash", "-c", "exec /sbin/init --log-target=journal 3>&1"]
+CMD ["/bin/bash", "-c", "exec /lib/systemd/systemd --log-target=journal 3>&1"]

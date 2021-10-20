@@ -18,7 +18,7 @@ setup(
         'backoff',
         'requests',
         'bcrypt',
-        'jupyterhub-traefik-proxy==0.2.*',
+        'jupyterhub-traefik-proxy==0.3.*',
     ],
     entry_points={
         'console_scripts': [

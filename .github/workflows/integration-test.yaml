@@ -1,41 +1,182 @@
+# This is a GitHub workflow defining a set of jobs with a set of steps.
+# ref: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions
+#
+name: Integration tests
+
 on:
   pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "**.md"
+      - "**.rst"
+      - ".github/workflows/*"
+      - "!.github/workflows/integration-test.yaml"
   push:
+    paths-ignore:
+      - "docs/**"
+      - "**.md"
+      - "**.rst"
+      - ".github/workflows/*"
+      - "!.github/workflows/integration-test.yaml"
+    branches-ignore:
+      - "dependabot/**"
+      - "pre-commit-ci-update-config"
   workflow_dispatch:
 
 jobs:
-  integration-test:
-    runs-on: ubuntu-18.04
+
+  # This job is used as a workaround to a limitation when using a matrix of
+  # variations that a job should be executed against. The limitation is that a
+  # matrix once defined can't include any conditions.
+  #
+  # What this job does before our real test job with a matrix of variations run,
+  # is to decide on that matrix of variations a conditional logic of our choice.
+  #
+  # For more details, see this excellent stack overflow answer:
+  # https://stackoverflow.com/a/65434401/2220152
+  #
+  decide-on-test-jobs-to-run:
+    name: Decide on test jobs to run
+    runs-on: ubuntu-latest
+
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+    steps:
+      # Currently, this logic filters out a matrix entry equaling a specific git
+      # reference identified by "dont_run_on_ref".
+      - name: Decide on test jobs to run
+        id: set-matrix
+        run: |
+          matrix_post_filter=$(
+            echo "$matrix_include_pre_filter" \
+              | yq e --output-format=json '.' - \
+              | jq '{"include": map( . | select(.dont_run_on_ref != "${{ github.ref }}" ))}'
+          )
+          echo ::set-output name=matrix::$(echo "$matrix_post_filter")
+
+          echo "The subsequent job's matrix are:"
+          echo $matrix_post_filter | jq '.'
+        env:
+          matrix_include_pre_filter: |
+            - name: "Int. tests: Ubuntu 18.04, Py 3.6"
+              ubuntu_version: "18.04"
+              python_version: "3.6"
+              extra_flags: ""
+            - name: "Int. tests: Ubuntu 20.04, Py 3.9"
+              ubuntu_version: "20.04"
+              python_version: "3.9"
+              extra_flags: ""
+            - name: "Int. tests: Ubuntu 21.10, Py 3.9"
+              runs_on: "20.04"
+              ubuntu_version: "21.10"
+              python_version: "3.9"
+              extra_flags: ""
+            - name: "Int. tests: Ubuntu 20.04, Py 3.9, --upgrade"
+              ubuntu_version: "20.04"
+              python_version: "3.9"
+              extra_flags: --upgrade
+              dont_run_on_ref: refs/heads/master
+
+  integration-tests:
+    needs: decide-on-test-jobs-to-run
+
+    # runs-on can only be configured to the LTS releases of ubuntu (18.04,
+    # 20.04, ...), so if we want to test against the latest non-LTS release, we
+    # must compromise when configuring runs-on and configure runs-on to be the
+    # latest LTS release instead.
+    #
+    # This can have consequences because actions like actions/setup-python will
+    # mount cached installations associated with the chosen runs-on environment.
+    #
+    runs-on: ${{ format('ubuntu-{0}', matrix.runs_on || matrix.ubuntu_version) }}
+
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.decide-on-test-jobs-to-run.outputs.matrix) }}
+
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: 3.6
+          python-version: ${{ matrix.python_version }}
+
+      - name: Install pytest
+        run: python3 -m pip install pytest
+
+      # We abort pytest after two failures as a compromise between wanting to
+      # avoid a flood of logs while still understanding if multiple tests would
+      # fail.
+      - name: Run bootstrap tests (Runs in/Builds ubuntu:${{ matrix.ubuntu_version }} derived image)
+        run: |
+          pytest --verbose --maxfail=2 --color=yes --durations=10 --capture=no \
+              integration-tests/test_bootstrap.py
+        timeout-minutes: 15
+        env:
+          # integration-tests/test_bootstrap.py will build and start containers
+          # based on this environment variable. This is similar to how
+          # .github/integration-test.py build-image can take a --build-arg
+          # setting the ubuntu_version.
+          UBUNTU_VERSION: ${{ matrix.ubuntu_version }}
+
+      # We build a docker image from wherein we will work
+      - name: Build systemd image (Builds ubuntu:${{ matrix.ubuntu_version }} derived image)
+        run: |
+          .github/integration-test.py build-image \
+              --build-arg "ubuntu_version=${{ matrix.ubuntu_version }}"
+
+      # FIXME: Make the logic below easier to follow.
+      # - In short, setting BOOTSTRAP_PIP_SPEC here, specifies from what
+      #   location the tljh python package should be installed from. In this
+      #   GitHub Workflow's test job, we provide a remote reference to itself as
+      #   found on GitHub - this could be the HEAD of a PR branch or the default
+      #   branch on merge.
+      #
+      # Overview of how this logic influences the end result.
+      # - integration-test.yaml:
+      #   Runs integration-test.py by passing --bootstrap-pip-spec flag with a
+      #   reference to the pull request on GitHub.
+      # - integration-test.py:
+      #   Starts a pre-build systemd container, setting the
+      #   TLJH_BOOTSTRAP_PIP_SPEC based on its passed --bootstrap-pip-spec value.
+      # - systemd container:
+      #   Runs bootstrap.py
+      # - bootstrap.py
+      #   Makes use of TLJH_BOOTSTRAP_PIP_SPEC environment variable to install
+      #   the tljh package from a given location, which could be a local git
+      #   clone of this repo where setup.py resides, or a reference to some
+      #   GitHub branch for example.
       - name: Set BOOTSTRAP_PIP_SPEC value
         run: |
           echo "BOOTSTRAP_PIP_SPEC=git+https://github.com/$GITHUB_REPOSITORY.git@$GITHUB_REF" >> $GITHUB_ENV
-      - name: Build systemd image
+          echo $BOOTSTRAP_PIP_SPEC
+
+      - name: Run basic tests (Runs in ubuntu:${{ matrix.ubuntu_version }} derived image)
         run: |
-          .github/integration-test.py build-image
-      - name: Run bootstrap checks
+          .github/integration-test.py run-test basic-tests \
+              --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
+              ${{ matrix.extra_flags }} \
+              test_hub.py \
+              test_proxy.py \
+              test_install.py \
+              test_extensions.py
+        timeout-minutes: 15
+
+      - name: Run admin tests (Runs in ubuntu:${{ matrix.ubuntu_version }} derived image)
         run: |
-          python3 -m pip install pytest
-          pytest integration-tests/test_bootstrap.py -s
-      - name: Run basic tests
+          .github/integration-test.py run-test admin-tests \
+              --installer-args "--admin admin:admin" \
+              --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
+              ${{ matrix.extra_flags }} \
+              test_admin_installer.py
+        timeout-minutes: 15
+
+      - name: Run plugin tests (Runs in ubuntu:${{ matrix.ubuntu_version }} derived image)
         run: |
-          .github/integration-test.py run-test \
-            --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
-            basic-tests test_hub.py test_proxy.py \
-            test_install.py test_extensions.py
-      - name: Run admin tests
-        run: |
-          .github/integration-test.py run-test \
-            --installer-args "--admin admin:admin" \
-            --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
-            basic-tests test_admin_installer.py \
-      - name: Run plugin tests
-        run: |
-          .github/integration-test.py run-test \
-            --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
-            --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
-            plugins test_simplest_plugin.py \
+          .github/integration-test.py run-test plugin-tests \
+              --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
+              --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
+              ${{ matrix.extra_flags }} \
+              test_simplest_plugin.py
+        timeout-minutes: 15
