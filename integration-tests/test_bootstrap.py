@@ -117,7 +117,10 @@ def test_ubuntu_too_old():
 
 
 def test_inside_no_systemd_docker():
-    output = run_bootstrap_after_preparing_container("plain-docker-test", "ubuntu:18.04")
+    output = run_bootstrap_after_preparing_container(
+        "plain-docker-test",
+        f"ubuntu:{os.getenv('UBUNTU_VERSION', '20.04')}",
+    )
     assert "Systemd is required to run TLJH" in output.stdout
     assert output.returncode == 1
 
@@ -150,7 +153,10 @@ def verify_progress_page(expected_status_code, timeout):
 def test_progress_page():
     with concurrent.futures.ThreadPoolExecutor() as executor:
         installer = executor.submit(
-            run_bootstrap_after_preparing_container, "progress-page", "ubuntu:18.04", True
+            run_bootstrap_after_preparing_container,
+            "progress-page",
+            f"ubuntu:{os.getenv('UBUNTU_VERSION', '20.04')}",
+            True
         )
 
         # Check if progress page started

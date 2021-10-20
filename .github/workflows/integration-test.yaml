@@ -123,6 +123,12 @@ jobs:
           pytest --verbose --maxfail=2 --color=yes --durations=10 --capture=no \
               integration-tests/test_bootstrap.py
         timeout-minutes: 15
+        env:
+          # integration-tests/test_bootstrap.py will build and start containers
+          # based on this environment variable. This is similar to how
+          # .github/integration-test.py build-image can take a --build-arg
+          # setting the ubuntu_version.
+          UBUNTU_VERSION: ${{ matrix.ubuntu_version }}
 
       - name: Run basic tests
         run: |
