@@ -48,6 +48,13 @@ def get_bootstrap_script_location(container_name, show_progress_page):
 #   - github: configures bootstrap to install tljh from the official github repo
 #   - <pip spec>: configures bootstrap to install tljh from any given remote location
 # - param: bootstrap_flags
+#
+# FIXME: Consider stripping logic in this file to only testing if the bootstrap
+#        script successfully detects the too old Ubuntu version and the lack of
+#        systemd. The remaining test named test_progress_page could rely on
+#        running against the systemd container that cab be built by
+#        integration-test.py.
+#
 def run_bootstrap_after_preparing_container(container_name, image, show_progress_page=False):
     """
     1. Stops old container

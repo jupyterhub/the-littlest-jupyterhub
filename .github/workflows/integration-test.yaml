@@ -102,23 +102,13 @@ jobs:
         with:
           python-version: ${{ matrix.python_version }}
 
-      - name: Set BOOTSTRAP_PIP_SPEC value
-        run: |
-          echo "BOOTSTRAP_PIP_SPEC=git+https://github.com/$GITHUB_REPOSITORY.git@$GITHUB_REF" >> $GITHUB_ENV
-          echo $BOOTSTRAP_PIP_SPEC
-
-      - name: Build systemd image
-        run: |
-          .github/integration-test.py build-image \
-              --build-arg "ubuntu_version=${{ matrix.ubuntu_version }}"
-
       - name: Install pytest
         run: python3 -m pip install pytest
 
       # We abort pytest after two failures as a compromise between wanting to
       # avoid a flood of logs while still understanding if multiple tests would
       # fail.
-      - name: Run bootstrap tests
+      - name: Run bootstrap tests (Runs in/Builds ubuntu:${{ matrix.ubuntu_version }} derived image)
         run: |
           pytest --verbose --maxfail=2 --color=yes --durations=10 --capture=no \
               integration-tests/test_bootstrap.py
@@ -130,7 +120,39 @@ jobs:
           # setting the ubuntu_version.
           UBUNTU_VERSION: ${{ matrix.ubuntu_version }}
 
-      - name: Run basic tests
+      # We build a docker image from wherein we will work
+      - name: Build systemd image (Builds ubuntu:${{ matrix.ubuntu_version }} derived image)
+        run: |
+          .github/integration-test.py build-image \
+              --build-arg "ubuntu_version=${{ matrix.ubuntu_version }}"
+
+      # FIXME: Make the logic below easier to follow.
+      # - In short, setting BOOTSTRAP_PIP_SPEC here, specifies from what
+      #   location the tljh python package should be installed from. In this
+      #   GitHub Workflow's test job, we provide a remote reference to itself as
+      #   found on GitHub - this could be the HEAD of a PR branch or the default
+      #   branch on merge.
+      #
+      # Overview of how this logic influences the end result.
+      # - integration-test.yaml:
+      #   Runs integration-test.py by passing --bootstrap-pip-spec flag with a
+      #   reference to the pull request on GitHub.
+      # - integration-test.py:
+      #   Starts a pre-build systemd container, setting the
+      #   TLJH_BOOTSTRAP_PIP_SPEC based on its passed --bootstrap-pip-spec value.
+      # - systemd container:
+      #   Runs bootstrap.py
+      # - bootstrap.py
+      #   Makes use of TLJH_BOOTSTRAP_PIP_SPEC environment variable to install
+      #   the tljh package from a given location, which could be a local git
+      #   clone of this repo where setup.py resides, or a reference to some
+      #   GitHub branch for example.
+      - name: Set BOOTSTRAP_PIP_SPEC value
+        run: |
+          echo "BOOTSTRAP_PIP_SPEC=git+https://github.com/$GITHUB_REPOSITORY.git@$GITHUB_REF" >> $GITHUB_ENV
+          echo $BOOTSTRAP_PIP_SPEC
+
+      - name: Run basic tests (Runs in ubuntu:${{ matrix.ubuntu_version }} derived image)
         run: |
           .github/integration-test.py run-test basic-tests \
               --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
@@ -141,7 +163,7 @@ jobs:
               test_extensions.py
         timeout-minutes: 15
 
-      - name: Run admin tests
+      - name: Run admin tests (Runs in ubuntu:${{ matrix.ubuntu_version }} derived image)
         run: |
           .github/integration-test.py run-test admin-tests \
               --installer-args "--admin admin:admin" \
@@ -150,7 +172,7 @@ jobs:
               test_admin_installer.py
         timeout-minutes: 15
 
-      - name: Run plugin tests
+      - name: Run plugin tests (Runs in ubuntu:${{ matrix.ubuntu_version }} derived image)
         run: |
           .github/integration-test.py run-test plugin-tests \
               --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
