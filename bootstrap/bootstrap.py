@@ -325,7 +325,7 @@ def main():
         apt_get_adjusted_env["DEBIAN_FRONTEND"] = "noninteractive"
         run_subprocess(['apt-get', 'update'])
         run_subprocess(['apt-get', 'install', '--yes', 'software-properties-common'], env=apt_get_adjusted_env)
-        run_subprocess(['add-apt-repository', 'universe'])
+        run_subprocess(['add-apt-repository', 'universe', '--yes'])
         run_subprocess(['apt-get', 'update'])
         run_subprocess(['apt-get', 'install', '--yes', 'python3', 'python3-venv', 'python3-pip', 'git'], env=apt_get_adjusted_env)
 
