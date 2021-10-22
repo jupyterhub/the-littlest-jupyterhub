@@ -7,6 +7,9 @@ Troubleshooting issues on your own server
 This is an incomplete list of issues people have run into
 when installing TLJH on their own servers, and ways they
 have fixed them.
+Before trying any of them, also consider whether turning your machine on and off
+and/or deleting the VM and starting over could solve the problem;
+it has done so on a surprisingly high number of occasions!
 
 Outgoing HTTP proxy required
 ============================
