@@ -161,9 +161,10 @@ Advanced: ``config.yaml``
 is the recommended method of editing / viewing configuration since editing
 YAML by hand in a terminal text editor is a large source of errors.
 
-To learn more, use the ``--help`` flag applied to ``tljh-config`` directly or
-after providing a positional argument as command like ``remove-item`` to learn
-more about those commands specifically.
+To learn more about the ``tljh-config`` usage, you can use the ``--help`` flag.
+The ``--help`` flag can be used either directly, to get information about the
+general usage of the command or after a positional argument. For example, using
+it after an argument like ``remove-item`` gives information about this specific command.
 
 .. code-block:: bash
 
