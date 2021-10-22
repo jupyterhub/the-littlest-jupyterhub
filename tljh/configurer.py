@@ -161,7 +161,7 @@ def update_auth(c, config):
         client_id: "..."
         client_secret: "..."
         oauth_callback_url: "..."
-      ArbitraryKey:
+      ClassName:
         arbitrary_key: "..."
         arbitrary_key_with_none_value:
     ```
@@ -185,13 +185,13 @@ def update_auth(c, config):
     c.JupyterHub.authenticator_class = tljh_auth_config['type']
 
     for auth_key, auth_value in tljh_auth_config.items():
-        if auth_key == "type":
+        if not (auth_key[0] == auth_key[0].upper() and isinstance(auth_value, dict)):
             continue
-        traitlet_class_name = auth_key
-        traitlet_class_config = auth_value
-        traitlet_class_instance = getattr(c, traitlet_class_name)
-        for config_name, config_value in traitlet_class_config.items():
-            set_if_not_none(traitlet_class_instance, config_name, config_value)
+        class_name = auth_key
+        class_config_to_set = auth_value
+        class_config = c[class_name]
+        for config_name, config_value in class_config_to_set.items():
+            set_if_not_none(class_config, config_name, config_value)
 
 
 def update_userlists(c, config):
