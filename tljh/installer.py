@@ -180,10 +180,10 @@ def ensure_jupyterlab_extensions():
         '@jupyter-widgets/jupyterlab-manager'
     ]
     utils.run_subprocess([
-                             os.path.join(USER_ENV_PREFIX, 'bin/jupyter'),
-                             'labextension',
-                             'install'
-                         ] + extensions)
+        os.path.join(USER_ENV_PREFIX, 'bin/jupyter'),
+        'labextension',
+        'install'
+    ] + extensions)
 
 
 def ensure_jupyterhub_package(prefix):

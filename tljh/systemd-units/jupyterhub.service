@@ -17,7 +17,6 @@ PrivateDevices=yes
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
 Environment=TLJH_INSTALL_PREFIX={install_prefix}
-# load the environment config , notice that before you modify the language setting in the conf , install the related fonts and packages first
 EnvironmentFile={env_conf}
 # Run upgrade-db before starting, in case Hub version has changed
 # This is a no-op when no db exists or no upgrades are needed
