@@ -231,3 +231,40 @@ Advanced: ``config.yaml``
 ``config.yaml`` file located at ``/opt/tljh/config/config.yaml``. ``tljh-config``
 is the recommended method of editing / viewing configuration since editing
 YAML by hand in a terminal text editor is a large source of errors.
+
+To learn more about the ``tljh-config`` usage, you can use the ``--help`` flag.
+The ``--help`` flag can be used either directly, to get information about the
+general usage of the command or after a positional argument. For example, using
+it after an argument like ``remove-item`` gives information about this specific command.
+
+.. code-block:: bash
+
+   sudo tljh-config --help
+
+   usage: tljh-config [-h] [--config-path CONFIG_PATH] {show,set,add-item,remove-item,reload} ...
+
+   positional arguments:
+     {show,set,add-item,remove-item,reload}
+       show                Show current configuration
+       set                 Set a configuration property
+       add-item            Add a value to a list for a configuration property
+       remove-item         Remove a value from a list for a configuration property
+       reload              Reload a component to apply configuration change
+
+   optional arguments:
+     -h, --help            show this help message and exit
+     --config-path CONFIG_PATH
+                           Path to TLJH config.yaml file
+
+.. code-block:: bash
+
+   sudo tljh-config remove-item --help
+
+   usage: tljh-config remove-item [-h] key_path value
+
+   positional arguments:
+     key_path    Dot separated path to configuration key to remove value from
+     value       Value to remove from key_path
+
+   optional arguments:
+     -h, --help  show this help message and exit
