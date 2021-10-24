@@ -5,7 +5,7 @@ Authenticate using AWS Cognito
 ==============================
 
 The **AWS Cognito Authenticator** lets users log into your JupyterHub using
-cognito user pools. To do so, you'll first need to register and configure a 
+cognito user pools. To do so, you'll first need to register and configure a
 cognito user pool and app, and then provide information about this
 application to your ``tljh`` configuration.
 
@@ -17,7 +17,7 @@ Create an AWS Cognito application
 
    When you have completed creating a user pool, app, and domain you should have the following settings available to you:
 
-   * **App client id**: From the App client page 
+   * **App client id**: From the App client page
    * **App client secret** From the App client page
    * **Callback URL** This should be the domain you are hosting you server on::
 
@@ -33,75 +33,73 @@ Create an AWS Cognito application
 
 
 Install and configure an AWS EC2 Instance with userdata
-========================================================
+=======================================================
 
-By adding following script to the ec2 instance user data you should be 
-able to configure the instance automatically, replace relevant config variables::
+By adding following script to the ec2 instance user data you should be
+able to configure the instance automatically, replace relevant placeholders::
 
         #!/bin/bash
         ##############################################
-        # Setup systemd environment variable overrides
-        ##############################################
-        mkdir /etc/systemd/system/jupyterhub.service.d
-
-        echo "[Service]
-        Environment=AWSCOGNITO_DOMAIN=${awscognito_domain}" >> /etc/systemd/system/jupyterhub.service.d/jupyterhub.conf
-        
-        ##############################################
-        # Need to ensure oauthenticator is bumped to 0.10.0
+        # Ensure tljh is up to date
         ##############################################
         curl -L https://tljh.jupyter.org/bootstrap.py \
           | sudo python3 - \
             --admin insightadmin
 
         ##############################################
-        # Setup aws Cognito Authenticator 
+        # Setup AWS Cognito OAuthenticator
         ##############################################
-        echo "c.AWSCognitoAuthenticator.client_id='${client_id}'
-        c.AWSCognitoAuthenticator.client_secret='${client_secret}'
-        c.AWSCognitoAuthenticator.oauth_callback_url='${callback_url}'
-        c.AWSCognitoAuthenticator.username_key='username'
-        c.AWSCognitoAuthenticator.oauth_logout_redirect_url='${logout_url}'" >> /opt/tljh/config/jupyterhub_config.d/awscognito.py
+        echo > /opt/tljh/config/jupyterhub_config.d/awscognito.py <<EOF
+        c.GenericOAuthenticator.client_id = "[your app client ID]"
+        c.GenericOAuthenticator.client_secret = "[your app client secret]"
+        c.GenericOAuthenticator.oauth_callback_url = "https://[your-jupyterhub-host]/hub/oauth_callback"
 
+        c.GenericOAuthenticator.authorize_url = "https://your-AWSCognito-domain/oauth2/authorize"
+        c.GenericOAuthenticator.token_url = "https://your-AWSCognito-domain/oauth2/token"
+        c.GenericOAuthenticator.userdata_url = "https://your-AWSCognito-domain/oauth2/userInfo"
+        c.GenericOAuthenticator.logout_redirect_url = "https://your-AWSCognito-domain/oauth2/logout"
 
-        tljh-config set auth.type oauthenticator.awscognito.AWSCognitoAuthenticator
+        # these are always the same
+        c.GenericOAuthenticator.login_service = "AWS Cognito"
+        c.GenericOAuthenticator.username_key = "username"
+        c.GenericOAuthenticator.userdata_method = "POST"
+        EOF
+
+        tljh-config set auth.type oauthenticator.generic.GenericOAuthenticator
 
         tljh-config reload
 
-Manual configuration to use the AWS Cognito Oauthenticator
-============================================================
+Manual configuration to use the AWS Cognito OAuthenticator
+==========================================================
 
-Assuming tljh has already been installed, we need to make sure the oautheneticator module is at 0.10.0 and if not 
-do a pip install oauthenticator>=0.10.0
+AWS Cognito is configured as a generic OAuth provider.
 
-Because the AWS Congito authenticator uses environment variables and the systemd script we need to pass the 
-the AWS Cognito domain in via systemd we can do this by creating a systemd service overide file::
+Using your preferred editor create the config file::
 
-        /etc/systemd/system/jupyterhub.service.d/jupyterhub.conf
+    /opt/tljh/config/jupyterhub_config.d/awscognito.py
 
-and add the following::
+substituting the relevant variables::
 
-        [Service]
-        Environment=AWSCOGNITO_DOMAIN=https://<<my_jupyter_hub>.auth.eu-west-1.amazoncognito.com
+    c.GenericOAuthenticator.client_id = "[your app ID]"
+    c.GenericOAuthenticator.client_secret = "[your app Password]"
+    c.GenericOAuthenticator.oauth_callback_url = "https://[your-jupyterhub-host]/hub/oauth_callback"
 
-Using your prefered editor create the config file::
+    c.GenericOAuthenticator.authorize_url = "https://your-AWSCognito-domain/oauth2/authorize"
+    c.GenericOAuthenticator.token_url = "https://your-AWSCognito-domain/oauth2/token"
+    c.GenericOAuthenticator.userdata_url = "https://your-AWSCognito-domain/oauth2/userInfo"
+    c.GenericOAuthenticator.logout_redirect_url = "https://your-AWSCognito-domain/oauth2/logout"
 
-        /opt/tljh/config/jupyterhub_config.d/awscognito.py
-
-subsituting the relevant variables::
-
-        c.AWSCognitoAuthenticator.client_id='${client_id}'
-        c.AWSCognitoAuthenticator.client_secret='${client_secret}'
-        c.AWSCognitoAuthenticator.oauth_callback_url='${callback_url}'
-        c.AWSCognitoAuthenticator.username_key='username'
-        c.AWSCognitoAuthenticator.oauth_logout_redirect_url='${logout_url}'
+    # these are always the same
+    c.GenericOAuthenticator.login_service = "AWS Cognito"
+    c.GenericOAuthenticator.username_key = "username"
+    c.GenericOAuthenticator.userdata_method = "POST"
 
 We'll use the ``tljh-config`` tool to configure your JupyterHub's authentication.
 For more information on ``tljh-config``, see :ref:`topic/tljh-config`.
 
-#. Tell your JupyterHub to *use* the AWS Cognito OAuthenticator for authentication::
+#. Tell your JupyterHub to use the GenericOAuthenticator for authentication::
 
-     tljh-config set auth.type oauthenticator.awscognito.AWSCognitoAuthenticator
+     tljh-config set auth.type oauthenticator.generic.GenericOAuthenticator
 
 #. Restart your JupyterHub so that new users see these changes::
 
