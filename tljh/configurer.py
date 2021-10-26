@@ -182,6 +182,10 @@ def update_auth(c, config):
     be set.
     """
     tljh_auth_config = config['auth']
+
+    # FIXME: Make sure this is something importable.
+    # FIXME: SECURITY: Class must inherit from Authenticator, to prevent us
+    #        being used to set arbitrary properties on arbitrary types of objects!
     c.JupyterHub.authenticator_class = tljh_auth_config['type']
 
     for auth_key, auth_value in tljh_auth_config.items():
