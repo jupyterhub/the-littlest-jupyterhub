@@ -1,38 +1,14 @@
 How-To Guides
 =============
 
-.. toctree::
-   :hidden:
-
-   content/nbgitpuller
-   content/add-data
-   content/share-data
-   env/user-environment
-   env/notebook-interfaces
-   env/server-resources
-   auth/dummy
-   auth/github
-   auth/google
-   auth/awscognito
-   auth/firstuse
-   auth/nativeauth
-   admin/admin-users
-   admin/resource-estimation
-   admin/resize
-   admin/nbresuse
-   admin/https
-   admin/enable-extensions
-   admin/systemd
-   providers/digitalocean
-   providers/azure
-
 How-To guides answer the question 'How do I...?' for a lot of topics.
 
-Content and Data
+Content and data
 ----------------
 
 .. toctree::
    :titlesonly:
+   :caption: Content and data
 
    content/nbgitpuller
    content/add-data
@@ -43,6 +19,7 @@ The user environment
 
 .. toctree::
    :titlesonly:
+   :caption: The user environment
 
    env/user-environment
    env/notebook-interfaces
@@ -70,6 +47,7 @@ Administration and security
 
 .. toctree::
    :titlesonly:
+   :caption: Administration and security
 
    admin/admin-users
    admin/resource-estimation
@@ -84,6 +62,7 @@ Cloud provider configuration
 
 .. toctree::
    :titlesonly:
+   :caption: Cloud provider configuration
 
    providers/digitalocean
    providers/azure
