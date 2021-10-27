@@ -3,64 +3,14 @@ Test configurer
 """
 
 from traitlets import Dict
+from traitlets.config import Config
 import os
 import sys
 
 from tljh import configurer
 
 
-class MockConfigurer:
-    """
-    Mock a Traitlets Config class object.
 
-    Equivalent to the `c` in `c.JupyterHub.some_property` method of setting
-    traitlet properties. If an accessed attribute doesn't exist, a new instance
-    of EmtpyObject is returned. This lets us set arbitrary attributes two
-    levels deep.
-
-        >>> c = MockConfigurer()
-        >>> c.FirstLevel.second_level = 'hi'
-        >>> c.FirstLevel.second_level == 'hi'
-        True
-        >>> hasattr(c.FirstLevel, 'does_not_exist')
-        False
-
-    The actual Config class implementation can be found at
-    https://github.com/ipython/traitlets/blob/34f596dd03b98434900a7d31c912fc168342bb80/traitlets/config/loader.py#L220
-    """
-
-    class _EmptyObject:
-        """
-        Empty class for putting attributes in.
-        """
-        pass
-
-    def __getattr__(self, k):
-        if k not in self.__dict__:
-            self.__dict__[k] = MockConfigurer._EmptyObject()
-        return self.__dict__[k]
-
-    def __getitem__(self, key):
-        """
-        To mimic the traitlets Config class instance we often access as "c", we
-        need to provide a subscript functionality that can be used as
-        c["Something"]. To do this, we provide a __getitem__ function.
-        """
-        return self.__getattr__(key)
-
-def test_mock_configurer():
-    """
-    Test the MockConfigurer's mocking ability
-    """
-    m = MockConfigurer()
-    m.SomethingSomething = 'hi'
-    m.FirstLevel.second_level = 'boo'
-
-    assert m.SomethingSomething == 'hi'
-    assert m.FirstLevel.second_level == 'boo'
-    assert m["FirstLevel"].second_level == 'boo'
-
-    assert not hasattr(m.FirstLevel, 'non_existent')
 
 
 def apply_mock_config(overrides):
@@ -69,7 +19,7 @@ def apply_mock_config(overrides):
 
     overrides should be a dict that matches what you parse from a config.yaml
     """
-    c = MockConfigurer()
+    c = Config()
     configurer.apply_config(overrides, c)
     return c
 
@@ -112,7 +62,7 @@ def test_app_default():
     """
     c = apply_mock_config({})
     # default_url is not set, so JupyterHub will pick default.
-    assert not hasattr(c.Spawner, 'default_url')
+    assert 'default_url' not in c.Spawner
 
 
 def test_app_jupyterlab():
