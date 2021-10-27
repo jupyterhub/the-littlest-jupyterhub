@@ -190,7 +190,9 @@ def update_auth(c, config):
 
     for auth_key, auth_value in tljh_auth_config.items():
         if not (auth_key[0] == auth_key[0].upper() and isinstance(auth_value, dict)):
-            continue
+            if auth_key == 'type':
+                continue
+            raise ValueError(f"Error: auth.{auth_key} was ignored, it didn't look like a valid configuration")
         class_name = auth_key
         class_config_to_set = auth_value
         class_config = c[class_name]
