@@ -11,19 +11,22 @@ from tljh import configurer
 
 class MockConfigurer:
     """
-    Mock a Traitlet Configurable object.
+    Mock a Traitlets Config class object.
 
     Equivalent to the `c` in `c.JupyterHub.some_property` method of setting
     traitlet properties. If an accessed attribute doesn't exist, a new instance
     of EmtpyObject is returned. This lets us set arbitrary attributes two
     levels deep.
 
-      >>> c = MockConfigurer()
-      >>> c.FirstLevel.second_level = 'hi'
-      >>> c.FirstLevel.second_level == 'hi'
-      True
-      >>> hasattr(c.FirstLevel, 'does_not_exist')
-      False
+        >>> c = MockConfigurer()
+        >>> c.FirstLevel.second_level = 'hi'
+        >>> c.FirstLevel.second_level == 'hi'
+        True
+        >>> hasattr(c.FirstLevel, 'does_not_exist')
+        False
+
+    The actual Config class implementation can be found at
+    https://github.com/ipython/traitlets/blob/34f596dd03b98434900a7d31c912fc168342bb80/traitlets/config/loader.py#L220
     """
 
     class _EmptyObject:
@@ -37,6 +40,13 @@ class MockConfigurer:
             self.__dict__[k] = MockConfigurer._EmptyObject()
         return self.__dict__[k]
 
+    def __getitem__(self, key):
+        """
+        To mimic the traitlets Config class instance we often access as "c", we
+        need to provide a subscript functionality that can be used as
+        c["Something"]. To do this, we provide a __getitem__ function.
+        """
+        return self.__getattr__(key)
 
 def test_mock_configurer():
     """
@@ -48,6 +58,7 @@ def test_mock_configurer():
 
     assert m.SomethingSomething == 'hi'
     assert m.FirstLevel.second_level == 'boo'
+    assert m["FirstLevel"].second_level == 'boo'
 
     assert not hasattr(m.FirstLevel, 'non_existent')
 

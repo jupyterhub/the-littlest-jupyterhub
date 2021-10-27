@@ -149,27 +149,55 @@ def update_base_url(c, config):
 
 def update_auth(c, config):
     """
-    Set auth related configuration from YAML config file
+    Set auth related configuration from YAML config file.
 
-    Use auth.type to determine authenticator to use. All parameters
-    in the config under auth.{auth.type} will be passed straight to the
-    authenticators themselves.
+    As an example, this function should update the following TLJH auth
+    configuration:
+
+    ```yaml
+    auth:
+      type: oauthenticator.github.GitHubOAuthenticator
+      GitHubOAuthenticator:
+        client_id: "..."
+        client_secret: "..."
+        oauth_callback_url: "..."
+      ClassName:
+        arbitrary_key: "..."
+        arbitrary_key_with_none_value:
+    ```
+
+    by applying the following configuration:
+
+    ```python
+    c.JupyterHub.authenticator_class = "oauthenticator.github.GitHubOAuthenticator"
+    c.GitHubOAuthenticator.client_id = "..."
+    c.GitHubOAuthenticator.client_secret = "..."
+    c.GitHubOAuthenticator.oauth_callback_url = "..."
+    c.ArbitraryKey.arbitrary_key = "..."
+    ```
+
+    Note that "auth.type" and "auth.ArbitraryKey.arbitrary_key_with_none_value"
+    are treated a bit differently. auth.type will always map to
+    c.JupyterHub.authenticator_class and any configured value being None won't
+    be set.
     """
-    auth = config.get('auth')
+    tljh_auth_config = config['auth']
 
     # FIXME: Make sure this is something importable.
-    # FIXME: SECURITY: Class must inherit from Authenticator, to prevent us being
-    # used to set arbitrary properties on arbitrary types of objects!
-    authenticator_class = auth['type']
-    # When specifying fully qualified name, use classname as key for config
-    authenticator_configname = authenticator_class.split('.')[-1]
-    c.JupyterHub.authenticator_class = authenticator_class
-    # Use just class name when setting config. If authenticator is dummyauthenticator.DummyAuthenticator,
-    # its config will be set under c.DummyAuthenticator
-    authenticator_parent = getattr(c, authenticator_class.split('.')[-1])
+    # FIXME: SECURITY: Class must inherit from Authenticator, to prevent us
+    #        being used to set arbitrary properties on arbitrary types of objects!
+    c.JupyterHub.authenticator_class = tljh_auth_config['type']
 
-    for k, v in auth.get(authenticator_configname, {}).items():
-        set_if_not_none(authenticator_parent, k, v)
+    for auth_key, auth_value in tljh_auth_config.items():
+        if not (auth_key[0] == auth_key[0].upper() and isinstance(auth_value, dict)):
+            if auth_key == 'type':
+                continue
+            raise ValueError(f"Error: auth.{auth_key} was ignored, it didn't look like a valid configuration")
+        class_name = auth_key
+        class_config_to_set = auth_value
+        class_config = c[class_name]
+        for config_name, config_value in class_config_to_set.items():
+            set_if_not_none(class_config, config_name, config_value)
 
 
 def update_userlists(c, config):
