@@ -161,7 +161,7 @@ def update_auth(c, config):
         client_id: "..."
         client_secret: "..."
         oauth_callback_url: "..."
-      ClassName:
+      ArbitraryClass:
         arbitrary_key: "..."
         arbitrary_key_with_none_value:
     ```
@@ -173,19 +173,16 @@ def update_auth(c, config):
     c.GitHubOAuthenticator.client_id = "..."
     c.GitHubOAuthenticator.client_secret = "..."
     c.GitHubOAuthenticator.oauth_callback_url = "..."
-    c.ArbitraryKey.arbitrary_key = "..."
+    c.ArbitraryClass.arbitrary_key = "..."
     ```
 
-    Note that "auth.type" and "auth.ArbitraryKey.arbitrary_key_with_none_value"
+    Note that "auth.type" and "auth.ArbitraryClass.arbitrary_key_with_none_value"
     are treated a bit differently. auth.type will always map to
     c.JupyterHub.authenticator_class and any configured value being None won't
     be set.
     """
     tljh_auth_config = config['auth']
 
-    # FIXME: Make sure this is something importable.
-    # FIXME: SECURITY: Class must inherit from Authenticator, to prevent us
-    #        being used to set arbitrary properties on arbitrary types of objects!
     c.JupyterHub.authenticator_class = tljh_auth_config['type']
 
     for auth_key, auth_value in tljh_auth_config.items():
