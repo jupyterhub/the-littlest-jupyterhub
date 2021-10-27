@@ -124,9 +124,7 @@ def ensure_jupyterhub_package(prefix):
         'libcurl4-openssl-dev',
         'build-essential'
     ])
-    conda.ensure_pip_packages(prefix, [
-        'pycurl==7.*'
-    ])
+    conda.ensure_pip_packages(prefix, ['pycurl==7.*'], upgrade=True)
 
     conda.ensure_pip_packages(
         prefix,
@@ -141,6 +139,7 @@ def ensure_jupyterhub_package(prefix):
             "jupyterhub-idle-culler==1.*",
             "git+https://github.com/yuvipanda/jupyterhub-configurator@317759e17c8e48de1b1352b836dac2a230536dba"
         ],
+        upgrade=True,
     )
     traefik.ensure_traefik_binary(prefix)
 
@@ -193,20 +192,28 @@ def ensure_user_environment(user_requirements_txt_file):
             conda.install_miniconda(installer_path, USER_ENV_PREFIX)
         conda_version = '4.10.3'
 
-    conda.ensure_conda_packages(USER_ENV_PREFIX, [
-        # Conda's latest version is on conda much more so than on PyPI.
-        'conda==' + conda_version,
-        'mamba==' + mambaforge_mamba_version,
-    ])
+    conda.ensure_conda_packages(
+        USER_ENV_PREFIX,
+        [
+            # Conda's latest version is on conda much more so than on PyPI.
+            'conda==' + conda_version,
+            'mamba==' + mambaforge_mamba_version,
+        ],
+    )
 
     conda.ensure_pip_requirements(
         USER_ENV_PREFIX,
         os.path.join(HERE, 'requirements-base.txt'),
+        upgrade=True,
     )
 
     if user_requirements_txt_file:
         # FIXME: This currently fails hard, should fail soft and not abort installer
-        conda.ensure_pip_requirements(USER_ENV_PREFIX, user_requirements_txt_file)
+        conda.ensure_pip_requirements(
+            USER_ENV_PREFIX,
+            user_requirements_txt_file,
+            upgrade=True,
+        )
 
 
 def ensure_admins(admin_password_list):
@@ -313,7 +320,7 @@ def setup_plugins(plugins=None):
     """
     # Install plugins
     if plugins:
-        conda.ensure_pip_packages(HUB_ENV_PREFIX, plugins)
+        conda.ensure_pip_packages(HUB_ENV_PREFIX, plugins, upgrade=True)
 
     # Set up plugin infrastructure
     pm = pluggy.PluginManager('tljh')
@@ -342,7 +349,11 @@ def run_plugin_actions(plugin_manager):
         logger.info('Installing {} hub pip packages collected from plugins: {}'.format(
             len(hub_pip_packages), ' '.join(hub_pip_packages)
         ))
-        conda.ensure_pip_packages(HUB_ENV_PREFIX, hub_pip_packages)
+        conda.ensure_pip_packages(
+            HUB_ENV_PREFIX,
+            hub_pip_packages,
+            upgrade=True,
+        )
 
     # Install conda packages
     conda_packages = list(set(itertools.chain(*hook.tljh_extra_user_conda_packages())))
@@ -358,7 +369,11 @@ def run_plugin_actions(plugin_manager):
         logger.info('Installing {} user pip packages collected from plugins: {}'.format(
             len(user_pip_packages), ' '.join(user_pip_packages)
         ))
-        conda.ensure_pip_packages(USER_ENV_PREFIX, user_pip_packages)
+        conda.ensure_pip_packages(
+            USER_ENV_PREFIX,
+            user_pip_packages,
+            upgrade=True,
+        )
 
     # Custom post install actions
     hook.tljh_post_install()
