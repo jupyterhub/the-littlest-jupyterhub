@@ -133,7 +133,7 @@ def ensure_pip_packages(prefix, packages, upgrade=False):
     """
     abspath = os.path.abspath(prefix)
     pip_executable = [os.path.join(abspath, 'bin', 'python'), '-m', 'pip']
-    pip_cmd = pip_executable + ['install', '--no-cache-dir']
+    pip_cmd = pip_executable + ['install']
     if upgrade:
         pip_cmd.append('--upgrade')
     utils.run_subprocess(pip_cmd + packages)
@@ -148,7 +148,7 @@ def ensure_pip_requirements(prefix, requirements_path, upgrade=False):
     """
     abspath = os.path.abspath(prefix)
     pip_executable = [os.path.join(abspath, 'bin', 'python'), '-m', 'pip']
-    pip_cmd = pip_executable + ['install', '--no-cache-dir']
+    pip_cmd = pip_executable + ['install']
     if upgrade:
         pip_cmd.append('--upgrade')
     utils.run_subprocess(pip_cmd + ['--requirement', requirements_path])
