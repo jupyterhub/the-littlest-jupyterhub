@@ -27,5 +27,3 @@ This calls systemctl and restarts Traefik. The user may call systemctl and resta
 .. code-block:: console
 
      $ sudo tljh-config reload hub
-
-

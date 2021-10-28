@@ -34,5 +34,3 @@ If you no longer need any of your resources you can delete the entire resource g
 * Go to "Reosurce groups" on the left hand panel
 * Click on your resource group
 * Click on "Delete resource group" you will then be asked to confirm the operation.  This operation will take between 5 and 10 minutes.
-
-
