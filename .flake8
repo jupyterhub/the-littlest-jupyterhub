@@ -1,0 +1,12 @@
+[flake8]
+# Ignore style and complexity
+# E: style errors
+# W: style warnings
+# C: complexity
+# F841: local variable assigned but never used
+ignore = E, C, W, F841
+builtins =
+    c
+    load_subconfig
+exclude =
+    build/
