@@ -1,14 +1,14 @@
 """
 Test configuration commandline tools
 """
-
 import os
 import tempfile
 from unittest import mock
 
 import pytest
 
-from tljh import config, configurer
+from tljh import config
+from tljh import configurer
 
 
 def test_set_no_mutate():

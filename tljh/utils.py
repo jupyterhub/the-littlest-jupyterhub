@@ -4,7 +4,6 @@ Miscellaneous functions useful in at least two places unrelated to each other
 import logging
 import subprocess
 
-# Copied into bootstrap/bootstrap.py. Make sure these two copies are exactly the same!
 import pluggy
 
 from tljh import hooks

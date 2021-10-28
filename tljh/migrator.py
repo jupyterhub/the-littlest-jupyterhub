@@ -1,15 +1,12 @@
 """Migration utilities for upgrading tljh"""
-
-import os
-from datetime import date
 import logging
+import os
 import shutil
+from datetime import date
 
-from tljh.config import (
-    CONFIG_DIR,
-    CONFIG_FILE,
-    INSTALL_PREFIX,
-)
+from tljh.config import CONFIG_DIR
+from tljh.config import CONFIG_FILE
+from tljh.config import INSTALL_PREFIX
 
 
 logger = logging.getLogger("tljh")

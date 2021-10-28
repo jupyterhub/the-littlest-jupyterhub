@@ -8,8 +8,8 @@ import pwd
 import subprocess
 from os.path import expanduser
 
-# Set up plugin infrastructure
 from tljh.utils import get_plugin_manager
+# Set up plugin infrastructure
 
 
 def ensure_user(username):

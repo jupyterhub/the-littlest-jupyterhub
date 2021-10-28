@@ -1,14 +1,15 @@
 """
 Test wrappers in tljw.user module
 """
-from tljh import user
-import os
+import grp
 import os.path
+import pwd
 import stat
 import uuid
-import pwd
-import grp
+
 import pytest
+
+from tljh import user
 
 
 def test_ensure_user():

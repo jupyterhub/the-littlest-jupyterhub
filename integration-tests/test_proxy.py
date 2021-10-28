@@ -2,20 +2,20 @@
 import os
 import shutil
 import ssl
-from subprocess import check_call
 import time
+from subprocess import check_call
 
-import toml
-from tornado.httpclient import HTTPClient, HTTPRequest, HTTPClientError
 import pytest
+import toml
+from tornado.httpclient import HTTPClient
+from tornado.httpclient import HTTPClientError
+from tornado.httpclient import HTTPRequest
 
-from tljh.config import (
-    reload_component,
-    set_config_value,
-    CONFIG_FILE,
-    CONFIG_DIR,
-    STATE_DIR,
-)
+from tljh.config import CONFIG_DIR
+from tljh.config import CONFIG_FILE
+from tljh.config import reload_component
+from tljh.config import set_config_value
+from tljh.config import STATE_DIR
 
 
 def send_request(url, max_sleep, validate_cert=True, username=None, password=None):

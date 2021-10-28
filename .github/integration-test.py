@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import argparse
-import subprocess
 import os
+import subprocess
 
 
 def build_systemd_image(image_name, source_path, build_args=None):

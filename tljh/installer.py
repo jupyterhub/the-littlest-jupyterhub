@@ -1,5 +1,4 @@
 """Installation logic for TLJH"""
-
 import argparse
 import dbm
 import itertools
@@ -17,24 +16,20 @@ import pluggy
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
-from tljh import (
-    apt,
-    conda,
-    hooks,
-    migrator,
-    systemd,
-    traefik,
-    user,
-)
-from .config import (
-    CONFIG_DIR,
-    CONFIG_FILE,
-    HUB_ENV_PREFIX,
-    INSTALL_PREFIX,
-    STATE_DIR,
-    USER_ENV_PREFIX,
-)
+from .config import CONFIG_DIR
+from .config import CONFIG_FILE
+from .config import HUB_ENV_PREFIX
+from .config import INSTALL_PREFIX
+from .config import STATE_DIR
+from .config import USER_ENV_PREFIX
 from .yaml import yaml
+from tljh import apt
+from tljh import conda
+from tljh import hooks
+from tljh import migrator
+from tljh import systemd
+from tljh import traefik
+from tljh import user
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 

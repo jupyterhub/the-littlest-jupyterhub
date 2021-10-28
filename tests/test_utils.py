@@ -1,7 +1,9 @@
-import pytest
-from tljh import utils
-import subprocess
 import logging
+import subprocess
+
+import pytest
+
+from tljh import utils
 
 
 def test_run_subprocess_exception(mocker):

@@ -38,14 +38,15 @@ Command line flags:
                             passed, it will pass --progress-page-server-pid=<pid>
                             to the tljh installer for later termination.
 """
-import os
-from http.server import SimpleHTTPRequestHandler, HTTPServer
+import logging
 import multiprocessing
+import os
+import shutil
 import subprocess
 import sys
-import logging
-import shutil
 import urllib.request
+from http.server import HTTPServer
+from http.server import SimpleHTTPRequestHandler
 
 progress_page_favicon_url = "https://raw.githubusercontent.com/jupyterhub/jupyterhub/HEAD/share/jupyterhub/static/favicon.ico"
 progress_page_html = """

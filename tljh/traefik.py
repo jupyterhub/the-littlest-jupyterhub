@@ -3,14 +3,15 @@ import hashlib
 import os
 from glob import glob
 
-from jinja2 import Template
-from passlib.apache import HtpasswdFile
 import backoff
 import requests
 import toml
+from jinja2 import Template
+from passlib.apache import HtpasswdFile
 
 from .config import CONFIG_DIR
-from tljh.configurer import load_config, _merge_dictionaries
+from tljh.configurer import _merge_dictionaries
+from tljh.configurer import load_config
 
 # FIXME: support more than one platform here
 plat = "linux-amd64"
@@ -141,4 +142,3 @@ def ensure_traefik_config(state_dir):
     # ensure acme.json exists and is private
     with open(os.path.join(state_dir, "acme.json"), "a") as f:
         os.fchmod(f.fileno(), 0o600)
-

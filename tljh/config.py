@@ -11,14 +11,14 @@ tljh-config show firstlevel
 
 tljh-config show firstlevel.second_level
 """
-
 import argparse
-from collections.abc import Sequence, Mapping
-from copy import deepcopy
 import os
 import re
 import sys
 import time
+from collections.abc import Mapping
+from collections.abc import Sequence
+from copy import deepcopy
 
 import requests
 

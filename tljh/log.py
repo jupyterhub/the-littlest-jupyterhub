@@ -1,6 +1,6 @@
 """Setup tljh logging"""
-import os
 import logging
+import os
 
 from .config import INSTALL_PREFIX
 

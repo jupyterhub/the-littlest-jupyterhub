@@ -1,11 +1,13 @@
 """
 Test conda commandline wrappers
 """
-from tljh import conda
 import os
-import pytest
 import subprocess
 import tempfile
+
+import pytest
+
+from tljh import conda
 
 
 @pytest.fixture(scope='module')

@@ -1,8 +1,8 @@
 """Test traefik configuration"""
 import os
 
-import toml
 import pytest
+import toml
 
 from tljh import config
 from tljh import traefik

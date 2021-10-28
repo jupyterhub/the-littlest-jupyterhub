@@ -1,14 +1,16 @@
 """
 Wrap conda commandline program
 """
+import contextlib
+import hashlib
+import json
 import os
 import subprocess
-import json
-import hashlib
-import contextlib
 import tempfile
-import requests
 from distutils.version import LooseVersion as V
+
+import requests
+
 from tljh import utils
 
 

@@ -1,7 +1,7 @@
 """pytest fixtures"""
-from importlib import reload
 import os
 import types
+from importlib import reload
 from unittest import mock
 
 import pytest
