@@ -97,6 +97,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          # This is tried to avoid an error in the CI system about the error
+          # from running the bootstrap.py script in the step where it is
+          # downloading the installer:
+          #
+          #   Running command git fetch -q https://github.com/jupyterhub/the-littlest-jupyterhub.git refs/pull/747/merge
+          #   fatal: pack has 3 unresolved deltas
+          #   fatal: index-pack failed
+          #
+          fetch-depth: 0
       - uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python_version }}
