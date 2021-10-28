@@ -26,7 +26,7 @@ Enabling the authenticator
 
    .. code-block:: bash
 
-      sudo tljh-config set auth.type dummyauthenticator.DummyAuthenticator
+      sudo tljh-config set auth.type dummy
 
    .. code-block:: bash
 

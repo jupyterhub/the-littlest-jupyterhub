@@ -1,18 +1,21 @@
+# When tljh.installer runs, the users' environment as typically found in
+# /opt/tljh/user, is setup with these packages.
+#
 # FIXME: a frozen version of this file should be used
 # pinning only direct dependencies is a recipe for broken environments!
 
 # JupyterHub + notebook package are base requirements for user environment
-jupyterhub==1.4.0
-notebook==6.4.1
+jupyterhub==1.*
+notebook==6.*
 # Install additional notebook frontends!
 jupyterlab==3.*
-nteract-on-jupyter==2.1.*
+nteract-on-jupyter==2.*
 # Install jupyterlab extensions from PyPI
 # nbgitpuller for easily pulling in Git repositories
 nbgitpuller==1.*
 # jupyter-resource-usage to show people how much RAM they are using
-jupyter-resource-usage==0.5.*
+jupyter-resource-usage==0.6.*
 # Most people consider ipywidgets to be part of the core notebook experience
-ipywidgets==7.6.*
+ipywidgets==7.*
 # Pin tornado
 tornado>=6.1

@@ -34,7 +34,7 @@ async def test_user_code_execute():
     hub_url = 'http://localhost'
     username = secrets.token_hex(8)
 
-    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummyauthenticator.DummyAuthenticator')).wait()
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummy')).wait()
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
 
     async with User(username, hub_url, partial(login_dummy, password='')) as u:
@@ -58,7 +58,7 @@ async def test_user_server_started_with_custom_base_url():
     hub_url = f"http://localhost{base_url}"
     username = secrets.token_hex(8)
 
-    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummyauthenticator.DummyAuthenticator')).wait()
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummy')).wait()
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'base_url', base_url)).wait()
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
 
@@ -81,7 +81,7 @@ async def test_user_admin_add():
     hub_url = 'http://localhost'
     username = secrets.token_hex(8)
 
-    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummyauthenticator.DummyAuthenticator')).wait()
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummy')).wait()
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'add-item', 'users.admin', username)).wait()
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
 
@@ -111,7 +111,7 @@ async def test_user_admin_remove():
     hub_url = 'http://localhost'
     username = secrets.token_hex(8)
 
-    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummyauthenticator.DummyAuthenticator')).wait()
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummy')).wait()
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'add-item', 'users.admin', username)).wait()
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
 
@@ -147,7 +147,7 @@ async def test_long_username():
     hub_url = 'http://localhost'
     username = secrets.token_hex(32)
 
-    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummyauthenticator.DummyAuthenticator')).wait()
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummy')).wait()
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
 
     try:
@@ -183,7 +183,7 @@ async def test_user_group_adding():
     # Create the group we want to add the user to
     system('groupadd somegroup')
 
-    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummyauthenticator.DummyAuthenticator')).wait()
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummy')).wait()
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'add-item', 'users.extra_user_groups.somegroup', username)).wait()
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'reload')).wait()
 
@@ -223,7 +223,7 @@ async def test_idle_server_culled():
     hub_url = 'http://localhost'
     username = secrets.token_hex(8)
 
-    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummyauthenticator.DummyAuthenticator')).wait()
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummy')).wait()
     # Check every 10s for idle servers to cull
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'services.cull.every', "10")).wait()
     # Apart from servers, also cull users
@@ -269,7 +269,7 @@ async def test_active_server_not_culled():
     hub_url = 'http://localhost'
     username = secrets.token_hex(8)
 
-    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummyauthenticator.DummyAuthenticator')).wait()
+    assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'auth.type', 'dummy')).wait()
     # Check every 10s for idle servers to cull
     assert 0 == await (await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, 'set', 'services.cull.every', "10")).wait()
     # Apart from servers, also cull users

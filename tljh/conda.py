@@ -96,6 +96,9 @@ def install_miniconda(installer_path, prefix):
 def ensure_conda_packages(prefix, packages):
     """
     Ensure packages (from conda-forge) are installed in the conda prefix.
+
+    Note that conda seem to update dependencies by default, so there is probably
+    no need to have a update parameter exposed for this function.
     """
     conda_executable = [os.path.join(prefix, 'bin', 'mamba')]
     abspath = os.path.abspath(prefix)
@@ -124,21 +127,20 @@ def ensure_conda_packages(prefix, packages):
     fix_permissions(prefix)
 
 
-def ensure_pip_packages(prefix, packages):
+def ensure_pip_packages(prefix, packages, upgrade=False):
     """
     Ensure pip packages are installed in the given conda prefix.
     """
     abspath = os.path.abspath(prefix)
     pip_executable = [os.path.join(abspath, 'bin', 'python'), '-m', 'pip']
-
-    utils.run_subprocess(pip_executable + [
-        'install',
-        '--no-cache-dir',
-    ] + packages)
+    pip_cmd = pip_executable + ['install']
+    if upgrade:
+        pip_cmd.append('--upgrade')
+    utils.run_subprocess(pip_cmd + packages)
     fix_permissions(prefix)
 
 
-def ensure_pip_requirements(prefix, requirements_path):
+def ensure_pip_requirements(prefix, requirements_path, upgrade=False):
     """
     Ensure pip packages from given requirements_path are installed in given conda prefix.
 
@@ -146,10 +148,8 @@ def ensure_pip_requirements(prefix, requirements_path):
     """
     abspath = os.path.abspath(prefix)
     pip_executable = [os.path.join(abspath, 'bin', 'python'), '-m', 'pip']
-
-    utils.run_subprocess(pip_executable + [
-        'install',
-        '-r',
-        requirements_path
-    ])
+    pip_cmd = pip_executable + ['install']
+    if upgrade:
+        pip_cmd.append('--upgrade')
+    utils.run_subprocess(pip_cmd + ['--requirement', requirements_path])
     fix_permissions(prefix)
