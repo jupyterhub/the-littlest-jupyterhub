@@ -105,20 +105,20 @@ jobs:
       - name: Install pytest
         run: python3 -m pip install pytest
 
-      # We abort pytest after two failures as a compromise between wanting to
-      # avoid a flood of logs while still understanding if multiple tests would
-      # fail.
-      - name: Run bootstrap tests (Runs in/Builds ubuntu:${{ matrix.ubuntu_version }} derived image)
-        run: |
-          pytest --verbose --maxfail=2 --color=yes --durations=10 --capture=no \
-              integration-tests/test_bootstrap.py
-        timeout-minutes: 15
-        env:
-          # integration-tests/test_bootstrap.py will build and start containers
-          # based on this environment variable. This is similar to how
-          # .github/integration-test.py build-image can take a --build-arg
-          # setting the ubuntu_version.
-          UBUNTU_VERSION: ${{ matrix.ubuntu_version }}
+      # # We abort pytest after two failures as a compromise between wanting to
+      # # avoid a flood of logs while still understanding if multiple tests would
+      # # fail.
+      # - name: Run bootstrap tests (Runs in/Builds ubuntu:${{ matrix.ubuntu_version }} derived image)
+      #   run: |
+      #     pytest --verbose --maxfail=2 --color=yes --durations=10 --capture=no \
+      #         integration-tests/test_bootstrap.py
+      #   timeout-minutes: 15
+      #   env:
+      #     # integration-tests/test_bootstrap.py will build and start containers
+      #     # based on this environment variable. This is similar to how
+      #     # .github/integration-test.py build-image can take a --build-arg
+      #     # setting the ubuntu_version.
+      #     UBUNTU_VERSION: ${{ matrix.ubuntu_version }}
 
       # We build a docker image from wherein we will work
       - name: Build systemd image (Builds ubuntu:${{ matrix.ubuntu_version }} derived image)
