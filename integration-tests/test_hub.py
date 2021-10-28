@@ -8,7 +8,6 @@ from functools import partial
 import asyncio
 import pwd
 import grp
-import sys
 import subprocess
 from os import system
 from tljh.normalize import generate_system_username

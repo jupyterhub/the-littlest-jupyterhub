@@ -16,7 +16,6 @@ import bcrypt
 import pluggy
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
-from getpass import getpass
 
 from tljh import (
     apt,
@@ -26,7 +25,6 @@ from tljh import (
     systemd,
     traefik,
     user,
-    utils
 )
 from .config import (
     CONFIG_DIR,

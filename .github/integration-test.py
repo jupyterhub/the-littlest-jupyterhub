@@ -104,7 +104,7 @@ def run_test(image_name, test_name, bootstrap_pip_spec, test_files, upgrade, ins
     if upgrade:
         run_container_command(
             test_name,
-            f'curl -L https://tljh.jupyter.org/bootstrap.py | python3 -'
+            'curl -L https://tljh.jupyter.org/bootstrap.py | python3 -'
         )
 
     run_container_command(

@@ -12,7 +12,6 @@ import pytest
 from tljh.config import (
     reload_component,
     set_config_value,
-    unset_config_value,
     CONFIG_FILE,
     CONFIG_DIR,
     STATE_DIR,

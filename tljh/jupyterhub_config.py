@@ -5,7 +5,6 @@ JupyterHub config for the littlest jupyterhub.
 from glob import glob
 import os
 
-from systemdspawner import SystemdSpawner
 from tljh import configurer
 from tljh.config import INSTALL_PREFIX, USER_ENV_PREFIX, CONFIG_DIR
 from tljh.utils import get_plugin_manager
