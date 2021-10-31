@@ -34,7 +34,7 @@ def ensure_user(username):
     subprocess.check_call([
         'chmod',
         'o-rwx',
-        expanduser('~{username}'.format(username=username))
+        expanduser(f'~{username}')
     ])
 
     pm = get_plugin_manager()

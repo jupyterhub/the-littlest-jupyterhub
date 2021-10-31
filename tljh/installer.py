@@ -225,7 +225,7 @@ def ensure_admins(admin_password_list):
     logger.info("Setting up admin users")
     config_path = CONFIG_FILE
     if os.path.exists(config_path):
-        with open(config_path, 'r') as f:
+        with open(config_path) as f:
             config = yaml.load(f)
     else:
         config = {}
@@ -261,7 +261,7 @@ def ensure_jupyterhub_running(times=20):
 
     for i in range(times):
         try:
-            logger.info('Waiting for JupyterHub to come up ({}/{} tries)'.format(i + 1, times))
+            logger.info(f'Waiting for JupyterHub to come up ({i + 1}/{times} tries)')
             # Because we don't care at this level that SSL is valid, we can suppress
             # InsecureRequestWarning for this request.
             with warnings.catch_warnings():
@@ -283,7 +283,7 @@ def ensure_jupyterhub_running(times=20):
             # Everything else should immediately abort
             raise
 
-    raise Exception("Installation failed: JupyterHub did not start in {}s".format(times))
+    raise Exception(f"Installation failed: JupyterHub did not start in {times}s")
 
 
 def ensure_symlinks(prefix):
@@ -388,7 +388,7 @@ def ensure_config_yaml(plugin_manager):
     migrator.migrate_config_files()
 
     if os.path.exists(CONFIG_FILE):
-        with open(CONFIG_FILE, 'r') as f:
+        with open(CONFIG_FILE) as f:
             config = yaml.load(f)
     else:
         config = {}

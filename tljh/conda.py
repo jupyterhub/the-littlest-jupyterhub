@@ -72,7 +72,7 @@ def fix_permissions(prefix):
     Run after each install command.
     """
     utils.run_subprocess(
-        ["chown", "-R", "{}:{}".format(os.getuid(), os.getgid()), prefix]
+        ["chown", "-R", f"{os.getuid()}:{os.getgid()}", prefix]
     )
     utils.run_subprocess(["chmod", "-R", "o-w", prefix])
 

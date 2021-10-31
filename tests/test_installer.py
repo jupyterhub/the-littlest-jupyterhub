@@ -31,7 +31,7 @@ def test_ensure_admins(tljh_dir, admins, expected_config):
 	installer.ensure_admins(admins)
 
 	config_path = installer.CONFIG_FILE
-	with open(config_path, 'r') as f:
+	with open(config_path) as f:
 	    config = yaml.load(f)
 
 	# verify the list was flattened
