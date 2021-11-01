@@ -31,9 +31,15 @@ def test_ensure_user():
         assert os.path.exists(home_dir)
         # Ensure not word readable/writable especially in teaching context
         homedir_stats = os.stat(home_dir).st_mode
-        assert not (homedir_stats & stat.S_IROTH), "Everyone should not be able to read users home directory"
-        assert not (homedir_stats & stat.S_IWOTH), "Everyone should not be able to write users home directory"
-        assert not (homedir_stats & stat.S_IXOTH), "Everyone should not be able to list what is in users home directory"
+        assert not (
+            homedir_stats & stat.S_IROTH
+        ), "Everyone should not be able to read users home directory"
+        assert not (
+            homedir_stats & stat.S_IWOTH
+        ), "Everyone should not be able to write users home directory"
+        assert not (
+            homedir_stats & stat.S_IXOTH
+        ), "Everyone should not be able to list what is in users home directory"
 
         # Run ensure_user again, should be a noop
         user.ensure_user(username)

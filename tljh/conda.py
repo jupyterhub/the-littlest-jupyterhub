@@ -30,10 +30,14 @@ def check_miniconda_version(prefix, version):
     Return true if a miniconda install with version exists at prefix
     """
     try:
-        installed_version = subprocess.check_output([
-            os.path.join(prefix, 'bin', 'conda'),
-            '-V'
-        ], stderr=subprocess.STDOUT).decode().strip().split()[1]
+        installed_version = (
+            subprocess.check_output(
+                [os.path.join(prefix, 'bin', 'conda'), '-V'], stderr=subprocess.STDOUT
+            )
+            .decode()
+            .strip()
+            .split()[1]
+        )
         return V(installed_version) >= V(version)
     except (subprocess.CalledProcessError, FileNotFoundError):
         # Conda doesn't exist
@@ -71,9 +75,7 @@ def fix_permissions(prefix):
 
     Run after each install command.
     """
-    utils.run_subprocess(
-        ["chown", "-R", f"{os.getuid()}:{os.getgid()}", prefix]
-    )
+    utils.run_subprocess(["chown", "-R", f"{os.getuid()}:{os.getgid()}", prefix])
     utils.run_subprocess(["chmod", "-R", "o-w", prefix])
 
 
@@ -81,12 +83,7 @@ def install_miniconda(installer_path, prefix):
     """
     Install miniconda with installer at installer_path under prefix
     """
-    utils.run_subprocess([
-        '/bin/bash',
-        installer_path,
-        '-u', '-b',
-        '-p', prefix
-    ])
+    utils.run_subprocess(['/bin/bash', installer_path, '-u', '-b', '-p', prefix])
     # fix permissions on initial install
     # a few files have the wrong ownership and permissions initially
     # when the installer is run as root
@@ -106,21 +103,30 @@ def ensure_conda_packages(prefix, packages):
     # Explicitly do *not* capture stderr, since that's not always JSON!
     # Scripting conda is a PITA!
     # FIXME: raise different exception when using
-    raw_output = subprocess.check_output(conda_executable + [
-        'install',
-        '-c', 'conda-forge',  # Make customizable if we ever need to
-        '--json',
-        '--prefix', abspath
-    ] + packages).decode()
+    raw_output = subprocess.check_output(
+        conda_executable
+        + [
+            'install',
+            '-c',
+            'conda-forge',  # Make customizable if we ever need to
+            '--json',
+            '--prefix',
+            abspath,
+        ]
+        + packages
+    ).decode()
     # `conda install` outputs JSON lines for fetch updates,
     # and a undelimited output at the end. There is no reasonable way to
     # parse this outside of this kludge.
-    filtered_output = '\n'.join([
-        l for l in raw_output.split('\n')
-        # Sometimes the JSON messages start with a \x00. The lstrip removes these.
-        # conda messages seem to randomly throw \x00 in places for no reason
-        if not l.lstrip('\x00').startswith('{"fetch"')
-    ])
+    filtered_output = '\n'.join(
+        [
+            l
+            for l in raw_output.split('\n')
+            # Sometimes the JSON messages start with a \x00. The lstrip removes these.
+            # conda messages seem to randomly throw \x00 in places for no reason
+            if not l.lstrip('\x00').startswith('{"fetch"')
+        ]
+    )
     output = json.loads(filtered_output.lstrip('\x00'))
     if 'success' in output and output['success'] == True:
         return

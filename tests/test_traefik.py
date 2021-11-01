@@ -36,10 +36,8 @@ def test_default_config(tmpdir, tljh_dir):
         "http": {"address": ":80"},
         "auth_api": {
             "address": "127.0.0.1:8099",
-            "auth": {
-                "basic": {"users": [""]}
-            },
-            "whiteList": {"sourceRange": ["127.0.0.1"]}
+            "auth": {"basic": {"users": [""]}},
+            "whiteList": {"sourceRange": ["127.0.0.1"]},
         },
     }
 
@@ -72,10 +70,8 @@ def test_letsencrypt_config(tljh_dir):
         "https": {"address": ":443", "tls": {"minVersion": "VersionTLS12"}},
         "auth_api": {
             "address": "127.0.0.1:8099",
-            "auth": {
-                "basic": {"users": [""]}
-            },
-            "whiteList": {"sourceRange": ["127.0.0.1"]}
+            "auth": {"basic": {"users": [""]}},
+            "whiteList": {"sourceRange": ["127.0.0.1"]},
         },
     }
     assert cfg["acme"] == {
@@ -113,17 +109,16 @@ def test_manual_ssl_config(tljh_dir):
                 "minVersion": "VersionTLS12",
                 "certificates": [
                     {"certFile": "/path/to/ssl.cert", "keyFile": "/path/to/ssl.key"}
-                ]
+                ],
             },
         },
         "auth_api": {
             "address": "127.0.0.1:8099",
-            "auth": {
-                "basic": {"users": [""]}
-            },
-            "whiteList": {"sourceRange": ["127.0.0.1"]}
+            "auth": {"basic": {"users": [""]}},
+            "whiteList": {"sourceRange": ["127.0.0.1"]},
         },
     }
+
 
 def test_extra_config(tmpdir, tljh_dir):
     extra_config_dir = os.path.join(tljh_dir, config.CONFIG_DIR, "traefik_config.d")
@@ -146,13 +141,9 @@ def test_extra_config(tmpdir, tljh_dir):
         # modify existing value
         "logLevel": "ERROR",
         # modify existing value with multiple levels
-        "entryPoints": {
-            "auth_api": {
-                "address": "127.0.0.1:9999"
-            }
-        },
+        "entryPoints": {"auth_api": {"address": "127.0.0.1:9999"}},
         # add new setting
-        "checkNewVersion": False
+        "checkNewVersion": False,
     }
 
     with open(os.path.join(extra_config_dir, "extra.toml"), "w+") as extra_config_file:

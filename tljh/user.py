@@ -25,17 +25,9 @@ def ensure_user(username):
         # User doesn't exist, time to create!
         pass
 
-    subprocess.check_call([
-        'useradd',
-        '--create-home',
-        username
-    ])
+    subprocess.check_call(['useradd', '--create-home', username])
 
-    subprocess.check_call([
-        'chmod',
-        'o-rwx',
-        expanduser(f'~{username}')
-    ])
+    subprocess.check_call(['chmod', 'o-rwx', expanduser(f'~{username}')])
 
     pm = get_plugin_manager()
     pm.hook.tljh_new_user_create(username=username)
@@ -51,22 +43,14 @@ def remove_user(username):
         # User doesn't exist, nothing to do
         return
 
-    subprocess.check_call([
-        'deluser',
-        '--quiet',
-        username
-    ])
+    subprocess.check_call(['deluser', '--quiet', username])
 
 
 def ensure_group(groupname):
     """
     Ensure given group exists
     """
-    subprocess.check_call([
-        'groupadd',
-        '--force',
-        groupname
-    ])
+    subprocess.check_call(['groupadd', '--force', groupname])
 
 
 def remove_group(groupname):
@@ -79,11 +63,7 @@ def remove_group(groupname):
         # Group doesn't exist, nothing to do
         return
 
-    subprocess.check_call([
-        'delgroup',
-        '--quiet',
-        groupname
-    ])
+    subprocess.check_call(['delgroup', '--quiet', groupname])
 
 
 def ensure_user_group(username, groupname):
@@ -96,12 +76,7 @@ def ensure_user_group(username, groupname):
     if username in group.gr_mem:
         return
 
-    subprocess.check_call([
-        'gpasswd',
-        '--add',
-        username,
-        groupname
-    ])
+    subprocess.check_call(['gpasswd', '--add', username, groupname])
 
 
 def remove_user_group(username, groupname):
@@ -112,9 +87,4 @@ def remove_user_group(username, groupname):
     if username not in group.gr_mem:
         return
 
-    subprocess.check_call([
-        'gpasswd',
-        '--delete',
-        username,
-        groupname
-    ])
+    subprocess.check_call(['gpasswd', '--delete', username, groupname])

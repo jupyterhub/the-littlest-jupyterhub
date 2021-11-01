@@ -73,11 +73,10 @@ def ensure_jupyterhub_service(prefix):
     with open(os.path.join(HERE, 'systemd-units', 'jupyterhub.service')) as f:
         hub_unit_template = f.read()
 
-
     with open(os.path.join(HERE, 'systemd-units', 'traefik.service')) as f:
         traefik_unit_template = f.read()
 
-    #Set up proxy / hub secret token if it is not already setup
+    # Set up proxy / hub secret token if it is not already setup
     proxy_secret_path = os.path.join(STATE_DIR, 'traefik-api.secret')
     if not os.path.exists(proxy_secret_path):
         with open(proxy_secret_path, 'w') as f:
@@ -103,7 +102,6 @@ def ensure_jupyterhub_service(prefix):
     systemd.enable_service('traefik')
 
 
-
 def ensure_jupyterhub_package(prefix):
     """
     Install JupyterHub into our conda environment if needed.
@@ -117,11 +115,7 @@ def ensure_jupyterhub_package(prefix):
     # Install pycurl. JupyterHub prefers pycurl over SimpleHTTPClient automatically
     # pycurl is generally more bugfree - see https://github.com/jupyterhub/the-littlest-jupyterhub/issues/289
     # build-essential is also generally useful to everyone involved, and required for pycurl
-    apt.install_packages([
-        'libssl-dev',
-        'libcurl4-openssl-dev',
-        'build-essential'
-    ])
+    apt.install_packages(['libssl-dev', 'libcurl4-openssl-dev', 'build-essential'])
     conda.ensure_pip_packages(prefix, ['pycurl==7.*'], upgrade=True)
 
     conda.ensure_pip_packages(
@@ -135,7 +129,7 @@ def ensure_jupyterhub_package(prefix):
             "jupyterhub-tmpauthenticator==0.6.*",
             "oauthenticator==14.*",
             "jupyterhub-idle-culler==1.*",
-            "git+https://github.com/yuvipanda/jupyterhub-configurator@317759e17c8e48de1b1352b836dac2a230536dba"
+            "git+https://github.com/yuvipanda/jupyterhub-configurator@317759e17c8e48de1b1352b836dac2a230536dba",
         ],
         upgrade=True,
     )
@@ -283,9 +277,9 @@ def ensure_jupyterhub_running(times=20):
             # Everything else should immediately abort
             raise
         except requests.ConnectionError:
-                # Hub isn't up yet, sleep & loop
-                time.sleep(1)
-                continue
+            # Hub isn't up yet, sleep & loop
+            time.sleep(1)
+            continue
         except Exception:
             # Everything else should immediately abort
             raise
@@ -312,7 +306,9 @@ def ensure_symlinks(prefix):
             #  tljh-config exists that isn't ours. We should *not* delete this file,
             # instead we throw an error and abort. Deleting files owned by other people
             # while running as root is dangerous, especially with symlinks involved.
-            raise FileExistsError(f'/usr/bin/tljh-config exists but is not a symlink to {tljh_config_src}')
+            raise FileExistsError(
+                f'/usr/bin/tljh-config exists but is not a symlink to {tljh_config_src}'
+            )
         else:
             # We have a working symlink, so do nothing
             return
@@ -343,17 +339,21 @@ def run_plugin_actions(plugin_manager):
     # Install apt packages
     apt_packages = list(set(itertools.chain(*hook.tljh_extra_apt_packages())))
     if apt_packages:
-        logger.info('Installing {} apt packages collected from plugins: {}'.format(
-            len(apt_packages), ' '.join(apt_packages)
-        ))
+        logger.info(
+            'Installing {} apt packages collected from plugins: {}'.format(
+                len(apt_packages), ' '.join(apt_packages)
+            )
+        )
         apt.install_packages(apt_packages)
 
     # Install hub pip packages
     hub_pip_packages = list(set(itertools.chain(*hook.tljh_extra_hub_pip_packages())))
     if hub_pip_packages:
-        logger.info('Installing {} hub pip packages collected from plugins: {}'.format(
-            len(hub_pip_packages), ' '.join(hub_pip_packages)
-        ))
+        logger.info(
+            'Installing {} hub pip packages collected from plugins: {}'.format(
+                len(hub_pip_packages), ' '.join(hub_pip_packages)
+            )
+        )
         conda.ensure_pip_packages(
             HUB_ENV_PREFIX,
             hub_pip_packages,
@@ -363,17 +363,21 @@ def run_plugin_actions(plugin_manager):
     # Install conda packages
     conda_packages = list(set(itertools.chain(*hook.tljh_extra_user_conda_packages())))
     if conda_packages:
-        logger.info('Installing {} user conda packages collected from plugins: {}'.format(
-            len(conda_packages), ' '.join(conda_packages)
-        ))
+        logger.info(
+            'Installing {} user conda packages collected from plugins: {}'.format(
+                len(conda_packages), ' '.join(conda_packages)
+            )
+        )
         conda.ensure_conda_packages(USER_ENV_PREFIX, conda_packages)
 
     # Install pip packages
     user_pip_packages = list(set(itertools.chain(*hook.tljh_extra_user_pip_packages())))
     if user_pip_packages:
-        logger.info('Installing {} user pip packages collected from plugins: {}'.format(
-            len(user_pip_packages), ' '.join(user_pip_packages)
-        ))
+        logger.info(
+            'Installing {} user pip packages collected from plugins: {}'.format(
+                len(user_pip_packages), ' '.join(user_pip_packages)
+            )
+        )
         conda.ensure_pip_packages(
             USER_ENV_PREFIX,
             user_pip_packages,
@@ -409,28 +413,22 @@ def ensure_config_yaml(plugin_manager):
 
 def main():
     from .log import init_logging
+
     init_logging()
 
     argparser = argparse.ArgumentParser()
     argparser.add_argument(
-        '--admin',
-        nargs='*',
-        action='append',
-        help='List of usernames set to be admin'
+        '--admin', nargs='*', action='append', help='List of usernames set to be admin'
     )
     argparser.add_argument(
         '--user-requirements-txt-url',
-        help='URL to a requirements.txt file that should be installed in the user environment'
+        help='URL to a requirements.txt file that should be installed in the user environment',
     )
-    argparser.add_argument(
-        '--plugin',
-        nargs='*',
-        help='Plugin pip-specs to install'
-    )
+    argparser.add_argument('--plugin', nargs='*', help='Plugin pip-specs to install')
     argparser.add_argument(
         '--progress-page-server-pid',
         type=int,
-        help='The pid of the progress page server'
+        help='The pid of the progress page server',
     )
 
     args = argparser.parse_args()

@@ -19,20 +19,20 @@ def test_ensure_config_yaml(tljh_dir):
 
 
 @pytest.mark.parametrize(
-	"admins, expected_config",
-	[
-		([['a1'], ['a2'], ['a3']], ['a1', 'a2', 'a3']),
-		([['a1:p1'], ['a2']], ['a1', 'a2']),
-	],
+    "admins, expected_config",
+    [
+        ([['a1'], ['a2'], ['a3']], ['a1', 'a2', 'a3']),
+        ([['a1:p1'], ['a2']], ['a1', 'a2']),
+    ],
 )
 def test_ensure_admins(tljh_dir, admins, expected_config):
-	# --admin option called multiple times on the installer
-	# creates a list of argument lists.
-	installer.ensure_admins(admins)
+    # --admin option called multiple times on the installer
+    # creates a list of argument lists.
+    installer.ensure_admins(admins)
 
-	config_path = installer.CONFIG_FILE
-	with open(config_path) as f:
-	    config = yaml.load(f)
+    config_path = installer.CONFIG_FILE
+    with open(config_path) as f:
+        config = yaml.load(f)
 
-	# verify the list was flattened
-	assert config['users']['admin'] == expected_config
+    # verify the list was flattened
+    assert config['users']['admin'] == expected_config

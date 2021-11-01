@@ -145,20 +145,26 @@ def run_subprocess(cmd, *args, **kwargs):
     and failed output directly to the user's screen
     """
     logger = logging.getLogger('tljh')
-    proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, *args, **kwargs)
+    proc = subprocess.run(
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, *args, **kwargs
+    )
     printable_command = ' '.join(cmd)
     if proc.returncode != 0:
         # Our process failed! Show output to the user
-        logger.error('Ran {command} with exit code {code}'.format(
-            command=printable_command, code=proc.returncode
-        ))
+        logger.error(
+            'Ran {command} with exit code {code}'.format(
+                command=printable_command, code=proc.returncode
+            )
+        )
         logger.error(proc.stdout.decode())
         raise subprocess.CalledProcessError(cmd=cmd, returncode=proc.returncode)
     else:
         # This goes into installer.log
-        logger.debug('Ran {command} with exit code {code}'.format(
-            command=printable_command, code=proc.returncode
-        ))
+        logger.debug(
+            'Ran {command} with exit code {code}'.format(
+                command=printable_command, code=proc.returncode
+            )
+        )
         # This produces multi line log output, unfortunately. Not sure how to fix.
         # For now, prioritizing human readability over machine readability.
         logger.debug(proc.stdout.decode())
@@ -169,6 +175,7 @@ def ensure_host_system_can_install_tljh():
     Check if TLJH is installable in current host system and exit with a clear
     error message otherwise.
     """
+
     def get_os_release_variable(key):
         """
         Return value for key from /etc/os-release
@@ -177,10 +184,17 @@ def ensure_host_system_can_install_tljh():
 
         Returns empty string if key is not found.
         """
-        return subprocess.check_output([
-            '/bin/bash', '-c',
-            "source /etc/os-release && echo ${{{key}}}".format(key=key)
-        ]).decode().strip()
+        return (
+            subprocess.check_output(
+                [
+                    '/bin/bash',
+                    '-c',
+                    "source /etc/os-release && echo ${{{key}}}".format(key=key),
+                ]
+            )
+            .decode()
+            .strip()
+        )
 
     # Require Ubuntu 18.04+
     distro = get_os_release_variable('ID')
@@ -203,8 +217,12 @@ def ensure_host_system_can_install_tljh():
         # Provide additional information about running in docker containers
         if os.path.exists('/.dockerenv'):
             print("Running inside a docker container without systemd isn't supported")
-            print("We recommend against running a production TLJH instance inside a docker container")
-            print("For local development, see http://tljh.jupyter.org/en/latest/contributing/dev-setup.html")
+            print(
+                "We recommend against running a production TLJH instance inside a docker container"
+            )
+            print(
+                "For local development, see http://tljh.jupyter.org/en/latest/contributing/dev-setup.html"
+            )
         sys.exit(1)
 
 
@@ -226,7 +244,7 @@ class ProgressPageRequestHandler(SimpleHTTPRequestHandler):
             return SimpleHTTPRequestHandler.do_GET(self)
         elif self.path == "/":
             self.send_response(302)
-            self.send_header('Location','/index.html')
+            self.send_header('Location', '/index.html')
             self.end_headers()
         else:
             SimpleHTTPRequestHandler.send_error(self, code=403)
@@ -243,14 +261,12 @@ def main():
     """
     ensure_host_system_can_install_tljh()
 
-
     # Various related constants
     install_prefix = os.environ.get('TLJH_INSTALL_PREFIX', '/opt/tljh')
     hub_prefix = os.path.join(install_prefix, 'hub')
     python_bin = os.path.join(hub_prefix, 'bin', 'python3')
     pip_bin = os.path.join(hub_prefix, 'bin', 'pip')
     initial_setup = not os.path.exists(python_bin)
-
 
     # Attempt to start a web server to serve a progress page reporting
     # installation progress.
@@ -276,15 +292,17 @@ def main():
                     server.serve_forever()
                 except KeyboardInterrupt:
                     pass
+
             progress_page_server = HTTPServer(("", 80), ProgressPageRequestHandler)
-            p = multiprocessing.Process(target=serve_forever, args=(progress_page_server,))
+            p = multiprocessing.Process(
+                target=serve_forever, args=(progress_page_server,)
+            )
             p.start()
 
             # Pass the server's pid to the installer for later termination
             tljh_installer_flags.extend(["--progress-page-server-pid", str(p.pid)])
         except OSError:
             pass
-
 
     # Set up logging to print to a file and to stderr
     os.makedirs(install_prefix, exist_ok=True)
@@ -303,7 +321,6 @@ def main():
     logger.addHandler(stderr_logger)
 
     logger.setLevel(logging.DEBUG)
-
 
     if not initial_setup:
         logger.info('Existing TLJH installation detected, upgrading...')
@@ -324,22 +341,34 @@ def main():
         apt_get_adjusted_env = os.environ.copy()
         apt_get_adjusted_env["DEBIAN_FRONTEND"] = "noninteractive"
         run_subprocess(['apt-get', 'update'])
-        run_subprocess(['apt-get', 'install', '--yes', 'software-properties-common'], env=apt_get_adjusted_env)
+        run_subprocess(
+            ['apt-get', 'install', '--yes', 'software-properties-common'],
+            env=apt_get_adjusted_env,
+        )
         run_subprocess(['add-apt-repository', 'universe', '--yes'])
         run_subprocess(['apt-get', 'update'])
-        run_subprocess(['apt-get', 'install', '--yes', 'python3', 'python3-venv', 'python3-pip', 'git'], env=apt_get_adjusted_env)
+        run_subprocess(
+            [
+                'apt-get',
+                'install',
+                '--yes',
+                'python3',
+                'python3-venv',
+                'python3-pip',
+                'git',
+            ],
+            env=apt_get_adjusted_env,
+        )
 
         logger.info('Setting up virtual environment at {}'.format(hub_prefix))
         os.makedirs(hub_prefix, exist_ok=True)
         run_subprocess(['python3', '-m', 'venv', hub_prefix])
-
 
     # Upgrade pip
     # Keep pip version pinning in sync with the one in unit-test.yml!
     # See changelog at https://pip.pypa.io/en/latest/news/#changelog
     logger.info('Upgrading pip...')
     run_subprocess([pip_bin, 'install', '--upgrade', 'pip==21.3.*'])
-
 
     # Install/upgrade TLJH installer
     tljh_install_cmd = [pip_bin, 'install', '--upgrade']
@@ -348,7 +377,7 @@ def main():
     tljh_install_cmd.append(
         os.environ.get(
             'TLJH_BOOTSTRAP_PIP_SPEC',
-            'git+https://github.com/jupyterhub/the-littlest-jupyterhub.git'
+            'git+https://github.com/jupyterhub/the-littlest-jupyterhub.git',
         )
     )
     if initial_setup:
@@ -356,7 +385,6 @@ def main():
     else:
         logger.info('Upgrading TLJH installer...')
     run_subprocess(tljh_install_cmd)
-
 
     # Run TLJH installer
     logger.info('Running TLJH installer...')

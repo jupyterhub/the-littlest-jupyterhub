@@ -20,16 +20,9 @@ default = {
     'base_url': '/',
     'auth': {
         'type': 'firstuseauthenticator.FirstUseAuthenticator',
-        'FirstUseAuthenticator': {
-            'create_users': False
-        }
+        'FirstUseAuthenticator': {'create_users': False},
     },
-    'users': {
-        'allowed': [],
-        'banned': [],
-        'admin': [],
-        'extra_user_groups': {}
-    },
+    'users': {'allowed': [], 'banned': [], 'admin': [], 'extra_user_groups': {}},
     'limits': {
         'memory': None,
         'cpu': None,
@@ -65,12 +58,10 @@ default = {
             'every': 60,
             'concurrency': 5,
             'users': False,
-            'max_age': 0
+            'max_age': 0,
         },
-        'configurator': {
-            'enabled': False
-        }
-    }
+        'configurator': {'enabled': False},
+    },
 }
 
 
@@ -189,7 +180,9 @@ def update_auth(c, config):
         if not (auth_key[0] == auth_key[0].upper() and isinstance(auth_value, dict)):
             if auth_key == 'type':
                 continue
-            raise ValueError(f"Error: auth.{auth_key} was ignored, it didn't look like a valid configuration")
+            raise ValueError(
+                f"Error: auth.{auth_key} was ignored, it didn't look like a valid configuration"
+            )
         class_name = auth_key
         class_config_to_set = auth_value
         class_config = c[class_name]
@@ -255,9 +248,7 @@ def set_cull_idle_service(config):
     """
     Set Idle Culler service
     """
-    cull_cmd = [
-        sys.executable, '-m', 'jupyterhub_idle_culler'
-    ]
+    cull_cmd = [sys.executable, '-m', 'jupyterhub_idle_culler']
     cull_config = config['services']['cull']
     print()
 
@@ -283,8 +274,10 @@ def set_configurator(config):
     """
     HERE = os.path.abspath(os.path.dirname(__file__))
     configurator_cmd = [
-        sys.executable, "-m", "jupyterhub_configurator.app",
-        f"--Configurator.config_file={HERE}/jupyterhub_configurator_config.py"
+        sys.executable,
+        "-m",
+        "jupyterhub_configurator.app",
+        f"--Configurator.config_file={HERE}/jupyterhub_configurator_config.py",
     ]
     configurator_service = {
         'name': 'configurator',

@@ -23,28 +23,16 @@ def test_pip_packages():
     """
     Test extra user & hub pip packages are installed
     """
-    subprocess.check_call([
-        f'{USER_ENV_PREFIX}/bin/python3',
-        '-c',
-        'import django'
-    ])
+    subprocess.check_call([f'{USER_ENV_PREFIX}/bin/python3', '-c', 'import django'])
 
-    subprocess.check_call([
-        f'{HUB_ENV_PREFIX}/bin/python3',
-        '-c',
-        'import there'
-    ])
+    subprocess.check_call([f'{HUB_ENV_PREFIX}/bin/python3', '-c', 'import there'])
 
 
 def test_conda_packages():
     """
     Test extra user conda packages are installed
     """
-    subprocess.check_call([
-        f'{USER_ENV_PREFIX}/bin/python3',
-        '-c',
-        'import hypothesis'
-    ])
+    subprocess.check_call([f'{USER_ENV_PREFIX}/bin/python3', '-c', 'import hypothesis'])
 
 
 def test_config_hook():
@@ -80,7 +68,7 @@ def test_new_user_create():
     """
     Test that plugin receives username as arg
     """
-    username="user1"
+    username = "user1"
     # Call ensure_user to make sure the user plugin gets called
     user.ensure_user(username)
 

@@ -32,10 +32,7 @@ def test_set_multi_level():
     new_conf = config.set_item_in_config(conf, 'a.b', 'c')
     new_conf = config.set_item_in_config(new_conf, 'a.d', 'e')
     new_conf = config.set_item_in_config(new_conf, 'f', 'g')
-    assert new_conf == {
-        'a': {'b': 'c', 'd': 'e'},
-        'f': 'g'
-    }
+    assert new_conf == {'a': {'b': 'c', 'd': 'e'}, 'f': 'g'}
 
 
 def test_set_overwrite():
@@ -44,9 +41,7 @@ def test_set_overwrite():
 
     This might be surprising destructive behavior to some :D
     """
-    conf = {
-        'a': 'b'
-    }
+    conf = {'a': 'b'}
 
     new_conf = config.set_item_in_config(conf, 'a', 'c')
     assert new_conf == {'a': 'c'}
@@ -73,16 +68,10 @@ def test_unset_one_level():
 
 
 def test_unset_multi_level():
-    conf = {
-        'a': {'b': 'c', 'd': 'e'},
-        'f': 'g'
-    }
+    conf = {'a': {'b': 'c', 'd': 'e'}, 'f': 'g'}
 
     new_conf = config.unset_item_from_config(conf, 'a.b')
-    assert new_conf == {
-        'a': {'d': 'e'},
-        'f': 'g'
-    }
+    assert new_conf == {'a': {'d': 'e'}, 'f': 'g'}
     new_conf = config.unset_item_from_config(new_conf, 'a.d')
     assert new_conf == {'f': 'g'}
     new_conf = config.unset_item_from_config(new_conf, 'f')
@@ -90,9 +79,7 @@ def test_unset_multi_level():
 
 
 def test_unset_and_clean_empty_configs():
-    conf = {
-        'a': {'b': {'c': {'d': {'e': 'f'}}}}
-    }
+    conf = {'a': {'b': {'c': {'d': {'e': 'f'}}}}}
 
     new_conf = config.unset_item_from_config(conf, 'a.b.c.d.e')
     assert new_conf == {}
@@ -113,32 +100,24 @@ def test_add_to_config_one_level():
     conf = {}
 
     new_conf = config.add_item_to_config(conf, 'a.b', 'c')
-    assert new_conf == {
-        'a': {'b': ['c']}
-    }
+    assert new_conf == {'a': {'b': ['c']}}
 
 
 def test_add_to_config_zero_level():
     conf = {}
 
     new_conf = config.add_item_to_config(conf, 'a', 'b')
-    assert new_conf == {
-        'a': ['b']
-    }
+    assert new_conf == {'a': ['b']}
 
 
 def test_add_to_config_multiple():
     conf = {}
 
     new_conf = config.add_item_to_config(conf, 'a.b.c', 'd')
-    assert new_conf == {
-        'a': {'b': {'c': ['d']}}
-    }
+    assert new_conf == {'a': {'b': {'c': ['d']}}}
 
     new_conf = config.add_item_to_config(new_conf, 'a.b.c', 'e')
-    assert new_conf == {
-        'a': {'b': {'c': ['d', 'e']}}
-    }
+    assert new_conf == {'a': {'b': {'c': ['d', 'e']}}}
 
 
 def test_remove_from_config():
@@ -146,14 +125,10 @@ def test_remove_from_config():
 
     new_conf = config.add_item_to_config(conf, 'a.b.c', 'd')
     new_conf = config.add_item_to_config(new_conf, 'a.b.c', 'e')
-    assert new_conf == {
-        'a': {'b': {'c': ['d', 'e']}}
-    }
+    assert new_conf == {'a': {'b': {'c': ['d', 'e']}}}
 
     new_conf = config.remove_item_from_config(new_conf, 'a.b.c', 'e')
-    assert new_conf == {
-        'a': {'b': {'c': ['d']}}
-    }
+    assert new_conf == {'a': {'b': {'c': ['d']}}}
 
 
 def test_remove_from_config_error():
@@ -193,13 +168,7 @@ def test_cli_no_command(capsys):
     assert "positional arguments:" in captured.out
 
 
-@pytest.mark.parametrize(
-    "arg, value",
-    [
-        ("true", True),
-        ("FALSE", False)
-    ]
-)
+@pytest.mark.parametrize("arg, value", [("true", True), ("FALSE", False)])
 def test_cli_set_bool(tljh_dir, arg, value):
     config.main(["set", "https.enabled", arg])
     cfg = configurer.load_config()

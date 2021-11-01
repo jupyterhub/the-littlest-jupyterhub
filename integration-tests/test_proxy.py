@@ -90,7 +90,6 @@ def test_manual_https(preserve_config):
     )
     assert resp.code == 200
 
-
     # cleanup
     shutil.rmtree(ssl_dir)
     set_config_value(CONFIG_FILE, "https.enabled", False)
@@ -104,7 +103,6 @@ def test_extra_traefik_config():
 
     dynamic_config_dir = os.path.join(STATE_DIR, "rules")
     os.makedirs(dynamic_config_dir, exist_ok=True)
-
 
     extra_static_config = {
         "entryPoints": {"no_auth_api": {"address": "127.0.0.1:9999"}},
@@ -125,7 +123,6 @@ def test_extra_traefik_config():
             "test": {"servers": {"server1": {"url": "http://127.0.0.1:15001"}}}
         },
     }
-
 
     success = False
     for i in range(5):

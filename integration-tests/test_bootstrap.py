@@ -38,6 +38,7 @@ def get_bootstrap_script_location(container_name, show_progress_page):
     subprocess.check_call(["docker", "cp", source_path, f"{container_name}:/srv/src"])
     return bootstrap_script
 
+
 # FIXME: Refactor this function to easier to understand using the following
 #        parameters
 #
@@ -55,7 +56,9 @@ def get_bootstrap_script_location(container_name, show_progress_page):
 #        running against the systemd container that cab be built by
 #        integration-test.py.
 #
-def run_bootstrap_after_preparing_container(container_name, image, show_progress_page=False):
+def run_bootstrap_after_preparing_container(
+    container_name, image, show_progress_page=False
+):
     """
     1. Stops old container
     2. Starts --detached container
@@ -163,7 +166,7 @@ def test_progress_page():
             run_bootstrap_after_preparing_container,
             "progress-page",
             f"ubuntu:{os.getenv('UBUNTU_VERSION', '20.04')}",
-            True
+            True,
         )
 
         # Check if progress page started

@@ -13,10 +13,7 @@ def reload_daemon():
 
     Makes systemd discover new units.
     """
-    subprocess.run([
-        'systemctl',
-        'daemon-reload'
-    ], check=True)
+    subprocess.run(['systemctl', 'daemon-reload'], check=True)
 
 
 def install_unit(name, unit, path='/etc/systemd/system'):
@@ -31,43 +28,28 @@ def uninstall_unit(name, path='/etc/systemd/system'):
     """
     Uninstall unit with given name
     """
-    subprocess.run([
-        'rm',
-        os.path.join(path, name)
-    ], check=True)
+    subprocess.run(['rm', os.path.join(path, name)], check=True)
 
 
 def start_service(name):
     """
     Start service with given name.
     """
-    subprocess.run([
-        'systemctl',
-        'start',
-        name
-    ], check=True)
+    subprocess.run(['systemctl', 'start', name], check=True)
 
 
 def stop_service(name):
     """
     Start service with given name.
     """
-    subprocess.run([
-        'systemctl',
-        'stop',
-        name
-    ], check=True)
+    subprocess.run(['systemctl', 'stop', name], check=True)
 
 
 def restart_service(name):
     """
     Restart service with given name.
     """
-    subprocess.run([
-        'systemctl',
-        'restart',
-        name
-    ], check=True)
+    subprocess.run(['systemctl', 'restart', name], check=True)
 
 
 def enable_service(name):
@@ -76,11 +58,7 @@ def enable_service(name):
 
     This most likely makes the service start on bootup
     """
-    subprocess.run([
-        'systemctl',
-        'enable',
-        name
-    ], check=True)
+    subprocess.run(['systemctl', 'enable', name], check=True)
 
 
 def disable_service(name):
@@ -89,11 +67,7 @@ def disable_service(name):
 
     This most likely makes the service start on bootup
     """
-    subprocess.run([
-        'systemctl',
-        'disable',
-        name
-    ], check=True)
+    subprocess.run(['systemctl', 'disable', name], check=True)
 
 
 def check_service_active(name):
@@ -101,25 +75,18 @@ def check_service_active(name):
     Check if a service is currently active (running)
     """
     try:
-        subprocess.run([
-            'systemctl',
-            'is-active',
-            name
-        ], check=True)
+        subprocess.run(['systemctl', 'is-active', name], check=True)
         return True
     except subprocess.CalledProcessError:
         return False
+
 
 def check_service_enabled(name):
     """
     Check if a service is enabled
     """
     try:
-        subprocess.run([
-            'systemctl',
-            'is-enabled',
-            name
-        ], check=True)
+        subprocess.run(['systemctl', 'is-enabled', name], check=True)
         return True
     except subprocess.CalledProcessError:
         return False

@@ -25,7 +25,14 @@ def add_source(name, source_url, section):
     distro is determined from /etc/os-release
     """
     # lsb_release is not installed in most docker images by default
-    distro = subprocess.check_output(['/bin/bash', '-c', 'source /etc/os-release && echo ${VERSION_CODENAME}'], stderr=subprocess.STDOUT).decode().strip()
+    distro = (
+        subprocess.check_output(
+            ['/bin/bash', '-c', 'source /etc/os-release && echo ${VERSION_CODENAME}'],
+            stderr=subprocess.STDOUT,
+        )
+        .decode()
+        .strip()
+    )
     line = f'deb {source_url} {distro} {section}\n'
     with open(os.path.join('/etc/apt/sources.list.d/', name + '.list'), 'a+') as f:
         # Write out deb line only if it already doesn't exist
@@ -46,8 +53,4 @@ def install_packages(packages):
     env = os.environ.copy()
     # Stop apt from asking questions!
     env['DEBIAN_FRONTEND'] = 'noninteractive'
-    utils.run_subprocess([
-        'apt-get',
-        'install',
-        '--yes'
-    ] + packages, env=env)
+    utils.run_subprocess(['apt-get', 'install', '--yes'] + packages, env=env)

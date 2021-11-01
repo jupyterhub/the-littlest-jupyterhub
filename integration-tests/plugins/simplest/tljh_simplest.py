@@ -17,11 +17,13 @@ def tljh_extra_user_pip_packages():
         'django',
     ]
 
+
 @hookimpl
 def tljh_extra_hub_pip_packages():
     return [
         'there',
     ]
+
 
 @hookimpl
 def tljh_extra_apt_packages():
@@ -33,9 +35,8 @@ def tljh_extra_apt_packages():
 @hookimpl
 def tljh_config_post_install(config):
     # Put an arbitrary marker we can test for
-    config['simplest_plugin'] = {
-        'present': True
-    }
+    config['simplest_plugin'] = {'present': True}
+
 
 @hookimpl
 def tljh_custom_jupyterhub_config(c):

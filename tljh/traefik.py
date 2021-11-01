@@ -29,6 +29,7 @@ checksums = {
     "linux-arm64": "0640fa665125efa6b598fc08c100178e24de66c5c6035ce5d75668d3dc3706e1"
 }
 
+
 def checksum_file(path):
     """Compute the sha256 checksum of a path"""
     hasher = hashlib.sha256()
@@ -37,16 +38,13 @@ def checksum_file(path):
             hasher.update(chunk)
     return hasher.hexdigest()
 
+
 def fatal_error(e):
     # Retry only when connection is reset or we think we didn't download entire file
     return str(e) != "ContentTooShort" and not isinstance(e, ConnectionResetError)
 
-@backoff.on_exception(
-    backoff.expo,
-    Exception,
-    max_tries=2,
-    giveup=fatal_error
-)
+
+@backoff.on_exception(backoff.expo, Exception, max_tries=2, giveup=fatal_error)
 def ensure_traefik_binary(prefix):
     """Download and install the traefik binary to a location identified by a prefix path such as '/opt/tljh/hub/'"""
     traefik_bin = os.path.join(prefix, "bin", "traefik")
@@ -150,4 +148,3 @@ def ensure_traefik_config(state_dir):
     # ensure acme.json exists and is private
     with open(os.path.join(state_dir, "acme.json"), "a") as f:
         os.fchmod(f.fileno(), 0o600)
-

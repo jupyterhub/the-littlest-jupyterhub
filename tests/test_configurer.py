@@ -9,9 +9,6 @@ import sys
 from tljh import configurer
 
 
-
-
-
 def apply_mock_config(overrides):
     """
     Configure a mock configurer with given overrides.
@@ -86,7 +83,10 @@ def test_auth_default():
     """
     c = apply_mock_config({})
 
-    assert c.JupyterHub.authenticator_class == 'firstuseauthenticator.FirstUseAuthenticator'
+    assert (
+        c.JupyterHub.authenticator_class
+        == 'firstuseauthenticator.FirstUseAuthenticator'
+    )
     # Do not auto create users who haven't been manually added by default
     assert not c.FirstUseAuthenticator.create_users
 
@@ -95,14 +95,9 @@ def test_auth_dummy():
     """
     Test setting Dummy Authenticator & password
     """
-    c = apply_mock_config({
-        'auth': {
-            'type': 'dummy',
-            'DummyAuthenticator': {
-                'password': 'test'
-            }
-        }
-    })
+    c = apply_mock_config(
+        {'auth': {'type': 'dummy', 'DummyAuthenticator': {'password': 'test'}}}
+    )
     assert c.JupyterHub.authenticator_class == 'dummy'
     assert c.DummyAuthenticator.password == 'test'
 
@@ -111,33 +106,32 @@ def test_user_groups():
     """
     Test setting user groups
     """
-    c = apply_mock_config({
-        'users': {
-            'extra_user_groups': {
-                "g1": ["u1", "u2"],
-                "g2": ["u3", "u4"]
-            },
+    c = apply_mock_config(
+        {
+            'users': {
+                'extra_user_groups': {"g1": ["u1", "u2"], "g2": ["u3", "u4"]},
+            }
         }
-    })
-    assert c.UserCreatingSpawner.user_groups == {
-        "g1": ["u1", "u2"],
-        "g2": ["u3", "u4"]
-    }
+    )
+    assert c.UserCreatingSpawner.user_groups == {"g1": ["u1", "u2"], "g2": ["u3", "u4"]}
 
 
 def test_auth_firstuse():
     """
     Test setting FirstUse Authenticator options
     """
-    c = apply_mock_config({
-        'auth': {
-            'type': 'firstuseauthenticator.FirstUseAuthenticator',
-            'FirstUseAuthenticator': {
-                'create_users': True
+    c = apply_mock_config(
+        {
+            'auth': {
+                'type': 'firstuseauthenticator.FirstUseAuthenticator',
+                'FirstUseAuthenticator': {'create_users': True},
             }
         }
-    })
-    assert c.JupyterHub.authenticator_class == 'firstuseauthenticator.FirstUseAuthenticator'
+    )
+    assert (
+        c.JupyterHub.authenticator_class
+        == 'firstuseauthenticator.FirstUseAuthenticator'
+    )
     assert c.FirstUseAuthenticator.create_users
 
 
@@ -145,16 +139,20 @@ def test_auth_github():
     """
     Test using GitHub authenticator
     """
-    c = apply_mock_config({
-        'auth': {
-            'type': 'oauthenticator.github.GitHubOAuthenticator',
-            'GitHubOAuthenticator': {
-                'client_id': 'something',
-                'client_secret': 'something-else'
+    c = apply_mock_config(
+        {
+            'auth': {
+                'type': 'oauthenticator.github.GitHubOAuthenticator',
+                'GitHubOAuthenticator': {
+                    'client_id': 'something',
+                    'client_secret': 'something-else',
+                },
             }
         }
-    })
-    assert c.JupyterHub.authenticator_class == 'oauthenticator.github.GitHubOAuthenticator'
+    )
+    assert (
+        c.JupyterHub.authenticator_class == 'oauthenticator.github.GitHubOAuthenticator'
+    )
     assert c.GitHubOAuthenticator.client_id == 'something'
     assert c.GitHubOAuthenticator.client_secret == 'something-else'
 
@@ -173,12 +171,9 @@ def test_set_traefik_api():
     """
     Test setting per traefik api credentials
     """
-    c = apply_mock_config({
-        'traefik_api': {
-            'username': 'some_user',
-            'password': '1234'
-        }
-    })
+    c = apply_mock_config(
+        {'traefik_api': {'username': 'some_user', 'password': '1234'}}
+    )
     assert c.TraefikTomlProxy.traefik_api_username == 'some_user'
     assert c.TraefikTomlProxy.traefik_api_password == '1234'
 
@@ -190,40 +185,47 @@ def test_cull_service_default():
     c = apply_mock_config({})
 
     cull_cmd = [
-        sys.executable, '-m', 'jupyterhub_idle_culler',
-        '--timeout=600', '--cull-every=60', '--concurrency=5',
-        '--max-age=0'
+        sys.executable,
+        '-m',
+        'jupyterhub_idle_culler',
+        '--timeout=600',
+        '--cull-every=60',
+        '--concurrency=5',
+        '--max-age=0',
     ]
-    assert c.JupyterHub.services == [{
-        'name': 'cull-idle',
-        'admin': True,
-        'command': cull_cmd,
-    }]
+    assert c.JupyterHub.services == [
+        {
+            'name': 'cull-idle',
+            'admin': True,
+            'command': cull_cmd,
+        }
+    ]
 
 
 def test_set_cull_service():
     """
     Test setting cull service options
     """
-    c = apply_mock_config({
-        'services': {
-            'cull': {
-                'every': 10,
-                'users': True,
-                'max_age': 60
-            }
-        }
-    })
+    c = apply_mock_config(
+        {'services': {'cull': {'every': 10, 'users': True, 'max_age': 60}}}
+    )
     cull_cmd = [
-        sys.executable, '-m', 'jupyterhub_idle_culler',
-        '--timeout=600', '--cull-every=10', '--concurrency=5',
-        '--max-age=60', '--cull-users'
+        sys.executable,
+        '-m',
+        'jupyterhub_idle_culler',
+        '--timeout=600',
+        '--cull-every=10',
+        '--concurrency=5',
+        '--max-age=60',
+        '--cull-users',
     ]
-    assert c.JupyterHub.services == [{
-        'name': 'cull-idle',
-        'admin': True,
-        'command': cull_cmd,
-    }]
+    assert c.JupyterHub.services == [
+        {
+            'name': 'cull-idle',
+            'admin': True,
+            'command': cull_cmd,
+        }
+    ]
 
 
 def test_load_secrets(tljh_dir):
@@ -243,13 +245,15 @@ def test_auth_native():
     """
     Test setting Native Authenticator
     """
-    c = apply_mock_config({
-        'auth': {
-            'type': 'nativeauthenticator.NativeAuthenticator',
-            'NativeAuthenticator': {
-                'open_signup': True,
+    c = apply_mock_config(
+        {
+            'auth': {
+                'type': 'nativeauthenticator.NativeAuthenticator',
+                'NativeAuthenticator': {
+                    'open_signup': True,
+                },
             }
         }
-    })
+    )
     assert c.JupyterHub.authenticator_class == 'nativeauthenticator.NativeAuthenticator'
     assert c.NativeAuthenticator.open_signup == True

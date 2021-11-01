@@ -12,9 +12,7 @@ version = ''
 release = 'v0.1'
 
 # Enable MathJax for Math
-extensions = ['sphinx.ext.mathjax',
-              'sphinx.ext.intersphinx',
-              'sphinx_copybutton']
+extensions = ['sphinx.ext.mathjax', 'sphinx.ext.intersphinx', 'sphinx_copybutton']
 
 # The root toctree document.
 root_doc = master_doc = "index"
@@ -22,14 +20,13 @@ root_doc = master_doc = "index"
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path .
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store',
-                    'install/custom.rst']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'install/custom.rst']
 
 intersphinx_mapping = {
     'sphinx': ('http://www.sphinx-doc.org/en/master/', None),
 }
 
-intersphinx_cache_limit = 90 # days
+intersphinx_cache_limit = 90  # days
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'

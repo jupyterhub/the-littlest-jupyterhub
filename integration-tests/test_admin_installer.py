@@ -19,6 +19,7 @@ async def test_admin_login():
         # If user is not logged in, this will raise an exception
         await u.ensure_server_simulate()
 
+
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "username, password",

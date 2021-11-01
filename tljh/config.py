@@ -247,7 +247,9 @@ def check_hub_ready():
     base_url = base_url[:-1] if base_url[-1] == '/' else base_url
     http_port = load_config()['http']['port']
     try:
-        r = requests.get('http://127.0.0.1:%d%s/hub/api' % (http_port, base_url), verify=False)
+        r = requests.get(
+            'http://127.0.0.1:%d%s/hub/api' % (http_port, base_url), verify=False
+        )
         return r.status_code == 200
     except:
         return False
@@ -306,13 +308,17 @@ def _is_list(item):
 def main(argv=None):
     if os.geteuid() != 0:
         print("tljh-config needs root privileges to run", file=sys.stderr)
-        print("Try using sudo before the tljh-config command you wanted to run", file=sys.stderr)
+        print(
+            "Try using sudo before the tljh-config command you wanted to run",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     if argv is None:
         argv = sys.argv[1:]
 
     from .log import init_logging
+
     try:
         init_logging()
     except Exception as e:
@@ -321,75 +327,48 @@ def main(argv=None):
 
     argparser = argparse.ArgumentParser()
     argparser.add_argument(
-        '--config-path',
-        default=CONFIG_FILE,
-        help='Path to TLJH config.yaml file'
+        '--config-path', default=CONFIG_FILE, help='Path to TLJH config.yaml file'
     )
     subparsers = argparser.add_subparsers(dest='action')
 
-    show_parser = subparsers.add_parser(
-        'show',
-        help='Show current configuration'
-    )
+    show_parser = subparsers.add_parser('show', help='Show current configuration')
 
-    unset_parser = subparsers.add_parser(
-        'unset',
-        help='Unset a configuration property'
-    )
+    unset_parser = subparsers.add_parser('unset', help='Unset a configuration property')
     unset_parser.add_argument(
-        'key_path',
-        help='Dot separated path to configuration key to unset'
+        'key_path', help='Dot separated path to configuration key to unset'
     )
 
-    set_parser = subparsers.add_parser(
-        'set',
-        help='Set a configuration property'
-    )
+    set_parser = subparsers.add_parser('set', help='Set a configuration property')
     set_parser.add_argument(
-        'key_path',
-        help='Dot separated path to configuration key to set'
+        'key_path', help='Dot separated path to configuration key to set'
     )
-    set_parser.add_argument(
-        'value',
-        help='Value to set the configuration key to'
-    )
+    set_parser.add_argument('value', help='Value to set the configuration key to')
 
     add_item_parser = subparsers.add_parser(
-        'add-item',
-        help='Add a value to a list for a configuration property'
+        'add-item', help='Add a value to a list for a configuration property'
     )
     add_item_parser.add_argument(
-        'key_path',
-        help='Dot separated path to configuration key to add value to'
+        'key_path', help='Dot separated path to configuration key to add value to'
     )
-    add_item_parser.add_argument(
-        'value',
-        help='Value to add to the configuration key'
-    )
+    add_item_parser.add_argument('value', help='Value to add to the configuration key')
 
     remove_item_parser = subparsers.add_parser(
-        'remove-item',
-        help='Remove a value from a list for a configuration property'
+        'remove-item', help='Remove a value from a list for a configuration property'
     )
     remove_item_parser.add_argument(
-        'key_path',
-        help='Dot separated path to configuration key to remove value from'
+        'key_path', help='Dot separated path to configuration key to remove value from'
     )
-    remove_item_parser.add_argument(
-        'value',
-        help='Value to remove from key_path'
-    )
+    remove_item_parser.add_argument('value', help='Value to remove from key_path')
 
     reload_parser = subparsers.add_parser(
-        'reload',
-        help='Reload a component to apply configuration change'
+        'reload', help='Reload a component to apply configuration change'
     )
     reload_parser.add_argument(
         'component',
         choices=('hub', 'proxy'),
         help='Which component to reload',
         default='hub',
-        nargs='?'
+        nargs='?',
     )
 
     args = argparser.parse_args(argv)
@@ -397,16 +376,13 @@ def main(argv=None):
     if args.action == 'show':
         show_config(args.config_path)
     elif args.action == 'set':
-        set_config_value(args.config_path, args.key_path,
-                         parse_value(args.value))
+        set_config_value(args.config_path, args.key_path, parse_value(args.value))
     elif args.action == 'unset':
         unset_config_value(args.config_path, args.key_path)
     elif args.action == 'add-item':
-        add_config_value(args.config_path, args.key_path,
-                         parse_value(args.value))
+        add_config_value(args.config_path, args.key_path, parse_value(args.value))
     elif args.action == 'remove-item':
-        remove_config_value(args.config_path, args.key_path,
-                            parse_value(args.value))
+        remove_config_value(args.config_path, args.key_path, parse_value(args.value))
     elif args.action == 'reload':
         reload_component(args.component)
     else:
