@@ -187,8 +187,8 @@ def ensure_host_system_can_install_tljh():
         return (
             subprocess.check_output(
                 [
-                    '/bin/bash',
-                    '-c',
+                    "/bin/bash",
+                    "-c",
                     "source /etc/os-release && echo ${{{key}}}".format(key=key),
                 ]
             )

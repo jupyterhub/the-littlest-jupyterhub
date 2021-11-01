@@ -10,7 +10,7 @@ def build_systemd_image(image_name, source_path, build_args=None):
 
     Built image is tagged with image_name
     """
-    cmd = ['docker', 'build', '-t', image_name, source_path]
+    cmd = ['docker', 'build', f'-t={image_name}', source_path]
     if build_args:
         cmd.extend([f"--build-arg={ba}" for ba in build_args])
     subprocess.check_call(cmd)
@@ -28,15 +28,12 @@ def run_systemd_image(image_name, container_name, bootstrap_pip_spec):
         'docker',
         'run',
         '--privileged',
-        '--mount',
-        'type=bind,source=/sys/fs/cgroup,target=/sys/fs/cgroup',
+        '--mount=type=bind,source=/sys/fs/cgroup,target=/sys/fs/cgroup',
         '--detach',
-        '--name',
-        container_name,
+        f'--name={container_name}',
         # A bit less than 1GB to ensure TLJH runs on 1GB VMs.
         # If this is changed all docs references to the required memory must be changed too.
-        '--memory',
-        '900m',
+        '--memory=900m',
     ]
 
     if bootstrap_pip_spec:
@@ -67,7 +64,7 @@ def run_container_command(container_name, cmd):
     Run cmd in a running container with a bash shell
     """
     proc = subprocess.run(
-        ['docker', 'exec', '-t', container_name, '/bin/bash', '-c', cmd], check=True
+        ["docker", "exec", "-t", container_name, "/bin/bash", "-c", cmd], check=True
     )
 
 
