@@ -1,0 +1,57 @@
+# pre-commit is a tool to perform a predefined set of tasks manually and/or
+# automatically before git commits are made.
+#
+# Config reference: https://pre-commit.com/#pre-commit-configyaml---top-level
+#
+# Common tasks
+#
+# - Run on all files:   pre-commit run --all-files
+# - Register git hooks: pre-commit install --install-hooks
+#
+repos:
+  # Autoformat: Python code, syntax patterns are modernized
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v2.29.0
+    hooks:
+      - id: pyupgrade
+        args:
+          - --py36-plus
+        # We need the bootstrap.py script to be parsable with Python 3.5, so we
+        # exclude it from the pyupgrade hook that will apply f-strings etc.
+        exclude: bootstrap/bootstrap.py
+
+  # Autoformat: Python code
+  - repo: https://github.com/psf/black
+    rev: 21.9b0
+    hooks:
+      - id: black
+
+  # Autoformat: markdown, yaml
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v2.4.1
+    hooks:
+      - id: prettier
+
+  # Misc...
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    # ref: https://github.com/pre-commit/pre-commit-hooks#hooks-available
+    hooks:
+      # Autoformat: Makes sure files end in a newline and only a newline.
+      - id: end-of-file-fixer
+
+      # Autoformat: Sorts entries in requirements.txt.
+      - id: requirements-txt-fixer
+
+      # Lint: Check for files with names that would conflict on a
+      # case-insensitive filesystem like MacOS HFS+ or Windows FAT.
+      - id: check-case-conflict
+
+      # Lint: Checks that non-binary executables have a proper shebang.
+      - id: check-executables-have-shebangs
+
+  # Lint: Python code
+  - repo: https://github.com/pycqa/flake8
+    rev: "4.0.1"
+    hooks:
+      - id: flake8
