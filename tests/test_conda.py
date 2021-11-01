@@ -59,7 +59,7 @@ def test_ensure_pip_requirements(prefix):
     conda.ensure_conda_packages(prefix, ['pip'])
     with tempfile.NamedTemporaryFile() as f:
         # Sample small package to test
-        f.write('there'.encode())
+        f.write(b'there')
         f.flush()
         conda.ensure_pip_requirements(prefix, f.name)
     subprocess.check_call([

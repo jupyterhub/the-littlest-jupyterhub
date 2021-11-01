@@ -1,6 +1,5 @@
 """Test traefik configuration"""
 import os
-from unittest import mock
 
 import toml
 import pytest

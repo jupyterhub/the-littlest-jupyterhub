@@ -2,7 +2,6 @@ from hubtraf.user import User
 from hubtraf.auth.dummy import login_dummy
 import pytest
 from functools import partial
-import asyncio
 
 
 @pytest.mark.asyncio

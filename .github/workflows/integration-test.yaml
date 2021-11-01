@@ -24,7 +24,6 @@ on:
   workflow_dispatch:
 
 jobs:
-
   # This job is used as a workaround to a limitation when using a matrix of
   # variations that a job should be executed against. The limitation is that a
   # matrix once defined can't include any conditions.

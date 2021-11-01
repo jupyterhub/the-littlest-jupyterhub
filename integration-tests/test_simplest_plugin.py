@@ -84,7 +84,7 @@ def test_new_user_create():
     # Call ensure_user to make sure the user plugin gets called
     user.ensure_user(username)
 
-    with open(f"test_new_user_create") as f:
+    with open("test_new_user_create") as f:
         content = f.read()
 
     assert content == username

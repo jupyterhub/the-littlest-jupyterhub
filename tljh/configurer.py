@@ -121,7 +121,7 @@ def load_traefik_api_credentials():
     proxy_secret_path = os.path.join(STATE_DIR, 'traefik-api.secret')
     if not os.path.exists(proxy_secret_path):
         return {}
-    with open(proxy_secret_path, 'r') as f:
+    with open(proxy_secret_path) as f:
         password = f.read()
     return {
         'traefik_api': {

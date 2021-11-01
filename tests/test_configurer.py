@@ -2,7 +2,6 @@
 Test configurer
 """
 
-from traitlets import Dict
 from traitlets.config import Config
 import os
 import sys

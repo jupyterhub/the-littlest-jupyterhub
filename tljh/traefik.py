@@ -69,7 +69,7 @@ def ensure_traefik_binary(prefix):
     # verify that we got what we expected
     checksum = checksum_file(traefik_bin)
     if checksum != checksums[plat]:
-        raise IOError(f"Checksum failed {traefik_bin}: {checksum} != {checksums[plat]}")
+        raise OSError(f"Checksum failed {traefik_bin}: {checksum} != {checksums[plat]}")
 
 
 def compute_basic_auth(username, password):

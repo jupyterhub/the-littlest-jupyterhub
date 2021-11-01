@@ -211,7 +211,7 @@ def ensure_host_system_can_install_tljh():
 class ProgressPageRequestHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path == "/logs":
-            with open("/opt/tljh/installer.log", "r") as log_file:
+            with open("/opt/tljh/installer.log") as log_file:
                 logs = log_file.read()
 
             self.send_response(200)

@@ -56,5 +56,3 @@ Enabling extensions via the command line
 
    .. image:: ../../images/admin/enable-spellcheck.png
       :alt: spellcheck-interface-changes
-
-
