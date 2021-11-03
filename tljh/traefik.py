@@ -12,13 +12,21 @@ import toml
 from .config import CONFIG_DIR
 from tljh.configurer import load_config, _merge_dictionaries
 
-# FIXME: support more than one platform here
-plat = "linux-amd64"
-traefik_version = "1.7.18"
+# traefik 2.7.x is not supported yet, use v1.7.x for now
+# see: https://github.com/jupyterhub/traefik-proxy/issues/97
+machine = os.uname().machine
+if machine == 'aarch64':
+    plat = "linux-arm64"
+elif machine == 'x86_64':
+    plat = "linux-amd64"
+else:
+    raise OSError(f"Error. Platform: {os.uname().sysname} / {machine} Not supported.")
+traefik_version = "1.7.33"
 
 # record sha256 hashes for supported platforms here
 checksums = {
-    "linux-amd64": "3c2d153d80890b6fc8875af9f8ced32c4d684e1eb5a46d9815337cb343dfd92e"
+    "linux-amd64": "314ffeaa4cd8ed6ab7b779e9b6773987819f79b23c28d7ab60ace4d3683c5935",
+    "linux-arm64": "0640fa665125efa6b598fc08c100178e24de66c5c6035ce5d75668d3dc3706e1"
 }
 
 def checksum_file(path):
@@ -40,7 +48,7 @@ def fatal_error(e):
     giveup=fatal_error
 )
 def ensure_traefik_binary(prefix):
-    """Download and install the traefik binary"""
+    """Download and install the traefik binary to a location identified by a prefix path such as '/opt/tljh/hub/'"""
     traefik_bin = os.path.join(prefix, "bin", "traefik")
     if os.path.exists(traefik_bin):
         checksum = checksum_file(traefik_bin)
@@ -57,6 +65,7 @@ def ensure_traefik_binary(prefix):
         "https://github.com/containous/traefik/releases"
         f"/download/v{traefik_version}/traefik_{plat}"
     )
+
     print(f"Downloading traefik {traefik_version}...")
     # download the file
     response = requests.get(traefik_url)
