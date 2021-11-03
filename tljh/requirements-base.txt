@@ -1,9 +1,10 @@
 # When tljh.installer runs, the users' environment as typically found in
 # /opt/tljh/user, is setup with these packages.
 #
-# FIXME: a frozen version of this file should be used
-# pinning only direct dependencies is a recipe for broken environments!
-
+# WARNING: The order of these dependencies matters, this was observed when using
+#          the requirements-txt-fixer pre-commit hook that sorted them and made
+#          our integration tests fail.
+#
 # JupyterHub + notebook package are base requirements for user environment
 jupyterhub==1.*
 notebook==6.*

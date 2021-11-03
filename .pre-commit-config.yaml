@@ -40,9 +40,6 @@ repos:
       # Autoformat: Makes sure files end in a newline and only a newline.
       - id: end-of-file-fixer
 
-      # Autoformat: Sorts entries in requirements.txt.
-      - id: requirements-txt-fixer
-
       # Lint: Check for files with names that would conflict on a
       # case-insensitive filesystem like MacOS HFS+ or Windows FAT.
       - id: check-case-conflict
