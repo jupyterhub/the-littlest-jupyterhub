@@ -21,14 +21,14 @@ c.JupyterHub.hub_port = 15001
 
 c.TraefikTomlProxy.should_start = False
 
-dynamic_conf_file_path = os.path.join(INSTALL_PREFIX, 'state', 'rules', 'rules.toml')
+dynamic_conf_file_path = os.path.join(INSTALL_PREFIX, "state", "rules", "rules.toml")
 c.TraefikTomlProxy.toml_dynamic_config_file = dynamic_conf_file_path
 c.JupyterHub.proxy_class = TraefikTomlProxy
 
-c.SystemdSpawner.extra_paths = [os.path.join(USER_ENV_PREFIX, 'bin')]
-c.SystemdSpawner.default_shell = '/bin/bash'
+c.SystemdSpawner.extra_paths = [os.path.join(USER_ENV_PREFIX, "bin")]
+c.SystemdSpawner.default_shell = "/bin/bash"
 # Drop the '-singleuser' suffix present in the default template
-c.SystemdSpawner.unit_name_template = 'jupyter-{USERNAME}'
+c.SystemdSpawner.unit_name_template = "jupyter-{USERNAME}"
 
 tljh_config = configurer.load_config()
 configurer.apply_config(tljh_config, c)
@@ -41,6 +41,6 @@ pm.hook.tljh_custom_jupyterhub_config(c=c)
 
 # Load arbitrary .py config files if they exist.
 # This is our escape hatch
-extra_configs = sorted(glob(os.path.join(CONFIG_DIR, 'jupyterhub_config.d', '*.py')))
+extra_configs = sorted(glob(os.path.join(CONFIG_DIR, "jupyterhub_config.d", "*.py")))
 for ec in extra_configs:
     load_subconfig(ec)

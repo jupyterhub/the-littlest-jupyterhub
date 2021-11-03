@@ -46,18 +46,18 @@ def remove_chp():
     Ensure CHP is not running
     """
     if os.path.exists("/etc/systemd/system/configurable-http-proxy.service"):
-        if systemd.check_service_active('configurable-http-proxy.service'):
+        if systemd.check_service_active("configurable-http-proxy.service"):
             try:
-                systemd.stop_service('configurable-http-proxy.service')
+                systemd.stop_service("configurable-http-proxy.service")
             except subprocess.CalledProcessError:
                 logger.info("Cannot stop configurable-http-proxy...")
-        if systemd.check_service_enabled('configurable-http-proxy.service'):
+        if systemd.check_service_enabled("configurable-http-proxy.service"):
             try:
-                systemd.disable_service('configurable-http-proxy.service')
+                systemd.disable_service("configurable-http-proxy.service")
             except subprocess.CalledProcessError:
                 logger.info("Cannot disable configurable-http-proxy...")
         try:
-            systemd.uninstall_unit('configurable-http-proxy.service')
+            systemd.uninstall_unit("configurable-http-proxy.service")
         except subprocess.CalledProcessError:
             logger.info("Cannot uninstall configurable-http-proxy...")
 
@@ -70,36 +70,36 @@ def ensure_jupyterhub_service(prefix):
     remove_chp()
     systemd.reload_daemon()
 
-    with open(os.path.join(HERE, 'systemd-units', 'jupyterhub.service')) as f:
+    with open(os.path.join(HERE, "systemd-units", "jupyterhub.service")) as f:
         hub_unit_template = f.read()
 
-    with open(os.path.join(HERE, 'systemd-units', 'traefik.service')) as f:
+    with open(os.path.join(HERE, "systemd-units", "traefik.service")) as f:
         traefik_unit_template = f.read()
 
     # Set up proxy / hub secret token if it is not already setup
-    proxy_secret_path = os.path.join(STATE_DIR, 'traefik-api.secret')
+    proxy_secret_path = os.path.join(STATE_DIR, "traefik-api.secret")
     if not os.path.exists(proxy_secret_path):
-        with open(proxy_secret_path, 'w') as f:
+        with open(proxy_secret_path, "w") as f:
             f.write(secrets.token_hex(32))
 
     traefik.ensure_traefik_config(STATE_DIR)
 
     unit_params = dict(
         python_interpreter_path=sys.executable,
-        jupyterhub_config_path=os.path.join(HERE, 'jupyterhub_config.py'),
+        jupyterhub_config_path=os.path.join(HERE, "jupyterhub_config.py"),
         install_prefix=INSTALL_PREFIX,
     )
-    systemd.install_unit('jupyterhub.service', hub_unit_template.format(**unit_params))
-    systemd.install_unit('traefik.service', traefik_unit_template.format(**unit_params))
+    systemd.install_unit("jupyterhub.service", hub_unit_template.format(**unit_params))
+    systemd.install_unit("traefik.service", traefik_unit_template.format(**unit_params))
     systemd.reload_daemon()
 
     # If JupyterHub is running, we want to restart it.
-    systemd.restart_service('jupyterhub')
-    systemd.restart_service('traefik')
+    systemd.restart_service("jupyterhub")
+    systemd.restart_service("traefik")
 
     # Mark JupyterHub & traefik to start at boot time
-    systemd.enable_service('jupyterhub')
-    systemd.enable_service('traefik')
+    systemd.enable_service("jupyterhub")
+    systemd.enable_service("traefik")
 
 
 def ensure_jupyterhub_package(prefix):
@@ -115,8 +115,8 @@ def ensure_jupyterhub_package(prefix):
     # Install pycurl. JupyterHub prefers pycurl over SimpleHTTPClient automatically
     # pycurl is generally more bugfree - see https://github.com/jupyterhub/the-littlest-jupyterhub/issues/289
     # build-essential is also generally useful to everyone involved, and required for pycurl
-    apt.install_packages(['libssl-dev', 'libcurl4-openssl-dev', 'build-essential'])
-    conda.ensure_pip_packages(prefix, ['pycurl==7.*'], upgrade=True)
+    apt.install_packages(["libssl-dev", "libcurl4-openssl-dev", "build-essential"])
+    conda.ensure_pip_packages(prefix, ["pycurl==7.*"], upgrade=True)
 
     conda.ensure_pip_packages(
         prefix,
@@ -140,17 +140,17 @@ def ensure_usergroups():
     """
     Sets up user groups & sudo rules
     """
-    user.ensure_group('jupyterhub-admins')
-    user.ensure_group('jupyterhub-users')
+    user.ensure_group("jupyterhub-admins")
+    user.ensure_group("jupyterhub-users")
 
     logger.info("Granting passwordless sudo to JupyterHub admins...")
-    with open('/etc/sudoers.d/jupyterhub-admins', 'w') as f:
+    with open("/etc/sudoers.d/jupyterhub-admins", "w") as f:
         # JupyterHub admins should have full passwordless sudo access
-        f.write('%jupyterhub-admins ALL = (ALL) NOPASSWD: ALL\n')
+        f.write("%jupyterhub-admins ALL = (ALL) NOPASSWD: ALL\n")
         # `sudo -E` should preserve the $PATH we set. This allows
         # admins in jupyter terminals to do `sudo -E pip install <package>`,
         # `pip` is in the $PATH we set in jupyterhub_config.py to include the user conda env.
-        f.write('Defaults exempt_group = jupyterhub-admins\n')
+        f.write("Defaults exempt_group = jupyterhub-admins\n")
 
 
 def ensure_user_environment(user_requirements_txt_file):
@@ -159,50 +159,58 @@ def ensure_user_environment(user_requirements_txt_file):
     """
     logger.info("Setting up user environment...")
 
-    miniconda_old_version = '4.5.4'
-    miniconda_new_version = '4.7.10'
+    miniconda_old_version = "4.5.4"
+    miniconda_new_version = "4.7.10"
     # Install mambaforge using an installer from
     # https://github.com/conda-forge/miniforge/releases
-    mambaforge_new_version = '4.10.3-7'
+    mambaforge_new_version = "4.10.3-7"
     # Check system architecture, set appropriate installer checksum
-    if os.uname().machine == 'aarch64':
-        installer_sha256 = "ac95f137b287b3408e4f67f07a284357b1119ee157373b788b34e770ef2392b2"
-    elif os.uname().machine == 'x86_64':
-        installer_sha256 = "fc872522ec427fcab10167a93e802efaf251024b58cc27b084b915a9a73c4474"
+    if os.uname().machine == "aarch64":
+        installer_sha256 = (
+            "ac95f137b287b3408e4f67f07a284357b1119ee157373b788b34e770ef2392b2"
+        )
+    elif os.uname().machine == "x86_64":
+        installer_sha256 = (
+            "fc872522ec427fcab10167a93e802efaf251024b58cc27b084b915a9a73c4474"
+        )
     # Check OS, set appropriate string for conda installer path
-    if os.uname().sysname != 'Linux':
+    if os.uname().sysname != "Linux":
         raise OSError("TLJH is only supported on Linux platforms.")
     # Then run `mamba --version` to get the conda and mamba versions
     # Keep these in sync with tests/test_conda.py::prefix
-    mambaforge_conda_new_version = '4.10.3'
-    mambaforge_mamba_version = '0.16.0'
+    mambaforge_conda_new_version = "4.10.3"
+    mambaforge_mamba_version = "0.16.0"
 
     if conda.check_miniconda_version(USER_ENV_PREFIX, mambaforge_conda_new_version):
-        conda_version = '4.10.3'
+        conda_version = "4.10.3"
     elif conda.check_miniconda_version(USER_ENV_PREFIX, miniconda_new_version):
-        conda_version = '4.8.1'
+        conda_version = "4.8.1"
     elif conda.check_miniconda_version(USER_ENV_PREFIX, miniconda_old_version):
-        conda_version = '4.5.8'
+        conda_version = "4.5.8"
     # If no prior miniconda installation is found, we can install a newer version
     else:
-        logger.info('Downloading & setting up user environment...')
-        installer_url = "https://github.com/conda-forge/miniforge/releases/download/{v}/Mambaforge-{v}-Linux-{arch}.sh".format(v=mambaforge_new_version, arch=os.uname().machine)
-        with conda.download_miniconda_installer(installer_url, installer_sha256) as installer_path:
+        logger.info("Downloading & setting up user environment...")
+        installer_url = "https://github.com/conda-forge/miniforge/releases/download/{v}/Mambaforge-{v}-Linux-{arch}.sh".format(
+            v=mambaforge_new_version, arch=os.uname().machine
+        )
+        with conda.download_miniconda_installer(
+            installer_url, installer_sha256
+        ) as installer_path:
             conda.install_miniconda(installer_path, USER_ENV_PREFIX)
-        conda_version = '4.10.3'
+        conda_version = "4.10.3"
 
     conda.ensure_conda_packages(
         USER_ENV_PREFIX,
         [
             # Conda's latest version is on conda much more so than on PyPI.
-            'conda==' + conda_version,
-            'mamba==' + mambaforge_mamba_version,
+            "conda==" + conda_version,
+            "mamba==" + mambaforge_mamba_version,
         ],
     )
 
     conda.ensure_pip_requirements(
         USER_ENV_PREFIX,
-        os.path.join(HERE, 'requirements-base.txt'),
+        os.path.join(HERE, "requirements-base.txt"),
         upgrade=True,
     )
 
@@ -231,25 +239,25 @@ def ensure_admins(admin_password_list):
     else:
         config = {}
 
-    config['users'] = config.get('users', {})
+    config["users"] = config.get("users", {})
 
-    db_passw = os.path.join(STATE_DIR, 'passwords.dbm')
+    db_passw = os.path.join(STATE_DIR, "passwords.dbm")
 
     admins = []
     for admin_password_entry in admin_password_list:
         for admin_password_pair in admin_password_entry:
             if ":" in admin_password_pair:
-                admin, password = admin_password_pair.split(':')
+                admin, password = admin_password_pair.split(":")
                 admins.append(admin)
                 # Add admin:password to the db
                 password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
-                with dbm.open(db_passw, 'c', 0o600) as db:
+                with dbm.open(db_passw, "c", 0o600) as db:
                     db[admin] = password
             else:
                 admins.append(admin_password_pair)
-    config['users']['admin'] = admins
+    config["users"]["admin"] = admins
 
-    with open(config_path, 'w+') as f:
+    with open(config_path, "w+") as f:
         yaml.dump(config, f)
 
 
@@ -262,12 +270,12 @@ def ensure_jupyterhub_running(times=20):
 
     for i in range(times):
         try:
-            logger.info(f'Waiting for JupyterHub to come up ({i + 1}/{times} tries)')
+            logger.info(f"Waiting for JupyterHub to come up ({i + 1}/{times} tries)")
             # Because we don't care at this level that SSL is valid, we can suppress
             # InsecureRequestWarning for this request.
             with warnings.catch_warnings():
                 warnings.filterwarnings("ignore", category=InsecureRequestWarning)
-                requests.get('http://127.0.0.1', verify=False)
+                requests.get("http://127.0.0.1", verify=False)
             return
         except requests.HTTPError as h:
             if h.response.status_code in [404, 502, 503]:
@@ -299,15 +307,15 @@ def ensure_symlinks(prefix):
     around this with sudo -E and extra entries in the sudoers file, but this
     is far more secure at the cost of upsetting some FHS purists.
     """
-    tljh_config_src = os.path.join(prefix, 'bin', 'tljh-config')
-    tljh_config_dest = '/usr/bin/tljh-config'
+    tljh_config_src = os.path.join(prefix, "bin", "tljh-config")
+    tljh_config_dest = "/usr/bin/tljh-config"
     if os.path.exists(tljh_config_dest):
         if os.path.realpath(tljh_config_dest) != tljh_config_src:
             #  tljh-config exists that isn't ours. We should *not* delete this file,
             # instead we throw an error and abort. Deleting files owned by other people
             # while running as root is dangerous, especially with symlinks involved.
             raise FileExistsError(
-                f'/usr/bin/tljh-config exists but is not a symlink to {tljh_config_src}'
+                f"/usr/bin/tljh-config exists but is not a symlink to {tljh_config_src}"
             )
         else:
             # We have a working symlink, so do nothing
@@ -324,9 +332,9 @@ def setup_plugins(plugins=None):
         conda.ensure_pip_packages(HUB_ENV_PREFIX, plugins, upgrade=True)
 
     # Set up plugin infrastructure
-    pm = pluggy.PluginManager('tljh')
+    pm = pluggy.PluginManager("tljh")
     pm.add_hookspecs(hooks)
-    pm.load_setuptools_entrypoints('tljh')
+    pm.load_setuptools_entrypoints("tljh")
 
     return pm
 
@@ -340,8 +348,8 @@ def run_plugin_actions(plugin_manager):
     apt_packages = list(set(itertools.chain(*hook.tljh_extra_apt_packages())))
     if apt_packages:
         logger.info(
-            'Installing {} apt packages collected from plugins: {}'.format(
-                len(apt_packages), ' '.join(apt_packages)
+            "Installing {} apt packages collected from plugins: {}".format(
+                len(apt_packages), " ".join(apt_packages)
             )
         )
         apt.install_packages(apt_packages)
@@ -350,8 +358,8 @@ def run_plugin_actions(plugin_manager):
     hub_pip_packages = list(set(itertools.chain(*hook.tljh_extra_hub_pip_packages())))
     if hub_pip_packages:
         logger.info(
-            'Installing {} hub pip packages collected from plugins: {}'.format(
-                len(hub_pip_packages), ' '.join(hub_pip_packages)
+            "Installing {} hub pip packages collected from plugins: {}".format(
+                len(hub_pip_packages), " ".join(hub_pip_packages)
             )
         )
         conda.ensure_pip_packages(
@@ -364,8 +372,8 @@ def run_plugin_actions(plugin_manager):
     conda_packages = list(set(itertools.chain(*hook.tljh_extra_user_conda_packages())))
     if conda_packages:
         logger.info(
-            'Installing {} user conda packages collected from plugins: {}'.format(
-                len(conda_packages), ' '.join(conda_packages)
+            "Installing {} user conda packages collected from plugins: {}".format(
+                len(conda_packages), " ".join(conda_packages)
             )
         )
         conda.ensure_conda_packages(USER_ENV_PREFIX, conda_packages)
@@ -374,8 +382,8 @@ def run_plugin_actions(plugin_manager):
     user_pip_packages = list(set(itertools.chain(*hook.tljh_extra_user_pip_packages())))
     if user_pip_packages:
         logger.info(
-            'Installing {} user pip packages collected from plugins: {}'.format(
-                len(user_pip_packages), ' '.join(user_pip_packages)
+            "Installing {} user pip packages collected from plugins: {}".format(
+                len(user_pip_packages), " ".join(user_pip_packages)
             )
         )
         conda.ensure_pip_packages(
@@ -393,7 +401,7 @@ def ensure_config_yaml(plugin_manager):
     Ensure we have a config.yaml present
     """
     # ensure config dir exists and is private
-    for path in [CONFIG_DIR, os.path.join(CONFIG_DIR, 'jupyterhub_config.d')]:
+    for path in [CONFIG_DIR, os.path.join(CONFIG_DIR, "jupyterhub_config.d")]:
         os.makedirs(path, mode=0o700, exist_ok=True)
 
     migrator.migrate_config_files()
@@ -407,7 +415,7 @@ def ensure_config_yaml(plugin_manager):
     hook = plugin_manager.hook
     hook.tljh_config_post_install(config=config)
 
-    with open(CONFIG_FILE, 'w+') as f:
+    with open(CONFIG_FILE, "w+") as f:
         yaml.dump(config, f)
 
 
@@ -418,17 +426,17 @@ def main():
 
     argparser = argparse.ArgumentParser()
     argparser.add_argument(
-        '--admin', nargs='*', action='append', help='List of usernames set to be admin'
+        "--admin", nargs="*", action="append", help="List of usernames set to be admin"
     )
     argparser.add_argument(
-        '--user-requirements-txt-url',
-        help='URL to a requirements.txt file that should be installed in the user environment',
+        "--user-requirements-txt-url",
+        help="URL to a requirements.txt file that should be installed in the user environment",
     )
-    argparser.add_argument('--plugin', nargs='*', help='Plugin pip-specs to install')
+    argparser.add_argument("--plugin", nargs="*", help="Plugin pip-specs to install")
     argparser.add_argument(
-        '--progress-page-server-pid',
+        "--progress-page-server-pid",
         type=int,
-        help='The pid of the progress page server',
+        help="The pid of the progress page server",
     )
 
     args = argparser.parse_args()
@@ -463,5 +471,5 @@ def main():
     logger.info("Done!")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

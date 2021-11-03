@@ -32,7 +32,7 @@ def check_miniconda_version(prefix, version):
     try:
         installed_version = (
             subprocess.check_output(
-                [os.path.join(prefix, 'bin', 'conda'), '-V'], stderr=subprocess.STDOUT
+                [os.path.join(prefix, "bin", "conda"), "-V"], stderr=subprocess.STDOUT
             )
             .decode()
             .strip()
@@ -53,7 +53,7 @@ def download_miniconda_installer(installer_url, sha256sum):
     of given version, verifies the sha256sum & provides path to it to the `with`
     block to run.
     """
-    with tempfile.NamedTemporaryFile('wb') as f:
+    with tempfile.NamedTemporaryFile("wb") as f:
         f.write(requests.get(installer_url).content)
         # Remain in the NamedTemporaryFile context, but flush changes, see:
         # https://docs.python.org/3/library/os.html#os.fsync
@@ -61,7 +61,7 @@ def download_miniconda_installer(installer_url, sha256sum):
         os.fsync(f.fileno())
 
         if sha256_file(f.name) != sha256sum:
-            raise Exception('sha256sum hash mismatch! Downloaded file corrupted')
+            raise Exception("sha256sum hash mismatch! Downloaded file corrupted")
 
         yield f.name
 
@@ -83,7 +83,7 @@ def install_miniconda(installer_path, prefix):
     """
     Install miniconda with installer at installer_path under prefix
     """
-    utils.run_subprocess(['/bin/bash', installer_path, '-u', '-b', '-p', prefix])
+    utils.run_subprocess(["/bin/bash", installer_path, "-u", "-b", "-p", prefix])
     # fix permissions on initial install
     # a few files have the wrong ownership and permissions initially
     # when the installer is run as root
@@ -97,7 +97,7 @@ def ensure_conda_packages(prefix, packages):
     Note that conda seem to update dependencies by default, so there is probably
     no need to have a update parameter exposed for this function.
     """
-    conda_executable = [os.path.join(prefix, 'bin', 'mamba')]
+    conda_executable = [os.path.join(prefix, "bin", "mamba")]
     abspath = os.path.abspath(prefix)
     # Let subprocess errors propagate
     # Explicitly do *not* capture stderr, since that's not always JSON!
@@ -106,11 +106,11 @@ def ensure_conda_packages(prefix, packages):
     raw_output = subprocess.check_output(
         conda_executable
         + [
-            'install',
-            '-c',
-            'conda-forge',  # Make customizable if we ever need to
-            '--json',
-            '--prefix',
+            "install",
+            "-c",
+            "conda-forge",  # Make customizable if we ever need to
+            "--json",
+            "--prefix",
             abspath,
         ]
         + packages
@@ -118,17 +118,17 @@ def ensure_conda_packages(prefix, packages):
     # `conda install` outputs JSON lines for fetch updates,
     # and a undelimited output at the end. There is no reasonable way to
     # parse this outside of this kludge.
-    filtered_output = '\n'.join(
+    filtered_output = "\n".join(
         [
             l
-            for l in raw_output.split('\n')
+            for l in raw_output.split("\n")
             # Sometimes the JSON messages start with a \x00. The lstrip removes these.
             # conda messages seem to randomly throw \x00 in places for no reason
-            if not l.lstrip('\x00').startswith('{"fetch"')
+            if not l.lstrip("\x00").startswith('{"fetch"')
         ]
     )
-    output = json.loads(filtered_output.lstrip('\x00'))
-    if 'success' in output and output['success'] == True:
+    output = json.loads(filtered_output.lstrip("\x00"))
+    if "success" in output and output["success"] == True:
         return
     fix_permissions(prefix)
 
@@ -138,10 +138,10 @@ def ensure_pip_packages(prefix, packages, upgrade=False):
     Ensure pip packages are installed in the given conda prefix.
     """
     abspath = os.path.abspath(prefix)
-    pip_executable = [os.path.join(abspath, 'bin', 'python'), '-m', 'pip']
-    pip_cmd = pip_executable + ['install']
+    pip_executable = [os.path.join(abspath, "bin", "python"), "-m", "pip"]
+    pip_cmd = pip_executable + ["install"]
     if upgrade:
-        pip_cmd.append('--upgrade')
+        pip_cmd.append("--upgrade")
     utils.run_subprocess(pip_cmd + packages)
     fix_permissions(prefix)
 
@@ -153,9 +153,9 @@ def ensure_pip_requirements(prefix, requirements_path, upgrade=False):
     requirements_path can be a file or a URL.
     """
     abspath = os.path.abspath(prefix)
-    pip_executable = [os.path.join(abspath, 'bin', 'python'), '-m', 'pip']
-    pip_cmd = pip_executable + ['install']
+    pip_executable = [os.path.join(abspath, "bin", "python"), "-m", "pip"]
+    pip_cmd = pip_executable + ["install"]
     if upgrade:
-        pip_cmd.append('--upgrade')
-    utils.run_subprocess(pip_cmd + ['--requirement', requirements_path])
+        pip_cmd.append("--upgrade")
+    utils.run_subprocess(pip_cmd + ["--requirement", requirements_path])
     fix_permissions(prefix)

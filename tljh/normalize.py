@@ -17,7 +17,7 @@ def generate_system_username(username):
     if len(username) < 26:
         return username
 
-    userhash = hashlib.sha256(username.encode('utf-8')).hexdigest()
-    return '{username_trunc}-{hash}'.format(
+    userhash = hashlib.sha256(username.encode("utf-8")).hexdigest()
+    return "{username_trunc}-{hash}".format(
         username_trunc=username[:26], hash=userhash[:5]
     )

@@ -3,8 +3,8 @@ Hook specifications that pluggy plugins can override
 """
 import pluggy
 
-hookspec = pluggy.HookspecMarker('tljh')
-hookimpl = pluggy.HookimplMarker('tljh')
+hookspec = pluggy.HookspecMarker("tljh")
+hookimpl = pluggy.HookimplMarker("tljh")
 
 
 @hookspec

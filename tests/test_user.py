@@ -16,7 +16,7 @@ def test_ensure_user():
     Test user creation & removal
     """
     # Use a prefix to make sure we never start with a number
-    username = 'u' + str(uuid.uuid4())[:8]
+    username = "u" + str(uuid.uuid4())[:8]
     # Validate that no user exists
     with pytest.raises(KeyError):
         pwd.getpwnam(username)
@@ -57,7 +57,7 @@ def test_ensure_group():
     Test group creation & removal
     """
     # Use a prefix to make sure we never start with a number
-    groupname = 'g' + str(uuid.uuid4())[:8]
+    groupname = "g" + str(uuid.uuid4())[:8]
 
     # Validate that no group exists
     with pytest.raises(KeyError):
@@ -83,8 +83,8 @@ def test_group_membership():
     """
     Test group memberships can be added / removed
     """
-    username = 'u' + str(uuid.uuid4())[:8]
-    groupname = 'g' + str(uuid.uuid4())[:8]
+    username = "u" + str(uuid.uuid4())[:8]
+    groupname = "g" + str(uuid.uuid4())[:8]
 
     # Validate that no group exists
     with pytest.raises(KeyError):

@@ -23,15 +23,15 @@ def run_subprocess(cmd, *args, **kwargs):
     In TLJH, this sends successful output to the installer log,
     and failed output directly to the user's screen
     """
-    logger = logging.getLogger('tljh')
+    logger = logging.getLogger("tljh")
     proc = subprocess.run(
         cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, *args, **kwargs
     )
-    printable_command = ' '.join(cmd)
+    printable_command = " ".join(cmd)
     if proc.returncode != 0:
         # Our process failed! Show output to the user
         logger.error(
-            'Ran {command} with exit code {code}'.format(
+            "Ran {command} with exit code {code}".format(
                 command=printable_command, code=proc.returncode
             )
         )
@@ -40,7 +40,7 @@ def run_subprocess(cmd, *args, **kwargs):
     else:
         # This goes into installer.log
         logger.debug(
-            'Ran {command} with exit code {code}'.format(
+            "Ran {command} with exit code {code}".format(
                 command=printable_command, code=proc.returncode
             )
         )
@@ -54,8 +54,8 @@ def get_plugin_manager():
     Return plugin manager instance
     """
     # Set up plugin infrastructure
-    pm = pluggy.PluginManager('tljh')
+    pm = pluggy.PluginManager("tljh")
     pm.add_hookspecs(hooks)
-    pm.load_setuptools_entrypoints('tljh')
+    pm.load_setuptools_entrypoints("tljh")
 
     return pm

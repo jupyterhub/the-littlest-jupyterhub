@@ -17,7 +17,7 @@ def tljh_dir(tmpdir):
         reload(tljh)
         for name in dir(tljh):
             mod = getattr(tljh, name)
-            if isinstance(mod, types.ModuleType) and mod.__name__.startswith('tljh.'):
+            if isinstance(mod, types.ModuleType) and mod.__name__.startswith("tljh."):
                 reload(mod)
         assert tljh.config.INSTALL_PREFIX == tljh_dir
         os.makedirs(tljh.config.STATE_DIR)
