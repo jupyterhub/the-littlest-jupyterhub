@@ -119,7 +119,7 @@ def test_admin_writable():
 
 def test_installer_log_readable():
     # Test that installer.log is owned by root, and not readable by anyone else
-    file_stat = os.stat('/opt/tljh/installer.log')
+    file_stat = os.stat("/opt/tljh/installer.log")
     assert file_stat.st_uid == 0
     assert file_stat.st_mode == 0o100500
 
@@ -172,7 +172,16 @@ def test_pip_install(group, allowed):
         # get a failure if the user can't install to the global site. Which is
         # what we wanted to test for here.
         subprocess.check_call(
-            [python, "-m", "pip", "install", "--no-user", "--ignore-installed", "--no-deps", "flit"],
+            [
+                python,
+                "-m",
+                "pip",
+                "install",
+                "--no-user",
+                "--ignore-installed",
+                "--no-deps",
+                "flit",
+            ],
             preexec_fn=partial(setgroup, group),
         )
     if allowed:
@@ -225,4 +234,4 @@ def test_symlinks():
     """
     Test we symlink tljh-config to /usr/local/bin
     """
-    assert os.path.exists('/usr/bin/tljh-config')
+    assert os.path.exists("/usr/bin/tljh-config")

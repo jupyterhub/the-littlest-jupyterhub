@@ -10,7 +10,7 @@ async def test_admin_login():
     Test if the admin that was added during install can login with
     the password provided.
     """
-    hub_url = 'http://localhost'
+    hub_url = "http://localhost"
     username = "admin"
     password = "admin"
 
@@ -18,6 +18,7 @@ async def test_admin_login():
         await u.login()
         # If user is not logged in, this will raise an exception
         await u.ensure_server_simulate()
+
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
@@ -32,7 +33,7 @@ async def test_unsuccessful_login(username, password):
     """
     Ensure nobody but the admin that was added during install can login
     """
-    hub_url = 'http://localhost'
+    hub_url = "http://localhost"
 
     async with User(username, hub_url, partial(login_dummy, password="")) as u:
         user_logged_in = await u.login()

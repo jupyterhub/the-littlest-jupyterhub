@@ -15,9 +15,9 @@ from tljh.configurer import load_config, _merge_dictionaries
 # traefik 2.7.x is not supported yet, use v1.7.x for now
 # see: https://github.com/jupyterhub/traefik-proxy/issues/97
 machine = os.uname().machine
-if machine == 'aarch64':
+if machine == "aarch64":
     plat = "linux-arm64"
-elif machine == 'x86_64':
+elif machine == "x86_64":
     plat = "linux-amd64"
 else:
     raise OSError(f"Error. Platform: {os.uname().sysname} / {machine} Not supported.")
@@ -26,8 +26,9 @@ traefik_version = "1.7.33"
 # record sha256 hashes for supported platforms here
 checksums = {
     "linux-amd64": "314ffeaa4cd8ed6ab7b779e9b6773987819f79b23c28d7ab60ace4d3683c5935",
-    "linux-arm64": "0640fa665125efa6b598fc08c100178e24de66c5c6035ce5d75668d3dc3706e1"
+    "linux-arm64": "0640fa665125efa6b598fc08c100178e24de66c5c6035ce5d75668d3dc3706e1",
 }
+
 
 def checksum_file(path):
     """Compute the sha256 checksum of a path"""
@@ -37,16 +38,13 @@ def checksum_file(path):
             hasher.update(chunk)
     return hasher.hexdigest()
 
+
 def fatal_error(e):
     # Retry only when connection is reset or we think we didn't download entire file
     return str(e) != "ContentTooShort" and not isinstance(e, ConnectionResetError)
 
-@backoff.on_exception(
-    backoff.expo,
-    Exception,
-    max_tries=2,
-    giveup=fatal_error
-)
+
+@backoff.on_exception(backoff.expo, Exception, max_tries=2, giveup=fatal_error)
 def ensure_traefik_binary(prefix):
     """Download and install the traefik binary to a location identified by a prefix path such as '/opt/tljh/hub/'"""
     traefik_bin = os.path.join(prefix, "bin", "traefik")
@@ -71,7 +69,7 @@ def ensure_traefik_binary(prefix):
     response = requests.get(traefik_url)
     if response.status_code == 206:
         raise Exception("ContentTooShort")
-    with open(traefik_bin, 'wb') as f:
+    with open(traefik_bin, "wb") as f:
         f.write(response.content)
     os.chmod(traefik_bin, 0o755)
 
@@ -91,7 +89,7 @@ def compute_basic_auth(username, password):
 
 
 def load_extra_config(extra_config_dir):
-    extra_configs = sorted(glob(os.path.join(extra_config_dir, '*.toml')))
+    extra_configs = sorted(glob(os.path.join(extra_config_dir, "*.toml")))
     # Load the toml list of files into dicts and merge them
     config = toml.load(extra_configs)
     return config
@@ -104,9 +102,9 @@ def ensure_traefik_config(state_dir):
     traefik_dynamic_config_dir = os.path.join(state_dir, "rules")
 
     config = load_config()
-    config['traefik_api']['basic_auth'] = compute_basic_auth(
-        config['traefik_api']['username'],
-        config['traefik_api']['password'],
+    config["traefik_api"]["basic_auth"] = compute_basic_auth(
+        config["traefik_api"]["username"],
+        config["traefik_api"]["password"],
     )
 
     with open(os.path.join(os.path.dirname(__file__), "traefik.toml.tpl")) as f:
@@ -150,4 +148,3 @@ def ensure_traefik_config(state_dir):
     # ensure acme.json exists and is private
     with open(os.path.join(state_dir, "acme.json"), "a") as f:
         os.fchmod(f.fileno(), 0o600)
-

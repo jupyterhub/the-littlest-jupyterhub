@@ -16,7 +16,7 @@ def test_ensure_user():
     Test user creation & removal
     """
     # Use a prefix to make sure we never start with a number
-    username = 'u' + str(uuid.uuid4())[:8]
+    username = "u" + str(uuid.uuid4())[:8]
     # Validate that no user exists
     with pytest.raises(KeyError):
         pwd.getpwnam(username)
@@ -31,9 +31,15 @@ def test_ensure_user():
         assert os.path.exists(home_dir)
         # Ensure not word readable/writable especially in teaching context
         homedir_stats = os.stat(home_dir).st_mode
-        assert not (homedir_stats & stat.S_IROTH), "Everyone should not be able to read users home directory"
-        assert not (homedir_stats & stat.S_IWOTH), "Everyone should not be able to write users home directory"
-        assert not (homedir_stats & stat.S_IXOTH), "Everyone should not be able to list what is in users home directory"
+        assert not (
+            homedir_stats & stat.S_IROTH
+        ), "Everyone should not be able to read users home directory"
+        assert not (
+            homedir_stats & stat.S_IWOTH
+        ), "Everyone should not be able to write users home directory"
+        assert not (
+            homedir_stats & stat.S_IXOTH
+        ), "Everyone should not be able to list what is in users home directory"
 
         # Run ensure_user again, should be a noop
         user.ensure_user(username)
@@ -51,7 +57,7 @@ def test_ensure_group():
     Test group creation & removal
     """
     # Use a prefix to make sure we never start with a number
-    groupname = 'g' + str(uuid.uuid4())[:8]
+    groupname = "g" + str(uuid.uuid4())[:8]
 
     # Validate that no group exists
     with pytest.raises(KeyError):
@@ -77,8 +83,8 @@ def test_group_membership():
     """
     Test group memberships can be added / removed
     """
-    username = 'u' + str(uuid.uuid4())[:8]
-    groupname = 'g' + str(uuid.uuid4())[:8]
+    username = "u" + str(uuid.uuid4())[:8]
+    groupname = "g" + str(uuid.uuid4())[:8]
 
     # Validate that no group exists
     with pytest.raises(KeyError):

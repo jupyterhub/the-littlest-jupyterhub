@@ -3,8 +3,8 @@ Hook specifications that pluggy plugins can override
 """
 import pluggy
 
-hookspec = pluggy.HookspecMarker('tljh')
-hookimpl = pluggy.HookimplMarker('tljh')
+hookspec = pluggy.HookspecMarker("tljh")
+hookimpl = pluggy.HookimplMarker("tljh")
 
 
 @hookspec
@@ -22,12 +22,14 @@ def tljh_extra_user_pip_packages():
     """
     pass
 
+
 @hookspec
 def tljh_extra_hub_pip_packages():
     """
     Return list of extra pip packages to install in the hub environment.
     """
     pass
+
 
 @hookspec
 def tljh_extra_apt_packages():
@@ -38,6 +40,7 @@ def tljh_extra_apt_packages():
     """
     pass
 
+
 @hookspec
 def tljh_custom_jupyterhub_config(c):
     """
@@ -47,6 +50,7 @@ def tljh_custom_jupyterhub_config(c):
     be here.
     """
     pass
+
 
 @hookspec
 def tljh_config_post_install(config):
@@ -60,6 +64,7 @@ def tljh_config_post_install(config):
     """
     pass
 
+
 @hookspec
 def tljh_post_install():
     """
@@ -69,6 +74,7 @@ def tljh_post_install():
     This can be arbitrary Python code.
     """
     pass
+
 
 @hookspec
 def tljh_new_user_create(username):
