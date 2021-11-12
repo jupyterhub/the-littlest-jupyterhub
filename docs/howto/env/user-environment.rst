@@ -184,11 +184,12 @@ To upgrade the Python version of the user environment, one can:
          source /opt/tljh/user/bin/activate
 
    2. Get the list of currently installed pip packages (so you can later install them under the
-      new Python):
+      new Python).
+      Note conda packages must be excluded from this list:
 
       .. code-block:: bash
 
-         pip freeze > pip_pkgs.txt
+         pip freeze | grep -v ' @ ' > pip_pkgs.txt
 
    3. Update all conda installed packages in the environment:
 
