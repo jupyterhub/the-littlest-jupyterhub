@@ -237,10 +237,7 @@ Let's create the server on which we can run JupyterHub.
    While waiting until the appropriate time to try, another way to check if
    things are churning away, is to open the **System Log**. To do this, go to
    the **EC2 Management Console** & highlight the instance by clicking on that
-   row and then right-click **Instance Settings** > **Get System Log**.
-
-   .. image:: ../images/providers/amazon/get_system_log.png
-      :alt: Getting system log.
+   row and then right-click **Monitor and troubleshoot** > **Get system log**.
 
 #. When the Jupyterhub creation process finishes and the hub is ready to show
    the login, the **System Log** should look similar to the image below. Scroll to
