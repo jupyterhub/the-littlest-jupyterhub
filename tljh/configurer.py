@@ -52,7 +52,7 @@ default = {
         "password": "",
     },
     "user_environment": {
-        "default_app": "classic",
+        "default_app": "jupyterlab",
     },
     "services": {
         "cull": {
@@ -231,6 +231,8 @@ def update_user_environment(c, config):
     # Set default application users are launched into
     if user_env["default_app"] == "jupyterlab":
         c.Spawner.default_url = "/lab"
+    elif user_env["default_app"] == "classic":
+        c.Spawner.default_url = "/tree"
 
 
 def update_user_account_config(c, config):
