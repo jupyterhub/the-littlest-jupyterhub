@@ -16,7 +16,8 @@ with ``sudo -E``.
 
    The ``sudo -E`` is very important!
 
-#. Install `there <https://github.com/Carreau/there>`_ with ``pip``
+#. Install `there <https://pypi.org/project/there>`_ with ``pip``
+
 
    .. code-block:: bash
 
