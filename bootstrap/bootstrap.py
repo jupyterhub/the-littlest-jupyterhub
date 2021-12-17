@@ -389,7 +389,8 @@ def main():
     # Run TLJH installer
     logger.info("Running TLJH installer...")
     os.execv(python_bin, [python_bin, "-m", "tljh.installer"] + tljh_installer_flags)
-
+    logger.info("TLJH setup complete")
+    
 
 if __name__ == "__main__":
     main()
