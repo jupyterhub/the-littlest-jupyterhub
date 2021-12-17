@@ -62,12 +62,12 @@ def test_app_default():
     assert "default_url" not in c.Spawner
 
 
-def test_app_jupyterlab():
+def test_app_classic():
     """
-    Test setting JupyterLab as default application
+    Test setting classic as default application
     """
-    c = apply_mock_config({"user_environment": {"default_app": "jupyterlab"}})
-    assert c.Spawner.default_url == "/lab"
+    c = apply_mock_config({"user_environment": {"default_app": "classic"}})
+    assert c.Spawner.default_url == "/tree"
 
 
 def test_auth_default():
