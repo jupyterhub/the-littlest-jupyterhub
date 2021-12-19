@@ -133,12 +133,13 @@ If you are looking for a way to extend or customize your TLJH deployment, you mi
 
 Here is a non-exhaustive list of known TLJH plugins:
 
-- `tljh-pangeo <https://github.com/yuvipanda/tljh-pangeo>`_: TLJH plugin for setting up the Pangeo Stack
-- `tljh-voila-gallery <https://github.com/voila-dashboards/tljh-voila-gallery>`_: TLJH plugin that installs a gallery of Voilà dashboards
+- `tljh-pangeo <https://github.com/yuvipanda/tljh-pangeo>`_: TLJH plugin for setting up the Pangeo Stack.
+- `tljh-voila-gallery <https://github.com/voila-dashboards/tljh-voila-gallery>`_: TLJH plugin that installs a gallery of Voilà dashboards.
 - `tljh-repo2docker <https://github.com/plasmabio/tljh-repo2docker>`_: TLJH plugin to build multiple user environments with
   `repo2docker <https://repo2docker.readthedocs.io>`_.
 - `tljh-shared-directory <https://github.com/kafonek/tljh-shared-directory>`_: TLJH plugin which sets up a *shared directory*
-   for the Hub users in ``/srv/scratch``.
+  for the Hub users in ``/srv/scratch``.
+- `tljh-db <https://github.com/sinzlab/tljh-db>`_: TLJH plugin for working with mysql databases.
 
 If you have authored a plugin, please open a PR to add it to this list!
 
