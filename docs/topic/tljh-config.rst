@@ -228,9 +228,10 @@ Advanced: ``config.yaml``
 =========================
 
 ``tljh-config`` is a simple program that modifies the contents of the
-``config.yaml`` file located at ``/opt/tljh/config/config.yaml``. ``tljh-config``
-is the recommended method of editing / viewing configuration since editing
-YAML by hand in a terminal text editor is a large source of errors.
+``config.yaml`` file located at ``/opt/tljh/config/config.yaml``.
+Note: you may need to be logged into root to access this folder (`sudo -s`).
+``tljh-config`` is the recommended method of editing / viewing configuration
+since editing YAML by hand in a terminal text editor is a large source of errors.
 
 To learn more about the ``tljh-config`` usage, you can use the ``--help`` flag.
 The ``--help`` flag can be used either directly, to get information about the
