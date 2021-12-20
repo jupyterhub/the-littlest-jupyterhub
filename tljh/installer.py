@@ -180,6 +180,7 @@ def ensure_user_environment(user_requirements_txt_file, user_python_version):
     # Keep these in sync with tests/test_conda.py::prefix
     mambaforge_conda_new_version = "4.10.3"
     mambaforge_mamba_version = "0.16.0"
+    user_python_version = user_python_version if user_python_version else "3.9.*"
 
     if conda.check_miniconda_version(USER_ENV_PREFIX, mambaforge_conda_new_version):
         conda_version = "4.10.3"
@@ -441,7 +442,7 @@ def main():
     )
     argparser.add_argument(
         "--python-version",
-        default="3.9.*", help="Set user-environment Python version",
+        help="Set user-environment Python version",
     )
 
     args = argparser.parse_args()
