@@ -153,7 +153,7 @@ def ensure_usergroups():
         f.write("Defaults exempt_group = jupyterhub-admins\n")
 
 
-def ensure_user_environment(user_requirements_txt_file):
+def ensure_user_environment(user_requirements_txt_file, user_python_version):
     """
     Set up user conda environment with required packages
     """
@@ -180,6 +180,7 @@ def ensure_user_environment(user_requirements_txt_file):
     # Keep these in sync with tests/test_conda.py::prefix
     mambaforge_conda_new_version = "4.10.3"
     mambaforge_mamba_version = "0.16.0"
+    user_python_version = user_python_version if user_python_version else "3.9.*"
 
     if conda.check_miniconda_version(USER_ENV_PREFIX, mambaforge_conda_new_version):
         conda_version = "4.10.3"
@@ -205,6 +206,7 @@ def ensure_user_environment(user_requirements_txt_file):
             # Conda's latest version is on conda much more so than on PyPI.
             "conda==" + conda_version,
             "mamba==" + mambaforge_mamba_version,
+            "python==" + user_python_version,
         ],
     )
 
@@ -438,6 +440,10 @@ def main():
         type=int,
         help="The pid of the progress page server",
     )
+    argparser.add_argument(
+        "--user-python-version",
+        help="Set user-environment Python version",
+    )
 
     args = argparser.parse_args()
 
@@ -446,7 +452,7 @@ def main():
     ensure_config_yaml(pm)
     ensure_admins(args.admin)
     ensure_usergroups()
-    ensure_user_environment(args.user_requirements_txt_url)
+    ensure_user_environment(args.user_requirements_txt_url, args.user_python_version)
 
     logger.info("Setting up JupyterHub...")
     ensure_jupyterhub_package(HUB_ENV_PREFIX)

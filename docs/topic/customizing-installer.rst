@@ -107,6 +107,21 @@ will fail.
    When pointing to a file on GitHub, make sure to use the 'Raw' version. It should point to
    ``raw.githubusercontent.com``, not ``github.com``.
 
+Specifying the user-environment Python version
+=======================
+
+By default the user environment is provisioned with the latest version of Python 3.9,
+though it is possible to specify a specific Python version if desired.
+
+For example, to set Python version 3.7.10 for the user environment,
+you would use:
+
+.. code-block:: bash
+
+   curl -L https://tljh.jupyter.org/bootstrap.py \
+    | sudo python3 - \
+      --user-python-version 3.7.10
+
 Installing TLJH plugins
 =======================
 
