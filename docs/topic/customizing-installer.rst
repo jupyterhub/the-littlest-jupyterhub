@@ -120,7 +120,7 @@ you would use:
 
    curl -L https://tljh.jupyter.org/bootstrap.py \
     | sudo python3 - \
-      --python-version 3.7.10
+      --user-python-version 3.7.10
 
 Installing TLJH plugins
 =======================
