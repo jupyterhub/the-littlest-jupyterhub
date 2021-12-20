@@ -441,7 +441,7 @@ def main():
         help="The pid of the progress page server",
     )
     argparser.add_argument(
-        "--python-version",
+        "--user-python-version",
         help="Set user-environment Python version",
     )
 
