@@ -241,11 +241,12 @@ it after an argument like ``remove-item`` gives information about this specific 
 
    sudo tljh-config --help
 
-   usage: tljh-config [-h] [--config-path CONFIG_PATH] {show,set,add-item,remove-item,reload} ...
+   usage: tljh-config [-h] [--config-path CONFIG_PATH] {show,unset,set,add-item,remove-item,reload} ...
 
    positional arguments:
-     {show,set,add-item,remove-item,reload}
+     {show,unset,set,add-item,remove-item,reload}
        show                Show current configuration
+       unset               Unset a configuration property
        set                 Set a configuration property
        add-item            Add a value to a list for a configuration property
        remove-item         Remove a value from a list for a configuration property
