@@ -373,6 +373,7 @@ def main():
     # Install/upgrade TLJH installer
     tljh_install_cmd = [pip_bin, "install", "--upgrade"]
     if os.environ.get("TLJH_BOOTSTRAP_DEV", "no") == "yes":
+        logger.info("Selected TLJH_BOOTSTRAP_DEV=yes...")
         tljh_install_cmd.append("--editable")
     tljh_install_cmd.append(
         os.environ.get(
