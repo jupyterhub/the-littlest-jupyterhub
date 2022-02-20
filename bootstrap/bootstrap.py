@@ -348,7 +348,7 @@ def main():
             ["apt-get", "install", "--yes", "software-properties-common"],
             env=apt_get_adjusted_env,
         )
-        if distro == "ubuntu"
+        if distro == "ubuntu":
             run_subprocess(["add-apt-repository", "universe", "--yes"])
         run_subprocess(["apt-get", "update"])
         run_subprocess(
