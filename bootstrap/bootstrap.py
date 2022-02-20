@@ -198,7 +198,7 @@ def ensure_host_system_can_install_tljh():
     # Require Ubuntu 18.04+
     distro = get_os_release_variable("ID")
     version = float(get_os_release_variable("VERSION_ID"))
-    if distro in ["ubuntu", "debian"]:
+    if distro not in ["ubuntu", "debian"]:
         print("The Littlest JupyterHub currently supports Ubuntu or Debian Linux only")
         sys.exit(1)
     elif distro == "ubuntu" and float(version) < 18.04:
