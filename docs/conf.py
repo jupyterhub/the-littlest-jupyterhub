@@ -1,4 +1,5 @@
 import os
+import sys
 
 source_suffix = [".rst"]
 
@@ -11,11 +12,19 @@ version = ""
 # The full version, including alpha/beta/rc tags
 release = "v0.1"
 
+# Supported Ubuntu server versions
+ext_ubuntu_latest_version = "Ubuntu Server 20.04 LTS"
+ext_ubuntu_previous_version = "Ubuntu Server 18.04 LTS"
+
+# Locate custom Sphinx extension
+sys.path.append(os.path.abspath("./sphinxext"))
+
 # Enable MathJax for Math
 extensions = [
     "sphinx.ext.mathjax",
     "sphinx.ext.intersphinx",
     "sphinx_copybutton",
+    "substitute",
 ]
 
 # The root toctree document.

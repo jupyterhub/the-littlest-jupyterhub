@@ -17,7 +17,7 @@ might still make breaking changes that have no clear upgrade pathway.
 Installation
 ============
 
-The Littlest JupyterHub (TLJH) can run on any server that is running **Ubuntu 18.04** or **Ubuntu 20.04** on a amd64 or arm64 CPU architecture. Earlier versions of Ubuntu are not supported.
+The Littlest JupyterHub (TLJH) can run on any server that is running **||UBUNTU_LATEST_VERSION||** or **||UBUNTU_PREVIOUS_VERSION||** on a amd64 or arm64 CPU architecture. Earlier versions of Ubuntu are not supported.
 We have a bunch of tutorials to get you started.
 
 - Tutorials to create a new server from scratch on a cloud provider & run TLJH
