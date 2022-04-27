@@ -148,7 +148,8 @@ jobs:
       #   GitHub branch for example.
       - name: Set BOOTSTRAP_PIP_SPEC value
         run: |
-          echo "BOOTSTRAP_PIP_SPEC=git+https://github.com/$GITHUB_REPOSITORY.git@$GITHUB_REF" >> $GITHUB_ENV
+          BOOTSTRAP_PIP_SPEC="git+https://github.com/$GITHUB_REPOSITORY.git@$GITHUB_REF"
+          echo "BOOTSTRAP_PIP_SPEC=$BOOTSTRAP_PIP_SPEC" >> $GITHUB_ENV
           echo $BOOTSTRAP_PIP_SPEC
 
       - name: Run basic tests (Runs in ubuntu:${{ matrix.ubuntu_version }} derived image)
