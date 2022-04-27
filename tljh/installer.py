@@ -122,7 +122,7 @@ def ensure_jupyterhub_package(prefix):
         prefix,
         [
             "jupyterhub==1.*",
-            "jupyterhub-systemdspawner==0.15.*",
+            "jupyterhub-systemdspawner==0.16.*",
             "jupyterhub-firstuseauthenticator==1.*",
             "jupyterhub-nativeauthenticator==1.*",
             "jupyterhub-ldapauthenticator==1.*",
