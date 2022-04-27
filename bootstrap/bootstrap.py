@@ -47,7 +47,7 @@ import logging
 import shutil
 import urllib.request
 
-progress_page_favicon_url = "https://raw.githubusercontent.com/jupyterhub/jupyterhub/HEAD/share/jupyterhub/static/favicon.ico"
+progress_page_favicon_url = "https://raw.githubusercontent.com/jupyterhub/jupyterhub/main/share/jupyterhub/static/favicon.ico"
 progress_page_html = """
 <html>
 <head>
