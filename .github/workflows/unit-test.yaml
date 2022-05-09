@@ -48,6 +48,9 @@ jobs:
           - name: "Unit tests: Ubuntu 20.04, Py 3.9"
             ubuntu_version: "20.04"
             python_version: "3.9"
+          - name: "Unit tests: Ubuntu 22.04, Py 3.10"
+            ubuntu_version: "22.04"
+            python_version: "3.10"
           # Test against Ubuntu 21.10 fails as of 2021-10-18 fail with the error
           # described in: https://github.com/jupyterhub/the-littlest-jupyterhub/issues/714#issuecomment-945154101
           #
