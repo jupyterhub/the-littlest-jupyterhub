@@ -38,6 +38,7 @@ Command line flags:
                             passed, it will pass --progress-page-server-pid=<pid>
                             to the tljh installer for later termination.
 """
+from argparse import ArgumentParser
 import os
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 import multiprocessing
@@ -252,14 +253,21 @@ class ProgressPageRequestHandler(SimpleHTTPRequestHandler):
 
 def main():
     """
-    This script intercepts the --show-progress-page flag, but all other flags
-    are passed through to the TLJH installer script.
+    This bootstrap script intercepts some command line flags, everything else is
+    passed through to the TLJH installer script.
 
     The --show-progress-page flag indicates that the bootstrap script should
     start a local webserver temporarily and report its installation progress via
     a web site served locally on port 80.
     """
     ensure_host_system_can_install_tljh()
+
+    parser = ArgumentParser()
+    parser.add_argument("--show-progress-page", action="store_true")
+    parser.add_argument(
+        "--version", default="main", help="TLJH version (Git reference)"
+    )
+    args, tljh_installer_flags = parser.parse_known_args()
 
     # Various related constants
     install_prefix = os.environ.get("TLJH_INSTALL_PREFIX", "/opt/tljh")
@@ -270,12 +278,7 @@ def main():
 
     # Attempt to start a web server to serve a progress page reporting
     # installation progress.
-    tljh_installer_flags = sys.argv[1:]
-    if "--show-progress-page" in tljh_installer_flags:
-        # Remove the bootstrap specific flag and let all other flags pass
-        # through to the installer.
-        tljh_installer_flags.remove("--show-progress-page")
-
+    if args.show_progress_page:
         # Write HTML and a favicon to be served by our webserver
         with open("/var/run/index.html", "w+") as f:
             f.write(progress_page_html)
@@ -378,7 +381,9 @@ def main():
     tljh_install_cmd.append(
         os.environ.get(
             "TLJH_BOOTSTRAP_PIP_SPEC",
-            "git+https://github.com/jupyterhub/the-littlest-jupyterhub.git",
+            "git+https://github.com/jupyterhub/the-littlest-jupyterhub.git@{version}".format(
+                version=args.version
+            ),
         )
     )
     if initial_setup:
