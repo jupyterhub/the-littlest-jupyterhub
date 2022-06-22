@@ -106,7 +106,7 @@ bde6b66287e3d157f2577bcaf2e986af020139f4	refs/tags/2.1.1
         ("1", "1.5.0"),
         ("1.0", "1.0.0"),
         ("1.2", "1.2.2"),
-        # ("1.100", None),
+        ("1.100", None),
         ("2.0.0", "2.0.0"),
         ("random-branch", "random-branch"),
         ("1234567890abcdef", "1234567890abcdef"),
@@ -120,4 +120,9 @@ def test_resolve_git_version(monkeypatch, requested, expected):
 
     monkeypatch.setattr(bootstrap, "run_subprocess", mock_run_subprocess)
 
-    assert bootstrap._resolve_git_version(requested) == expected
+    if expected is None:
+        with pytest.raises(Exception) as exc:
+            bootstrap._resolve_git_version(requested)
+        assert exc.value.args[0].startswith("No version matching 1.100 found")
+    else:
+        assert bootstrap._resolve_git_version(requested) == expected
