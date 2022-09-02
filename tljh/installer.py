@@ -370,13 +370,16 @@ def run_plugin_actions(plugin_manager):
 
     # Install conda packages
     conda_packages = list(set(itertools.chain(*hook.tljh_extra_user_conda_packages())))
+    conda_channels = list(itertools.chain(*hook.tljh_extra_user_conda_channels()))
+    if len(conda_channels) == 0:
+        conda_channels = ('conda-forge',)
     if conda_packages:
         logger.info(
             "Installing {} user conda packages collected from plugins: {}".format(
                 len(conda_packages), " ".join(conda_packages)
             )
         )
-        conda.ensure_conda_packages(USER_ENV_PREFIX, conda_packages)
+        conda.ensure_conda_packages(USER_ENV_PREFIX, conda_packages, conda_channels=conda_channels)
 
     # Install pip packages
     user_pip_packages = list(set(itertools.chain(*hook.tljh_extra_user_pip_packages())))
