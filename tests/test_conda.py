@@ -43,6 +43,15 @@ def test_ensure_packages(prefix):
     # Throws an error if this fails
     subprocess.check_call([os.path.join(prefix, "bin", "python"), "-c", "import numpy"])
 
+    
+def test_ensure_channel_packages(prefix):
+    """
+    Test installing packages in conda environment
+    """
+    conda.ensure_conda_packages(prefix, ["csvtk"], channels=('conda-forge', 'bioconda'))
+    # Throws an error if this fails
+    subprocess.check_call([os.path.join(prefix, "bin", "csvtk"), "cat", "--help"])
+    
 
 def test_ensure_pip_packages(prefix):
     """

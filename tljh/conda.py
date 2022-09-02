@@ -90,9 +90,9 @@ def install_miniconda(installer_path, prefix):
     fix_permissions(prefix)
 
 
-def ensure_conda_packages(prefix, packages):
+def ensure_conda_packages(prefix, packages, channels=('conda-forge',)):
     """
-    Ensure packages (from conda-forge) are installed in the conda prefix.
+    Ensure packages (from channels) are installed in the conda prefix.
 
     Note that conda seem to update dependencies by default, so there is probably
     no need to have a update parameter exposed for this function.
@@ -103,16 +103,18 @@ def ensure_conda_packages(prefix, packages):
     # Explicitly do *not* capture stderr, since that's not always JSON!
     # Scripting conda is a PITA!
     # FIXME: raise different exception when using
+    
+    channel_cmd = '-c ' + ' -c '.join(channels)
+    
     raw_output = subprocess.check_output(
         conda_executable
         + [
             "install",
-            "-c",
-            "conda-forge",  # Make customizable if we ever need to
             "--json",
             "--prefix",
             abspath,
         ]
+        + channel_cmd.split()
         + packages
     ).decode()
     # `conda install` outputs JSON lines for fetch updates,
