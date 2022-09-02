@@ -114,6 +114,22 @@ environment from conda-forge.
             'iris',
             'dask',
         ]
+        
+By default packages are only installed from the ``conda-forge`` channel.
+If you need other channels, like ``bioconda`` or self-made channels,
+they can be added by using the ``tljh_extra_user_conda_channels`` hook.
+
+.. code-block:: python
+
+    from tljh.hooks import hookimpl
+
+    @hookimpl
+    def tljh_extra_user_conda_channels():
+        return [
+            'conda-forge',
+            'bioconda',
+            'fastai',
+        ]
 
 
 Publishing plugins
