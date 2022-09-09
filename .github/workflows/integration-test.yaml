@@ -66,22 +66,21 @@ jobs:
               ubuntu_version: "20.04"
               python_version: "3.9"
               extra_flags: ""
-            - name: "Int. tests: Ubuntu 21.10, Py 3.9"
-              runs_on: "20.04"
-              ubuntu_version: "21.10"
-              python_version: "3.9"
+            - name: "Int. tests: Ubuntu 22.04, Py 3.10"
+              ubuntu_version: "22.04"
+              python_version: "3.10"
               extra_flags: ""
-            - name: "Int. tests: Ubuntu 20.04, Py 3.9, --upgrade"
-              ubuntu_version: "20.04"
-              python_version: "3.9"
+            - name: "Int. tests: Ubuntu 22.04, Py 3.10, --upgrade"
+              ubuntu_version: "22.04"
+              python_version: "3.10"
               extra_flags: --upgrade
               dont_run_on_ref: refs/heads/master
 
   integration-tests:
     needs: decide-on-test-jobs-to-run
 
-    # runs-on can only be configured to the LTS releases of ubuntu (18.04,
-    # 20.04, ...), so if we want to test against the latest non-LTS release, we
+    # runs-on can only be configured to the LTS releases of ubuntu (20.04,
+    # 22.04, ...), so if we want to test against the latest non-LTS release, we
     # must compromise when configuring runs-on and configure runs-on to be the
     # latest LTS release instead.
     #
@@ -99,7 +98,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python_version }}
+          python-version: "${{ matrix.python_version }}"
 
       - name: Install pytest
         run: python3 -m pip install pytest
