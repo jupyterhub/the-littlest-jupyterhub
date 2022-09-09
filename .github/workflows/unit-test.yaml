@@ -51,19 +51,12 @@ jobs:
           - name: "Unit tests: Ubuntu 22.04, Py 3.10"
             ubuntu_version: "22.04"
             python_version: "3.10"
-          # Test against Ubuntu 21.10 fails as of 2021-10-18 fail with the error
-          # described in: https://github.com/jupyterhub/the-littlest-jupyterhub/issues/714#issuecomment-945154101
-          #
-          # - name: "Unit tests: Ubuntu 21.10, Py 3.9"
-          #   runs_on: "20.04"
-          #   ubuntu_version: "21.10"
-          #   python_version: "3.9"
 
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python_version }}
+          python-version: "${{ matrix.python_version }}"
 
       - name: Install venv, git and setup venv
         run: |
