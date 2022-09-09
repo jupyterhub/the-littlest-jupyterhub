@@ -447,7 +447,7 @@ def main():
     ensure_admins(args.admin)
     ensure_usergroups()
     if args.user_requirements_txt_url:
-         logger.info("installing packages from user_requirements_txt_url")
+        logger.info("installing packages from user_requirements_txt_url")
     ensure_user_environment(args.user_requirements_txt_url)
 
     logger.info("Setting up JupyterHub...")
