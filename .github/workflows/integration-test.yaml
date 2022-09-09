@@ -95,8 +95,8 @@ jobs:
       matrix: ${{ fromJson(needs.decide-on-test-jobs-to-run.outputs.matrix) }}
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: "${{ matrix.python_version }}"
 
