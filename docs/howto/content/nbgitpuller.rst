@@ -39,7 +39,7 @@ Step 1: Generate nbgitpuller link
 =================================
 
 The quickest way to generate a link is to use `nbgitpuller.link
-<https://nbgitpuller.link>`_, but other options exist as described in the
+<https://jupyterhub.github.io/nbgitpuller/link.html>`_, but other options exist as described in the
 `nbgitpuller project's documentation
 <https://jupyterhub.github.io/nbgitpuller/use.html>`_.
 
