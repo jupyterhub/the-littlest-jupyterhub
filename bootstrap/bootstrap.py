@@ -421,6 +421,7 @@ def main():
             ["apt-get", "install", "--yes", "software-properties-common"],
             env=apt_get_adjusted_env,
         )
+        # Section "universe" exists and is required only in ubuntu.
         if distro == "ubuntu":
             run_subprocess(["add-apt-repository", "universe", "--yes"])
         run_subprocess(["apt-get", "update"])
@@ -433,7 +434,7 @@ def main():
                 "python3-venv",
                 "python3-pip",
                 "git",
-                "sudo",
+                "sudo", # sudo is missing in default debian install
             ],
             env=apt_get_adjusted_env,
         )
