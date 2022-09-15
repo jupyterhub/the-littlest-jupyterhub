@@ -122,7 +122,7 @@ def ensure_jupyterhub_package(prefix):
         prefix,
         [
             "jupyterhub==1.*",
-            "jupyterhub-systemdspawner==0.15.*",
+            "jupyterhub-systemdspawner==0.16.*",
             "jupyterhub-firstuseauthenticator==1.*",
             "jupyterhub-nativeauthenticator==1.*",
             "jupyterhub-ldapauthenticator==1.*",
@@ -447,7 +447,7 @@ def main():
     ensure_admins(args.admin)
     ensure_usergroups()
     if args.user_requirements_txt_url:
-         logger.info("installing packages from user_requirements_txt_url")
+        logger.info("installing packages from user_requirements_txt_url")
     ensure_user_environment(args.user_requirements_txt_url)
 
     logger.info("Setting up JupyterHub...")

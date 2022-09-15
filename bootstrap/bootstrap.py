@@ -38,16 +38,18 @@ Command line flags:
                             passed, it will pass --progress-page-server-pid=<pid>
                             to the tljh installer for later termination.
 """
+from argparse import ArgumentParser
 import os
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 import multiprocessing
+import re
 import subprocess
 import sys
 import logging
 import shutil
 import urllib.request
 
-progress_page_favicon_url = "https://raw.githubusercontent.com/jupyterhub/jupyterhub/HEAD/share/jupyterhub/static/favicon.ico"
+progress_page_favicon_url = "https://raw.githubusercontent.com/jupyterhub/jupyterhub/main/share/jupyterhub/static/favicon.ico"
 progress_page_html = """
 <html>
 <head>
@@ -164,9 +166,11 @@ def run_subprocess(cmd, *args, **kwargs):
                 command=printable_command, code=proc.returncode
             )
         )
+        output = proc.stdout.decode()
         # This produces multi line log output, unfortunately. Not sure how to fix.
         # For now, prioritizing human readability over machine readability.
-        logger.debug(proc.stdout.decode())
+        logger.debug(output)
+        return output
 
 
 def ensure_host_system_can_install_tljh():
@@ -253,16 +257,90 @@ class ProgressPageRequestHandler(SimpleHTTPRequestHandler):
             SimpleHTTPRequestHandler.send_error(self, code=403)
 
 
+def _find_matching_version(all_versions, requested):
+    """
+    Find the latest version that is less than or equal to requested.
+    all_versions must be int-tuples.
+    requested must be an int-tuple or "latest"
+
+    Returns None if no version is found.
+    """
+    sorted_versions = sorted(all_versions, reverse=True)
+    if requested == "latest":
+        return sorted_versions[0]
+    components = len(requested)
+    for v in sorted_versions:
+        if v[:components] == requested:
+            return v
+    return None
+
+
+def _resolve_git_version(version):
+    """
+    Resolve the version argument to a git ref using git ls-remote
+    - If version looks like MAJOR.MINOR.PATCH or a partial tag then fetch all tags
+      and return the most latest tag matching MAJOR.MINOR.PATCH
+      (e.g. version=0.1 -> 0.1.PATCH). This should ignore dev tags
+    - If version='latest' then return the latest release tag
+    - Otherwise assume version is a branch or hash and return it without checking
+    """
+
+    if version != "latest" and not re.match(r"\d+(\.\d+)?(\.\d+)?$", version):
+        return version
+
+    all_versions = set()
+    out = run_subprocess(
+        [
+            "git",
+            "ls-remote",
+            "--tags",
+            "--refs",
+            "https://github.com/jupyterhub/the-littlest-jupyterhub.git",
+        ]
+    )
+
+    for line in out.splitlines():
+        m = re.match(r"(?P<sha>[a-f0-9]+)\s+refs/tags/(?P<tag>[\S]+)$", line)
+        if not m:
+            raise Exception("Unexpected git ls-remote output: {}".format(line))
+        tag = m.group("tag")
+        if tag == version:
+            return tag
+        if re.match(r"\d+\.\d+\.\d+$", tag):
+            all_versions.add(tuple(int(v) for v in tag.split(".")))
+
+    if not all_versions:
+        raise Exception("No MAJOR.MINOR.PATCH git tags found")
+
+    if version == "latest":
+        requested = "latest"
+    else:
+        requested = tuple(int(v) for v in version.split("."))
+    found = _find_matching_version(all_versions, requested)
+    if not found:
+        raise Exception(
+            "No version matching {} found {}".format(version, sorted(all_versions))
+        )
+    return ".".join(str(f) for f in found)
+
+
 def main():
     """
-    This script intercepts the --show-progress-page flag, but all other flags
-    are passed through to the TLJH installer script.
+    This bootstrap script intercepts some command line flags, everything else is
+    passed through to the TLJH installer script.
 
     The --show-progress-page flag indicates that the bootstrap script should
     start a local webserver temporarily and report its installation progress via
     a web site served locally on port 80.
     """
     distro, version = ensure_host_system_can_install_tljh()
+
+    parser = ArgumentParser()
+    parser.add_argument("--show-progress-page", action="store_true")
+    parser.add_argument(
+        "--version", default="main", help="TLJH version or Git reference"
+    )
+    args, tljh_installer_flags = parser.parse_known_args()
 
     # Various related constants
     install_prefix = os.environ.get("TLJH_INSTALL_PREFIX", "/opt/tljh")
@@ -273,12 +351,7 @@ def main():
 
     # Attempt to start a web server to serve a progress page reporting
     # installation progress.
-    tljh_installer_flags = sys.argv[1:]
-    if "--show-progress-page" in tljh_installer_flags:
-        # Remove the bootstrap specific flag and let all other flags pass
-        # through to the installer.
-        tljh_installer_flags.remove("--show-progress-page")
-
+    if args.show_progress_page:
         # Write HTML and a favicon to be served by our webserver
         with open("/var/run/index.html", "w+") as f:
             f.write(progress_page_html)
@@ -380,10 +453,14 @@ def main():
     if os.environ.get("TLJH_BOOTSTRAP_DEV", "no") == "yes":
         logger.info("Selected TLJH_BOOTSTRAP_DEV=yes...")
         tljh_install_cmd.append("--editable")
+    version = _resolve_git_version(args.version)
+
     tljh_install_cmd.append(
         os.environ.get(
             "TLJH_BOOTSTRAP_PIP_SPEC",
-            "git+https://github.com/jupyterhub/the-littlest-jupyterhub.git",
+            "git+https://github.com/jupyterhub/the-littlest-jupyterhub.git@{}".format(
+                version
+            ),
         )
     )
     if initial_setup:
