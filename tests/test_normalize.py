@@ -17,6 +17,8 @@ def test_generate_username():
         "jupyter-abcdefghijklmnopq": "jupyter-abcdefghijklmnopq",
         # 27 characters, just above our cutoff for hashing
         "jupyter-abcdefghijklmnopqr": "jupyter-abcdefghijklmnopqr-e375e",
+        # spaces
+        "jupyter test": "jupyter-test"
     }
     for hub_user, system_user in usernames.items():
         assert generate_system_username(hub_user) == system_user
