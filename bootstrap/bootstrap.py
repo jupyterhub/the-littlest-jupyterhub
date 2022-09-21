@@ -199,7 +199,7 @@ def ensure_host_system_can_install_tljh():
             .strip()
         )
 
-    # Require Ubuntu 18.04+
+    # Require Ubuntu 18.04+ or Debian 10+
     distro = get_os_release_variable("ID")
     version = float(get_os_release_variable("VERSION_ID"))
     if distro not in ["ubuntu", "debian"]:
