@@ -2,22 +2,29 @@
 Functions to normalize various inputs
 """
 import hashlib
-
+import re
 
 def generate_system_username(username):
     """
     Generate a posix username from given username.
 
-    If username < 26 char, we just return it.
-    Else, we hash the username, truncate username at
-    26 char, append a '-' and first add 5char of hash.
-    This makes sure our usernames are always under 32char.
+    If username < 26 char and looks like a legal linux username*, 
+    we just return it.
+    Else, we take the first 26 chars of the username minus any 
+    illegal characters, append a '-' and the first 5 chars of 
+    the hash of the username.
+    This makes sure our usernames are always under 32char and
+    are legal unix usernames.
+
+    * using the debian/ubuntu iusername username spec, which
+    seems like the most restrictive one
     """
 
-    if len(username) < 26:
+    legal_username = re.sub("[^a-z0-9_-]", "", username.lower())
+    if legal_username == username and len(username) < 26:
         return username
 
     userhash = hashlib.sha256(username.encode("utf-8")).hexdigest()
     return "{username_trunc}-{hash}".format(
-        username_trunc=username[:26], hash=userhash[:5]
+        username_trunc=legal_username[:26], hash=userhash[:5]
     )
