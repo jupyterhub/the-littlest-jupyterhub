@@ -44,7 +44,7 @@ For example, to enable the progress page and add the first *admin* user, you wou
 
   curl -L https://tljh.jupyter.org/bootstrap.py \
   | sudo python3 - \
-   --admin admin --showprogress-page
+   --admin admin --show-progress-page
 
 Adding admin users
 ===================
