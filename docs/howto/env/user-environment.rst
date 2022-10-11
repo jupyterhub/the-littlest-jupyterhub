@@ -183,27 +183,29 @@ To upgrade the Python version of the user environment, one can:
 
          source /opt/tljh/user/bin/activate
 
-   2. Get the list of currently installed pip packages (so you can later install them under the
-      new Python):
+   2. Get the list of currently installed pip packages, excluding the ones installed by conda
+      (so you can later install them under the new Python):
 
       .. code-block:: bash
 
-         pip freeze > pip_pkgs.txt
+         conda env export --json | jq -r '.dependencies[] | objects | .pip[]' > pip_reqs_from_conda.txt
+
 
    3. Update all conda installed packages in the environment:
 
       .. code-block:: bash
 
-         sudo PATH=${PATH} conda update --all
+         sudo env PATH=${PATH} conda update --all  # has confirmation prompt
 
    4. Update Python version:
 
       .. code-block:: bash
 
-         sudo PATH=${PATH} conda install python=3.7
+         # replace x with desired Python version, e.g. 3.7, 3.10
+         sudo env PATH=${PATH} conda install python=3.x  # has confirmation prompt
 
    5. Install the pip packages previously saved:
 
       .. code-block:: bash
 
-         pip install -r pip_pkgs.txt
+         sudo env "PATH=$PATH" pip install -r pip_reqs_from_conda.txt
