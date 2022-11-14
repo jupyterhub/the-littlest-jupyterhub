@@ -55,7 +55,7 @@ jobs:
           echo "matrix=$matrix_post_filter" >> $GITHUB_OUTPUT
 
           echo "The subsequent job's matrix are:"
-          echo $matrix_post_filter | jq '.'
+          echo $matrix_post_filter | jq -C '.'
         env:
           matrix_include_pre_filter: |
             - name: "Int. tests: Ubuntu 18.04, Py 3.6"
