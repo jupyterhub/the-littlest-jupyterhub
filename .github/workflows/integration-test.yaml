@@ -50,9 +50,9 @@ jobs:
           matrix_post_filter=$(
             echo "$matrix_include_pre_filter" \
               | yq e --output-format=json '.' - \
-              | jq '{"include": map( . | select(.dont_run_on_ref != "${{ github.ref }}" ))}'
+              | jq -c '{"include": map( . | select(.dont_run_on_ref != "${{ github.ref }}" ))}'
           )
-          echo ::set-output name=matrix::$(echo "$matrix_post_filter")
+          echo "matrix=$matrix_post_filter" >> $GITHUB_OUTPUT
 
           echo "The subsequent job's matrix are:"
           echo $matrix_post_filter | jq '.'
