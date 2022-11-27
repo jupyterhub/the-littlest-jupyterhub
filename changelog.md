@@ -1,6 +1,6 @@
-# 4a74ad17a1a19f6378efe12a01ba634ed90f1e03...master@{2022-11-27}
+# 0.2.0 - YYYY-MM-DD
 
-([full changelog](https://github.com/jupyterhub/the-littlest-jupyterhub/compare/4a74ad17a1a19f6378efe12a01ba634ed90f1e03...7fb84aad5642dd5d0ec5a3c4c238848081678919))
+([full changelog](https://github.com/jupyterhub/the-littlest-jupyterhub/compare/4a74ad17a1a19f6378efe12a01ba634ed90f1e03...0.2.0))
 
 ## Merged PRs
 
