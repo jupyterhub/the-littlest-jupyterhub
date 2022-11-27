@@ -45,9 +45,21 @@ def check_container_ready(container_name, timeout=60):
     now = time.time()
     while True:
         try:
-            container_check_output(["exec", "-t", container_name, "id"])
+            out = container_check_output(["exec", "-t", container_name, "id"])
+            print(out.decode())
             return
-        except subprocess.CalledProcessError:
+        except subprocess.CalledProcessError as e:
+            print(e)
+            try:
+                out = container_check_output(["inspect", container_name])
+                print(out.decode())
+            except subprocess.CalledProcessError as e:
+                print(e)
+            try:
+                out = container_check_output(["logs", container_name])
+                print(out.decode())
+            except subprocess.CalledProcessError as e:
+                print(e)
             if time.time() - now > timeout:
                 raise RuntimeError(f"Container {container_name} hasn't started")
             time.sleep(5)
