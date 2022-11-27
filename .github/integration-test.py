@@ -82,8 +82,8 @@ def run_systemd_image(image_name, container_name, bootstrap_pip_spec):
         # If this is changed all docs references to the required memory must be changed too.
         "--memory=900m",
     ]
-    if container_runtime() != "podman":
-        cmd.append("--mount=type=bind,source=/sys/fs/cgroup,target=/sys/fs/cgroup")
+    # if container_runtime() != "podman":
+    #     cmd.append("--mount=type=bind,source=/sys/fs/cgroup,target=/sys/fs/cgroup")
 
     if bootstrap_pip_spec:
         cmd.append("-e")
