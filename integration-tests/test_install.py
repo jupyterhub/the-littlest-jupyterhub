@@ -45,6 +45,12 @@ def test_groups_exist(group):
     grp.getgrnam(group)
 
 
+def debug_uid_gid():
+    return (
+        f"uid={os.getuid()} gid={os.getgid()} euid={os.geteuid()} egid={os.getegid()}"
+    )
+
+
 def permissions_test(group, path, *, readable=None, writable=None, dirs_only=False):
     """Run a permissions test on all files in a path path"""
     # start a subprocess and become nobody:group in the process
@@ -88,18 +94,22 @@ def permissions_test(group, path, *, readable=None, writable=None, dirs_only=Fal
             # check if the path should be writable
             if writable is not None:
                 if access(path, os.W_OK) != writable:
+                    stat = os.stat(path)
+                    info = pool.submit(debug_uid_gid).result()
                     failures.append(
-                        "{} {} should {}be writable by {}".format(
-                            stat_str, path, "" if writable else "not ", group
+                        "{} {} should {}be writable by {} [{}]".format(
+                            stat_str, path, "" if writable else "not ", group, info
                         )
                     )
 
             # check if the path should be readable
             if readable is not None:
                 if access(path, os.R_OK) != readable:
+                    stat = os.stat(path)
+                    info = pool.submit(debug_uid_gid).result()
                     failures.append(
-                        "{} {} should {}be readable by {}".format(
-                            stat_str, path, "" if readable else "not ", group
+                        "{} {} should {}be readable by {} [{}]".format(
+                            stat_str, path, "" if readable else "not ", group, info
                         )
                     )
     # verify that we actually tested some files
