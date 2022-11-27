@@ -335,7 +335,14 @@ def main():
     parser = ArgumentParser()
     parser.add_argument("--show-progress-page", action="store_true")
     parser.add_argument(
-        "--version", default="main", help="TLJH version or Git reference"
+        "--version",
+        default="latest",
+        help=(
+            "TLJH version or Git reference. "
+            "Default 'latest' is the most recent release. "
+            "Partial versions can be specified, for example '1', '1.0' or '1.0.0'. "
+            "You can also pass a branch name such as 'main' or a commit hash."
+        ),
     )
     args, tljh_installer_flags = parser.parse_known_args()
 
