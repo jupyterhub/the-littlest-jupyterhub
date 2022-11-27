@@ -100,7 +100,14 @@ def run_bootstrap_after_preparing_container(
 
     bootstrap_script = get_bootstrap_script_location(container_name, show_progress_page)
 
-    exec_flags = ["-i", container_name, "python3", bootstrap_script]
+    exec_flags = [
+        "-i",
+        container_name,
+        "python3",
+        bootstrap_script,
+        "--version",
+        "main",
+    ]
     if show_progress_page:
         exec_flags = (
             ["-e", "TLJH_BOOTSTRAP_DEV=yes", "-e", "TLJH_BOOTSTRAP_PIP_SPEC=/srv/src"]

@@ -455,16 +455,16 @@ def main():
     if os.environ.get("TLJH_BOOTSTRAP_DEV", "no") == "yes":
         logger.info("Selected TLJH_BOOTSTRAP_DEV=yes...")
         tljh_install_cmd.append("--editable")
-    version = _resolve_git_version(args.version)
 
-    tljh_install_cmd.append(
-        os.environ.get(
-            "TLJH_BOOTSTRAP_PIP_SPEC",
+    bootstrap_pip_spec = os.environ.get("TLJH_BOOTSTRAP_PIP_SPEC")
+    if not bootstrap_pip_spec:
+        bootstrap_pip_spec = (
             "git+https://github.com/jupyterhub/the-littlest-jupyterhub.git@{}".format(
-                version
-            ),
+                _resolve_git_version(args.version)
+            )
         )
-    )
+
+    tljh_install_cmd.append(bootstrap_pip_spec)
     if initial_setup:
         logger.info("Installing TLJH installer...")
     else:
