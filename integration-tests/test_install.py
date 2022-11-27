@@ -46,9 +46,10 @@ def test_groups_exist(group):
 
 
 def debug_uid_gid():
-    return (
-        f"uid={os.getuid()} gid={os.getgid()} euid={os.geteuid()} egid={os.getegid()}"
-    )
+    return subprocess.check_output("id").decode()
+    # return (
+    #     f"uid={os.getuid()} gid={os.getgid()} euid={os.geteuid()} egid={os.getegid()}"
+    # )
 
 
 def permissions_test(group, path, *, readable=None, writable=None, dirs_only=False):
