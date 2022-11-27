@@ -7,7 +7,7 @@ import os
 
 
 def container_runtime():
-    runtimes = ["podman", "docker"]
+    runtimes = ["docker", "podman"]
     for runtime in runtimes:
         if which(runtime):
             return runtime
