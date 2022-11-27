@@ -2,7 +2,7 @@
 import argparse
 from shutil import which
 import subprocess
-from time import time
+import time
 import os
 
 
@@ -42,13 +42,13 @@ def check_container_ready(container_name, timeout=60):
     """
     Check if container is ready to run tests
     """
-    now = time()
+    now = time.time()
     while True:
         try:
             container_check_output(["exec", "-t", container_name, "id"])
             return
         except subprocess.CalledProcessError:
-            if time() - now > timeout:
+            if time.time() - now > timeout:
                 raise RuntimeError(f"Container {container_name} hasn't started")
             time.sleep(5)
 
