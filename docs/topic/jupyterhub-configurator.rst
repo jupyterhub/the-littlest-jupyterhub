@@ -6,9 +6,6 @@ JupyterHub Configurator
 
 The `JupyterHub configurator <https://github.com/yuvipanda/jupyterhub-configurator>`_ allows admins to change a subset of hub settings via a GUI.
 
-.. image:: ../images/jupyterhub-configurator.png
-  :alt: Changing the default JupyterHub interface
-
 Enabling the configurator
 =========================
 

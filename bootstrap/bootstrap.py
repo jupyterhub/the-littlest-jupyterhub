@@ -59,7 +59,7 @@ progress_page_html = """
   <meta http-equiv="refresh" content="30" >
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width">
-  <img class="logo" src="https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/HEAD/docs/images/logo/logo.png">
+  <img class="logo" src="https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/HEAD/docs/_static/images/logo/logo.png">
   <div class="loader center"></div>
   <div class="center main-msg">Please wait while your TLJH is setting up...</div>
   <div class="center logs-msg">Click the button below to see the logs</div>

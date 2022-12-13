@@ -1,4 +1,6 @@
-sphinx>=2
-sphinx-autobuild
-sphinx_copybutton
 pydata-sphinx-theme
+sphinx>=4
+sphinx_copybutton
+sphinx-autobuild
+sphinxext-opengraph
+sphinxext-rediraffe
