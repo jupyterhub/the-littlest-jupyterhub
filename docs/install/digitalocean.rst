@@ -34,10 +34,10 @@ Let's create the server on which we can run JupyterHub.
    This takes you to a page titled **Create Droplets** that lets you configure
    your server.
 
-#. Under **Choose an image**, select **18.04 x64** under **Ubuntu**.
+#. Under **Choose an image**, select **22.04 x64** under **Ubuntu**.
 
    .. image:: ../images/providers/digitalocean/select-image.png
-      :alt: Select 18.04 x64 image under Ubuntu
+      :alt: Select 22.04 x64 image under Ubuntu
 
 #. Under **Choose a size**, select the size of the server you want. The default
    (4GB RAM, 2CPUs, 20 USD / month) is not a bad start. You can resize your server

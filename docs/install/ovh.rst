@@ -52,10 +52,10 @@ Let's create the server on which we can run JupyterHub.
       
 #. **Select a region**.
 
-#. Select **Ubuntu 18.04** as the image:
+#. Select **Ubuntu 22.04** as the image:
 
    .. image:: ../images/providers/ovh/distribution.png
-      :alt: Select Ubuntu 18.04 as the image
+      :alt: Select Ubuntu 22.04 as the image
 
 #. OVH requires setting an SSH key to be able to connect to the instance.
    You can create a new SSH by following

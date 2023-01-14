@@ -33,11 +33,11 @@ Let's create the server on which we can run JupyterHub.
    This takes you to a page with a list of base images you can choose for your
    server.
 
-#. Under **Image Search**, search for **Ubuntu 18.04**, and select the
-   **Ubuntu 18.04 Devel and Docker** image.
+#. Under **Image Search**, search for **Ubuntu 22.04**, and select the
+   **Ubuntu 22.04 Devel and Docker** image.
 
    .. image:: ../images/providers/jetstream/select-image.png
-      :alt: Select Ubuntu 18.04 x64 image from image list
+      :alt: Select Ubuntu 22.04 x64 image from image list
 
 #. Once selected, you will see more information about this image. Click the
    **Launch** button on the top right.

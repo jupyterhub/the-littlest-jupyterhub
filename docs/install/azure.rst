@@ -52,7 +52,7 @@ A new screen with all the options for Virtual Machines in Azure will displayed.
         :alt: Create VM from the marketplace
 
 #. **Choose an Ubuntu server for your VM**: 
-    * Click `Ubuntu Server 18.04 LTS.`
+    * Click `Ubuntu Server 22.04 LTS.`
     * Make sure `Resource Manager` is selected in the next screen and click **Create**
 
     .. image:: ../images/providers/azure/ubuntu-vm.png
@@ -70,7 +70,7 @@ A new screen with all the options for Virtual Machines in Azure will displayed.
     * **Name**. Use a descriptive name for your virtual machine (note that you cannot use spaces or special characters).
     * **Region**. Choose a location near where you expect your users to be located.
     * **Availability options**. Choose "No infrastructure redundancy required".
-    * **Image**. Make sure "Ubuntu Server 18.04 LTS" is selected (from the previous step).
+    * **Image**. Make sure "Ubuntu Server 22.04 LTS" is selected (from the previous step).
     * **Authentication type**. Change authentication type to "password".
     * **Username**. Choose a memorable username, this will be your "root" user, and you'll need it later on.
     * **Password**. Type in a password, this will be used later for admin access so make sure it is something memorable.
