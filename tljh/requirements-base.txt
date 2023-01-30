@@ -5,6 +5,8 @@
 #          the requirements-txt-fixer pre-commit hook that sorted them and made
 #          our integration tests fail.
 #
+# For JupyterHub 1.x SQLAlchemy below 2.0.0
+SQLAlchemy<2.0.0
 # JupyterHub + notebook package are base requirements for user environment
 jupyterhub==1.*
 notebook==6.*
