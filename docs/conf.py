@@ -1,54 +1,96 @@
-import os
+# Configuration file for Sphinx to build our documentation to HTML.
+#
+# Configuration reference: https://www.sphinx-doc.org/en/master/usage/configuration.html
+#
+import datetime
 
+
+# -- Project information -----------------------------------------------------
+# ref: https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+#
+project = "The Littlest JupyterHub"
+copyright = f"{datetime.date.today().year}, Project Jupyter Contributors"
+author = "Project Jupyter Contributors"
+
+
+# -- General Sphinx configuration ---------------------------------------------------
+# ref: https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
+#
+# Add any Sphinx extension module names here, as strings. They can be extensions
+# coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
+#
+extensions = [
+    "sphinx_copybutton",
+    "sphinxext.opengraph",
+    "sphinxext.rediraffe",
+]
+root_doc = "index"
 source_suffix = [".rst"]
 
-project = "The Littlest JupyterHub"
-copyright = "2018, JupyterHub Team"
-author = "JupyterHub Team"
 
-# The short X.Y version
-version = ""
-# The full version, including alpha/beta/rc tags
-release = "v0.1"
+# -- Options for HTML output -------------------------------------------------
+# ref: https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
+#
+html_logo = "_static/images/logo/logo.png"
+html_favicon = "_static/images/logo/favicon.ico"
+html_static_path = ["_static"]
 
-# Enable MathJax for Math
-extensions = [
-    "sphinx.ext.mathjax",
-    "sphinx.ext.intersphinx",
-    "sphinx_copybutton",
-]
-
-# The root toctree document.
-root_doc = master_doc = "index"
-
-# List of patterns, relative to source directory, that match files and
-# directories to ignore when looking for source files.
-# This pattern also affects html_static_path and html_extra_path .
-exclude_patterns = [
-    "_build",
-    "Thumbs.db",
-    ".DS_Store",
-    "install/custom.rst",
-]
-
-intersphinx_mapping = {
-    "sphinx": ("http://www.sphinx-doc.org/en/master/", None),
+# pydata_sphinx_theme reference: https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html
+html_theme = "pydata_sphinx_theme"
+html_theme_options = {
+    "icon_links": [
+        {
+            "name": "GitHub",
+            "url": "https://github.com/jupyterhub/the-littlest-jupyterhub",
+            "icon": "fab fa-github-square",
+        },
+        {
+            "name": "Discourse",
+            "url": "https://discourse.jupyter.org/c/jupyterhub/tljh/13",
+            "icon": "fab fa-discourse",
+        },
+    ],
+    "use_edit_page_button": True,
+}
+html_context = {
+    "github_user": "jupyterhub",
+    "github_repo": "the-littlest-jupyterhub",
+    "github_version": "main",
+    "doc_path": "docs",
 }
 
-intersphinx_cache_limit = 90  # days
 
-# The name of the Pygments (syntax highlighting) style to use.
-pygments_style = "sphinx"
+# -- Options for linkcheck builder -------------------------------------------
+# ref: https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-the-linkcheck-builder
+#
+linkcheck_ignore = [
+    r"(.*)github\.com(.*)#",  # javascript based anchors
+    r"(.*)/#%21(.*)/(.*)",  # /#!forum/jupyter - encoded anchor edge case
+    r"https://github.com/[^/]*$",  # too many github usernames / searches in changelog
+    "https://github.com/jupyterhub/the-littlest-jupyterhub/pull/",  # too many PRs in changelog
+    "https://github.com/jupyterhub/the-littlest-jupyterhub/compare/",  # too many comparisons in changelog
+]
+linkcheck_anchors_ignore = [
+    "/#!",
+    "/#%21",
+]
 
-html_theme = "pydata_sphinx_theme"
 
-html_logo = "images/logo/logo.png"
-html_favicon = "images/logo/favicon.ico"
+# -- Options for the opengraph extension -------------------------------------
+# ref: https://github.com/wpilibsuite/sphinxext-opengraph#options
+#
+# ogp_site_url is set automatically by RTD
+ogp_image = "_static/logo.png"
+ogp_use_first_image = True
 
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-# Do this only if _static exists, otherwise this will error
-here = os.path.dirname(os.path.abspath(__file__))
-if os.path.exists(os.path.join(here, "_static")):
-    html_static_path = ["_static"]
+
+# -- Options for the rediraffe extension -------------------------------------
+# ref: https://github.com/wpilibsuite/sphinxext-rediraffe#readme
+#
+# This extensions help us relocated content without breaking links. If a
+# document is moved internally, we should configure a redirect like below.
+#
+rediraffe_branch = "main"
+rediraffe_redirects = {
+    # "old-file": "new-folder/new-file-name",
+}
