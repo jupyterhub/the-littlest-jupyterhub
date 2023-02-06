@@ -121,6 +121,7 @@ def ensure_jupyterhub_package(prefix):
     conda.ensure_pip_packages(
         prefix,
         [
+            "SQLAlchemy<2.0.0",
             "jupyterhub==1.*",
             "jupyterhub-systemdspawner==0.16.*",
             "jupyterhub-firstuseauthenticator==1.*",
