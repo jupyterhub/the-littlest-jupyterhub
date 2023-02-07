@@ -35,6 +35,7 @@ def setgroup(group):
     gid = grp.getgrnam(group).gr_gid
     uid = pwd.getpwnam("nobody").pw_uid
     os.setgid(gid)
+    os.setgroups([])
     os.setuid(uid)
     os.environ["HOME"] = "/tmp/test-home-%i-%i" % (uid, gid)
 
