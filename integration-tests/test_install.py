@@ -35,6 +35,7 @@ def setgroup(group):
     gid = grp.getgrnam(group).gr_gid
     uid = pwd.getpwnam("nobody").pw_uid
     os.setgid(gid)
+    os.setgroups([])
     os.setuid(uid)
     os.environ["HOME"] = "/tmp/test-home-%i-%i" % (uid, gid)
 
@@ -43,6 +44,10 @@ def setgroup(group):
 def test_groups_exist(group):
     """Verify that groups exist"""
     grp.getgrnam(group)
+
+
+def debug_uid_gid():
+    return subprocess.check_output("id").decode()
 
 
 def permissions_test(group, path, *, readable=None, writable=None, dirs_only=False):
@@ -88,18 +93,22 @@ def permissions_test(group, path, *, readable=None, writable=None, dirs_only=Fal
             # check if the path should be writable
             if writable is not None:
                 if access(path, os.W_OK) != writable:
+                    stat = os.stat(path)
+                    info = pool.submit(debug_uid_gid).result()
                     failures.append(
-                        "{} {} should {}be writable by {}".format(
-                            stat_str, path, "" if writable else "not ", group
+                        "{} {} should {}be writable by {} [{}]".format(
+                            stat_str, path, "" if writable else "not ", group, info
                         )
                     )
 
             # check if the path should be readable
             if readable is not None:
                 if access(path, os.R_OK) != readable:
+                    stat = os.stat(path)
+                    info = pool.submit(debug_uid_gid).result()
                     failures.append(
-                        "{} {} should {}be readable by {}".format(
-                            stat_str, path, "" if readable else "not ", group
+                        "{} {} should {}be readable by {} [{}]".format(
+                            stat_str, path, "" if readable else "not ", group, info
                         )
                     )
     # verify that we actually tested some files

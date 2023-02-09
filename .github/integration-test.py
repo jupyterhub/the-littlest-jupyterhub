@@ -1,7 +1,29 @@
 #!/usr/bin/env python3
 import argparse
+from shutil import which
 import subprocess
+import time
 import os
+
+
+def container_runtime():
+    runtimes = ["docker", "podman"]
+    for runtime in runtimes:
+        if which(runtime):
+            return runtime
+    raise RuntimeError(f"No container runtime found, tried: {' '.join(runtimes)}")
+
+
+def container_check_output(*args, **kwargs):
+    cmd = [container_runtime()] + list(*args)
+    print(f"Running {cmd} {kwargs}")
+    return subprocess.check_output(cmd, **kwargs)
+
+
+def container_run(*args, **kwargs):
+    cmd = [container_runtime()] + list(*args)
+    print(f"Running {cmd} {kwargs}")
+    return subprocess.run(cmd, **kwargs)
 
 
 def build_systemd_image(image_name, source_path, build_args=None):
@@ -10,10 +32,37 @@ def build_systemd_image(image_name, source_path, build_args=None):
 
     Built image is tagged with image_name
     """
-    cmd = ["docker", "build", f"-t={image_name}", source_path]
+    cmd = ["build", f"-t={image_name}", source_path]
     if build_args:
         cmd.extend([f"--build-arg={ba}" for ba in build_args])
-    subprocess.check_call(cmd)
+    container_check_output(cmd)
+
+
+def check_container_ready(container_name, timeout=60):
+    """
+    Check if container is ready to run tests
+    """
+    now = time.time()
+    while True:
+        try:
+            out = container_check_output(["exec", "-t", container_name, "id"])
+            print(out.decode())
+            return
+        except subprocess.CalledProcessError as e:
+            print(e)
+            try:
+                out = container_check_output(["inspect", container_name])
+                print(out.decode())
+            except subprocess.CalledProcessError as e:
+                print(e)
+            try:
+                out = container_check_output(["logs", container_name])
+                print(out.decode())
+            except subprocess.CalledProcessError as e:
+                print(e)
+            if time.time() - now > timeout:
+                raise RuntimeError(f"Container {container_name} hasn't started")
+            time.sleep(5)
 
 
 def run_systemd_image(image_name, container_name, bootstrap_pip_spec):
@@ -25,10 +74,8 @@ def run_systemd_image(image_name, container_name, bootstrap_pip_spec):
     Container named container_name will be started.
     """
     cmd = [
-        "docker",
         "run",
         "--privileged",
-        "--mount=type=bind,source=/sys/fs/cgroup,target=/sys/fs/cgroup",
         "--detach",
         f"--name={container_name}",
         # A bit less than 1GB to ensure TLJH runs on 1GB VMs.
@@ -42,7 +89,7 @@ def run_systemd_image(image_name, container_name, bootstrap_pip_spec):
 
     cmd.append(image_name)
 
-    subprocess.check_call(cmd)
+    container_check_output(cmd)
 
 
 def stop_container(container_name):
@@ -50,21 +97,20 @@ def stop_container(container_name):
     Stop & remove docker container if it exists.
     """
     try:
-        subprocess.check_output(
-            ["docker", "inspect", container_name], stderr=subprocess.STDOUT
-        )
+        container_check_output(["inspect", container_name], stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError:
         # No such container exists, nothing to do
         return
-    subprocess.check_call(["docker", "rm", "-f", container_name])
+    container_check_output(["rm", "-f", container_name])
 
 
 def run_container_command(container_name, cmd):
     """
     Run cmd in a running container with a bash shell
     """
-    proc = subprocess.run(
-        ["docker", "exec", "-t", container_name, "/bin/bash", "-c", cmd], check=True
+    proc = container_run(
+        ["exec", "-t", container_name, "/bin/bash", "-c", cmd],
+        check=True,
     )
 
 
@@ -72,7 +118,7 @@ def copy_to_container(container_name, src_path, dest_path):
     """
     Copy files from src_path to dest_path inside container_name
     """
-    subprocess.check_call(["docker", "cp", src_path, f"{container_name}:{dest_path}"])
+    container_check_output(["cp", src_path, f"{container_name}:{dest_path}"])
 
 
 def run_test(
@@ -84,6 +130,8 @@ def run_test(
     stop_container(test_name)
     run_systemd_image(image_name, test_name, bootstrap_pip_spec)
 
+    check_container_ready(test_name)
+
     source_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 
     copy_to_container(test_name, os.path.join(source_path, "bootstrap/."), "/srv/src")
@@ -93,7 +141,7 @@ def run_test(
 
     # These logs can be very relevant to debug a container startup failure
     print(f"--- Start of logs from the container: {test_name}")
-    print(subprocess.check_output(["docker", "logs", test_name]).decode())
+    print(container_check_output(["logs", test_name]).decode())
     print(f"--- End of logs from the container: {test_name}")
 
     # Install TLJH from the default branch first to test upgrades
