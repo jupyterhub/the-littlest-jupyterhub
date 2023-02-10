@@ -1,4 +1,4 @@
-# 0.2.0 - YYYY-MM-DD
+# 0.2.0 - 2023-02-10
 
 ([full changelog](https://github.com/jupyterhub/the-littlest-jupyterhub/compare/4a74ad17a1a19f6378efe12a01ba634ed90f1e03...0.2.0))
 
