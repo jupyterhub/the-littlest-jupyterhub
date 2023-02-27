@@ -335,7 +335,14 @@ def main():
     parser = ArgumentParser()
     parser.add_argument("--show-progress-page", action="store_true")
     parser.add_argument(
-        "--version", default="main", help="TLJH version or Git reference"
+        "--version",
+        default="latest",
+        help=(
+            "TLJH version or Git reference. "
+            "Default 'latest' is the most recent release. "
+            "Partial versions can be specified, for example '1', '1.0' or '1.0.0'. "
+            "You can also pass a branch name such as 'main' or a commit hash."
+        ),
     )
     args, tljh_installer_flags = parser.parse_known_args()
 
@@ -448,16 +455,16 @@ def main():
     if os.environ.get("TLJH_BOOTSTRAP_DEV", "no") == "yes":
         logger.info("Selected TLJH_BOOTSTRAP_DEV=yes...")
         tljh_install_cmd.append("--editable")
-    version = _resolve_git_version(args.version)
 
-    tljh_install_cmd.append(
-        os.environ.get(
-            "TLJH_BOOTSTRAP_PIP_SPEC",
+    bootstrap_pip_spec = os.environ.get("TLJH_BOOTSTRAP_PIP_SPEC")
+    if not bootstrap_pip_spec:
+        bootstrap_pip_spec = (
             "git+https://github.com/jupyterhub/the-littlest-jupyterhub.git@{}".format(
-                version
-            ),
+                _resolve_git_version(args.version)
+            )
         )
-    )
+
+    tljh_install_cmd.append(bootstrap_pip_spec)
     if initial_setup:
         logger.info("Installing TLJH installer...")
     else:

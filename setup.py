@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="the-littlest-jupyterhub",
-    version="0.1",
+    version="0.2.0",
     description="A small JupyterHub distribution",
     url="https://github.com/jupyterhub/the-littlest-jupyterhub",
     author="Jupyter Development Team",
