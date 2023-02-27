@@ -59,10 +59,12 @@ able to configure the instance automatically, replace relevant placeholders::
         c.GenericOAuthenticator.userdata_url = "https://your-AWSCognito-domain/oauth2/userInfo"
         c.GenericOAuthenticator.logout_redirect_url = "https://your-AWSCognito-domain/oauth2/logout"
 
-        # these are always the same
+        # you may rename the login button here
         c.GenericOAuthenticator.login_service = "AWS Cognito"
+        
+        # if you use an AWS Cognito user pool, this is the username key
         c.GenericOAuthenticator.username_key = "username"
-        c.GenericOAuthenticator.userdata_method = "POST"
+
         EOF
 
         tljh-config set auth.type oauthenticator.generic.GenericOAuthenticator
@@ -89,10 +91,11 @@ substituting the relevant variables::
     c.GenericOAuthenticator.userdata_url = "https://your-AWSCognito-domain/oauth2/userInfo"
     c.GenericOAuthenticator.logout_redirect_url = "https://your-AWSCognito-domain/oauth2/logout"
 
-    # these are always the same
+    # you may rename the login button here
     c.GenericOAuthenticator.login_service = "AWS Cognito"
+        
+    # if you use an AWS Cognito user pool, this is the username key
     c.GenericOAuthenticator.username_key = "username"
-    c.GenericOAuthenticator.userdata_method = "POST"
 
 We'll use the ``tljh-config`` tool to configure your JupyterHub's authentication.
 For more information on ``tljh-config``, see :ref:`topic/tljh-config`.
@@ -120,3 +123,18 @@ Confirm that the new authenticator works
 
 #. **If this does not work** you can revert back to the default
    JupyterHub authenticator by following the steps in :ref:`howto/auth/firstuse`.
+   
+Using custom claims for group mapping
+=====================================
+
+If you use AWS Cognito to federate with an OIDC provider and you want to authorize
+your users based on e.g. their department claim, you have to make sure that the custom
+claim is provided as array.
+
+If it is not provided as array, there is an easy fix. Just add these lines to your ``awscognito.py``::
+
+    def claim_groups_key_func(user_data_resp_json):
+        return [user_data_resp_json['custom:department']]
+    
+    c.GenericOAuthenticator.claim_groups_key = claim_groups_key_func
+    c.GenericOAuthenticator.allowed_groups = ["AA BB CC", "AA BB DD"]
