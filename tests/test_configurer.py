@@ -201,6 +201,32 @@ def test_cull_service_default():
         }
     ]
 
+def test_cull_service_named():
+    """
+    Test default cull service settings with named server removal
+    """
+    c = apply_mock_config(
+        {"services": {"cull": {"every": 10, "remove_named_servers": True, "max_age": 60}}}
+    )
+
+    cull_cmd = [
+        sys.executable,
+        "-m",
+        "jupyterhub_idle_culler",
+        "--timeout=600",
+        "--cull-every=10",
+        "--concurrency=5",
+        "--max-age=60",
+        "--remove-named-servers",
+    ]
+    assert c.JupyterHub.services == [
+        {
+            "name": "cull-idle",
+            "admin": True,
+            "command": cull_cmd,
+        }
+    ]
+
 
 def test_set_cull_service():
     """
