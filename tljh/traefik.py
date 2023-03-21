@@ -1,7 +1,11 @@
 """Traefik installation and setup"""
 import hashlib
+import io
+import logging
 import os
+import tarfile
 from glob import glob
+from subprocess import run
 
 import backoff
 import requests
@@ -13,28 +17,33 @@ from tljh.configurer import _merge_dictionaries, load_config
 
 from .config import CONFIG_DIR
 
-# traefik 2.7.x is not supported yet, use v1.7.x for now
-# see: https://github.com/jupyterhub/traefik-proxy/issues/97
+logger = logging.getLogger("tljh")
+
 machine = os.uname().machine
 if machine == "aarch64":
-    plat = "linux-arm64"
+    plat = "linux_arm64"
 elif machine == "x86_64":
-    plat = "linux-amd64"
+    plat = "linux_amd64"
 else:
-    raise OSError(f"Error. Platform: {os.uname().sysname} / {machine} Not supported.")
-traefik_version = "1.7.33"
+    plat = None
+
+traefik_version = "2.9.9"
 
 # record sha256 hashes for supported platforms here
 checksums = {
-    "linux-amd64": "314ffeaa4cd8ed6ab7b779e9b6773987819f79b23c28d7ab60ace4d3683c5935",
-    "linux-arm64": "0640fa665125efa6b598fc08c100178e24de66c5c6035ce5d75668d3dc3706e1",
+    "linux_amd64": "141db1434ae76890915486a4bc5ecf3dbafc8ece78984ce1a8db07737c42db88",
+    "linux_arm64": "0a65ead411307669916ba629fa13f698acda0b2c5387abe0309b43e168e4e57f",
 }
 
 
-def checksum_file(path):
+def checksum_file(path_or_file):
     """Compute the sha256 checksum of a path"""
     hasher = hashlib.sha256()
-    with open(path, "rb") as f:
+    if hasattr(path_or_file, "read"):
+        f = path_or_file
+    else:
+        f = open(path_or_file, "rb")
+    with f:
         for chunk in iter(lambda: f.read(4096), b""):
             hasher.update(chunk)
     return hasher.hexdigest()
@@ -45,39 +54,68 @@ def fatal_error(e):
     return str(e) != "ContentTooShort" and not isinstance(e, ConnectionResetError)
 
 
+def check_traefik_version(traefik_bin):
+    """Check the traefik version from `traefik version` output"""
+
+    try:
+        version_out = run([traefik_bin, "version"], capture=True, text=True)
+    except (FileNotFoundError, OSError) as e:
+        logger.debug(f"Failed to get traefik version: {e}")
+        return False
+    versions = {}
+    for line in version_out.splitlines():
+        before, _, after = line.partition(":")
+        key = before.strip()
+        if key.lower() == "version":
+            version = after.strip()
+            if version == traefik_version:
+                logger.debug(f"Found {traefik_bin} {version}")
+                return True
+            else:
+                logger.info(
+                    f"Found {traefik_bin} version {version} != {traefik_version}"
+                )
+                return False
+
+    logger.debug(f"Failed to extract traefik version from: {version_out}")
+    return False
+
+
 @backoff.on_exception(backoff.expo, Exception, max_tries=2, giveup=fatal_error)
 def ensure_traefik_binary(prefix):
     """Download and install the traefik binary to a location identified by a prefix path such as '/opt/tljh/hub/'"""
+    if plat is None:
+        raise OSError(
+            f"Error. Platform: {os.uname().sysname} / {machine} Not supported."
+        )
+    traefik_bin_dir = os.path.join(prefix, "bin")
     traefik_bin = os.path.join(prefix, "bin", "traefik")
     if os.path.exists(traefik_bin):
-        checksum = checksum_file(traefik_bin)
-        if checksum == checksums[plat]:
-            # already have the right binary
-            # ensure permissions and we're done
-            os.chmod(traefik_bin, 0o755)
+        if check_traefik_version(traefik_bin):
             return
         else:
-            print(f"checksum mismatch on {traefik_bin}")
             os.remove(traefik_bin)
 
     traefik_url = (
         "https://github.com/containous/traefik/releases"
-        f"/download/v{traefik_version}/traefik_{plat}"
+        f"/download/v{traefik_version}/traefik_v{traefik_version}_{plat}.tar.gz"
     )
 
-    print(f"Downloading traefik {traefik_version}...")
+    logger.info(f"Downloading traefik {traefik_version} from {traefik_url}...")
     # download the file
     response = requests.get(traefik_url)
+    response.raise_for_status()
     if response.status_code == 206:
         raise Exception("ContentTooShort")
-    with open(traefik_bin, "wb") as f:
-        f.write(response.content)
-    os.chmod(traefik_bin, 0o755)
 
     # verify that we got what we expected
-    checksum = checksum_file(traefik_bin)
+    checksum = checksum_file(io.BytesIO(response.content))
     if checksum != checksums[plat]:
-        raise OSError(f"Checksum failed {traefik_bin}: {checksum} != {checksums[plat]}")
+        raise OSError(f"Checksum failed {traefik_url}: {checksum} != {checksums[plat]}")
+
+    with tarfile.open(fileobj=io.BytesIO(response.content)) as tf:
+        tf.extract("traefik", path=traefik_bin_dir)
+    os.chmod(traefik_bin, 0o755)
 
 
 def compute_basic_auth(username, password):
