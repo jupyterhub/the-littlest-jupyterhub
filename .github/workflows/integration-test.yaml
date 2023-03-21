@@ -58,8 +58,8 @@ jobs:
           echo $matrix_post_filter | jq -C '.'
         env:
           matrix_include_pre_filter: |
-            - name: "Int. tests: Debian 10, Py 3.7"
-              distro_image: "debian:10"
+            - name: "Int. tests: Debian 11, Py 3.9"
+              distro_image: "debian:11"
               runs_on: "ubuntu-22.04"
               extra_flags: ""
             - name: "Int. tests: Ubuntu 20.04, Py 3.8"

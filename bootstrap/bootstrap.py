@@ -9,10 +9,10 @@ This script is run as:
 
 Constraints:
 
-    - The entire script should be compatible with Python 3.7, which is the on
-      Debian 10.
+    - The entire script should be compatible with Python 3.8, which is the on
+      Ubuntu 20.04.
     - The script should parse in Python 3.6 as we print error messages for using
-      Ubuntu 18.04+ which comes with Python 3.6 by default.
+      Ubuntu 18.04 which comes with Python 3.6 by default.
     - The script must depend only on stdlib modules, as no previous installation
       of dependencies can be assumed.
 
@@ -134,7 +134,7 @@ logger = logging.getLogger(__name__)
 
 def _parse_version(vs):
     """Parse a simple version into a tuple of ints"""
-    return (int(part) for part in vs.split("."))
+    return tuple(int(part) for part in vs.split("."))
 
 
 # This function is needed both by the process starting this script, and by the
@@ -204,7 +204,7 @@ def ensure_host_system_can_install_tljh():
             .strip()
         )
 
-    # Require Ubuntu 20.04+ or Debian 10+
+    # Require Ubuntu 20.04+ or Debian 11+
     distro = get_os_release_variable("ID")
     version = get_os_release_variable("VERSION_ID")
     if distro not in ["ubuntu", "debian"]:
@@ -213,13 +213,13 @@ def ensure_host_system_can_install_tljh():
     elif distro == "ubuntu" and _parse_version(version) < (20, 4):
         print("The Littlest JupyterHub requires Ubuntu 20.04 or higher")
         sys.exit(1)
-    elif distro == "debian" and _parse_version(version) < (10,):
+    elif distro == "debian" and _parse_version(version) < (11,):
         print("The Littlest JupyterHub requires Debian 10 or higher")
         sys.exit(1)
 
-    # Require Python 3.6+
-    if sys.version_info < (3, 7):
-        print(f"bootstrap.py must be run with at least Python 3.7, found {sys.version}")
+    # Require Python 3.8+
+    if sys.version_info < (3, 8):
+        print(f"bootstrap.py must be run with at least Python 3.8, found {sys.version}")
         sys.exit(1)
 
     # Require systemd (systemctl is a part of systemd)
