@@ -8,8 +8,8 @@ import hashlib
 import contextlib
 import tempfile
 import requests
-from distutils.version import LooseVersion as V
 from tljh import utils
+from tljh.utils import parse_version as V
 
 
 def sha256_file(fname):
@@ -29,19 +29,44 @@ def check_miniconda_version(prefix, version):
     """
     Return true if a miniconda install with version exists at prefix
     """
+    versions = get_mamba_versions(prefix)
+    if "conda" not in versions:
+        return False
+
+    return V(versions["conda"]) >= V(version)
+
+
+def get_mamba_versions(prefix):
+    """Parse `mamba --version` output into a dict
+
+    which looks like:
+
+    mamba 1.1.0
+    conda 22.11.1
+
+    into:
+
+    {
+        "mamba": "1.1.0",
+        "conda": "22.11.1",
+    }
+    """
+    versions = {}
     try:
-        installed_version = (
+        out = (
             subprocess.check_output(
-                [os.path.join(prefix, "bin", "conda"), "-V"], stderr=subprocess.STDOUT
+                [os.path.join(prefix, "bin", "mamba"), "--version"],
+                stderr=subprocess.STDOUT,
             )
             .decode()
             .strip()
-            .split()[1]
         )
-        return V(installed_version) >= V(version)
     except (subprocess.CalledProcessError, FileNotFoundError):
-        # Conda doesn't exist
-        return False
+        return versions
+    for line in out.strip().splitlines():
+        pkg, version = line.split()
+        versions[pkg] = version
+    return versions
 
 
 @contextlib.contextmanager
@@ -53,7 +78,7 @@ def download_miniconda_installer(installer_url, sha256sum):
     of given version, verifies the sha256sum & provides path to it to the `with`
     block to run.
     """
-    with tempfile.NamedTemporaryFile("wb") as f:
+    with tempfile.NamedTemporaryFile("wb", suffix=".sh") as f:
         f.write(requests.get(installer_url).content)
         # Remain in the NamedTemporaryFile context, but flush changes, see:
         # https://docs.python.org/3/library/os.html#os.fsync

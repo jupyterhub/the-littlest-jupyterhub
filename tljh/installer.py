@@ -26,6 +26,7 @@ from tljh import (
     traefik,
     user,
 )
+
 from .config import (
     CONFIG_DIR,
     CONFIG_FILE,
@@ -34,6 +35,7 @@ from .config import (
     STATE_DIR,
     USER_ENV_PREFIX,
 )
+from .utils import parse_version as V
 from .yaml import yaml
 
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -154,58 +156,92 @@ def ensure_usergroups():
         f.write("Defaults exempt_group = jupyterhub-admins\n")
 
 
+# Install mambaforge using an installer from
+# https://github.com/conda-forge/miniforge/releases
+MAMBAFORGE_VERSION = "22.11.1-4"
+# sha256 checksums
+MAMBAFORGE_CHECKSUMS = {
+    "aarch64": "96191001f27e0cc76612d4498d34f9f656d8a7dddee44617159e42558651479c",
+    "x86_64": "16c7d256de783ceeb39970e675efa4a8eb830dcbb83187f1197abfea0bf07d30",
+}
+# run `mamba --version` to get the conda and mamba versions
+# conda/mamba will be _upgraded_ to these versions, if they differ from what's in
+# the mambaforge distribution
+MAMBAFORGE_MAMBA_VERSION = "1.1.0"
+MAMBAFORGE_CONDA_VERSION = "22.11.1"
+
+
+def _mambaforge_url(version=MAMBAFORGE_VERSION, arch=None):
+    """Return (URL, checksum) for mambaforge download for a given version and arch
+
+    Default values provided for both version and arch
+    """
+    if arch is None:
+        arch = os.uname().machine
+    installer_url = "https://github.com/conda-forge/miniforge/releases/download/{v}/Mambaforge-{v}-Linux-{arch}.sh".format(
+        v=version,
+        arch=arch,
+    )
+    # Check system architecture, set appropriate installer checksum
+    checksum = MAMBAFORGE_CHECKSUMS.get(arch)
+    if not checksum:
+        raise ValueError(
+            f"Unsupported architecture: {arch}. TLJH only supports {','.join(MAMBAFORGE_CHECKSUMS.keys())}"
+        )
+    return installer_url, checksum
+
+
 def ensure_user_environment(user_requirements_txt_file):
     """
     Set up user conda environment with required packages
     """
     logger.info("Setting up user environment...")
+    # note: these must be in descending order
+    conda_upgrade_versions = {
+        # format: "conda version": (conda_version, mamba_version),
+        # mambaforge 4.10.3-7 (2023-03-21)
+        "22.11.1": (MAMBAFORGE_CONDA_VERSION, MAMBAFORGE_MAMBA_VERSION),
+        # tljh up to 0.2.0 (2021-10-18)
+        "4.10.3": ("4.10.3", "0.16.0"),
+        # very old versions, do these still work?
+        "4.7.10": ("4.8.1", "0.16.0"),
+        "4.5.4": ("4.5.8", "0.16.0"),
+    }
 
-    miniconda_old_version = "4.5.4"
-    miniconda_new_version = "4.7.10"
-    # Install mambaforge using an installer from
-    # https://github.com/conda-forge/miniforge/releases
-    mambaforge_new_version = "4.10.3-7"
-    # Check system architecture, set appropriate installer checksum
-    if os.uname().machine == "aarch64":
-        installer_sha256 = (
-            "ac95f137b287b3408e4f67f07a284357b1119ee157373b788b34e770ef2392b2"
-        )
-    elif os.uname().machine == "x86_64":
-        installer_sha256 = (
-            "fc872522ec427fcab10167a93e802efaf251024b58cc27b084b915a9a73c4474"
-        )
     # Check OS, set appropriate string for conda installer path
     if os.uname().sysname != "Linux":
         raise OSError("TLJH is only supported on Linux platforms.")
-    # Then run `mamba --version` to get the conda and mamba versions
-    # Keep these in sync with tests/test_conda.py::prefix
-    mambaforge_conda_new_version = "4.10.3"
-    mambaforge_mamba_version = "0.16.0"
+    found_conda = False
+    have_versions = conda.get_mamba_versions(USER_ENV_PREFIX)
+    have_conda_version = have_versions.get("conda")
+    if have_conda_version:
+        for check_version, conda_mamba_version in conda_upgrade_versions.items():
+            if V(have_conda_version) >= V(check_version):
+                found_conda = True
+                conda_version, mamba_version = conda_mamba_version
+                break
 
-    if conda.check_miniconda_version(USER_ENV_PREFIX, mambaforge_conda_new_version):
-        conda_version = "4.10.3"
-    elif conda.check_miniconda_version(USER_ENV_PREFIX, miniconda_new_version):
-        conda_version = "4.8.1"
-    elif conda.check_miniconda_version(USER_ENV_PREFIX, miniconda_old_version):
-        conda_version = "4.5.8"
-    # If no prior miniconda installation is found, we can install a newer version
-    else:
+    if not found_conda:
+        if os.path.exists(USER_ENV_PREFIX):
+            logger.warning(
+                f"Found prefix at {USER_ENV_PREFIX}, but too old or missing conda/mamba ({have_versions}). Rebuilding env from scratch!!"
+            )
+            # FIXME: should this fail? I'm not sure how destructive it is
         logger.info("Downloading & setting up user environment...")
-        installer_url = "https://github.com/conda-forge/miniforge/releases/download/{v}/Mambaforge-{v}-Linux-{arch}.sh".format(
-            v=mambaforge_new_version, arch=os.uname().machine
-        )
+        installer_url, installer_sha256 = _mambaforge_url()
         with conda.download_miniconda_installer(
             installer_url, installer_sha256
         ) as installer_path:
             conda.install_miniconda(installer_path, USER_ENV_PREFIX)
-        conda_version = "4.10.3"
+        conda_version = MAMBAFORGE_CONDA_VERSION
+        mamba_version = MAMBAFORGE_MAMBA_VERSION
 
     conda.ensure_conda_packages(
         USER_ENV_PREFIX,
         [
             # Conda's latest version is on conda much more so than on PyPI.
             "conda==" + conda_version,
-            "mamba==" + mambaforge_mamba_version,
+            "mamba==" + MAMBAFORGE_MAMBA_VERSION,
         ],
     )
 

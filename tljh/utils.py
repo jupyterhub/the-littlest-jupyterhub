@@ -59,3 +59,12 @@ def get_plugin_manager():
     pm.load_setuptools_entrypoints("tljh")
 
     return pm
+
+
+def parse_version(version_string):
+    """Parse version string to tuple
+
+    Finds all numbers and returns a tuple of ints
+    _very_ loose version parsing, like the old distutils.version.LooseVersion
+    """
+    return tuple(int(part) for part in version_string.split("."))
