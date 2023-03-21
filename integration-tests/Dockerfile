@@ -11,6 +11,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
         curl \
         git \
         sudo \
+        python3 \
  && rm -rf /var/lib/apt/lists/*
 
 # Kill all the things we don't need
