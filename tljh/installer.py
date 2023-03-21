@@ -201,11 +201,8 @@ def ensure_user_environment(user_requirements_txt_file):
         # format: "conda version": (conda_version, mamba_version),
         # mambaforge 4.10.3-7 (2023-03-21)
         "22.11.1": (MAMBAFORGE_CONDA_VERSION, MAMBAFORGE_MAMBA_VERSION),
-        # tljh up to 0.2.0 (2021-10-18)
+        # tljh up to 0.2.0 (since 2021-10-18)
         "4.10.3": ("4.10.3", "0.16.0"),
-        # very old versions, do these still work?
-        "4.7.10": ("4.8.1", "0.16.0"),
-        "4.5.4": ("4.5.8", "0.16.0"),
     }
 
     # Check OS, set appropriate string for conda installer path
