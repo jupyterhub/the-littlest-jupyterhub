@@ -1,6 +1,6 @@
 # Systemd inside a Docker container, for CI only
-ARG ubuntu_version=20.04
-FROM ubuntu:${ubuntu_version}
+ARG BASE_IMAGE=ubuntu:20.04
+FROM $BASE_IMAGE
 
 # DEBIAN_FRONTEND is set to avoid being asked for input and hang during build:
 # https://anonoz.github.io/tech/2020/04/24/docker-build-stuck-tzdata.html

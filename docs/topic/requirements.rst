@@ -7,7 +7,7 @@ Server Requirements
 Operating System
 ================
 
-We require using Ubuntu 18.04 as the base operating system for your server.
+We require using Ubuntu >=20.04 as the base operating system for your server.
 
 Root access
 ===========
