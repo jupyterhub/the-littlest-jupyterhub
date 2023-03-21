@@ -65,7 +65,7 @@ jobs:
             - name: "Int. tests: Ubuntu 20.04, Py 3.8"
               distro_image: "ubuntu:20.04"
               extra_flags: ""
-            - name: "Int. tests: Ubuntu 22.04 (Py 3.10)"
+            - name: "Int. tests: Ubuntu 22.04 Py 3.10"
               distro_image: "ubuntu:22.04"
               extra_flags: ""
             - name: "Int. tests: Ubuntu 22.04, Py 3.10, --upgrade"
