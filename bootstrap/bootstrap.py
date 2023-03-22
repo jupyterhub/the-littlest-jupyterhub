@@ -9,7 +9,7 @@ This script is run as:
 
 Constraints:
 
-    - The entire script should be compatible with Python 3.8, which is the on
+    - The entire script should be compatible with Python 3.8, which is the default on
       Ubuntu 20.04.
     - The script should parse in Python 3.6 as we print error messages for using
       Ubuntu 18.04 which comes with Python 3.6 by default.
@@ -214,7 +214,7 @@ def ensure_host_system_can_install_tljh():
         print("The Littlest JupyterHub requires Ubuntu 20.04 or higher")
         sys.exit(1)
     elif distro == "debian" and _parse_version(version) < (11,):
-        print("The Littlest JupyterHub requires Debian 10 or higher")
+        print("The Littlest JupyterHub requires Debian 11 or higher")
         sys.exit(1)
 
     # Require Python 3.8+
