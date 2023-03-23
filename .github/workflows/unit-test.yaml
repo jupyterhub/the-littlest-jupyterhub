@@ -42,9 +42,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: "Unit tests: Ubuntu 18.04, Py 3.6"
-            ubuntu_version: "18.04"
-            python_version: "3.6"
           - name: "Unit tests: Ubuntu 20.04, Py 3.9"
             ubuntu_version: "20.04"
             python_version: "3.9"

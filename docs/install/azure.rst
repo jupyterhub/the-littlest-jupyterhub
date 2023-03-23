@@ -13,16 +13,16 @@ users and a user environment with packages you want to be installed running on
 
 This tutorial leads you step-by-step for you to manually deploy your own JupyterHub on Azure cloud.
 
-.. note:: ✨ The ``Deploy to Azure button`` project allows you  to deploy your own JupyterHub with minimal manual configuration steps. The deploy to Azure button allows you  to have a vanilla configuration in just one-click and by assigning some variables. 
-    
+.. note:: ✨ The ``Deploy to Azure button`` project allows you  to deploy your own JupyterHub with minimal manual configuration steps. The deploy to Azure button allows you  to have a vanilla configuration in just one-click and by assigning some variables.
+
     Check it out at `https://github.com/trallard/TLJH-azure-button <https://github.com/trallard/TLJH-azure-button>`_.
 
 Prerequisites
 ==============
 
-* A Microsoft Azure account. 
+* A Microsoft Azure account.
 
-* To get started you can get a free account which  includes 150 dollars worth of Azure credits (`get a free account here <https://azure.microsoft.com/en-us/free//?wt.mc_id=TLJH-github-taallard>`_) 
+* To get started you can get a free account which  includes 150 dollars worth of Azure credits (`get a free account here <https://azure.microsoft.com/en-us/free//?wt.mc_id=TLJH-github-taallard>`_)
 
 These instructions cover how to set up a Virtual Machine
 on Microsoft Azure. For subsequent information about creating
@@ -51,8 +51,8 @@ A new screen with all the options for Virtual Machines in Azure will displayed.
     .. image:: ../images/providers/azure/create-vm.png
         :alt: Create VM from the marketplace
 
-#. **Choose an Ubuntu server for your VM**: 
-    * Click `Ubuntu Server 18.04 LTS.`
+#. **Choose an Ubuntu server for your VM**:
+    * Click `Ubuntu Server 22.04 LTS.`
     * Make sure `Resource Manager` is selected in the next screen and click **Create**
 
     .. image:: ../images/providers/azure/ubuntu-vm.png
@@ -70,7 +70,7 @@ A new screen with all the options for Virtual Machines in Azure will displayed.
     * **Name**. Use a descriptive name for your virtual machine (note that you cannot use spaces or special characters).
     * **Region**. Choose a location near where you expect your users to be located.
     * **Availability options**. Choose "No infrastructure redundancy required".
-    * **Image**. Make sure "Ubuntu Server 18.04 LTS" is selected (from the previous step).
+    * **Image**. Make sure "Ubuntu Server 22.04 LTS" is selected (from the previous step).
     * **Authentication type**. Change authentication type to "password".
     * **Username**. Choose a memorable username, this will be your "root" user, and you'll need it later on.
     * **Password**. Type in a password, this will be used later for admin access so make sure it is something memorable.
@@ -83,17 +83,17 @@ A new screen with all the options for Virtual Machines in Azure will displayed.
 
 #. Before clicking on "Next" we need to select the RAM size for the image.
     * For this we need to make sure we have enough RAM to accommodate your users. For example, if each user needs 2GB of RAM, and you have 10 total users, you need at least 20GB of RAM on the machine. It's also good to have a few GB of "buffer" RAM beyond what you think you'll need.
-    * Click on **Change size** (see image below) 
+    * Click on **Change size** (see image below)
 
     .. image:: ../images/providers/azure/size-vm.png
-            :alt: Choose vm size 
+            :alt: Choose vm size
 
-    .. note:: For more information about estimating memory, CPU and disk needs check `The memory section in the TLJH documentation <https://tljh.jupyter.org/en/latest/howto/admin/resource-estimation.html>`_ 
+    .. note:: For more information about estimating memory, CPU and disk needs check `The memory section in the TLJH documentation <https://tljh.jupyter.org/en/latest/howto/admin/resource-estimation.html>`_
 
-    * Select a suitable image (to check available images and prices in your region `click on this link <https://azuremarketplace.microsoft.com/en-gb/marketplace/apps/Canonical.UbuntuServer?tab=PlansAndPrice/?wt.mc_id=TLJH-github-taallard>`_).    
-    
+    * Select a suitable image (to check available images and prices in your region `click on this link <https://azuremarketplace.microsoft.com/en-gb/marketplace/apps/Canonical.UbuntuServer?tab=PlansAndPrice/?wt.mc_id=TLJH-github-taallard>`_).
+
 #. Disks (Storage):
-    * **Disk options**: select the OS disk type there are options for SDD and HDD. **SSD persistent disk** gives you a faster but more expensive disk than HDD. 
+    * **Disk options**: select the OS disk type there are options for SDD and HDD. **SSD persistent disk** gives you a faster but more expensive disk than HDD.
     * **Data disk**. Click on create and attach a new disk. Select an appropriate type and size and click ok.
     * Click "Next".
 
@@ -111,7 +111,7 @@ A new screen with all the options for Virtual Machines in Azure will displayed.
     * **Public inbound ports**. Check **HTTP**, **HTTPS**, and **SSH**.
 
     .. image:: ../images/providers/azure/networking-vm.png
-            :alt: Choose networking ports 
+            :alt: Choose networking ports
 
 #. Management
     * Monitoring
@@ -129,7 +129,7 @@ A new screen with all the options for Virtual Machines in Azure will displayed.
 
 #. Advanced settings
     * **Extensions**. Make sure there are no extensions listed
-    * **Cloud init**. We are going to use this section to install TLJH directly into our Virtual Machine. 
+    * **Cloud init**. We are going to use this section to install TLJH directly into our Virtual Machine.
       Copy the code snippet below:
 
       .. code:: bash
@@ -165,7 +165,7 @@ A new screen with all the options for Virtual Machines in Azure will displayed.
     .. image:: ../images/providers/azure/goto-vm.png
         :alt: Go to VM
 
-#. Check if the installation is completed by **copying** the **Public IP address** of your virtual machine, and trying to access it with a browser. 
+#. Check if the installation is completed by **copying** the **Public IP address** of your virtual machine, and trying to access it with a browser.
 
     .. image:: ../images/providers/azure/ip-vm.png
         :alt: Public IP address
