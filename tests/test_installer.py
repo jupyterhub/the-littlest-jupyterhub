@@ -121,7 +121,13 @@ def test_ensure_user_environment(
             # install a noarch: python package that won't be used otherwise
             # should depend on Python, so it will interact with possible upgrades
             run(
-                [str(user_env_prefix / "bin/conda"), "install", "-y", canary_package],
+                [
+                    str(user_env_prefix / "bin/conda"),
+                    "install",
+                    "-y",
+                    "-c" "conda-forge",
+                    canary_package,
+                ],
                 input="",
                 check=True,
             )
