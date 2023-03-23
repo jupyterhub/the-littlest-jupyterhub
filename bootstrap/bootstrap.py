@@ -9,11 +9,10 @@ This script is run as:
 
 Constraints:
 
-    - The entire script should be compatible with Python 3.6, which is the on
-      Ubuntu 18.04+.
-    - The script should parse in Python 3.5 as we print error messages for using
-      Ubuntu 16.04+ which comes with Python 3.5 by default. This means no
-      f-strings can be used.
+    - The entire script should be compatible with Python 3.8, which is the default on
+      Ubuntu 20.04.
+    - The script should parse in Python 3.6 as we print error messages for using
+      Ubuntu 18.04 which comes with Python 3.6 by default.
     - The script must depend only on stdlib modules, as no previous installation
       of dependencies can be assumed.
 
@@ -133,6 +132,11 @@ progress_page_html = """
 logger = logging.getLogger(__name__)
 
 
+def _parse_version(vs):
+    """Parse a simple version into a tuple of ints"""
+    return tuple(int(part) for part in vs.split("."))
+
+
 # This function is needed both by the process starting this script, and by the
 # TLJH installer that this script execs in the end. Make sure its replica at
 # tljh/utils.py stays in sync with this version!
@@ -200,19 +204,22 @@ def ensure_host_system_can_install_tljh():
             .strip()
         )
 
-    # Require Ubuntu 18.04+
+    # Require Ubuntu 20.04+ or Debian 11+
     distro = get_os_release_variable("ID")
-    version = float(get_os_release_variable("VERSION_ID"))
-    if distro != "ubuntu":
-        print("The Littlest JupyterHub currently supports Ubuntu Linux only")
+    version = get_os_release_variable("VERSION_ID")
+    if distro not in ["ubuntu", "debian"]:
+        print("The Littlest JupyterHub currently supports Ubuntu or Debian Linux only")
         sys.exit(1)
-    elif float(version) < 18.04:
-        print("The Littlest JupyterHub requires Ubuntu 18.04 or higher")
+    elif distro == "ubuntu" and _parse_version(version) < (20, 4):
+        print("The Littlest JupyterHub requires Ubuntu 20.04 or higher")
+        sys.exit(1)
+    elif distro == "debian" and _parse_version(version) < (11,):
+        print("The Littlest JupyterHub requires Debian 11 or higher")
         sys.exit(1)
 
-    # Require Python 3.6+
-    if sys.version_info < (3, 6):
-        print("bootstrap.py must be run with at least Python 3.6")
+    # Require Python 3.8+
+    if sys.version_info < (3, 8):
+        print(f"bootstrap.py must be run with at least Python 3.8, found {sys.version}")
         sys.exit(1)
 
     # Require systemd (systemctl is a part of systemd)
@@ -228,6 +235,7 @@ def ensure_host_system_can_install_tljh():
                 "For local development, see http://tljh.jupyter.org/en/latest/contributing/dev-setup.html"
             )
         sys.exit(1)
+    return distro, version
 
 
 class ProgressPageRequestHandler(SimpleHTTPRequestHandler):
@@ -330,7 +338,7 @@ def main():
     start a local webserver temporarily and report its installation progress via
     a web site served locally on port 80.
     """
-    ensure_host_system_can_install_tljh()
+    distro, version = ensure_host_system_can_install_tljh()
 
     parser = ArgumentParser()
     parser.add_argument("--show-progress-page", action="store_true")
@@ -425,7 +433,9 @@ def main():
             ["apt-get", "install", "--yes", "software-properties-common"],
             env=apt_get_adjusted_env,
         )
-        run_subprocess(["add-apt-repository", "universe", "--yes"])
+        # Section "universe" exists and is required only in ubuntu.
+        if distro == "ubuntu":
+            run_subprocess(["add-apt-repository", "universe", "--yes"])
         run_subprocess(["apt-get", "update"])
         run_subprocess(
             [
@@ -436,6 +446,7 @@ def main():
                 "python3-venv",
                 "python3-pip",
                 "git",
+                "sudo",  # sudo is missing in default debian install
             ],
             env=apt_get_adjusted_env,
         )

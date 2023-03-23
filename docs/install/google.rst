@@ -94,10 +94,10 @@ Let's create the server on which we can run JupyterHub.
 
    This should open a **Boot disk** popup.
 
-#. Select **Ubuntu 18.04 LTS** from the list of operating system images.
+#. Select **Ubuntu 22.04 LTS** from the list of operating system images.
 
    .. image:: ../images/providers/google/boot-disk-ubuntu.png
-      :alt: Selecting Ubuntu 18.04 for OS
+      :alt: Selecting Ubuntu 22.04 for OS
 
 #. You can also change the **type** and **size** of your disk at the bottom
    of this popup.

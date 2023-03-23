@@ -170,7 +170,7 @@ To upgrade the Python version of the user environment, one can:
 
 *  **Upgrade Python manually.**
 
-   Because upgrading Python for existing installs can break packages alaredy installed
+   Because upgrading Python for existing installs can break packages already installed
    under the old Python, upgrading your current TLJH installation, will NOT upgrade
    the Python version of the user environment, but you may do so manually.
 
