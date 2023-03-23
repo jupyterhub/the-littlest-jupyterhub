@@ -2,6 +2,7 @@
 Miscellaneous functions useful in at least two places unrelated to each other
 """
 import logging
+import re
 import subprocess
 
 # Copied into bootstrap/bootstrap.py. Make sure these two copies are exactly the same!
@@ -67,4 +68,6 @@ def parse_version(version_string):
     Finds all numbers and returns a tuple of ints
     _very_ loose version parsing, like the old distutils.version.LooseVersion
     """
-    return tuple(int(part) for part in version_string.split("."))
+    # return a tuple of all the numbers in the version string
+    # always succeeds, even if passed nonsense
+    return tuple(int(part) for part in re.findall(r"\d+", version_string))

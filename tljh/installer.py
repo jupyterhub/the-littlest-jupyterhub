@@ -224,7 +224,7 @@ def ensure_user_environment(user_requirements_txt_file):
     if not found_conda:
         if os.path.exists(USER_ENV_PREFIX):
             logger.warning(
-                f"Found prefix at {USER_ENV_PREFIX}, but too old or missing conda/mamba ({have_versions}). Rebuilding env from scratch!!"
+                f"Found prefix at {USER_ENV_PREFIX}, but too old or missing conda/mamba ({have_versions}). Upgrading from mambaforge."
             )
             # FIXME: should this fail? I'm not sure how destructive it is
         logger.info("Downloading & setting up user environment...")
