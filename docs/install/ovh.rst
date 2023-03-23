@@ -32,7 +32,7 @@ Let's create the server on which we can run JupyterHub.
 
    .. image:: ../images/providers/ovh/create-ovh-stack.png
       :alt: Button to create an OVH stack
-      
+
 #. Select a name for the project:
 
    .. image:: ../images/providers/ovh/project-name.png
@@ -47,15 +47,15 @@ Let's create the server on which we can run JupyterHub.
 
    .. image:: ../images/providers/ovh/create-instance.png
       :alt: Create a new instance
-      
+
 #. **Select a model** for the instance. A good start is the **S1-4** model under **Shared resources** which comes with 4GB RAM, 1 vCores and 20GB SSD.
-      
+
 #. **Select a region**.
 
-#. Select **Ubuntu 18.04** as the image:
+#. Select **Ubuntu 22.04** as the image:
 
    .. image:: ../images/providers/ovh/distribution.png
-      :alt: Select Ubuntu 18.04 as the image
+      :alt: Select Ubuntu 22.04 as the image
 
 #. OVH requires setting an SSH key to be able to connect to the instance.
    You can create a new SSH by following

@@ -6,6 +6,8 @@ import os
 import subprocess
 import time
 
+BASE_IMAGE = os.getenv("BASE_IMAGE", "ubuntu:20.04")
+
 
 def install_pkgs(container_name, show_progress_page):
     # Install python3 inside the ubuntu container
@@ -13,7 +15,7 @@ def install_pkgs(container_name, show_progress_page):
     pkgs = ["python3"]
     if show_progress_page:
         pkgs += ["systemd", "git", "curl"]
-        # Create the sudoers dir, so that the installer succesfully gets to the
+        # Create the sudoers dir, so that the installer successfully gets to the
         # point of starting jupyterhub and stopping the progress page server.
         subprocess.check_output(
             ["docker", "exec", container_name, "mkdir", "-p", "etc/sudoers.d"]
@@ -128,15 +130,15 @@ def test_ubuntu_too_old():
     """
     Error with a useful message when running in older Ubuntu
     """
-    output = run_bootstrap_after_preparing_container("old-distro-test", "ubuntu:16.04")
-    assert output.stdout == "The Littlest JupyterHub requires Ubuntu 18.04 or higher\n"
+    output = run_bootstrap_after_preparing_container("old-distro-test", "ubuntu:18.04")
+    assert output.stdout == "The Littlest JupyterHub requires Ubuntu 20.04 or higher\n"
     assert output.returncode == 1
 
 
 def test_inside_no_systemd_docker():
     output = run_bootstrap_after_preparing_container(
         "plain-docker-test",
-        f"ubuntu:{os.getenv('UBUNTU_VERSION', '20.04')}",
+        BASE_IMAGE,
     )
     assert "Systemd is required to run TLJH" in output.stdout
     assert output.returncode == 1
@@ -172,7 +174,7 @@ def test_progress_page():
         installer = executor.submit(
             run_bootstrap_after_preparing_container,
             "progress-page",
-            f"ubuntu:{os.getenv('UBUNTU_VERSION', '20.04')}",
+            BASE_IMAGE,
             True,
         )
 
