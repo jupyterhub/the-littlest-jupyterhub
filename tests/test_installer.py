@@ -57,6 +57,19 @@ def setup_conda(distro, version, prefix):
         raise ValueError(f"{distro=} must be 'miniconda' or 'mambaforge'")
     with conda.download_miniconda_installer(installer_url, None) as installer_path:
         conda.install_miniconda(installer_path, str(prefix))
+    # avoid auto-updating conda when we install other packages
+    run(
+        [
+            str(prefix / "bin/conda"),
+            "config",
+            "--system",
+            "--set",
+            "auto_update_conda",
+            "false",
+        ],
+        input="",
+        check=True,
+    )
 
 
 @pytest.fixture
