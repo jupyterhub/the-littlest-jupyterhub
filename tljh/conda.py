@@ -6,8 +6,12 @@ import subprocess
 import json
 import hashlib
 import contextlib
+import logging
 import tempfile
+import time
+
 import requests
+
 from tljh import utils
 from tljh.utils import parse_version as V
 
@@ -78,12 +82,19 @@ def download_miniconda_installer(installer_url, sha256sum):
     of given version, verifies the sha256sum & provides path to it to the `with`
     block to run.
     """
+    logger = logging.getLogger("tljh")
+    logger.info(f"Downloading conda installer {installer_url}")
     with tempfile.NamedTemporaryFile("wb", suffix=".sh") as f:
-        f.write(requests.get(installer_url).content)
+        tic = time.perf_counter()
+        r = requests.get(installer_url)
+        r.raise_for_status()
+        f.write(r.content)
         # Remain in the NamedTemporaryFile context, but flush changes, see:
         # https://docs.python.org/3/library/os.html#os.fsync
         f.flush()
         os.fsync(f.fileno())
+        t = time.perf_counter() - tic
+        logger.info(f"Downloaded conda installer {installer_url} in {t:.1f}s")
 
         if sha256_file(f.name) != sha256sum:
             raise Exception("sha256sum hash mismatch! Downloaded file corrupted")

@@ -212,6 +212,9 @@ def ensure_user_environment(user_requirements_txt_file):
     have_versions = conda.get_mamba_versions(USER_ENV_PREFIX)
     have_conda_version = have_versions.get("conda")
     if have_conda_version:
+        logger.info(
+            f"Found prefix at {USER_ENV_PREFIX}, with conda/mamba({have_versions})"
+        )
         for check_version, conda_mamba_version in conda_upgrade_versions.items():
             if V(have_conda_version) >= V(check_version):
                 found_conda = True
@@ -238,7 +241,7 @@ def ensure_user_environment(user_requirements_txt_file):
         [
             # Conda's latest version is on conda much more so than on PyPI.
             "conda==" + conda_version,
-            "mamba==" + MAMBAFORGE_MAMBA_VERSION,
+            "mamba==" + mamba_version,
         ],
     )
 
