@@ -61,6 +61,7 @@ jobs:
           apt-get update
           apt-get install --yes \
               python3-venv \
+              bzip2 \
               git
 
           python3 -m venv /srv/venv
