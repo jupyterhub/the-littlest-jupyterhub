@@ -25,10 +25,11 @@ def run_subprocess(cmd, *args, **kwargs):
     and failed output directly to the user's screen
     """
     logger = logging.getLogger("tljh")
+    printable_command = " ".join(cmd)
+    logger.debug("Running %s", printable_command)
     proc = subprocess.run(
         cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, *args, **kwargs
     )
-    printable_command = " ".join(cmd)
     if proc.returncode != 0:
         # Our process failed! Show output to the user
         logger.error(
