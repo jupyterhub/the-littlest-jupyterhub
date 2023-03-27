@@ -8,9 +8,9 @@ HTTPS encrypts traffic so that usernames, passwords and your data are
 communicated securely. sensitive bits of information are communicated
 securely. The Littlest JupyterHub supports automatically configuring HTTPS
 via [Let's Encrypt](https://letsencrypt.org), or setting it up
-{ref}`manually <howto/admin/https/manual>` with your own TLS key and
+[manually](#howto-admin-https-manual) with your own TLS key and
 certificate. Unless you have a strong reason to use the manual method,
-you should use the {ref}`Let's Encrypt <howto/admin/https/letsencrypt>`
+you should use the [Let's Encrypt](#howto-admin-https-letsencrypt)
 method.
 
 :::{note}
@@ -35,7 +35,7 @@ similar to this:
 If the machine you are running on is not reachable from the internet -
 for example, if it is a machine internal to your organization that
 is cut off from the internet - you can not use this method. Please
-set up a DNS entry and HTTPS {ref}`manually <howto/admin/https/manual>`.
+set up a DNS entry and HTTPS [manually](#howto-admin-https-manual).
 :::
 
 To enable HTTPS via letsencrypt:
@@ -115,4 +115,4 @@ and now access your Hub securely at <https://yourhub.yourdomain.edu>.
 
 ## Troubleshooting
 
-If you're having trouble with HTTPS, looking at the {ref}`traefik proxy logs <troubleshooting/logs/traefik>` might help.
+If you're having trouble with HTTPS, looking at the [traefik proxy logs](troubleshooting-logs-traefik) might help.

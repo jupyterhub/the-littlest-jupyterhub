@@ -110,7 +110,7 @@ The Littlest JupyterHub can install additional _plugins_ that provide additional
 features. They are most commonly used to install a particular _stack_ - such as
 the [PANGEO Stack](https://github.com/yuvipanda/tljh-pangeo) for earth sciences
 research, a stack for a particular class, etc. You can find more information about
-writing plugins and a list of existing plugins at {ref}`contributing/plugins`.
+writing plugins and a list of existing plugins at [](/contributing/plugins).
 
 `--plugin <plugin-to-install>` installs and activates a plugin. You can pass it
 however many times you want. Since plugins are distributed as python packages,

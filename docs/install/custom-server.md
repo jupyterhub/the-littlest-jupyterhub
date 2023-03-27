@@ -14,7 +14,7 @@ on your personal computer.
 :::{note}
 Running TLJH _inside_ a docker container is not supported, since we depend
 on systemd. If you want to run TLJH locally for development, see
-{ref}`contributing/dev-setup`.
+[](/contributing/dev-setup).
 :::
 
 ## Goal
@@ -31,7 +31,7 @@ a server you have access to.
 4. Ability to `ssh` into the server & run commands from the prompt.
 5. An **IP address** where the server can be reached from the browsers of your target audience.
 
-If you run into issues, look at the specific {ref}`troubleshooting guide <troubleshooting/providers/custom>`
+If you run into issues, look at the specific [troubleshooting guide](/troubleshooting/providers/custom)
 for custom server installations.
 
 ## Step 1: Installing The Littlest JupyterHub
@@ -56,8 +56,8 @@ for custom server installations.
    ```
 
    :::{note}
-   See {ref}`topic/installer-actions` if you want to understand exactly what the installer is doing.
-   {ref}`topic/customizing-installer` documents other options that can be passed to the installer.
+   See [](/topic/installer-actions) if you want to understand exactly what the installer is doing.
+   [](/topic/customizing-installer) documents other options that can be passed to the installer.
    :::
 
 4. Press `Enter` to start the installation process. This will take 5-10 minutes,
@@ -92,4 +92,4 @@ for custom server installations.
 ## Step 4: Setup HTTPS
 
 Once you are ready to run your server for real, and have a domain, it's a good
-idea to proceed directly to {ref}`howto/admin/https`.
+idea to proceed directly to [](/howto/admin/https).

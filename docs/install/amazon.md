@@ -72,7 +72,7 @@ Let's create the server on which we can run JupyterHub.
     offers. Select the one you want and then select the button
     `Next: Configure Instance Details` in the lower right corner.
 
-    Check out our guide on How To {ref}`howto/admin/resource-estimation` to help pick
+    Check out our guide on How To [](/howto/admin/resource-estimation) to help pick
     how much Memory / CPU your server needs.
     We recommend you use a server with at least 2GB of RAM, such as a **t3.small**.
     However, if you need to minimise costs you can use a server with **1GB** RAM such as a **t2.micro**, but performance will be limited.
@@ -101,8 +101,8 @@ Let's create the server on which we can run JupyterHub.
     ```
 
     :::{note}
-    See {ref}`topic/installer-actions` for a detailed description and
-    {ref}`topic/customizing-installer` for other options that can be used.
+    See [](/topic/installer-actions) for a detailed description and
+    [](/topic/customizing-installer) for other options that can be used.
     :::
 
 8.  Under **Step 4: Add Storage**, you can change the **size** and **type of your
@@ -112,7 +112,7 @@ Let's create the server on which we can run JupyterHub.
     :alt: Selecting disk size and type
     ```
 
-    Check out {ref}`howto/admin/resource-estimation` to help pick
+    Check out [](/howto/admin/resource-estimation) to help pick
     how much Disk space your server needs.
 
     Hover over the encircled `i` next to **Volume Type** for an explanation of

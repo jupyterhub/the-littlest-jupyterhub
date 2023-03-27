@@ -77,8 +77,8 @@ Let's create the server on which we can run JupyterHub.
     ```
 
     :::{note}
-    See {ref}`topic/installer-actions` if you want to understand exactly what the installer is doing.
-    {ref}`topic/customizing-installer` documents other options that can be passed to the installer.
+    See [](/topic/installer-actions) if you want to understand exactly what the installer is doing.
+    [](/topic/customizing-installer) documents other options that can be passed to the installer.
     :::
 
     ```{image} ../images/providers/ovh/configuration.png

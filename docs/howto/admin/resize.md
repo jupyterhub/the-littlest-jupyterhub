@@ -11,7 +11,7 @@ the cloud provider of your choice.
 
 Currently there are instructions to resize your resources on the following providers:
 
-- {ref}`Digital Ocean <howto/providers/digitalocean/resize>`.
+- [Digital Ocean](howto-providers-digitalocean-resize)
 
 Once resources have been reallocated, you must tell TLJH to make use of these resources,
 and verify that the resources have become available.
@@ -20,7 +20,7 @@ and verify that the resources have become available.
 
 1. Once you have resized your server, tell the JupyterHub to make use of
    these new resources. To accomplish this, follow the instructions in
-   {ref}`topic/tljh-config` to set new memory or CPU limits and reload the hub. This can be completed
+   [](/topic/tljh-config) to set new memory or CPU limits and reload the hub. This can be completed
    using the terminal in the JupyterHub (or via SSH-ing into your VM and using this terminal).
 
 2. TLJH configuration options can be verified by viewing the tljh-config output.

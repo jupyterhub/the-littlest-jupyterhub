@@ -59,7 +59,7 @@ If you encounter this error, it's likely that you are running inside a virtual e
 Error in "currentmodule" directive:
 ```
 
-To get started contributing, you'll want to read the {ref}`reStructuredText reference <sphinx:rst-index>`
+To get started contributing, you'll want to read the `reStructuredText reference <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`
 
 Your locally-built documentation will be themed differently than the
 documentation at [the-littlest-jupyterhub.readthedocs.io](https://the-littlest-jupyterhub.readthedocs.io).

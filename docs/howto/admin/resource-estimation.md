@@ -36,7 +36,7 @@ over time. We generally recommend between 40-60% of your total class size to sta
 
 Depending on what kind of work your users are doing, they will use different amounts
 of memory. The easiest way to determine this is to run through a typical user
-workflow yourself, and measure how much memory is used. You can use {ref}`howto/admin/nbresuse`
+workflow yourself, and measure how much memory is used. You can use [](/howto/admin/nbresuse)
 to determine how much memory your user is using.
 
 A good rule of thumb is to take the maximum amount of memory you used during

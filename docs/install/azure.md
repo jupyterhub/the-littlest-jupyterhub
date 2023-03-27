@@ -161,8 +161,8 @@ A new screen with all the options for Virtual Machines in Azure will displayed.
       ```
 
     :::{note}
-    See {ref}`topic/installer-actions` if you want to understand exactly what the installer is doing.
-    {ref}`topic/customizing-installer` documents other options that can be passed to the installer.
+    See [](/topic/installer-actions) if you want to understand exactly what the installer is doing.
+    [](/topic/customizing-installer) documents other options that can be passed to the installer.
     :::
 
 8.  Check the summary and confirm the creation of your Virtual Machine.

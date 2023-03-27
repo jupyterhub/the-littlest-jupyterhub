@@ -102,7 +102,7 @@ c.GenericOAuthenticator.userdata_method = "POST"
 ```
 
 We'll use the `tljh-config` tool to configure your JupyterHub's authentication.
-For more information on `tljh-config`, see {ref}`topic/tljh-config`.
+For more information on `tljh-config`, see [](/topic/tljh-config).
 
 1. Tell your JupyterHub to use the GenericOAuthenticator for authentication:
 
@@ -125,4 +125,4 @@ For more information on `tljh-config`, see {ref}`topic/tljh-config`.
 4. You will likely have to create a new user (sign up) and then you should be directed to the
    Jupyter interface used in this JupyterHub.
 5. **If this does not work** you can revert back to the default
-   JupyterHub authenticator by following the steps in {ref}`howto/auth/firstuse`.
+   JupyterHub authenticator by following the steps in [](/howto/auth/firstuse).

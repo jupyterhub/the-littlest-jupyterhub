@@ -24,7 +24,7 @@ not to have _perfect_ documentation before merging a pull request. If you
 are new and not sure how to add documentation, other contributors will
 be happy to guide you.
 
-See {ref}`contributing/docs` for guidelines on writing documentation.
+See [](/contributing/docs) for guidelines on writing documentation.
 
 ## Write tests
 
@@ -43,4 +43,4 @@ add more tests.
 If you are unsure what kind of tests to add for your pull request, other
 contributors to the repo will be happy to help guide you!
 
-See {ref}`contributing/tests` for guidelines on writing tests.
+See [](/contributing/tests) for guidelines on writing tests.

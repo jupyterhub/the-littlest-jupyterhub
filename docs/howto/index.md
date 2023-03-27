@@ -28,7 +28,7 @@ env/server-resources
 
 We have a special set of How-To Guides on using various forms of authentication
 with your JupyterHub. For more information on Authentication, see
-{ref}`topic/authenticator-configuration`
+[](/topic/authenticator-configuration)
 
 ```{toctree}
 :titlesonly: true

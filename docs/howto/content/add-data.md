@@ -4,13 +4,13 @@
 
 This section covers how to add data to your JupyterHub either from the internet
 or from your own machine. To learn how to **share data** that is already
-on your JupyterHub, see {ref}`howto/content/share-data`.
+on your JupyterHub, see [](/howto/content/share-data).
 
 :::{note}
 When you add data using the methods on this page, you will **only add it
 to your user directory**. This is not a place that is accessible to others.
 For information on sharing this data with users on the JupyterHub, see
-{ref}`howto/content/share-data`.
+[](/howto/content/share-data).
 :::
 
 ## Adding data from your local machine
@@ -40,7 +40,7 @@ interface. To do so, follow these steps:
    be on your JupyterHub, your home user's home directory.
 
 To learn how to **share** this data with new users on the JupyterHub,
-see {ref}`howto/content/share-data`.
+see [](/howto/content/share-data).
 
 ## Downloading data from the command line
 
@@ -95,6 +95,6 @@ time. You can download it from your browser [at this link](https://swcarpentry.g
 5. Confirm that your data was unzipped. It could be in a folder called `data/`.
 
 To learn how to **share** this data with new users on the JupyterHub,
-see {ref}`howto/content/share-data`.
+see [](/howto/content/share-data).
 
 % TODO: Downloading data with the "download" module in Python? https://github.com/choldgraf/download

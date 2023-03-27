@@ -66,4 +66,4 @@ feature of systemd.
 ## HTTPS
 
 Any internet-facing JupyterHub should use HTTPS to secure its traffic. For
-information on how to use HTTPS with your JupyterHub, see {ref}`howto/admin/https`.
+information on how to use HTTPS with your JupyterHub, see [](/howto/admin/https).

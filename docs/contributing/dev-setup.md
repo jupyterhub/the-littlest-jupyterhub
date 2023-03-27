@@ -68,5 +68,5 @@ The easiest & safest way to develop & test TLJH is with [Docker](https://www.doc
      restart jupyterhub for them to take effect. `tljh-config reload hub`
      should do that.
 
-{ref}`troubleshooting/logs` has information on looking at various logs in the container
+[](/troubleshooting/logs) has information on looking at various logs in the container
 to debug issues you might have.

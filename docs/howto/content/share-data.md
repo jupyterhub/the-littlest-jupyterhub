@@ -13,7 +13,7 @@ contained in the link's target repository is downloaded to the user's home
 directory. Note that a copy of the dataset will be made for each user.
 
 For information on creating and sharing `nbgitpuller` links, see
-{ref}`howto/content/nbgitpuller`.
+[](/howto/content/nbgitpuller).
 
 ## Option 2: Create a read-only shared folder for data
 
@@ -37,7 +37,7 @@ steps:
    sudo mkdir -p /srv/data/my_shared_data_folder
    ```
 
-4. **Download the data** into this folder. See {ref}`howto/content/add-data` for
+4. **Download the data** into this folder. See [](/howto/content/add-data) for
    details on how to do this.
 
 5. All users now have read access to the data in this folder.

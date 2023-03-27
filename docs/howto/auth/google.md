@@ -77,7 +77,7 @@ with the new IP address.
 ## Configure your JupyterHub to use the Google Oauthenticator
 
 We'll use the `tljh-config` tool to configure your JupyterHub's authentication.
-For more information on `tljh-config`, see {ref}`topic/tljh-config`.
+For more information on `tljh-config`, see [](/topic/tljh-config).
 
 1. Log in as an administrator account to your JupyterHub.
 
@@ -130,4 +130,4 @@ For more information on `tljh-config`, see {ref}`topic/tljh-config`.
    Jupyter interface used in this JupyterHub.
 
 5. **If this does not work** you can revert back to the default
-   JupyterHub authenticator by following the steps in {ref}`howto/auth/firstuse`.
+   JupyterHub authenticator by following the steps in [](/howto/auth/firstuse).

@@ -39,4 +39,4 @@ disk space, or CPUs. Digital Ocean servers can be resized in the
 
 Now that you've resized your Droplet, you may want to change the resources available
 to your users. Further information on making more resources available to
-users and verifying resource availability can be found in {ref}`howto/admin/resize`.
+users and verifying resource availability can be found in [](/howto/admin/resize).

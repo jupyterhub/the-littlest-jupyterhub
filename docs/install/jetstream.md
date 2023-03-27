@@ -55,7 +55,7 @@ Let's create the server on which we can run JupyterHub.
     2. Select an appropriate **Instance Size**. We suggest m1.medium or larger.
        Make sure your instance has at least **1GB** of RAM.
 
-       Check out our guide on How To {ref}`howto/admin/resource-estimation` to help pick
+       Check out our guide on How To [](/howto/admin/resource-estimation) to help pick
        how much Memory, CPU & disk space your server needs.
 
     3. If you have multiple allocations, make sure you are 'charging' this server
@@ -93,8 +93,8 @@ Let's create the server on which we can run JupyterHub.
     ```
 
     :::{note}
-    See {ref}`topic/installer-actions` if you want to understand exactly what the installer is doing.
-    {ref}`topic/customizing-installer` documents other options that can be passed to the installer.
+    See [](/topic/installer-actions) if you want to understand exactly what the installer is doing.
+    [](/topic/customizing-installer) documents other options that can be passed to the installer.
     :::
 
 9.  Under **Execution Strategy Type**, select **Run script on first boot**.

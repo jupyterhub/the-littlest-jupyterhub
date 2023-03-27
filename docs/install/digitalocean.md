@@ -40,7 +40,7 @@ Let's create the server on which we can run JupyterHub.
     (4GB RAM, 2CPUs, 20 USD / month) is not a bad start. You can resize your server
     later if you need.
 
-    Check out our guide on How To {ref}`howto/admin/resource-estimation` to help pick
+    Check out our guide on How To [](/howto/admin/resource-estimation) to help pick
     how much Memory, CPU & disk space your server needs.
 
 5.  Scroll down to **Select additional options**, and select **User data**.
@@ -66,8 +66,8 @@ Let's create the server on which we can run JupyterHub.
     ```
 
     :::{note}
-    See {ref}`topic/installer-actions` if you want to understand exactly what the installer is doing.
-    {ref}`topic/customizing-installer` documents other options that can be passed to the installer.
+    See [](/topic/installer-actions) if you want to understand exactly what the installer is doing.
+    [](/topic/customizing-installer) documents other options that can be passed to the installer.
     :::
 
 7.  Under the **Finalize and create** section, enter a `hostname` that descriptively

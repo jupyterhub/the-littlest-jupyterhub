@@ -20,7 +20,7 @@ stability required for a good plugin ecosystem.
 
 ## Installing Plugins
 
-Include `--plugin <install_name>` in the Installer script. See {ref}`topic/customizing-installer` for more info.
+Include `--plugin <install_name>` in the Installer script. See [](/topic/customizing-installer) for more info.
 
 ## Writing a simple plugins
 

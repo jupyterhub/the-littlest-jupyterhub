@@ -10,7 +10,7 @@ can be used with TLJH. A number of them ship by default with TLJH:
    OAuth based authentication methods.
 2. [LDAPAuthenticator](https://github.com/jupyterhub/ldapauthenticator) - LDAP & Active Directory.
 3. [DummyAuthenticator](https://github.com/yuvipanda/jupyterhub-dummy-authenticator) - Any username,
-   one shared password. A {ref}`how-to guide on using DummyAuthenticator <howto/auth/dummy>` is also
+   one shared password. A [how-to guide on using DummyAuthenticator](howto-auth-dummy) is also
    available.
 4. [FirstUseAuthenticator](https://github.com/yuvipanda/jupyterhub-firstuseauthenticator) - Users set
    their password when they log in for the first time. Default authenticator used in TLJH.
@@ -75,7 +75,7 @@ sudo tljh-config reload
 
 Try logging in a separate incognito window to check if your configuration works. This
 lets you preserve your terminal in case there were errors. If there are
-errors, {ref}`troubleshooting/logs` should help you debug them.
+errors, [](/troubleshooting/logs) should help you debug them.
 
 ### Example
 

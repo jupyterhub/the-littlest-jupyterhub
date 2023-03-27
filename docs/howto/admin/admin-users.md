@@ -17,7 +17,7 @@ so attackers can not easily gain control of the system.
 :::{important}
 You should make sure an admin user is present when you **install** TLJH
 the very first time. It is recommended that you also set a password
-for the admin at this step. The {ref}`--admin <topic/customizing-installer/admin>`
+for the admin at this step. The [`--admin`] (/topic/customizing-installer/admin)
 flag passed to the installer does this. If you had forgotten to do so, the
 easiest way to fix this is to run the installer again.
 :::

@@ -37,7 +37,7 @@ logs is a great first step.
 sudo journalctl -u jupyterhub
 ```
 
-This command displays logs from JupyterHub itself. See {ref}`journalctl_tips`
+This command displays logs from JupyterHub itself. See [](#journalctl-tips)
 for tips on navigating the logs.
 
 (troubleshooting-logs-traefik)=
@@ -52,7 +52,7 @@ is one line cryptic error messages, or if you are having trouble with HTTPS.
 sudo journalctl -u traefik
 ```
 
-This command displays logs from Traefik. See {ref}`journalctl_tips`
+This command displays logs from Traefik. See [](#journalctl-tips)
 for tips on navigating the logs.
 
 ## User Server Logs
@@ -67,7 +67,7 @@ sudo journalctl -u jupyter-<name-of-user>
 
 This command displays logs from the given user's notebook server. You can get a
 list of all users from the "users" button at the top-right of the Admin page.
-See {ref}`journalctl_tips` for tips on navigating the logs.
+See [](#journalctl-tips) for tips on navigating the logs.
 
 (journalctl-tips)=
 
