@@ -116,12 +116,14 @@ def ensure_conda_packages(prefix, packages):
         [
             conda_executable,
             "install",
+            "-y",
             "-c",
             "conda-forge",  # Make customizable if we ever need to
             "--prefix",
             abspath,
         ]
         + packages,
+        input="",
     )
     fix_permissions(prefix)
 
