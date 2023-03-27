@@ -164,11 +164,15 @@ MAMBAFORGE_CHECKSUMS = {
     "aarch64": "96191001f27e0cc76612d4498d34f9f656d8a7dddee44617159e42558651479c",
     "x86_64": "16c7d256de783ceeb39970e675efa4a8eb830dcbb83187f1197abfea0bf07d30",
 }
-# run `mamba --version` to get the conda and mamba versions
-# conda/mamba will be _upgraded_ to these versions, if they differ from what's in
-# the mambaforge distribution
-MAMBAFORGE_MAMBA_VERSION = "1.1.0"
-MAMBAFORGE_CONDA_VERSION = "22.11.1"
+
+# minimum versions of packages
+MINIMUM_VERSIONS = {
+    # if conda/mamba are lower than this, upgrade them before installing the user packages
+    "mamba": "0.16.0",
+    "conda": "4.10",
+    # minimum Python version (if not matched, abort to avoid big disruptive updates)
+    "python": "3.9",
+}
 
 
 def _mambaforge_url(version=MAMBAFORGE_VERSION, arch=None):
@@ -196,54 +200,71 @@ def ensure_user_environment(user_requirements_txt_file):
     Set up user conda environment with required packages
     """
     logger.info("Setting up user environment...")
-    # note: these must be in descending order
-    conda_upgrade_versions = {
-        # format: "conda version": (conda_version, mamba_version),
-        # mambaforge 4.10.3-7 (2023-03-21)
-        "22.11.1": (MAMBAFORGE_CONDA_VERSION, MAMBAFORGE_MAMBA_VERSION),
-        # tljh up to 0.2.0 (since 2021-10-18)
-        "4.10.3": ("4.10.3", "0.16.0"),
-    }
-
     # Check OS, set appropriate string for conda installer path
     if os.uname().sysname != "Linux":
         raise OSError("TLJH is only supported on Linux platforms.")
-    found_conda = False
-    have_versions = conda.get_mamba_versions(USER_ENV_PREFIX)
-    have_conda_version = have_versions.get("conda")
-    if have_conda_version:
-        logger.info(
-            f"Found prefix at {USER_ENV_PREFIX}, with conda/mamba({have_versions})"
-        )
-        for check_version, conda_mamba_version in conda_upgrade_versions.items():
-            if V(have_conda_version) >= V(check_version):
-                found_conda = True
-                conda_version, mamba_version = conda_mamba_version
-                break
 
-    if not found_conda:
-        if os.path.exists(USER_ENV_PREFIX):
-            logger.warning(
-                f"Found prefix at {USER_ENV_PREFIX}, but too old or missing conda/mamba ({have_versions}). Upgrading from mambaforge."
-            )
-            # FIXME: should this fail? I'm not sure how destructive it is
+    # Check the existing environment for what to do
+    package_versions = conda.get_conda_package_versions(USER_ENV_PREFIX)
+
+    # Case 1: no existing environment
+    if not package_versions:
+        # 1a. no environment, but prefix exists.
+        # Abort to avoid clobbering something we don't recognize
+        if os.path.exists(USER_ENV_PREFIX) and os.listdir(USER_ENV_PREFIX):
+            msg = f"Found non-empty directory that is not a conda install in {USER_ENV_PREFIX}. Please remove it (or rename it to preserve files) and run tljh again."
+            logger.error(msg)
+            raise OSError(msg)
+
+        # 1b. No environment, directory empty or doesn't exist
+        # start fresh install
         logger.info("Downloading & setting up user environment...")
         installer_url, installer_sha256 = _mambaforge_url()
         with conda.download_miniconda_installer(
             installer_url, installer_sha256
         ) as installer_path:
             conda.install_miniconda(installer_path, USER_ENV_PREFIX)
-        conda_version = MAMBAFORGE_CONDA_VERSION
-        mamba_version = MAMBAFORGE_MAMBA_VERSION
+        package_versions = conda.get_conda_package_versions(USER_ENV_PREFIX)
+        # quick sanity check: we should have conda and mamba!
+        assert "conda" in package_versions
+        assert "mamba" in package_versions
 
-    conda.ensure_conda_packages(
-        USER_ENV_PREFIX,
-        [
-            # Conda's latest version is on conda much more so than on PyPI.
-            "conda==" + conda_version,
-            "mamba==" + mamba_version,
-        ],
-    )
+    # next, check Python
+    python_version = package_versions["python"]
+    logger.debug(f"Found python={python_version} in {USER_ENV_PREFIX}")
+    if V(python_version) < V(MINIMUM_VERSIONS["python"]):
+        msg = (
+            f"TLJH requires Python >={MINIMUM_VERSIONS['python']}, found python={python_version} in {USER_ENV_PREFIX}."
+            f"\nPlease upgrade Python (may be highly disruptive!), or remove/rename {USER_ENV_PREFIX} to allow TLJH to make a fresh install."
+            f"\nYou can use `{USER_ENV_PREFIX}/bin/conda list` to save your current list of packages."
+        )
+        logger.error(msg)
+        raise ValueError(msg)
+
+    # at this point, we know we have an env ready with conda and are going to start installing
+    # first, check if we should upgrade/install conda and/or mamba
+    to_upgrade = []
+    for pkg in ("conda", "mamba"):
+        version = package_versions.get(pkg)
+        min_version = MINIMUM_VERSIONS[pkg]
+        if not version:
+            logger.warning(f"{USER_ENV_PREFIX} is missing {pkg}, installing it...")
+            to_upgrade.append(pkg)
+        else:
+            logger.debug(f"Found {pkg}=={version} in {USER_ENV_PREFIX}")
+            if V(version) < V(min_version):
+                logger.info(
+                    f"{USER_ENV_PREFIX} has {pkg}=={version}, it will be upgraded to {pkg}>={min_version}"
+                )
+                to_upgrade.append(pkg)
+
+    if to_upgrade:
+        conda.ensure_conda_packages(
+            USER_ENV_PREFIX,
+            # we _could_ explicitly pin Python here,
+            # but conda already does this by default
+            to_upgrade,
+        )
 
     conda.ensure_pip_requirements(
         USER_ENV_PREFIX,

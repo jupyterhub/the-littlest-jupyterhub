@@ -21,13 +21,6 @@ def prefix():
             installer_url, checksum
         ) as installer_path:
             conda.install_miniconda(installer_path, tmpdir)
-        conda.ensure_conda_packages(
-            tmpdir,
-            [
-                f"conda=={installer.MAMBAFORGE_CONDA_VERSION}",
-                f"mamba=={installer.MAMBAFORGE_MAMBA_VERSION}",
-            ],
-        )
         yield tmpdir
 
 

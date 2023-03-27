@@ -13,7 +13,6 @@ import time
 import requests
 
 from tljh import utils
-from tljh.utils import parse_version as V
 
 
 def sha256_file(fname):
@@ -29,47 +28,20 @@ def sha256_file(fname):
     return hash_sha256.hexdigest()
 
 
-def check_miniconda_version(prefix, version):
-    """
-    Return true if a miniconda install with version exists at prefix
-    """
-    versions = get_mamba_versions(prefix)
-    if "conda" not in versions:
-        return False
-
-    return V(versions["conda"]) >= V(version)
-
-
-def get_mamba_versions(prefix):
-    """Parse `mamba --version` output into a dict
-
-    which looks like:
-
-    mamba 1.1.0
-    conda 22.11.1
-
-    into:
-
-    {
-        "mamba": "1.1.0",
-        "conda": "22.11.1",
-    }
-    """
+def get_conda_package_versions(prefix):
+    """Get conda package versions, via `conda list --json`"""
     versions = {}
     try:
-        out = (
-            subprocess.check_output(
-                [os.path.join(prefix, "bin", "mamba"), "--version"],
-                stderr=subprocess.STDOUT,
-            )
-            .decode()
-            .strip()
+        out = subprocess.check_output(
+            [os.path.join(prefix, "bin", "conda"), "list", "--json"],
+            text=True,
         )
     except (subprocess.CalledProcessError, FileNotFoundError):
         return versions
-    for line in out.strip().splitlines():
-        pkg, version = line.split()
-        versions[pkg] = version
+
+    packages = json.loads(out)
+    for package in packages:
+        versions[package["name"]] = package["version"]
     return versions
 
 
@@ -133,39 +105,24 @@ def ensure_conda_packages(prefix, packages):
     Note that conda seem to update dependencies by default, so there is probably
     no need to have a update parameter exposed for this function.
     """
-    conda_executable = [os.path.join(prefix, "bin", "mamba")]
+    conda_executable = os.path.join(prefix, "bin", "mamba")
+    if not os.path.isfile(conda_executable):
+        # fallback on conda if mamba is not present (e.g. for mamba to install itself)
+        conda_executable = os.path.join(prefix, "bin", "conda")
+
     abspath = os.path.abspath(prefix)
-    # Let subprocess errors propagate
-    # Explicitly do *not* capture stderr, since that's not always JSON!
-    # Scripting conda is a PITA!
-    # FIXME: raise different exception when using
-    raw_output = subprocess.check_output(
-        conda_executable
-        + [
+
+    utils.run_subprocess(
+        [
+            conda_executable,
             "install",
             "-c",
             "conda-forge",  # Make customizable if we ever need to
-            "--json",
             "--prefix",
             abspath,
         ]
-        + packages
-    ).decode()
-    # `conda install` outputs JSON lines for fetch updates,
-    # and a undelimited output at the end. There is no reasonable way to
-    # parse this outside of this kludge.
-    filtered_output = "\n".join(
-        [
-            l
-            for l in raw_output.split("\n")
-            # Sometimes the JSON messages start with a \x00. The lstrip removes these.
-            # conda messages seem to randomly throw \x00 in places for no reason
-            if not l.lstrip("\x00").startswith('{"fetch"')
-        ]
+        + packages,
     )
-    output = json.loads(filtered_output.lstrip("\x00"))
-    if "success" in output and output["success"] == True:
-        return
     fix_permissions(prefix)
 
 

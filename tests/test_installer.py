@@ -6,11 +6,12 @@ import os
 from unittest import mock
 from subprocess import run, PIPE
 
+from packaging.version import parse as V
+from packaging.specifiers import SpecifierSet
 import pytest
 
 from tljh import conda
 from tljh import installer
-from tljh.utils import parse_version as V
 from tljh.yaml import yaml
 
 
@@ -48,13 +49,18 @@ def setup_conda(distro, version, prefix):
     """Install mambaforge or miniconda in a prefix"""
     if distro == "mambaforge":
         installer_url, _ = installer._mambaforge_url(version)
+    elif distro == "miniforge":
+        installer_url, _ = installer._mambaforge_url(version)
+        installer_url = installer_url.replace("Mambaforge", "Miniforge3")
     elif distro == "miniconda":
         arch = os.uname().machine
         installer_url = (
             f"https://repo.anaconda.com/miniconda/Miniconda3-{version}-Linux-{arch}.sh"
         )
     else:
-        raise ValueError(f"{distro=} must be 'miniconda' or 'mambaforge'")
+        raise ValueError(
+            f"{distro=} must be 'miniconda' or 'mambaforge' or 'miniforge'"
+        )
     with conda.download_miniconda_installer(installer_url, None) as installer_path:
         conda.install_miniconda(installer_path, str(prefix))
     # avoid auto-updating conda when we install other packages
@@ -79,77 +85,127 @@ def user_env_prefix(tmp_path):
         yield user_env_prefix
 
 
+def _specifier(version):
+    """Convert version string to SpecifierSet
+
+    If just a version number, add == to make it a specifier
+
+    Any missing fields are replaced with .*
+
+    If it's already a specifier string, pass it directly to SpecifierSet
+
+    e.g.
+
+    - 3.7 -> ==3.7.*
+    - 1.2.3 -> ==1.2.3
+    """
+    if version[0].isdigit():
+        # it's a version number, not a specifier
+        if version.count(".") < 2:
+            # pad missing fields
+            version += ".*"
+        version = f"=={version}"
+    return SpecifierSet(version)
+
+
 @pytest.mark.parametrize(
-    "distro, version, conda_version, mamba_version",
+    "distro, distro_version, expected_versions",
     [
+        # No previous install, start fresh
         (
             None,
             None,
-            installer.MAMBAFORGE_CONDA_VERSION,
-            installer.MAMBAFORGE_MAMBA_VERSION,
+            {
+                "python": "3.10.*",
+                "conda": "22.11.1",
+                "mamba": "1.1.0",
+            },
         ),
-        (
-            "exists",
-            None,
-            installer.MAMBAFORGE_CONDA_VERSION,
-            installer.MAMBAFORGE_MAMBA_VERSION,
-        ),
+        # previous install, 1.0
         (
             "mambaforge",
             "22.11.1-4",
-            installer.MAMBAFORGE_CONDA_VERSION,
-            installer.MAMBAFORGE_MAMBA_VERSION,
+            {
+                "python": "3.10.*",
+                "conda": "22.11.1",
+                "mamba": "1.1.0",
+            },
         ),
-        ("mambaforge", "4.10.3-7", "4.10.3", "0.16.0"),
+        # 0.2 install, no upgrade needed
+        (
+            "mambaforge",
+            "4.10.3-7",
+            {
+                "conda": "4.10.3",
+                "mamba": "0.16.0",
+                "python": "3.9.*",
+            },
+        ),
+        # simulate missing mamba
+        # will be installed but not pinned
+        # to avoid conflicts
+        (
+            "miniforge",
+            "4.10.3-7",
+            {
+                "conda": "4.10.3",
+                "mamba": ">=1.1.0",
+                "python": "3.9.*",
+            },
+        ),
+        # too-old Python (3.7), abort
         (
             "miniconda",
             "4.7.10",
-            installer.MAMBAFORGE_CONDA_VERSION,
-            installer.MAMBAFORGE_MAMBA_VERSION,
-        ),
-        (
-            "miniconda",
-            "4.5.1",
-            installer.MAMBAFORGE_CONDA_VERSION,
-            installer.MAMBAFORGE_MAMBA_VERSION,
+            ValueError,
         ),
     ],
 )
 def test_ensure_user_environment(
     user_env_prefix,
     distro,
-    version,
-    conda_version,
-    mamba_version,
+    distro_version,
+    expected_versions,
 ):
-    if version and V(version) < V("4.10.1") and os.uname().machine == "aarch64":
-        pytest.skip(f"Miniconda {version} not available for aarch64")
+    if (
+        distro_version
+        and V(distro_version) < V("4.10.1")
+        and os.uname().machine == "aarch64"
+    ):
+        pytest.skip(f"{distro} {distro_version} not available for aarch64")
     canary_file = user_env_prefix / "test-file.txt"
     canary_package = "types-backports_abc"
     if distro:
-        if distro == "exists":
-            user_env_prefix.mkdir()
-        else:
-            setup_conda(distro, version, user_env_prefix)
-            # install a noarch: python package that won't be used otherwise
-            # should depend on Python, so it will interact with possible upgrades
-            run(
-                [
-                    str(user_env_prefix / "bin/conda"),
-                    "install",
-                    "-y",
-                    "-c" "conda-forge",
-                    canary_package,
-                ],
-                input="",
-                check=True,
-            )
+        setup_conda(distro, distro_version, user_env_prefix)
+        # install a noarch: python package that won't be used otherwise
+        # should depend on Python, so it will interact with possible upgrades
+        pkgs = [canary_package]
+        run(
+            [
+                str(user_env_prefix / "bin/conda"),
+                "install",
+                "-S",
+                "-y",
+                "-c",
+                "conda-forge",
+            ]
+            + pkgs,
+            input="",
+            check=True,
+        )
 
         # make a file not managed by conda, to check for wipeouts
         with canary_file.open("w") as f:
             f.write("I'm here\n")
 
-    installer.ensure_user_environment("")
+    if isinstance(expected_versions, type) and issubclass(expected_versions, Exception):
+        exc_class = expected_versions
+        with pytest.raises(exc_class):
+            installer.ensure_user_environment("")
+        return
+    else:
+        installer.ensure_user_environment("")
+
     p = run(
         [str(user_env_prefix / "bin/conda"), "list", "--json"],
         stdout=PIPE,
@@ -158,14 +214,23 @@ def test_ensure_user_environment(
     )
     package_list = json.loads(p.stdout)
     packages = {package["name"]: package for package in package_list}
+
     if distro:
         # make sure we didn't wipe out files
         assert canary_file.exists()
-        if distro != "exists":
-            # make sure we didn't delete the installed package
-            assert canary_package in packages
+        # make sure we didn't delete the installed package
+        assert canary_package in packages
 
-    assert "conda" in packages
-    assert packages["conda"]["version"] == conda_version
-    assert "mamba" in packages
-    assert packages["mamba"]["version"] == mamba_version
+    for pkg, version in expected_versions.items():
+        assert pkg in packages
+        assert V(packages[pkg]["version"]) in _specifier(version)
+
+
+def test_ensure_user_environment_no_clobber(user_env_prefix):
+    # don't clobber existing user-env dir if it's non-empty and not a conda install
+    user_env_prefix.mkdir()
+    canary_file = user_env_prefix / "test-file.txt"
+    with canary_file.open("w") as f:
+        pass
+    with pytest.raises(OSError):
+        installer.ensure_user_environment("")
