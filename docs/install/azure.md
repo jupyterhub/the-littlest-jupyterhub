@@ -207,12 +207,12 @@ A new screen with all the options for Virtual Machines in Azure will displayed.
 
 ## Step 2: Adding more users
 
-```{eval-rst}
-.. include:: add_users.txt
+```{include} add_users.txt
+
 ```
 
 ## Step 3: Install conda / pip packages for all users
 
-```{eval-rst}
-.. include:: add_packages.txt
+```{include} add_packages.txt
+
 ```

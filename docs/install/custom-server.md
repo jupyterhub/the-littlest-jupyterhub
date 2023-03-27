@@ -79,14 +79,14 @@ for custom server installations.
 
 ## Step 2: Adding more users
 
-```{eval-rst}
-.. include:: add_users.txt
+```{include} add_users.txt
+
 ```
 
 ## Step 3: Install conda / pip packages for all users
 
-```{eval-rst}
-.. include:: add_packages.txt
+```{include} add_packages.txt
+
 ```
 
 ## Step 4: Setup HTTPS
