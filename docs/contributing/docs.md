@@ -59,7 +59,7 @@ If you encounter this error, it's likely that you are running inside a virtual e
 Error in "currentmodule" directive:
 ```
 
-To get started contributing, you'll want to read the `reStructuredText reference <https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html>`
+To get started contributing, you'll want to get familiar with [markdown](https://commonmark.org/help/) and [MyST](https://myst-parser.readthedocs.io).
 
 Your locally-built documentation will be themed differently than the
 documentation at [the-littlest-jupyterhub.readthedocs.io](https://the-littlest-jupyterhub.readthedocs.io).
@@ -152,36 +152,16 @@ documentation:
 - **Notebook Interface** -- generic term for referring to JupyterLab,
   nteract, classic notebook & other user interfaces for accessing
 
-## Guidelines for reStructuredText files
+## Guidelines for markdown files
 
-These guidelines regulate the format of our reST (reStructuredText)
+These guidelines regulate the format of our markdown
 documentation:
 
 - In section titles, capitalize only initial words and proper nouns.
 
-- Wrap the documentation at 120 characters wide, unless a code example
+- Wrap the documentation at sentence breaks or around 120 characters wide, unless a code example
   is significantly less readable when split over two lines, or for another
   good reason.
-
-- Use these heading styles:
-
-  ```
-  ===
-  One
-  ===
-
-  Two
-  ===
-
-  Three
-  -----
-
-  Four
-  ~~~~
-
-  Five
-  ^^^^
-  ```
 
 ## Documenting new features
 
