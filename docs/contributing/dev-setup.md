@@ -42,21 +42,21 @@ The easiest & safest way to develop & test TLJH is with [Docker](https://www.doc
    python3 /srv/src/bootstrap/bootstrap.py --admin admin
    ```
 
-> Or, if you would like to setup the admin's password during install,
-> you can use this command (replace "admin" with the desired admin username
-> and "password" with the desired admin password):
->
-> > ```console
-> > python3 /srv/src/bootstrap/bootstrap.py --admin admin:password
-> > ```
-> >
-> > The primary hub environment will also be in your PATH already for convenience.
+   Or, if you would like to setup the admin's password during install,
+   you can use this command (replace "admin" with the desired admin username
+   and "password" with the desired admin password):
 
-1. You should be able to access the JupyterHub from your browser now at
+   ```console
+   python3 /srv/src/bootstrap/bootstrap.py --admin admin:password
+   ```
+
+   The primary hub environment will also be in your PATH already for convenience.
+
+7. You should be able to access the JupyterHub from your browser now at
    [http://localhost:12000](http://localhost:12000). Congratulations, you are
    set up to develop TLJH!
 
-2. Make some changes to the repository. You can test easily depending on what
+8. Make some changes to the repository. You can test easily depending on what
    you changed.
 
    - If you changed the `bootstrap/bootstrap.py` script or any of its dependencies,
