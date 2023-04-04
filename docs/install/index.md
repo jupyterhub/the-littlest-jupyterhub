@@ -10,14 +10,14 @@ Tutorials to create a new server from scratch on a cloud provider & run TLJH
 on it. These are **recommended** if you do not have much experience setting up
 servers.
 
-> ```{toctree}
-> :titlesonly: true
->
-> digitalocean
-> ovh
-> jetstream
-> google
-> amazon
-> azure
-> custom-server
-> ```
+```{toctree}
+:titlesonly: true
+
+digitalocean
+ovh
+jetstream
+google
+amazon
+azure
+custom-server
+```

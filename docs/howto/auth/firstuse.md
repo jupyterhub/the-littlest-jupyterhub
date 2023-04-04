@@ -13,7 +13,7 @@ the default authenticator that ships with TLJH.
 the FirstUseAuthenticator is enabled by default in TLJH.
 :::
 
-1. Enable the authenticator and reload config to apply the configuration:
+Enable the authenticator and reload config to apply the configuration:
 
 ```bash
 sudo tljh-config set auth.type firstuseauthenticator.FirstUseAuthenticator

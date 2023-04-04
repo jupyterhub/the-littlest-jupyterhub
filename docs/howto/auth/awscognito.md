@@ -40,7 +40,7 @@ application to your `tljh` configuration.
 By adding following script to the ec2 instance user data you should be
 able to configure the instance automatically, replace relevant placeholders:
 
-```
+```bash
 #!/bin/bash
 ##############################################
 # Ensure tljh is up to date
@@ -85,7 +85,7 @@ Using your preferred editor create the config file:
 
 substituting the relevant variables:
 
-```
+```python
 c.GenericOAuthenticator.client_id = "[your app ID]"
 c.GenericOAuthenticator.client_secret = "[your app Password]"
 c.GenericOAuthenticator.oauth_callback_url = "https://[your-jupyterhub-host]/hub/oauth_callback"
