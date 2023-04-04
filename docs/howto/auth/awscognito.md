@@ -29,11 +29,11 @@ application to your `tljh` configuration.
      http(s)://<my-tljh-ip-address>
      ```
 
-   > - **Auth Domain** Create an auth domain e.g. \<my_jupyter_hub>:
-   >
-   >   ```
-   >   https://<<my_jupyter_hub>.auth.eu-west-1.amazoncognito.com
-   >   ```
+   - **Auth Domain** Create an auth domain e.g. \<my_jupyter_hub>:
+
+     ```
+     https://<<my_jupyter_hub>.auth.eu-west-1.amazoncognito.com
+     ```
 
 ## Install and configure an AWS EC2 Instance with userdata
 

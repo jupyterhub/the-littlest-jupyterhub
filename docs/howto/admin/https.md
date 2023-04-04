@@ -21,9 +21,9 @@ To do that, you would have to log in to the website of your registrar
 and go to the DNS records section. The interface will look like something
 similar to this:
 
-> ```{image} ../../images/dns.png
-> :alt: Adding an entry to the DNS records
-> ```
+```{image} ../../images/dns.png
+:alt: Adding an entry to the DNS records
+```
 
 :::
 

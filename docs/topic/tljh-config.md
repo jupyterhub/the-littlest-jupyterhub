@@ -58,32 +58,32 @@ Some of the existing `<property-path>` are listed below by categories:
 
 ### Base URL
 
-> Use `base_url` to determine the base URL used by JupyterHub. This parameter will
-> be passed straight to `c.JupyterHub.base_url`.
+Use `base_url` to determine the base URL used by JupyterHub. This parameter will
+be passed straight to `c.JupyterHub.base_url`.
 
 (tljh-set-auth)=
 
 ### Authentication
 
-> Use `auth.type` to determine authenticator to use. All parameters
-> in the config under `auth.{auth.type}` will be passed straight to the
-> authenticators themselves.
+Use `auth.type` to determine authenticator to use. All parameters
+in the config under `auth.{auth.type}` will be passed straight to the
+authenticators themselves.
 
 (tljh-set-ports)=
 
 ### Ports
 
-> Use `http.port` and `https.port` to set the ports that TLJH will listen on,
-> which are 80 and 443 by default. However, if you change these, note that
-> TLJH does a lot of other things to the system (with user accounts and sudo
-> rules primarily) that might break security assumptions your other
-> applications have, so use with extreme caution.
->
-> ```bash
-> sudo tljh-config set http.port 8080
-> sudo tljh-config set https.port 8443
-> sudo tljh-config reload proxy
-> ```
+Use `http.port` and `https.port` to set the ports that TLJH will listen on,
+which are 80 and 443 by default. However, if you change these, note that
+TLJH does a lot of other things to the system (with user accounts and sudo
+rules primarily) that might break security assumptions your other
+applications have, so use with extreme caution.
+
+```bash
+sudo tljh-config set http.port 8080
+sudo tljh-config set https.port 8443
+sudo tljh-config reload proxy
+```
 
 (tljh-set-user-lists)=
 
@@ -138,13 +138,12 @@ Some of the existing `<property-path>` are listed below by categories:
 
 ### User Environment
 
-> `user_environment.default_app` Set default application users are
-> launched into. Currently can be set to the following values
-> `jupyterlab` or `nteract`
->
-> ```bash
-> sudo tljh-config set user_environment.default_app jupyterlab
-> ```
+`user_environment.default_app` Set default application users are
+launched into. Currently this can only be set to: `jupyterlab`
+
+```bash
+sudo tljh-config set user_environment.default_app jupyterlab
+```
 
 (tljh-set-extra-user-groups)=
 

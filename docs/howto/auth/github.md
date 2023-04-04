@@ -29,9 +29,9 @@ You'll need a GitHub account in order to complete these steps.
 
    - When you're done filling in the page, it should look something like this:
 
-     > ```{image} ../../images/auth/github/create_application.png
-     > :alt: Create a GitHub OAuth application
-     > ```
+     ```{image} ../../images/auth/github/create_application.png
+     :alt: Create a GitHub OAuth application
+     ```
 
 2. Click "Register application". You'll be taken to a page with the registered application details.
 
