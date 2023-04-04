@@ -46,9 +46,9 @@ We start by creating the Virtual Machine in which we can run TLJH (The Littlest 
 4.  Select **Create VM from Marketplace** in the next screen.
     A new screen with all the options for Virtual Machines in Azure will displayed.
 
-        ```{image} ../images/providers/azure/create-vm.png
-        :alt: Create VM from the marketplace
-        ```
+    ```{image} ../images/providers/azure/create-vm.png
+    :alt: Create VM from the marketplace
+    ```
 
 5.  **Choose an Ubuntu server for your VM**:
 
@@ -177,7 +177,7 @@ We start by creating the Virtual Machine in which we can run TLJH (The Littlest 
 12. Check the summary and confirm the creation of your Virtual Machine.
 
 13. Check that the creation of your Virtual Machine worked.
-    : - Wait for the virtual machine to be created. This might take about 5-10 minutes.
+    - Wait for the virtual machine to be created. This might take about 5-10 minutes.
 
     - After completion, you should see a similar screen to the one below:
 
@@ -186,14 +186,11 @@ We start by creating the Virtual Machine in which we can run TLJH (The Littlest 
     ```
 
 14. Note that the Littlest JupyterHub should be installing in the background on your new server.
-    : It takes around 5-10 minutes for this installation to complete.
+    It takes around 5-10 minutes for this installation to complete.
 
 15. Click on the **Go to resource button**
-    : ```{image} ../images/providers/azure/goto-vm.png
+    ```{image} ../images/providers/azure/goto-vm.png
     :alt: Go to VM
-
-    ```
-
     ```
 
 16. Check if the installation is completed by **copying** the **Public IP address** of your virtual machine, and trying to access it with a browser.
