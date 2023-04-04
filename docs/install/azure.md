@@ -177,6 +177,7 @@ We start by creating the Virtual Machine in which we can run TLJH (The Littlest 
 12. Check the summary and confirm the creation of your Virtual Machine.
 
 13. Check that the creation of your Virtual Machine worked.
+
     - Wait for the virtual machine to be created. This might take about 5-10 minutes.
 
     - After completion, you should see a similar screen to the one below:
@@ -189,6 +190,7 @@ We start by creating the Virtual Machine in which we can run TLJH (The Littlest 
     It takes around 5-10 minutes for this installation to complete.
 
 15. Click on the **Go to resource button**
+
     ```{image} ../images/providers/azure/goto-vm.png
     :alt: Go to VM
     ```
