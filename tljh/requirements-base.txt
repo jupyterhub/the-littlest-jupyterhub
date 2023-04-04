@@ -5,20 +5,15 @@
 #          the requirements-txt-fixer pre-commit hook that sorted them and made
 #          our integration tests fail.
 #
-# For JupyterHub 1.x SQLAlchemy below 2.0.0
-SQLAlchemy<2.0.0
 # JupyterHub + notebook package are base requirements for user environment
-jupyterhub==1.*
+jupyterhub==3.*
 notebook==6.*
 # Install additional notebook frontends!
 jupyterlab==3.*
 nteract-on-jupyter==2.*
-# Install jupyterlab extensions from PyPI
 # nbgitpuller for easily pulling in Git repositories
 nbgitpuller==1.*
 # jupyter-resource-usage to show people how much RAM they are using
-jupyter-resource-usage==0.6.*
+jupyter-resource-usage==0.7.*
 # Most people consider ipywidgets to be part of the core notebook experience
-ipywidgets==7.*
-# Pin tornado
-tornado>=6.1
+ipywidgets==8.*
