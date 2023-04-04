@@ -138,8 +138,8 @@ sudo tljh-config reload proxy
 
 ### User Environment
 
-`user_environment.default_app` Set default application users are
-launched into. Currently this can only be set to: `jupyterlab`
+`user_environment.default_app` Set default application users are launched into.
+Currently this can only be set to: `classic` and `jupyterlab`.
 
 ```bash
 sudo tljh-config set user_environment.default_app jupyterlab

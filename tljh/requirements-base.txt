@@ -10,7 +10,6 @@ jupyterhub==3.*
 notebook==6.*
 # Install additional notebook frontends!
 jupyterlab==3.*
-nteract-on-jupyter==2.*
 # nbgitpuller for easily pulling in Git repositories
 nbgitpuller==1.*
 # jupyter-resource-usage to show people how much RAM they are using
