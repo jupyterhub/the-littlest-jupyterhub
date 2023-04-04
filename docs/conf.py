@@ -23,9 +23,10 @@ extensions = [
     "sphinx_copybutton",
     "sphinxext.opengraph",
     "sphinxext.rediraffe",
+    "myst_parser",
 ]
 root_doc = "index"
-source_suffix = [".rst"]
+source_suffix = [".md"]
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -59,6 +60,19 @@ html_context = {
     "doc_path": "docs",
 }
 
+# -- MyST configuration ------------------------------------------------------
+# ref: https://myst-parser.readthedocs.io/en/latest/configuration.html
+#
+myst_heading_anchors = 2
+
+myst_enable_extensions = [
+    # available extensions: https://myst-parser.readthedocs.io/en/latest/syntax/optional.html
+    "attrs_inline",
+    "colon_fence",
+    "deflist",
+    "dollarmath",
+    "fieldlist",
+]
 
 # -- Options for linkcheck builder -------------------------------------------
 # ref: https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-the-linkcheck-builder

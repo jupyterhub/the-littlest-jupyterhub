@@ -1,3 +1,4 @@
+myst-parser>=0.19
 pydata-sphinx-theme
 # Sphix 6.0.0 breaks pydata-sphinx-theme
 # See pydata/pydata-sphinx-theme#1094
