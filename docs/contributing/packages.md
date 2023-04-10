@@ -16,7 +16,7 @@ TLJH sets up two python environments during installation.
    primarily since conda does not support ARM CPUs and we'd like to support the
    RaspberryPI someday. Admins generally do not install custom packages
    in this environment.
-2. **User Environment**. Jupyter Notebook, JupyterLab, nteract, kernels,
+2. **User Environment**. Jupyter Notebook, JupyterLab, kernels,
    and packages the users wanna use (such as numpy, scipy, etc) are installed
    here. A [conda](https://conda.io) environment is used here, since
    a lot of scientific packages are available from Conda. `pip` is still

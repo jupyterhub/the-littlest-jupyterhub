@@ -150,7 +150,7 @@ documentation:
   capitalized except when used in code / the commandline.
 - **Python** -- when referring to the language, capitalize Python.
 - **Notebook Interface** -- generic term for referring to JupyterLab,
-  nteract, classic notebook & other user interfaces for accessing
+  classic notebook & other user interfaces for accessing.
 
 ## Guidelines for markdown files
 
