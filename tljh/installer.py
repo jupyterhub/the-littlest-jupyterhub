@@ -158,11 +158,11 @@ def ensure_usergroups():
 
 # Install mambaforge using an installer from
 # https://github.com/conda-forge/miniforge/releases
-MAMBAFORGE_VERSION = "22.11.1-4"
+MAMBAFORGE_VERSION = "23.1.0-1"
 # sha256 checksums
 MAMBAFORGE_CHECKSUMS = {
-    "aarch64": "96191001f27e0cc76612d4498d34f9f656d8a7dddee44617159e42558651479c",
-    "x86_64": "16c7d256de783ceeb39970e675efa4a8eb830dcbb83187f1197abfea0bf07d30",
+    "aarch64": "d9d89c9e349369702171008d9ee7c5ce80ed420e5af60bd150a3db4bf674443a",
+    "x86_64": "cfb16c47dc2d115c8b114280aa605e322173f029fdb847a45348bf4bd23c62ab",
 }
 
 # minimum versions of packages

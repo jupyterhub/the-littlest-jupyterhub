@@ -117,8 +117,8 @@ def _specifier(version):
             None,
             {
                 "python": "3.10.*",
-                "conda": "22.11.1",
-                "mamba": "1.1.0",
+                "conda": "23.1.0",
+                "mamba": "1.4.1",
             },
         ),
         # previous install, 1.0
@@ -127,8 +127,8 @@ def _specifier(version):
             "22.11.1-4",
             {
                 "python": "3.10.*",
-                "conda": "22.11.1",
-                "mamba": "1.1.0",
+                "conda": "23.1.0",
+                "mamba": "1.4.1",
             },
         ),
         # 0.2 install, no upgrade needed
@@ -149,7 +149,7 @@ def _specifier(version):
             "4.10.3-7",
             {
                 "conda": "4.10.3",
-                "mamba": ">=1.1.0",
+                "mamba": ">=1.4.1",
                 "python": "3.9.*",
             },
         ),
