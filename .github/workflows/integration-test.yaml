@@ -58,23 +58,23 @@ jobs:
           echo $matrix_post_filter | jq -C '.'
         env:
           matrix_include_pre_filter: |
-            - name: "Int. tests: Debian 11, Py 3.9"
+            - name: "Debian 11, Py 3.9"
               distro_image: "debian:11"
               runs_on: "ubuntu-22.04"
               extra_flags: ""
-            - name: "Int. tests: Ubuntu 20.04, Py 3.8"
+            - name: "Ubuntu 20.04, Py 3.8"
               distro_image: "ubuntu:20.04"
               extra_flags: ""
-            - name: "Int. tests: Ubuntu 22.04 Py 3.10"
+            - name: "Ubuntu 22.04 Py 3.10"
               distro_image: "ubuntu:22.04"
               extra_flags: ""
-            - name: "Int. tests: Ubuntu 22.04, Py 3.10, --upgrade-from=main"
+            - name: "Ubuntu 22.04, Py 3.10, from main"
               distro_image: "ubuntu:22.04"
               extra_flags: --upgrade-from=main
-            - name: "Int. tests: Ubuntu 22.04, Py 3.10, --upgrade-from=latest"
+            - name: "Ubuntu 22.04, Py 3.10, from latest"
               distro_image: "ubuntu:22.04"
               extra_flags: --upgrade-from=latest
-            - name: "Int. tests: Ubuntu 22.04, Py 3.10, --upgrade-from=0.2.0"
+            - name: "Ubuntu 22.04, Py 3.10, from 0.2.0"
               distro_image: "ubuntu:22.04"
               extra_flags: --upgrade-from=0.2.0
 
