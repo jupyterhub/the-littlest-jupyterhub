@@ -356,10 +356,10 @@ def main():
 
     # Various related constants
     install_prefix = os.environ.get("TLJH_INSTALL_PREFIX", "/opt/tljh")
-    hub_prefix = os.path.join(install_prefix, "hub")
-    python_bin = os.path.join(hub_prefix, "bin", "python3")
-    pip_bin = os.path.join(hub_prefix, "bin", "pip")
-    initial_setup = not os.path.exists(python_bin)
+    hub_env_prefix = os.path.join(install_prefix, "hub")
+    hub_env_python = os.path.join(hub_env_prefix, "bin", "python3")
+    hub_env_pip = os.path.join(hub_env_prefix, "bin", "pip")
+    initial_setup = not os.path.exists(hub_env_python)
 
     # Attempt to start a web server to serve a progress page reporting
     # installation progress.
@@ -451,18 +451,18 @@ def main():
             env=apt_get_adjusted_env,
         )
 
-        logger.info("Setting up virtual environment at {}".format(hub_prefix))
-        os.makedirs(hub_prefix, exist_ok=True)
-        run_subprocess(["python3", "-m", "venv", hub_prefix])
+        logger.info("Setting up virtual environment at {}".format(hub_env_prefix))
+        os.makedirs(hub_env_prefix, exist_ok=True)
+        run_subprocess(["python3", "-m", "venv", hub_env_prefix])
 
     # Upgrade pip
     # Keep pip version pinning in sync with the one in unit-test.yml!
     # See changelog at https://pip.pypa.io/en/latest/news/#changelog
     logger.info("Upgrading pip...")
-    run_subprocess([pip_bin, "install", "--upgrade", "pip==21.3.*"])
+    run_subprocess([hub_env_pip, "install", "--upgrade", "pip==21.3.*"])
 
     # Install/upgrade TLJH installer
-    tljh_install_cmd = [pip_bin, "install", "--upgrade"]
+    tljh_install_cmd = [hub_env_pip, "install", "--upgrade"]
     if os.environ.get("TLJH_BOOTSTRAP_DEV", "no") == "yes":
         logger.info("Selected TLJH_BOOTSTRAP_DEV=yes...")
         tljh_install_cmd.append("--editable")
@@ -484,7 +484,9 @@ def main():
 
     # Run TLJH installer
     logger.info("Running TLJH installer...")
-    os.execv(python_bin, [python_bin, "-m", "tljh.installer"] + tljh_installer_flags)
+    os.execv(
+        hub_env_python, [hub_env_python, "-m", "tljh.installer"] + tljh_installer_flags
+    )
 
 
 if __name__ == "__main__":
