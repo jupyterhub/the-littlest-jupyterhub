@@ -97,5 +97,4 @@ jobs:
         run: pytest --verbose --maxfail=2 --color=yes --durations=10 --cov=tljh tests/
         timeout-minutes: 15
 
-      - name: Upload code coverage stats
-        run: codecov
+      - uses: codecov/codecov-action@v3
