@@ -26,7 +26,7 @@ Environment variables:
                                 installing the tljh installer. Pass the values
                                 yes or no.
 
-Command line flags:
+Command line flags, from "bootstrap.py --help":
 
     The bootstrap.py script accept the following command line flags. All other
     flags are passed through to the tljh installer without interception by this
@@ -36,6 +36,11 @@ Command line flags:
                             logs can be accessed during installation. If this is
                             passed, it will pass --progress-page-server-pid=<pid>
                             to the tljh installer for later termination.
+    --version               TLJH version or Git reference. Default 'latest' is
+                            the most recent release. Partial versions can be
+                            specified, for example '1', '1.0' or '1.0.0'. You
+                            can also pass a branch name such as 'main' or a
+                            commit hash.
 """
 from argparse import ArgumentParser
 import os
@@ -340,8 +345,23 @@ def main():
     """
     distro, version = ensure_host_system_can_install_tljh()
 
-    parser = ArgumentParser()
-    parser.add_argument("--show-progress-page", action="store_true")
+    parser = ArgumentParser(
+        description=(
+            "The bootstrap.py script accept the following command line flags. "
+            "All other flags are passed through to the tljh installer without "
+            "interception by this script."
+        )
+    )
+    parser.add_argument(
+        "--show-progress-page",
+        action="store_true",
+        help=(
+            "Starts a local web server listening on port 80 where logs can be "
+            "accessed during installation. If this is passed, it will pass "
+            "--progress-page-server-pid=<pid> to the tljh installer for later "
+            "termination."
+        ),
+    )
     parser.add_argument(
         "--version",
         default="latest",
