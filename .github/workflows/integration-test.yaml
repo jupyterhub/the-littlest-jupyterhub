@@ -8,14 +8,12 @@ on:
     paths-ignore:
       - "docs/**"
       - "**.md"
-      - "**.rst"
       - ".github/workflows/*"
       - "!.github/workflows/integration-test.yaml"
   push:
     paths-ignore:
       - "docs/**"
       - "**.md"
-      - "**.rst"
       - ".github/workflows/*"
       - "!.github/workflows/integration-test.yaml"
     branches-ignore:
