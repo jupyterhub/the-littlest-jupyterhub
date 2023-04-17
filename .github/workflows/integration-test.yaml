@@ -8,14 +8,12 @@ on:
     paths-ignore:
       - "docs/**"
       - "**.md"
-      - "**.rst"
       - ".github/workflows/*"
       - "!.github/workflows/integration-test.yaml"
   push:
     paths-ignore:
       - "docs/**"
       - "**.md"
-      - "**.rst"
       - ".github/workflows/*"
       - "!.github/workflows/integration-test.yaml"
     branches-ignore:
@@ -24,58 +22,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  # This job is used as a workaround to a limitation when using a matrix of
-  # variations that a job should be executed against. The limitation is that a
-  # matrix once defined can't include any conditions.
-  #
-  # What this job does before our real test job with a matrix of variations run,
-  # is to decide on that matrix of variations a conditional logic of our choice.
-  #
-  # For more details, see this excellent stack overflow answer:
-  # https://stackoverflow.com/a/65434401/2220152
-  #
-  decide-on-test-jobs-to-run:
-    name: Decide on test jobs to run
-    runs-on: ubuntu-latest
-
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-
-    steps:
-      # Currently, this logic filters out a matrix entry equaling a specific git
-      # reference identified by "dont_run_on_ref".
-      - name: Decide on test jobs to run
-        id: set-matrix
-        run: |
-          matrix_post_filter=$(
-            echo "$matrix_include_pre_filter" \
-              | yq e --output-format=json '.' - \
-              | jq -c '{"include": map( . | select(.dont_run_on_ref != "${{ github.ref }}" ))}'
-          )
-          echo "matrix=$matrix_post_filter" >> $GITHUB_OUTPUT
-
-          echo "The subsequent job's matrix are:"
-          echo $matrix_post_filter | jq -C '.'
-        env:
-          matrix_include_pre_filter: |
-            - name: "Int. tests: Debian 11, Py 3.9"
-              distro_image: "debian:11"
-              runs_on: "ubuntu-22.04"
-              extra_flags: ""
-            - name: "Int. tests: Ubuntu 20.04, Py 3.8"
-              distro_image: "ubuntu:20.04"
-              extra_flags: ""
-            - name: "Int. tests: Ubuntu 22.04 Py 3.10"
-              distro_image: "ubuntu:22.04"
-              extra_flags: ""
-            - name: "Int. tests: Ubuntu 22.04, Py 3.10, --upgrade"
-              distro_image: "ubuntu:22.04"
-              extra_flags: --upgrade
-              dont_run_on_ref: refs/heads/master
-
   integration-tests:
-    needs: decide-on-test-jobs-to-run
-
     # integration tests run in a container,
     # not in the worker, so this version is not relevant to the tests
     # and can be the same for all tested versions
@@ -84,7 +31,27 @@ jobs:
     name: ${{ matrix.name }}
     strategy:
       fail-fast: false
-      matrix: ${{ fromJson(needs.decide-on-test-jobs-to-run.outputs.matrix) }}
+      matrix:
+        include:
+          - name: "Debian 11, Py 3.9"
+            distro_image: "debian:11"
+            runs_on: "ubuntu-22.04"
+            extra_flags: ""
+          - name: "Ubuntu 20.04, Py 3.8"
+            distro_image: "ubuntu:20.04"
+            extra_flags: ""
+          - name: "Ubuntu 22.04 Py 3.10"
+            distro_image: "ubuntu:22.04"
+            extra_flags: ""
+          - name: "Ubuntu 22.04, Py 3.10, from main"
+            distro_image: "ubuntu:22.04"
+            extra_flags: --upgrade-from=main
+          - name: "Ubuntu 22.04, Py 3.10, from latest"
+            distro_image: "ubuntu:22.04"
+            extra_flags: --upgrade-from=latest
+          - name: "Ubuntu 22.04, Py 3.10, from 0.2.0"
+            distro_image: "ubuntu:22.04"
+            extra_flags: --upgrade-from=0.2.0
 
     steps:
       - uses: actions/checkout@v3
@@ -107,7 +74,7 @@ jobs:
           # integration-tests/test_bootstrap.py will build and start containers
           # based on this environment variable. This is similar to how
           # .github/integration-test.py build-image can take a --build-arg
-          # setting the base image.
+          # setting the base image via a Dockerfile ARG.
           BASE_IMAGE: ${{ matrix.distro_image }}
 
       # We build a docker image from wherein we will work

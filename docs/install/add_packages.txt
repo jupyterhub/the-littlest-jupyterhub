@@ -1,30 +1,30 @@
 The **User Environment** is a conda environment that is shared by all users
 in the JupyterHub. Libraries installed in this environment are immediately
 available to all users. Admin users can install packages in this environment
-with ``sudo -E``.
+with `sudo -E`.
 
-#. Log in as an admin user and open a Terminal in your Jupyter Notebook.
+1. Log in as an admin user and open a Terminal in your Jupyter Notebook.
 
-   .. image:: ../images/notebook/new-terminal-button.png
-      :alt: New Terminal button under New menu
+   ```{image} ../images/notebook/new-terminal-button.png
+   :alt: New Terminal button under New menu
+   ```
 
-#. Install `gdal <https://anaconda.org/conda-forge/gdal>`_ from `conda-forge <https://conda-forge.org/>`_.
+2. Install [gdal](https://anaconda.org/conda-forge/gdal) from [conda-forge](https://conda-forge.org/).
 
-   .. code-block:: bash
+   ```bash
+   sudo -E conda install -c conda-forge gdal
+   ```
 
-      sudo -E conda install -c conda-forge gdal
+   The `sudo -E` is very important!
 
-   The ``sudo -E`` is very important!
+3. Install [there](https://pypi.org/project/there) with `pip`
 
-#. Install `there <https://pypi.org/project/there>`_ with ``pip``
+   ```bash
+   sudo -E pip install there
+   ```
 
-
-   .. code-block:: bash
-
-      sudo -E pip install there
-
-The packages ``gdal`` and ``there`` are now available to all users in JupyterHub.
+The packages `gdal` and `there` are now available to all users in JupyterHub.
 If a user already had a python notebook running, they have to restart their notebook's
 kernel to make the new libraries available.
 
-See :ref:`howto/env/user_environment` for more information.
+See {ref}`howto-env-user-environment` for more information.

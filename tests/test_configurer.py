@@ -69,14 +69,6 @@ def test_app_jupyterlab():
     assert c.Spawner.default_url == "/lab"
 
 
-def test_app_nteract():
-    """
-    Test setting nteract as default application
-    """
-    c = apply_mock_config({"user_environment": {"default_app": "nteract"}})
-    assert c.Spawner.default_url == "/nteract"
-
-
 def test_auth_default():
     """
     Test default authentication settings with no overrides

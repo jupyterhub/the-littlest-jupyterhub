@@ -8,14 +8,12 @@ on:
     paths-ignore:
       - "docs/**"
       - "**.md"
-      - "**.rst"
       - ".github/workflows/*"
       - "!.github/workflows/unit-test.yaml"
   push:
     paths-ignore:
       - "docs/**"
       - "**.md"
-      - "**.rst"
       - ".github/workflows/*"
       - "!.github/workflows/unit-test.yaml"
     branches-ignore:
@@ -42,10 +40,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: "Unit tests: Ubuntu 20.04, Py 3.9"
+          - name: "Ubuntu 20.04, Py 3.9"
             ubuntu_version: "20.04"
             python_version: "3.9"
-          - name: "Unit tests: Ubuntu 22.04, Py 3.10"
+          - name: "Ubuntu 22.04, Py 3.10"
             ubuntu_version: "22.04"
             python_version: "3.10"
 
@@ -98,5 +96,4 @@ jobs:
         run: pytest --verbose --maxfail=2 --color=yes --durations=10 --cov=tljh tests/
         timeout-minutes: 15
 
-      - name: Upload code coverage stats
-        run: codecov
+      - uses: codecov/codecov-action@v3
