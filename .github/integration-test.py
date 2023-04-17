@@ -122,10 +122,16 @@ def copy_to_container(container_name, src_path, dest_path):
 
 
 def run_test(
-    image_name, test_name, bootstrap_pip_spec, test_files, upgrade, installer_args
+    image_name,
+    test_name,
+    bootstrap_pip_spec,
+    test_files,
+    upgrade_from,
+    installer_args,
 ):
     """
-    Wrapper that sets up tljh with installer_args & runs test_name
+    Starts a new container based on image_name, runs the bootstrap script to
+    setup tljh with installer_args, and runs test_name.
     """
     stop_container(test_name)
     run_systemd_image(image_name, test_name, bootstrap_pip_spec)
@@ -144,12 +150,26 @@ def run_test(
     print(container_check_output(["logs", test_name]).decode())
     print(f"--- End of logs from the container: {test_name}")
 
-    # Install TLJH from the default branch first to test upgrades
-    if upgrade:
+    # To test upgrades, we run a bootstrap.py script two times instead of one,
+    # where the initial run first installs some older version.
+    #
+    # We want to support testing a PR by upgrading from "main", "latest" (latest
+    # released version), and from a previous major-like version.
+    #
+    # FIXME: We currently always rely on the main branch's bootstrap.py script.
+    #        Realistically, we should run previous versions of the bootstrap
+    #        script which also installs previous versions of TLJH.
+    #
+    #        2023-04-15 Erik observed that https://tljh.jupyter.org/bootstrap.py
+    #        is referencing to the master (now main) branch which didn't seem
+    #        obvious, thinking it could have been the latest released version
+    #        also.
+    #
+    if upgrade_from:
         run_container_command(
-            test_name, "curl -L https://tljh.jupyter.org/bootstrap.py | python3 -"
+            test_name,
+            f"curl -L https://tljh.jupyter.org/bootstrap.py | python3 - --version={upgrade_from}",
         )
-
     run_container_command(test_name, f"python3 /srv/src/bootstrap.py {installer_args}")
 
     # Install pkgs from requirements in hub's pip, where
@@ -192,9 +212,11 @@ def main():
         dest="build_args",
     )
 
-    subparsers.add_parser("stop-container").add_argument("container_name")
+    stop_container_parser = subparsers.add_parser("stop-container")
+    stop_container_parser.add_argument("container_name")
 
-    subparsers.add_parser("start-container").add_argument("container_name")
+    start_container_parser = subparsers.add_parser("start-container")
+    start_container_parser.add_argument("container_name")
 
     run_parser = subparsers.add_parser("run")
     run_parser.add_argument("container_name")
@@ -207,7 +229,7 @@ def main():
 
     run_test_parser = subparsers.add_parser("run-test")
     run_test_parser.add_argument("--installer-args", default="")
-    run_test_parser.add_argument("--upgrade", action="store_true")
+    run_test_parser.add_argument("--upgrade-from", default="")
     run_test_parser.add_argument(
         "--bootstrap-pip-spec", nargs="?", default="", type=str
     )
@@ -227,7 +249,7 @@ def main():
             args.test_name,
             args.bootstrap_pip_spec,
             args.test_files,
-            args.upgrade,
+            args.upgrade_from,
             args.installer_args,
         )
     elif args.action == "show-logs":
