@@ -124,7 +124,7 @@ def _specifier(version):
         # previous install, 1.0
         (
             "mambaforge",
-            "22.11.1-4",
+            "23.1.0-1",
             {
                 "python": "3.10.*",
                 "conda": "23.1.0",
