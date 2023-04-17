@@ -149,7 +149,7 @@ def _specifier(version):
             "4.10.3-7",
             {
                 "conda": "4.10.3",
-                "mamba": ">=1.4.1",
+                "mamba": ">=1.1.0",
                 "python": "3.9.*",
             },
         ),
