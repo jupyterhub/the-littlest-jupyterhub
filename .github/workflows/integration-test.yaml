@@ -69,7 +69,7 @@ jobs:
         run: |
           pytest --verbose --maxfail=2 --color=yes --durations=10 --capture=no \
               integration-tests/test_bootstrap.py
-        timeout-minutes: 15
+        timeout-minutes: 20
         env:
           # integration-tests/test_bootstrap.py will build and start containers
           # based on this environment variable. This is similar to how
