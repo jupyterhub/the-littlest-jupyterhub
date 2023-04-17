@@ -2,6 +2,7 @@
 Miscellaneous functions useful in at least two places unrelated to each other
 """
 import logging
+import re
 import subprocess
 
 # Copied into bootstrap/bootstrap.py. Make sure these two copies are exactly the same!
@@ -24,10 +25,11 @@ def run_subprocess(cmd, *args, **kwargs):
     and failed output directly to the user's screen
     """
     logger = logging.getLogger("tljh")
+    printable_command = " ".join(cmd)
+    logger.debug("Running %s", printable_command)
     proc = subprocess.run(
         cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, *args, **kwargs
     )
-    printable_command = " ".join(cmd)
     if proc.returncode != 0:
         # Our process failed! Show output to the user
         logger.error(
@@ -59,3 +61,14 @@ def get_plugin_manager():
     pm.load_setuptools_entrypoints("tljh")
 
     return pm
+
+
+def parse_version(version_string):
+    """Parse version string to tuple
+
+    Finds all numbers and returns a tuple of ints
+    _very_ loose version parsing, like the old distutils.version.LooseVersion
+    """
+    # return a tuple of all the numbers in the version string
+    # always succeeds, even if passed nonsense
+    return tuple(int(part) for part in re.findall(r"\d+", version_string))
