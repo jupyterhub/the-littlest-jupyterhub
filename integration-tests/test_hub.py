@@ -31,7 +31,7 @@ def test_hub_version():
     r = requests.get(hub_url + "/hub/api")
     r.raise_for_status()
     info = r.json()
-    assert V("3.0") <= V(info["version"]) <= V("4.0")
+    assert V("4") <= V(info["version"]) <= V("5")
 
 
 @pytest.mark.asyncio
