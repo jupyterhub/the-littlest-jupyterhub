@@ -163,7 +163,7 @@ We start by creating the Virtual Machine in which we can run TLJH (The Littlest 
           --admin <admin-user-name>
       ```
 
-      where the `username` is the root username you chose for your Virtual Machine.
+      where the `admin-user-name` is the root username you chose for your Virtual Machine.
 
       ```{image} ../images/providers/azure/cloudinit-vm.png
       :alt: Install TLJH
