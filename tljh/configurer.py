@@ -59,7 +59,7 @@ default = {
             "concurrency": 5,
             "users": False,
             "max_age": 0,
-            "remove_named_servers": False
+            "remove_named_servers": False,
         },
         "configurator": {"enabled": False},
     },

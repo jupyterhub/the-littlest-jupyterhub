@@ -193,6 +193,7 @@ def test_cull_service_default():
         }
     ]
 
+
 def test_set_cull_service():
     """
     Test setting cull service options
@@ -218,12 +219,22 @@ def test_set_cull_service():
         }
     ]
 
+
 def test_cull_service_named():
     """
     Test default cull service settings with named server removal
     """
     c = apply_mock_config(
-        {"services": {"cull": {"every": 10, "cull_users": True, "remove_named_servers": True, "max_age": 60}}}
+        {
+            "services": {
+                "cull": {
+                    "every": 10,
+                    "cull_users": True,
+                    "remove_named_servers": True,
+                    "max_age": 60,
+                }
+            }
+        }
     )
 
     cull_cmd = [
@@ -244,6 +255,7 @@ def test_cull_service_named():
             "command": cull_cmd,
         }
     ]
+
 
 def test_load_secrets(tljh_dir):
     """
