@@ -37,16 +37,16 @@ Let's create the server on which we can run JupyterHub.
     ```
 
 4.  Under **Choose a size**, select the size of the server you want. The default
-    (4GB RAM, 2CPUs, 20 USD / month) is not a bad start. You can resize your server
+    (4GB RAM, 2CPUs, 24 USD / month) is not a bad start. You can resize your server
     later if you need.
 
     Check out our guide on How To [](/howto/admin/resource-estimation) to help pick
     how much Memory, CPU & disk space your server needs.
 
-5.  Scroll down to **Select additional options**, and select **User data**.
+5.  Open the **Advanced Options**, and check the box for **Add Initialization scripts**.
 
     ```{image} ../images/providers/digitalocean/additional-options.png
-    :alt: Turn on User Data in additional options
+    :alt: Turn on User Data in advanced options
     ```
 
     This opens up a textbox where you can enter a script that will be run
