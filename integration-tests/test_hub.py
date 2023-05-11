@@ -389,7 +389,9 @@ async def test_idle_server_culled():
     )
 
     async with User(username, hub_url, partial(login_dummy, password="")) as u:
+        # Login the user
         await u.login()
+
         # Start user's server
         await u.ensure_server_simulate()
         # Assert that the user exists
@@ -400,12 +402,23 @@ async def test_idle_server_culled():
         r = await u.session.get(user_url, allow_redirects=False)
         assert r.status == 200
 
+        # Extract the xsrf token from the _xsrf cookie set after visiting
+        # /hub/login with the u.session
+        hub_cookie = u.session.cookie_jar.filter_cookies(str(u.hub_url / "hub/api/user"))
+        assert "_xsrf" in hub_cookie
+        hub_xsrf_token = hub_cookie["_xsrf"].value
+
         # Check that we can talk to JupyterHub itself
         # use this as a proxy for whether the user still exists
         async def hub_api_request():
             r = await u.session.get(
                 u.hub_url / "hub/api/user",
-                headers={"Referer": str(u.hub_url / "hub/")},
+                headers={
+                    # Referer is needed for JupyterHub <=3
+                    "Referer": str(u.hub_url / "hub/"),
+                    # X-XSRFToken is needed for JupyterHub >=4
+                    "X-XSRFToken": hub_xsrf_token,
+                },
                 allow_redirects=False,
             )
             return r
