@@ -178,6 +178,13 @@ def run_test(
         test_name,
         "/opt/tljh/hub/bin/python3 -m pip install -r /srv/src/integration-tests/requirements.txt",
     )
+
+    # show environment
+    run_container_command(
+        test_name,
+        "/opt/tljh/hub/bin/python3 -m pip freeze",
+    )
+
     run_container_command(
         test_name,
         # We abort pytest after two failures as a compromise between wanting to
