@@ -11,16 +11,27 @@ import grp
 import subprocess
 from os import system
 from tljh.normalize import generate_system_username
-
+from packaging.version import Version as V
 
 # Use sudo to invoke it, since this is how users invoke it.
 # This catches issues with PATH
 TLJH_CONFIG_PATH = ["sudo", "tljh-config"]
 
+# This *must* be localhost, not an IP
+# aiohttp throws away cookies if we are connecting to an IP!
+hub_url = "http://localhost"
+
 
 def test_hub_up():
-    r = requests.get("http://127.0.0.1")
+    r = requests.get(hub_url)
     r.raise_for_status()
+
+
+def test_hub_version():
+    r = requests.get(hub_url + "/hub/api")
+    r.raise_for_status()
+    info = r.json()
+    assert V("3.0") <= V(info["version"]) <= V("4.0")
 
 
 @pytest.mark.asyncio
@@ -28,9 +39,6 @@ async def test_user_code_execute():
     """
     User logs in, starts a server & executes code
     """
-    # This *must* be localhost, not an IP
-    # aiohttp throws away cookies if we are connecting to an IP!
-    hub_url = "http://localhost"
     username = secrets.token_hex(8)
 
     assert (
