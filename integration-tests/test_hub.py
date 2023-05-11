@@ -404,7 +404,9 @@ async def test_idle_server_culled():
 
         # Extract the xsrf token from the _xsrf cookie set after visiting
         # /hub/login with the u.session
-        hub_cookie = u.session.cookie_jar.filter_cookies(str(u.hub_url / "hub/api/user"))
+        hub_cookie = u.session.cookie_jar.filter_cookies(
+            str(u.hub_url / "hub/api/user")
+        )
         assert "_xsrf" in hub_cookie
         hub_xsrf_token = hub_cookie["_xsrf"].value
 
