@@ -40,6 +40,12 @@ the users will not be culled alongside their notebooks and will continue to exis
 services.cull.users = False
 ```
 
+If named servers are in use, they are not removed after being culled.
+
+```python
+services.cull.remove_named_servers = False
+```
+
 ## Configuring the idle culler
 
 The available configuration options are:
@@ -73,6 +79,16 @@ The maximum age can be configured using:
 
 ```bash
 sudo tljh-config set services.cull.max_age <server-max-age>
+sudo tljh-config reload
+```
+
+### Remove Named Servers
+
+Remove named servers after they are shutdown. Only applies if named servers are
+enabled on the hub installation:
+
+```bash
+sudo tljh-config set services.cull.remove_named_servers True
 sudo tljh-config reload
 ```
 

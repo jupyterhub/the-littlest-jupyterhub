@@ -59,6 +59,7 @@ default = {
             "concurrency": 5,
             "users": False,
             "max_age": 0,
+            "remove_named_servers": False,
         },
         "configurator": {"enabled": False},
     },
@@ -256,6 +257,8 @@ def set_cull_idle_service(config):
     cull_cmd += ["--max-age=%d" % cull_config["max_age"]]
     if cull_config["users"]:
         cull_cmd += ["--cull-users"]
+    if cull_config["remove_named_servers"]:
+        cull_cmd += ["--remove-named-servers"]
 
     cull_service = {
         "name": "cull-idle",
