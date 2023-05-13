@@ -52,3 +52,7 @@ repos:
     rev: "6.0.0"
     hooks:
       - id: flake8
+
+# pre-commit.ci config reference: https://pre-commit.ci/#configuration
+ci:
+  autoupdate_schedule: monthly
