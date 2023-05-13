@@ -200,6 +200,8 @@ def ensure_user_environment(user_requirements_txt_file):
 
     # Case 1: no existing environment
     if not package_versions:
+        is_fresh_install = True
+
         # 1a. no environment, but prefix exists.
         # Abort to avoid clobbering something we don't recognize
         if os.path.exists(USER_ENV_PREFIX) and os.listdir(USER_ENV_PREFIX):
@@ -219,6 +221,8 @@ def ensure_user_environment(user_requirements_txt_file):
         # quick sanity check: we should have conda and mamba!
         assert "conda" in package_versions
         assert "mamba" in package_versions
+    else:
+        is_fresh_install = False
 
     # next, check Python
     python_version = package_versions["python"]
@@ -259,9 +263,15 @@ def ensure_user_environment(user_requirements_txt_file):
 
     conda.ensure_pip_requirements(
         USER_ENV_PREFIX,
-        os.path.join(HERE, "requirements-base.txt"),
+        os.path.join(HERE, "requirements-user-env.txt"),
         upgrade=True,
     )
+    if is_fresh_install:
+        conda.ensure_pip_requirements(
+            USER_ENV_PREFIX,
+            os.path.join(HERE, "requirements-user-env-extras.txt"),
+            upgrade=True,
+        )
 
     if user_requirements_txt_file:
         # FIXME: This currently fails hard, should fail soft and not abort installer
