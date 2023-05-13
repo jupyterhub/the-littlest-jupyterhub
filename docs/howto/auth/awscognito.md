@@ -126,3 +126,20 @@ For more information on `tljh-config`, see [](/topic/tljh-config).
    Jupyter interface used in this JupyterHub.
 5. **If this does not work** you can revert back to the default
    JupyterHub authenticator by following the steps in [](/howto/auth/firstuse).
+
+## Optionally using custom claims for group mapping
+
+If you use AWS Cognito to federate with an OIDC provider and you want to
+authorize your users based on e.g. their department claim, you have to make sure
+that the custom claim is provided as array.
+
+If it is not provided as array, there is an easy fix. Just add these lines to
+your `awscognito.py`:
+
+```python
+def claim_groups_key_func(user_data_resp_json):
+    return [user_data_resp_json['custom:department']]
+
+c.GenericOAuthenticator.claim_groups_key = claim_groups_key_func
+c.GenericOAuthenticator.allowed_groups = ["AA BB CC", "AA BB DD"]
+```
