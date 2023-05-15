@@ -84,7 +84,7 @@ jobs:
         # Keep pip version pinning in sync with the one in bootstrap.py!
         # See changelog at https://pip.pypa.io/en/latest/news/#changelog
         run: |
-          python3 -m pip install -U "pip==21.3.*"
+          python3 -m pip install -U "pip==23.1.*"
           python3 -m pip install -r dev-requirements.txt
           python3 -m pip install -e .
           pip freeze
