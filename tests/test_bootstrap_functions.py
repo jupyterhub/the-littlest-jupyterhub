@@ -5,8 +5,9 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from bootstrap import bootstrap
 import pytest
+
+from bootstrap import bootstrap
 
 
 @pytest.mark.parametrize(

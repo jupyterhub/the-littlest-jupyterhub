@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 import argparse
-from shutil import which
+import os
 import subprocess
 import time
-import os
+from shutil import which
 
 
 def container_runtime():

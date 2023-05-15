@@ -13,17 +13,16 @@ tljh-config show firstlevel.second_level
 """
 
 import argparse
-from collections.abc import Sequence, Mapping
-from copy import deepcopy
 import os
 import re
 import sys
 import time
+from collections.abc import Mapping, Sequence
+from copy import deepcopy
 
 import requests
 
 from .yaml import yaml
-
 
 INSTALL_PREFIX = os.environ.get("TLJH_INSTALL_PREFIX", "/opt/tljh")
 HUB_ENV_PREFIX = os.path.join(INSTALL_PREFIX, "hub")

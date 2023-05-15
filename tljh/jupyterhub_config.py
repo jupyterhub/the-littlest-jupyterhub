@@ -2,14 +2,15 @@
 JupyterHub config for the littlest jupyterhub.
 """
 
-from glob import glob
 import os
+from glob import glob
+
+from jupyterhub_traefik_proxy import TraefikTomlProxy
 
 from tljh import configurer
-from tljh.config import INSTALL_PREFIX, USER_ENV_PREFIX, CONFIG_DIR
-from tljh.utils import get_plugin_manager
+from tljh.config import CONFIG_DIR, INSTALL_PREFIX, USER_ENV_PREFIX
 from tljh.user_creating_spawner import UserCreatingSpawner
-from jupyterhub_traefik_proxy import TraefikTomlProxy
+from tljh.utils import get_plugin_manager
 
 c.JupyterHub.spawner_class = UserCreatingSpawner
 

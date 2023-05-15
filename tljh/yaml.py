@@ -3,8 +3,8 @@
 ensures the same yaml settings for reading/writing
 throughout tljh
 """
-from ruamel.yaml.composer import Composer
 from ruamel.yaml import YAML
+from ruamel.yaml.composer import Composer
 
 
 class _NoEmptyFlowComposer(Composer):

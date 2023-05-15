@@ -1,14 +1,13 @@
-from contextlib import contextmanager
-from concurrent.futures import ProcessPoolExecutor
-from functools import partial
 import grp
 import os
 import pwd
 import subprocess
 import sys
+from concurrent.futures import ProcessPoolExecutor
+from contextlib import contextmanager
+from functools import partial
 
 import pytest
-
 
 ADMIN_GROUP = "jupyterhub-admins"
 USER_GROUP = "jupyterhub-users"

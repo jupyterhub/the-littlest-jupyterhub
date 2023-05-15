@@ -1,9 +1,9 @@
-from tljh.normalize import generate_system_username
-from tljh import user
-from tljh import configurer
-from systemdspawner import SystemdSpawner
-from traitlets import Dict, Unicode, List
 from jupyterhub_configurator.mixins import ConfiguratorSpawnerMixin
+from systemdspawner import SystemdSpawner
+from traitlets import Dict, List, Unicode
+
+from tljh import configurer, user
+from tljh.normalize import generate_system_username
 
 
 class CustomSpawner(SystemdSpawner):

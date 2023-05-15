@@ -162,7 +162,7 @@ def verify_progress_page(expected_status_code, timeout):
             if b"HTTP/1.0 200 OK" in resp:
                 progress_page_status = True
                 break
-        except Exception as e:
+        except Exception:
             time.sleep(2)
             continue
 
