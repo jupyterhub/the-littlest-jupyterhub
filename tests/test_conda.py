@@ -1,12 +1,13 @@
 """
 Test conda commandline wrappers
 """
-from tljh import conda
-from tljh import installer
 import os
-import pytest
 import subprocess
 import tempfile
+
+import pytest
+
+from tljh import conda, installer
 
 
 @pytest.fixture(scope="module")
@@ -14,7 +15,6 @@ def prefix():
     """
     Provide a temporary directory with a mambaforge conda environment
     """
-    machine = os.uname().machine
     installer_url, checksum = installer._mambaforge_url()
     with tempfile.TemporaryDirectory() as tmpdir:
         with conda.download_miniconda_installer(

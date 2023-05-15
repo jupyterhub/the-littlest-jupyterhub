@@ -17,15 +17,7 @@ import pluggy
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
-from tljh import (
-    apt,
-    conda,
-    hooks,
-    migrator,
-    systemd,
-    traefik,
-    user,
-)
+from tljh import apt, conda, hooks, migrator, systemd, traefik, user
 
 from .config import (
     CONFIG_DIR,
@@ -518,7 +510,6 @@ def main():
             print("Progress page server stopped successfully.")
         except Exception as e:
             logger.error(f"Couldn't stop the progress page server. Exception was {e}.")
-            pass
 
     ensure_jupyterhub_service(HUB_ENV_PREFIX)
     ensure_jupyterhub_running()

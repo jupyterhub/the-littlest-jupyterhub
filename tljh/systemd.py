@@ -3,8 +3,8 @@ Wraps systemctl to install, uninstall, start & stop systemd services.
 
 If we use a debian package instead, we can get rid of all this code.
 """
-import subprocess
 import os
+import subprocess
 
 
 def reload_daemon():

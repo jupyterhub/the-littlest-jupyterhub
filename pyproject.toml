@@ -1,0 +1,34 @@
+# autoflake is used for autoformatting Python code
+#
+# ref: https://github.com/PyCQA/autoflake#readme
+#
+[tool.autoflake]
+ignore-init-module-imports = true
+remove-all-unused-imports = true
+remove-duplicate-keys = true
+remove-unused-variables = true
+
+
+# isort is used for autoformatting Python code
+#
+# ref: https://pycqa.github.io/isort/
+#
+[tool.isort]
+profile = "black"
+
+
+# black is used for autoformatting Python code
+#
+# ref: https://black.readthedocs.io/en/stable/
+#
+[tool.black]
+# target-version should be all supported versions, see
+# https://github.com/psf/black/issues/751#issuecomment-473066811
+target_version = [
+    "py36",
+    "py37",
+    "py38",
+    "py39",
+    "py310",
+    "py311",
+]

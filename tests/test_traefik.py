@@ -1,11 +1,10 @@
 """Test traefik configuration"""
 import os
 
-import toml
 import pytest
+import toml
 
-from tljh import config
-from tljh import traefik
+from tljh import config, traefik
 
 
 def test_download_traefik(tmpdir):

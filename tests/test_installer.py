@@ -3,15 +3,14 @@ Unit test  functions in installer.py
 """
 import json
 import os
+from subprocess import PIPE, run
 from unittest import mock
-from subprocess import run, PIPE
 
-from packaging.version import parse as V
-from packaging.specifiers import SpecifierSet
 import pytest
+from packaging.specifiers import SpecifierSet
+from packaging.version import parse as V
 
-from tljh import conda
-from tljh import installer
+from tljh import conda, installer
 from tljh.yaml import yaml
 
 

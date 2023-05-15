@@ -42,16 +42,16 @@ Command line flags, from "bootstrap.py --help":
                             can also pass a branch name such as 'main' or a
                             commit hash.
 """
-from argparse import ArgumentParser
-import os
-from http.server import SimpleHTTPRequestHandler, HTTPServer
+import logging
 import multiprocessing
+import os
 import re
+import shutil
 import subprocess
 import sys
-import logging
-import shutil
 import urllib.request
+from argparse import ArgumentParser
+from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 progress_page_favicon_url = "https://raw.githubusercontent.com/jupyterhub/jupyterhub/main/share/jupyterhub/static/favicon.ico"
 progress_page_html = """

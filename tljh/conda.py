@@ -1,12 +1,12 @@
 """
 Wrap conda commandline program
 """
+import contextlib
+import hashlib
+import json
+import logging
 import os
 import subprocess
-import json
-import hashlib
-import contextlib
-import logging
 import tempfile
 import time
 

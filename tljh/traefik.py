@@ -3,14 +3,15 @@ import hashlib
 import os
 from glob import glob
 
-from jinja2 import Template
-from passlib.apache import HtpasswdFile
 import backoff
 import requests
 import toml
+from jinja2 import Template
+from passlib.apache import HtpasswdFile
+
+from tljh.configurer import _merge_dictionaries, load_config
 
 from .config import CONFIG_DIR
-from tljh.configurer import load_config, _merge_dictionaries
 
 # traefik 2.7.x is not supported yet, use v1.7.x for now
 # see: https://github.com/jupyterhub/traefik-proxy/issues/97

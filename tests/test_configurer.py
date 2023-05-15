@@ -2,9 +2,10 @@
 Test configurer
 """
 
-from traitlets.config import Config
 import os
 import sys
+
+from traitlets.config import Config
 
 from tljh import configurer
 

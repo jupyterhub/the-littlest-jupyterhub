@@ -2,19 +2,19 @@
 import os
 import shutil
 import ssl
-from subprocess import check_call
 import time
+from subprocess import check_call
 
-import toml
-from tornado.httpclient import HTTPClient, HTTPRequest, HTTPClientError
 import pytest
+import toml
+from tornado.httpclient import HTTPClient, HTTPClientError, HTTPRequest
 
 from tljh.config import (
+    CONFIG_DIR,
+    CONFIG_FILE,
+    STATE_DIR,
     reload_component,
     set_config_value,
-    CONFIG_FILE,
-    CONFIG_DIR,
-    STATE_DIR,
 )
 
 
@@ -36,7 +36,6 @@ def send_request(url, max_sleep, validate_cert=True, username=None, password=Non
             break
         except Exception as e:
             print(e)
-            pass
 
     return resp
 
@@ -134,7 +133,7 @@ def test_extra_traefik_config():
                 HTTPClient().fetch(req)
             success = True
             break
-        except Exception as e:
+        except Exception:
             pass
 
     assert success == True

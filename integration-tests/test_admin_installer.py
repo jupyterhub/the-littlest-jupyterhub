@@ -1,7 +1,8 @@
-from hubtraf.user import User
-from hubtraf.auth.dummy import login_dummy
-import pytest
 from functools import partial
+
+import pytest
+from hubtraf.auth.dummy import login_dummy
+from hubtraf.user import User
 
 
 @pytest.mark.asyncio

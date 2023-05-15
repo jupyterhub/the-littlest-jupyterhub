@@ -56,7 +56,7 @@ def test_set_overwrite():
 def test_unset_no_mutate():
     conf = {"a": "b"}
 
-    new_conf = config.unset_item_from_config(conf, "a")
+    config.unset_item_from_config(conf, "a")
     assert conf == {"a": "b"}
 
 

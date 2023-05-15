@@ -1,13 +1,14 @@
 """
 Test simplest plugin
 """
-from ruamel.yaml import YAML
-import requests
 import os
 import subprocess
 
-from tljh.config import CONFIG_FILE, USER_ENV_PREFIX, HUB_ENV_PREFIX
+import requests
+from ruamel.yaml import YAML
+
 from tljh import user
+from tljh.config import CONFIG_FILE, HUB_ENV_PREFIX, USER_ENV_PREFIX
 
 yaml = YAML(typ="rt")
 
