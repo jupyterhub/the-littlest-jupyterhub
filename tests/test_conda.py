@@ -14,7 +14,6 @@ def prefix():
     """
     Provide a temporary directory with a mambaforge conda environment
     """
-    machine = os.uname().machine
     installer_url, checksum = installer._mambaforge_url()
     with tempfile.TemporaryDirectory() as tmpdir:
         with conda.download_miniconda_installer(

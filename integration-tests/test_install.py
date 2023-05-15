@@ -93,7 +93,6 @@ def permissions_test(group, path, *, readable=None, writable=None, dirs_only=Fal
             # check if the path should be writable
             if writable is not None:
                 if access(path, os.W_OK) != writable:
-                    stat = os.stat(path)
                     info = pool.submit(debug_uid_gid).result()
                     failures.append(
                         "{} {} should {}be writable by {} [{}]".format(
@@ -104,7 +103,6 @@ def permissions_test(group, path, *, readable=None, writable=None, dirs_only=Fal
             # check if the path should be readable
             if readable is not None:
                 if access(path, os.R_OK) != readable:
-                    stat = os.stat(path)
                     info = pool.submit(debug_uid_gid).result()
                     failures.append(
                         "{} {} should {}be readable by {} [{}]".format(
