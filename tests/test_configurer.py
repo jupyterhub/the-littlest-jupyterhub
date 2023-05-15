@@ -156,8 +156,8 @@ def test_traefik_api_default():
     """
     c = apply_mock_config({})
 
-    assert c.TraefikTomlProxy.traefik_api_username == "api_admin"
-    assert len(c.TraefikTomlProxy.traefik_api_password) == 0
+    assert c.TraefikProxy.traefik_api_username == "api_admin"
+    assert len(c.TraefikProxy.traefik_api_password) == 0
 
 
 def test_set_traefik_api():
@@ -167,8 +167,8 @@ def test_set_traefik_api():
     c = apply_mock_config(
         {"traefik_api": {"username": "some_user", "password": "1234"}}
     )
-    assert c.TraefikTomlProxy.traefik_api_username == "some_user"
-    assert c.TraefikTomlProxy.traefik_api_password == "1234"
+    assert c.TraefikProxy.traefik_api_username == "some_user"
+    assert c.TraefikProxy.traefik_api_password == "1234"
 
 
 def test_cull_service_default():
@@ -268,7 +268,7 @@ def test_load_secrets(tljh_dir):
     tljh_config = configurer.load_config()
     assert tljh_config["traefik_api"]["password"] == "traefik-password"
     c = apply_mock_config(tljh_config)
-    assert c.TraefikTomlProxy.traefik_api_password == "traefik-password"
+    assert c.TraefikProxy.traefik_api_password == "traefik-password"
 
 
 def test_auth_native():

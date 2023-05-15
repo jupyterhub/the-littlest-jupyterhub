@@ -5,13 +5,13 @@ import logging
 import os
 import tarfile
 from glob import glob
+from pathlib import Path
 from subprocess import run
 
 import backoff
 import requests
 import toml
 from jinja2 import Template
-from passlib.apache import HtpasswdFile
 
 from tljh.configurer import _merge_dictionaries, load_config
 
@@ -34,6 +34,8 @@ checksums = {
     "linux_amd64": "141db1434ae76890915486a4bc5ecf3dbafc8ece78984ce1a8db07737c42db88",
     "linux_arm64": "0a65ead411307669916ba629fa13f698acda0b2c5387abe0309b43e168e4e57f",
 }
+
+_tljh_path = Path(__file__).parent.resolve()
 
 
 def checksum_file(path_or_file):
@@ -58,11 +60,14 @@ def check_traefik_version(traefik_bin):
     """Check the traefik version from `traefik version` output"""
 
     try:
-        version_out = run([traefik_bin, "version"], capture=True, text=True)
+        version_out = run(
+            [traefik_bin, "version"],
+            capture_output=True,
+            text=True,
+        ).stdout
     except (FileNotFoundError, OSError) as e:
         logger.debug(f"Failed to get traefik version: {e}")
         return False
-    versions = {}
     for line in version_out.splitlines():
         before, _, after = line.partition(":")
         key = before.strip()
@@ -118,15 +123,6 @@ def ensure_traefik_binary(prefix):
     os.chmod(traefik_bin, 0o755)
 
 
-def compute_basic_auth(username, password):
-    """Generate hashed HTTP basic auth from traefik_api username+password"""
-    ht = HtpasswdFile()
-    # generate htpassword
-    ht.set_password(username, password)
-    hashed_password = str(ht.to_string()).split(":")[1][:-3]
-    return username + ":" + hashed_password
-
-
 def load_extra_config(extra_config_dir):
     extra_configs = sorted(glob(os.path.join(extra_config_dir, "*.toml")))
     # Load the toml list of files into dicts and merge them
@@ -139,16 +135,13 @@ def ensure_traefik_config(state_dir):
     traefik_std_config_file = os.path.join(state_dir, "traefik.toml")
     traefik_extra_config_dir = os.path.join(CONFIG_DIR, "traefik_config.d")
     traefik_dynamic_config_dir = os.path.join(state_dir, "rules")
-
-    config = load_config()
-    config["traefik_api"]["basic_auth"] = compute_basic_auth(
-        config["traefik_api"]["username"],
-        config["traefik_api"]["password"],
+    traefik_dynamic_config_file = os.path.join(
+        traefik_dynamic_config_dir, "dynamic.toml"
     )
 
-    with open(os.path.join(os.path.dirname(__file__), "traefik.toml.tpl")) as f:
-        template = Template(f.read())
-    std_config = template.render(config)
+    config = load_config()
+    config["traefik_dynamic_config_dir"] = traefik_dynamic_config_dir
+
     https = config["https"]
     letsencrypt = https["letsencrypt"]
     tls = https["tls"]
@@ -162,6 +155,14 @@ def ensure_traefik_config(state_dir):
             letsencrypt["domains"] and not letsencrypt["email"]
         ):
             raise ValueError("Both email and domains must be set for letsencrypt")
+
+    with (_tljh_path / "traefik.toml.tpl").open() as f:
+        template = Template(f.read())
+    std_config = template.render(config)
+
+    with (_tljh_path / "traefik-dynamic.toml.tpl").open() as f:
+        dynamic_template = Template(f.read())
+    dynamic_config = dynamic_template.render(config)
 
     # Ensure traefik extra static config dir exists and is private
     os.makedirs(traefik_extra_config_dir, mode=0o700, exist_ok=True)
@@ -180,6 +181,12 @@ def ensure_traefik_config(state_dir):
     with open(traefik_std_config_file, "w") as f:
         os.fchmod(f.fileno(), 0o600)
         toml.dump(new_toml, f)
+
+    with open(os.path.join(traefik_dynamic_config_dir, "dynamic.toml"), "w") as f:
+        os.fchmod(f.fileno(), 0o600)
+        # validate toml syntax before writing
+        toml.loads(dynamic_config)
+        f.write(dynamic_config)
 
     with open(os.path.join(traefik_dynamic_config_dir, "rules.toml"), "w") as f:
         os.fchmod(f.fileno(), 0o600)

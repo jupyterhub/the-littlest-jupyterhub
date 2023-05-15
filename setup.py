@@ -14,11 +14,10 @@ setup(
         "ruamel.yaml==0.17.*",
         "jinja2",
         "pluggy==1.*",
-        "passlib",
         "backoff",
         "requests",
         "bcrypt",
-        "jupyterhub-traefik-proxy==0.3.*",
+        "jupyterhub-traefik-proxy==1.0.0b3",
     ],
     entry_points={
         "console_scripts": [
