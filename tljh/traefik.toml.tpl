@@ -44,11 +44,10 @@ X-Xsrftoken = "redact"
   address = "localhost:{{ traefik_api['port'] }}"
 
 {% if https['enabled'] and https['letsencrypt']['email'] and https['letsencrypt']['domains'] %}
-[certificateResolvers.letsencrypt.acme]
+[certificatesResolvers.letsencrypt.acme]
 email = "{{ https['letsencrypt']['email'] }}"
 storage = "acme.json"
-[certificateResolvers.letsencrypt.acme.httpChallenge]
-entryPoint = "http"
+[certificatesResolvers.letsencrypt.acme.tlsChallenge]
 {% endif %}
 
 [providers]

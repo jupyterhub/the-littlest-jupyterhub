@@ -5,21 +5,21 @@
   [tls.options.default]
   minVersion = "VersionTLS12"
 
-  {% if https['tls']['cert'] %}
+  {% if https['tls']['cert'] -%}
   [tls.stores.default.defaultCertificate]
     certFile = "{{ https['tls']['cert'] }}"
     keyFile = "{{ https['tls']['key'] }}"
-  {% endif %}
+  {%- endif %}
 
-  {% if https['letsencrypt']['email'] and https['letsencrypt']['domains'] %}
+  {% if https['letsencrypt']['email'] and https['letsencrypt']['domains'] -%}
   [tls.stores.default.defaultGeneratedCert]
   resolver = "letsencrypt"
     [tls.stores.default.defaultGeneratedCert.domain]
     main = "{{ https['letsencrypt']['domains'][0] }}"
     sans = [
-      {% for domain in https['letsencrypt']['domains'][1:] %}
+      {% for domain in https['letsencrypt']['domains'][1:] -%}
       "{{ domain }}",
-      {% endfor %}
+      {%- endfor %}
     ]
-  {% endif %}
+  {%- endif %}
 {% endif %}

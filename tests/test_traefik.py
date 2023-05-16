@@ -114,13 +114,13 @@ def test_letsencrypt_config(tljh_dir):
             }
         },
     }
-    assert "certificateResolvers" in cfg
-    assert "letsencrypt" in cfg["certificateResolvers"]
+    assert "certificatesResolvers" in cfg
+    assert "letsencrypt" in cfg["certificatesResolvers"]
 
-    assert cfg["certificateResolvers"]["letsencrypt"]["acme"] == {
+    assert cfg["certificatesResolvers"]["letsencrypt"]["acme"] == {
         "email": "fake@jupyter.org",
         "storage": "acme.json",
-        "httpChallenge": {"entryPoint": "http"},
+        "tlsChallenge": {},
     }
 
 
