@@ -40,6 +40,7 @@ default = {
         "letsencrypt": {
             "email": "",
             "domains": [],
+            "staging": False,
         },
     },
     "traefik_api": {

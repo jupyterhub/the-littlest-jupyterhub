@@ -47,6 +47,9 @@ X-Xsrftoken = "redact"
 [certificatesResolvers.letsencrypt.acme]
 email = "{{ https['letsencrypt']['email'] }}"
 storage = "acme.json"
+{% if https['letsencrypt']['staging'] -%}
+caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
+{%- endif %}
 [certificatesResolvers.letsencrypt.acme.tlsChallenge]
 {% endif %}
 
