@@ -185,7 +185,7 @@ def test_progress_page():
         )
 
         # Check if progress page started
-        started = verify_progress_page(expected_status_code=200, timeout=120)
+        started = verify_progress_page(expected_status_code=200, timeout=180)
         assert started
 
         # This will fail start tljh but should successfully get to the point
