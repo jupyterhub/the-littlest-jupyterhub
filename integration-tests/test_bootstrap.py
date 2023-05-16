@@ -4,6 +4,7 @@ Test running bootstrap script in different circumstances
 import concurrent.futures
 import os
 import subprocess
+import sys
 import time
 
 BASE_IMAGE = os.getenv("BASE_IMAGE", "ubuntu:20.04")
@@ -162,8 +163,13 @@ def verify_progress_page(expected_status_code, timeout):
             if b"HTTP/1.0 200 OK" in resp:
                 progress_page_status = True
                 break
-        except Exception:
-            time.sleep(2)
+            else:
+                print(
+                    f"Unexpected progress page response: {resp[:100]}", file=sys.stderr
+                )
+        except Exception as e:
+            print(f"Error getting progress page: {e}", file=sys.stderr)
+            time.sleep(1)
             continue
 
     return progress_page_status
