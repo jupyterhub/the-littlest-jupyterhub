@@ -27,7 +27,8 @@ elif machine == "x86_64":
 else:
     plat = None
 
-traefik_version = "2.9.9"
+# Traefik releases: https://github.com/traefik/traefik/releases
+traefik_version = "2.10.1"
 
 # record sha256 hashes for supported platforms here
 checksums = {
