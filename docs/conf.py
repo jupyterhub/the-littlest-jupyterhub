@@ -38,6 +38,7 @@ html_static_path = ["_static"]
 # pydata_sphinx_theme reference: https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html
 html_theme = "pydata_sphinx_theme"
 html_theme_options = {
+    "navigation_with_keys": False,
     "icon_links": [
         {
             "name": "GitHub",
