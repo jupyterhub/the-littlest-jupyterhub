@@ -106,25 +106,13 @@ def ensure_jupyterhub_package(prefix):
     hub environment be installed with pip prevents accidental mixing of python
     and conda packages!
     """
-    # Install pycurl. JupyterHub prefers pycurl over SimpleHTTPClient automatically
-    # pycurl is generally more bugfree - see https://github.com/jupyterhub/the-littlest-jupyterhub/issues/289
-    # build-essential is also generally useful to everyone involved, and required for pycurl
+    # Install dependencies for installing pycurl via pip, where build-essential
+    # is generally useful for installing other packages as well.
     apt.install_packages(["libssl-dev", "libcurl4-openssl-dev", "build-essential"])
-    conda.ensure_pip_packages(prefix, ["pycurl==7.*"], upgrade=True)
 
-    conda.ensure_pip_packages(
+    conda.ensure_pip_requirements(
         prefix,
-        [
-            "jupyterhub==4.*",
-            "jupyterhub-systemdspawner==0.17.*",
-            "jupyterhub-firstuseauthenticator==1.*",
-            "jupyterhub-nativeauthenticator==1.*",
-            "jupyterhub-ldapauthenticator==1.*",
-            "jupyterhub-tmpauthenticator==0.6.*",
-            "oauthenticator==15.*",
-            "jupyterhub-idle-culler==1.*",
-            "git+https://github.com/yuvipanda/jupyterhub-configurator@317759e17c8e48de1b1352b836dac2a230536dba",
-        ],
+        os.path.join(HERE, "requirements-hub-env.txt"),
         upgrade=True,
     )
     traefik.ensure_traefik_binary(prefix)

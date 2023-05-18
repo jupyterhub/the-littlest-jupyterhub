@@ -1,0 +1,29 @@
+# When tljh.installer runs, the hub' environment as typically found in
+# /opt/tljh/hub, is upgraded to use these packages.
+#
+# When a new release is made, the lower bounds should be incremented to the
+# latest release to help us narrow the versions based on knowing what tljh
+# version is installed from inspecting this file.
+#
+# If a dependency is bumped to a new major version, we should make a major
+# version release of tljh.
+#
+jupyterhub>=4.0.0,<5
+jupyterhub-systemdspawner>=0.17.0,<5
+jupyterhub-firstuseauthenticator>=1.0.0,<2
+jupyterhub-nativeauthenticator>=1.1.0,<2
+jupyterhub-ldapauthenticator>=1.3.2,<2
+jupyterhub-tmpauthenticator>=0.6.0,<0.7
+oauthenticator>=15.1.0,<16
+jupyterhub-idle-culler>=1.2.1,<2
+git+https://github.com/yuvipanda/jupyterhub-configurator@317759e17c8e48de1b1352b836dac2a230536dba
+
+# pycurl is installed to improve reliability and performance for when JupyterHub
+# makes web requests. JupyterHub will use tornado's CurlAsyncHTTPClient when
+# making requests over tornado's SimpleHTTPClient automatically if pycurl is
+# installed.
+#
+# ref: https://www.tornadoweb.org/en/stable/httpclient.html#module-tornado.simple_httpclient
+# ref: https://github.com/jupyterhub/the-littlest-jupyterhub/issues/289
+#
+pycurl>=7.45.2,<8
