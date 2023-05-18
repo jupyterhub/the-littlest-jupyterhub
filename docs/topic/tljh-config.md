@@ -89,9 +89,9 @@ sudo tljh-config reload proxy
 
 ### User Lists
 
-- `users.allowed` takes in usernames to whitelist
+- `users.allowed` takes in usernames to allow
 
-- `users.banned` takes in usernames to blacklist
+- `users.banned` takes in usernames to ban
 
 - `users.admin` takes in usernames to designate as admins
 
