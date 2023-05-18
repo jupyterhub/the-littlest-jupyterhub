@@ -146,9 +146,10 @@ MAMBAFORGE_CHECKSUMS = {
 
 # minimum versions of packages
 MINIMUM_VERSIONS = {
-    # if conda/mamba are lower than this, upgrade them before installing the user packages
+    # if conda/mamba/pip are lower than this, upgrade them before installing the user packages
     "mamba": "0.16.0",
     "conda": "4.10",
+    "pip": "23.1.2",
     # minimum Python version (if not matched, abort to avoid big disruptive updates)
     "python": "3.9",
 }
@@ -224,10 +225,14 @@ def ensure_user_environment(user_requirements_txt_file):
         logger.error(msg)
         raise ValueError(msg)
 
-    # at this point, we know we have an env ready with conda and are going to start installing
-    # first, check if we should upgrade/install conda and/or mamba
+    # Ensure minimum versions of the following packages by upgrading to the
+    # latest if below that version.
+    #
+    # - conda/mamba, via conda-forge
+    # - pip,         via PyPI
+    #
     to_upgrade = []
-    for pkg in ("conda", "mamba"):
+    for pkg in ("conda", "mamba", "pip"):
         version = package_versions.get(pkg)
         min_version = MINIMUM_VERSIONS[pkg]
         if not version:
@@ -241,19 +246,21 @@ def ensure_user_environment(user_requirements_txt_file):
                 )
                 to_upgrade.append(pkg)
 
-    if to_upgrade:
-        conda.ensure_conda_packages(
-            USER_ENV_PREFIX,
-            # we _could_ explicitly pin Python here,
-            # but conda already does this by default
-            to_upgrade,
-        )
-
-    conda.ensure_pip_requirements(
-        USER_ENV_PREFIX,
-        os.path.join(HERE, "requirements-user-env.txt"),
-        upgrade=True,
-    )
+        cf_pkgs_to_upgrade = list(set(to_upgrade) & {"conda", "mamba"})
+        if cf_pkgs_to_upgrade:
+            conda.ensure_conda_packages(
+                USER_ENV_PREFIX,
+                # we _could_ explicitly pin Python here,
+                # but conda already does this by default
+                cf_pkgs_to_upgrade,
+            )
+        pypi_pkgs_to_upgrade = list(set(to_upgrade) & {"pip"})
+        if pypi_pkgs_to_upgrade:
+            conda.ensure_pip_packages(
+                USER_ENV_PREFIX,
+                pypi_pkgs_to_upgrade,
+                upgrade=True,
+            )
     if is_fresh_install:
         conda.ensure_pip_requirements(
             USER_ENV_PREFIX,
