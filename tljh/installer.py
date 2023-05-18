@@ -186,20 +186,16 @@ def ensure_user_environment(user_requirements_txt_file):
 
     # Check the existing environment for what to do
     package_versions = conda.get_conda_package_versions(USER_ENV_PREFIX)
+    is_fresh_install = not package_versions
 
-    # Case 1: no existing environment
-    if not package_versions:
-        is_fresh_install = True
-
-        # 1a. no environment, but prefix exists.
-        # Abort to avoid clobbering something we don't recognize
+    if is_fresh_install:
+        # If no Python environment is detected but a folder exists we abort to
+        # avoid clobbering something we don't recognize.
         if os.path.exists(USER_ENV_PREFIX) and os.listdir(USER_ENV_PREFIX):
             msg = f"Found non-empty directory that is not a conda install in {USER_ENV_PREFIX}. Please remove it (or rename it to preserve files) and run tljh again."
             logger.error(msg)
             raise OSError(msg)
 
-        # 1b. No environment, directory empty or doesn't exist
-        # start fresh install
         logger.info("Downloading & setting up user environment...")
         installer_url, installer_sha256 = _mambaforge_url()
         with conda.download_miniconda_installer(
@@ -207,13 +203,12 @@ def ensure_user_environment(user_requirements_txt_file):
         ) as installer_path:
             conda.install_miniconda(installer_path, USER_ENV_PREFIX)
         package_versions = conda.get_conda_package_versions(USER_ENV_PREFIX)
+
         # quick sanity check: we should have conda and mamba!
         assert "conda" in package_versions
         assert "mamba" in package_versions
-    else:
-        is_fresh_install = False
 
-    # next, check Python
+    # Check Python version
     python_version = package_versions["python"]
     logger.debug(f"Found python={python_version} in {USER_ENV_PREFIX}")
     if V(python_version) < V(MINIMUM_VERSIONS["python"]):
