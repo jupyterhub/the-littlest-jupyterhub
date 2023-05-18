@@ -1,7 +1,0 @@
-# When tljh.installer runs, the users' environment as typically found in
-# /opt/tljh/user, is installed or upgraded with these packages.
-#
-# Whats listed here should be only the unconditional requirements that we have in
-# the user environment.
-#
-jupyterhub==4.*

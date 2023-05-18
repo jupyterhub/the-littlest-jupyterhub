@@ -256,11 +256,20 @@ def ensure_user_environment(user_requirements_txt_file):
                 pypi_pkgs_to_upgrade,
                 upgrade=True,
             )
+
+    # Install/upgrade the jupyterhub version in the user env based on the
+    # version specification used for the hub env.
+    #
+    with open(os.path.join(HERE, "requirements-hub-env.txt")) as f:
+        jh_version_spec = [l for l in f if l.startswith("jupyterhub>=")][0]
+    conda.ensure_pip_packages(USER_ENV_PREFIX, [jh_version_spec], upgrade=True)
+
+    # Install user environment extras for initial installations
+    #
     if is_fresh_install:
         conda.ensure_pip_requirements(
             USER_ENV_PREFIX,
             os.path.join(HERE, "requirements-user-env-extras.txt"),
-            upgrade=True,
         )
 
     if user_requirements_txt_file:
