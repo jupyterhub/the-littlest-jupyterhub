@@ -82,7 +82,7 @@ In this section we'll use the `tljh-config` tool to configure your JupyterHub's 
 For more information on `tljh-config`, see [](/topic/tljh-config).
 
 :::{important}
-By default, the following allows *anyone* with a Google account to login. 
+By default, the following allows _anyone_ with a Google account to login.
 You can set specific allowed users and admins using [](#tljh-set-user-lists).
 :::
 
@@ -124,7 +124,7 @@ You can set specific allowed users and admins using [](#tljh-set-user-lists).
 
 Administrative and regular users of your TLJH can also be easily managed with Google Groups.
 This requires a service account and a Workspace admin account that can be impersonated by the
-service account to read groups in your domain. You may need to contact your Google Workspace 
+service account to read groups in your domain. You may need to contact your Google Workspace
 administrator for help performing these steps.
 
 1. [Create a service account](https://cloud.google.com/iam/docs/service-accounts-create).
@@ -150,16 +150,16 @@ administrator for help performing these steps.
    ```
 
 1. Install the extra requirements within the hub environment.
-   
+
    ```
    source /opt/tljh/hub/bin/activate
    pip3 install oauthenticator[googlegroups]
    deactivate
    ```
 
-1. Create a configuration directory `jupyterhub_config.d` within `/opt/tljh/config/`. 
+1. Create a configuration directory `jupyterhub_config.d` within `/opt/tljh/config/`.
    Any `.py` files within this directory will be sourced for configuration.
-   
+
    ```
    sudo mkdir /opt/tljh/config/jupyterhub_config.d
    ```
@@ -170,9 +170,9 @@ administrator for help performing these steps.
    from oauthenticator.google import GoogleOAuthenticator
    c.JupyterHub.authenticator_class = GoogleOAuthenticator
 
-   c.GoogleOAuthenticator.google_service_account_keys = {'<my-domain.com>': '</path/to/your/service_account_key.json>'} 
-   c.GoogleOAuthenticator.gsuite_administrator = {'<my-domain.com>': '<my-gsuite-admin>'} 
-   c.GoogleOAuthenticator.allowed_google_groups = {'<my-domain.com>': ['example-group', 'another-example-group']} 
+   c.GoogleOAuthenticator.google_service_account_keys = {'<my-domain.com>': '</path/to/your/service_account_key.json>'}
+   c.GoogleOAuthenticator.gsuite_administrator = {'<my-domain.com>': '<my-gsuite-admin>'}
+   c.GoogleOAuthenticator.allowed_google_groups = {'<my-domain.com>': ['example-group', 'another-example-group']}
    c.GoogleOAuthenticator.admin_google_groups = {'<my-domain.com>': ['example-admin-group', 'another-example-admin-group']}
    c.GoogleOAuthenticator.client_id = '<my-tljh-client-id>'
    c.GoogleOAuthenticator.client_secret = '<my-tljh-client-secret>'
@@ -181,9 +181,8 @@ administrator for help performing these steps.
    c.GoogleOAuthenticator.oauth_callback_url = 'http(s)://<my-tljh-ip-address>/hub/oauth_callback'
    ```
 
-   See the [Google OAuthenticator documentation](https://oauthenticator.readthedocs.io/en/latest/reference/api/gen/oauthenticator.google.html) 
+   See the [Google OAuthenticator documentation](https://oauthenticator.readthedocs.io/en/latest/reference/api/gen/oauthenticator.google.html)
    for more information on these and other configuration options.
-
 
 1. Reload your configuration for the changes to take effect:
    ```
