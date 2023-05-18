@@ -2,7 +2,7 @@
 
 # Authenticate using Google
 
-The **Google Authenticator** lets users log into your JupyterHub using their
+The **Google OAuthenticator** lets users log into your JupyterHub using their
 Google user ID / password. To do so, you'll first need to register an
 application with Google, and then provide information about this
 application to your `tljh` configuration.
@@ -74,10 +74,17 @@ IP address** to it. In this case, **you must update your Google application info
 with the new IP address.
 :::
 
-## Configure your JupyterHub to use the Google Oauthenticator
+## Step 3: Configure your JupyterHub to use the Google OAuthenticator
 
-We'll use the `tljh-config` tool to configure your JupyterHub's authentication.
+### Configuration with `tljh-config`
+
+In this section we'll use the `tljh-config` tool to configure your JupyterHub's authentication.
 For more information on `tljh-config`, see [](/topic/tljh-config).
+
+:::{important}
+By default, the following allows *anyone* with a Google account to login. 
+You can set specific allowed users and admins using [](#tljh-set-user-lists).
+:::
 
 1. Log in as an administrator account to your JupyterHub.
 
@@ -113,7 +120,77 @@ For more information on `tljh-config`, see [](/topic/tljh-config).
    sudo tljh-config reload
    ```
 
-## Confirm that the new authenticator works
+### Advanced Configuration with Google Groups
+
+Administrative and regular users of your TLJH can also be easily managed with Google Groups.
+This requires a service account and a Workspace admin account that can be impersonated by the
+service account to read groups in your domain. You may need to contact your Google Workspace 
+administrator for help performing these steps.
+
+1. [Create a service account](https://cloud.google.com/iam/docs/service-accounts-create).
+
+1. [Create a service account key](https://developers.google.com/workspace/guides/create-credentials#create_credentials_for_a_service_account). Keep this key in a safe space, you will need to add it to your instance later.
+
+1. Setup [domain-wide delegation](https://developers.google.com/workspace/guides/create-credentials#optional_set_up_domain-wide_delegation_for_a_service_account) for the service account that includes the following scopes:
+   ```
+   https://www.googleapis.com/auth/admin.directory.user.readonly
+   https://www.googleapis.com/auth/admin.directory.group.readonly
+   ```
+1. Add the service account key to your instance and ensure it is _not_ readable by non-admin users of the hub.
+   :::{important}
+   The service account key is a secret. Anyone for whom you configure admin privileges on your TLJH instance will be able to access it.
+   :::
+
+1. Log in as an administrator account to your JupyterHub.
+
+1. Open a terminal window.
+
+   ```{image} ../../images/notebook/new-terminal-button.png
+   :alt: New terminal button.
+   ```
+
+1. Install the extra requirements within the hub environment.
+   
+   ```
+   source /opt/tljh/hub/bin/activate
+   pip3 install oauthenticator[googlegroups]
+   deactivate
+   ```
+
+1. Create a configuration directory `jupyterhub_config.d` within `/opt/tljh/config/`. 
+   Any `.py` files within this directory will be sourced for configuration.
+   
+   ```
+   sudo mkdir /opt/tljh/config/jupyterhub_config.d
+   ```
+
+1. Configure your hub for Google Groups-based authentication by adding the following to a `.py` file within `/opt/tljh/config/jupyterhub_config.d`.
+
+   ```python
+   from oauthenticator.google import GoogleOAuthenticator
+   c.JupyterHub.authenticator_class = GoogleOAuthenticator
+
+   c.GoogleOAuthenticator.google_service_account_keys = {'<my-domain.com>': '</path/to/your/service_account_key.json>'} 
+   c.GoogleOAuthenticator.gsuite_administrator = {'<my-domain.com>': '<my-gsuite-admin>'} 
+   c.GoogleOAuthenticator.allowed_google_groups = {'<my-domain.com>': ['example-group', 'another-example-group']} 
+   c.GoogleOAuthenticator.admin_google_groups = {'<my-domain.com>': ['example-admin-group', 'another-example-admin-group']}
+   c.GoogleOAuthenticator.client_id = '<my-tljh-client-id>'
+   c.GoogleOAuthenticator.client_secret = '<my-tljh-client-secret>'
+   c.GoogleOAuthenticator.hosted_domain = '<my-domain.com>'
+   c.GoogleOAuthenticator.login_service = '<my-login-service>'
+   c.GoogleOAuthenticator.oauth_callback_url = 'http(s)://<my-tljh-ip-address>/hub/oauth_callback'
+   ```
+
+   See the [Google OAuthenticator documentation](https://oauthenticator.readthedocs.io/en/latest/reference/api/gen/oauthenticator.google.html) 
+   for more information on these and other configuration options.
+
+
+1. Reload your configuration for the changes to take effect:
+   ```
+   sudo tljh-config reload
+   ```
+
+## Step 4: Confirm that the new authenticator works
 
 1. **Open an incognito window** in your browser (do not log out until you confirm
    that the new authentication method works!)
