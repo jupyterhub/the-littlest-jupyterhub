@@ -475,11 +475,8 @@ def main():
         os.makedirs(hub_env_prefix, exist_ok=True)
         run_subprocess(["python3", "-m", "venv", hub_env_prefix])
 
-    # Upgrade pip
-    # Keep pip version pinning in sync with the one in unit-test.yml!
-    # See changelog at https://pip.pypa.io/en/latest/news/#changelog
     logger.info("Upgrading pip...")
-    run_subprocess([hub_env_pip, "install", "--upgrade", "pip==23.1.*"])
+    run_subprocess([hub_env_pip, "install", "--upgrade", "pip"])
 
     # Install/upgrade TLJH installer
     tljh_install_cmd = [hub_env_pip, "install", "--upgrade"]
