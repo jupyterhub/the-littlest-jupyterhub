@@ -40,6 +40,7 @@ default = {
         "letsencrypt": {
             "email": "",
             "domains": [],
+            "staging": False,
         },
     },
     "traefik_api": {
@@ -239,8 +240,13 @@ def update_traefik_api(c, config):
     """
     Set traefik api endpoint credentials
     """
-    c.TraefikTomlProxy.traefik_api_username = config["traefik_api"]["username"]
-    c.TraefikTomlProxy.traefik_api_password = config["traefik_api"]["password"]
+    c.TraefikProxy.traefik_api_username = config["traefik_api"]["username"]
+    c.TraefikProxy.traefik_api_password = config["traefik_api"]["password"]
+    https = config["https"]
+    if https["enabled"]:
+        c.TraefikProxy.traefik_entrypoint = "https"
+    else:
+        c.TraefikProxy.traefik_entrypoint = "http"
 
 
 def set_cull_idle_service(config):

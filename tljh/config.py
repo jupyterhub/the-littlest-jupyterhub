@@ -249,8 +249,11 @@ def check_hub_ready():
         r = requests.get(
             "http://127.0.0.1:%d%s/hub/api" % (http_port, base_url), verify=False
         )
+        if r.status_code != 200:
+            print(f"Hub not ready: (HTTP status {r.status_code})")
         return r.status_code == 200
-    except:
+    except Exception as e:
+        print(f"Hub not ready: {e}")
         return False
 
 
