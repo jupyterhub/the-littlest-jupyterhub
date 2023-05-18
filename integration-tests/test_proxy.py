@@ -19,9 +19,7 @@ from tljh.config import (
 
 
 def send_request(url, max_sleep, validate_cert=True, username=None, password=None):
-    resp = None
     for i in range(max_sleep):
-        time.sleep(i)
         try:
             req = HTTPRequest(
                 url,
@@ -32,12 +30,12 @@ def send_request(url, max_sleep, validate_cert=True, username=None, password=Non
                 follow_redirects=True,
                 max_redirects=15,
             )
-            resp = HTTPClient().fetch(req)
-            break
+            return HTTPClient().fetch(req)
         except Exception as e:
+            if i + 1 == max_sleep:
+                raise
             print(e)
-
-    return resp
+            time.sleep(i)
 
 
 def test_manual_https(preserve_config):
@@ -104,37 +102,51 @@ def test_extra_traefik_config():
     os.makedirs(dynamic_config_dir, exist_ok=True)
 
     extra_static_config = {
-        "entryPoints": {"no_auth_api": {"address": "127.0.0.1:9999"}},
-        "api": {"dashboard": True, "entrypoint": "no_auth_api"},
+        "entryPoints": {"alsoHub": {"address": "127.0.0.1:9999"}},
     }
 
     extra_dynamic_config = {
-        "frontends": {
-            "test": {
-                "backend": "test",
-                "routes": {
-                    "rule1": {"rule": "PathPrefixStrip: /the/hub/runs/here/too"}
+        "http": {
+            "middlewares": {
+                "testHubStripPrefix": {
+                    "stripPrefix": {"prefixes": ["/the/hub/runs/here/too"]}
+                }
+            },
+            "routers": {
+                "test1": {
+                    "rule": "PathPrefix(`/hub`)",
+                    "entryPoints": ["alsoHub"],
+                    "service": "test",
                 },
-            }
-        },
-        "backends": {
-            # redirect to hub
-            "test": {"servers": {"server1": {"url": "http://127.0.0.1:15001"}}}
+                "test2": {
+                    "rule": "PathPrefix(`/the/hub/runs/here/too`)",
+                    "middlewares": ["testHubStripPrefix"],
+                    "entryPoints": ["http"],
+                    "service": "test",
+                },
+            },
+            "services": {
+                "test": {
+                    "loadBalancer": {
+                        # forward requests to the hub
+                        "servers": [{"url": "http://127.0.0.1:15001"}]
+                    }
+                }
+            },
         },
     }
 
     success = False
     for i in range(5):
-        time.sleep(i)
         try:
             with pytest.raises(HTTPClientError, match="HTTP 401: Unauthorized"):
-                # The default dashboard entrypoint requires authentication, so it should fail
-                req = HTTPRequest("http://127.0.0.1:8099/dashboard/", method="GET")
-                HTTPClient().fetch(req)
+                # The default api entrypoint requires authentication, so it should fail
+                HTTPClient().fetch("http://localhost:8099/api")
             success = True
             break
-        except Exception:
-            pass
+        except Exception as e:
+            print(e)
+            time.sleep(i)
 
     assert success == True
 
@@ -153,8 +165,9 @@ def test_extra_traefik_config():
     # load the extra config
     reload_component("proxy")
 
+    # check hub page
     # the new dashboard entrypoint shouldn't require authentication anymore
-    resp = send_request(url="http://127.0.0.1:9999/dashboard/", max_sleep=5)
+    resp = send_request(url="http://127.0.0.1:9999/hub/login", max_sleep=5)
     assert resp.code == 200
 
     # test extra dynamic config
