@@ -23,35 +23,37 @@ X-Xsrftoken = "redact"
 [entryPoints]
   [entryPoints.http]
   address = ":{{ http['port'] }}"
+
   [entryPoints.http.transport.respondingTimeouts]
   idleTimeout = "10m"
 
-  {% if https['enabled'] %}
+  {%- if https['enabled'] %}
   [entryPoints.http.http.redirections.entryPoint]
   to = "https"
   scheme = "https"
 
   [entryPoints.https]
   address = ":{{ https['port'] }}"
+
   [entryPoints.https.http.tls]
   options = "default"
 
   [entryPoints.https.transport.respondingTimeouts]
   idleTimeout = "10m"
-  {% endif %}
+  {%- endif %}
 
   [entryPoints.auth_api]
   address = "localhost:{{ traefik_api['port'] }}"
 
-{% if https['enabled'] and https['letsencrypt']['email'] and https['letsencrypt']['domains'] %}
+{%- if https['enabled'] and https['letsencrypt']['email'] and https['letsencrypt']['domains'] %}
 [certificatesResolvers.letsencrypt.acme]
 email = "{{ https['letsencrypt']['email'] }}"
 storage = "acme.json"
-{% if https['letsencrypt']['staging'] -%}
+{%- if https['letsencrypt']['staging'] %}
 caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
 {%- endif %}
 [certificatesResolvers.letsencrypt.acme.tlsChallenge]
-{% endif %}
+{%- endif %}
 
 [providers]
 providersThrottleDuration = "0s"

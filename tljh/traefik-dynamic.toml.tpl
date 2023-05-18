@@ -1,6 +1,6 @@
 # traefik.toml dynamic config (mostly TLS)
 # dynamic config in the static config file will be ignored
-{% if https['enabled'] %}
+{%- if https['enabled'] %}
 [tls]
   [tls.options.default]
   minVersion = "VersionTLS12"
@@ -12,13 +12,13 @@
     "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305",
     "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305",
   ]
-  {% if https['tls']['cert'] -%}
+  {%- if https['tls']['cert'] %}
   [tls.stores.default.defaultCertificate]
     certFile = "{{ https['tls']['cert'] }}"
     keyFile = "{{ https['tls']['key'] }}"
   {%- endif %}
 
-  {% if https['letsencrypt']['email'] and https['letsencrypt']['domains'] -%}
+  {%- if https['letsencrypt']['email'] and https['letsencrypt']['domains'] %}
   [tls.stores.default.defaultGeneratedCert]
   resolver = "letsencrypt"
     [tls.stores.default.defaultGeneratedCert.domain]
@@ -29,4 +29,4 @@
       {%- endfor %}
     ]
   {%- endif %}
-{% endif %}
+{%- endif %}
