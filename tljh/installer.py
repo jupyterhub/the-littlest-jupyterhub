@@ -106,25 +106,13 @@ def ensure_jupyterhub_package(prefix):
     hub environment be installed with pip prevents accidental mixing of python
     and conda packages!
     """
-    # Install pycurl. JupyterHub prefers pycurl over SimpleHTTPClient automatically
-    # pycurl is generally more bugfree - see https://github.com/jupyterhub/the-littlest-jupyterhub/issues/289
-    # build-essential is also generally useful to everyone involved, and required for pycurl
+    # Install dependencies for installing pycurl via pip, where build-essential
+    # is generally useful for installing other packages as well.
     apt.install_packages(["libssl-dev", "libcurl4-openssl-dev", "build-essential"])
-    conda.ensure_pip_packages(prefix, ["pycurl==7.*"], upgrade=True)
 
-    conda.ensure_pip_packages(
+    conda.ensure_pip_requirements(
         prefix,
-        [
-            "jupyterhub==4.*",
-            "jupyterhub-systemdspawner==0.17.*",
-            "jupyterhub-firstuseauthenticator==1.*",
-            "jupyterhub-nativeauthenticator==1.*",
-            "jupyterhub-ldapauthenticator==1.*",
-            "jupyterhub-tmpauthenticator==0.6.*",
-            "oauthenticator==15.*",
-            "jupyterhub-idle-culler==1.*",
-            "git+https://github.com/yuvipanda/jupyterhub-configurator@317759e17c8e48de1b1352b836dac2a230536dba",
-        ],
+        os.path.join(HERE, "requirements-hub-env.txt"),
         upgrade=True,
     )
     traefik.ensure_traefik_binary(prefix)
@@ -158,9 +146,10 @@ MAMBAFORGE_CHECKSUMS = {
 
 # minimum versions of packages
 MINIMUM_VERSIONS = {
-    # if conda/mamba are lower than this, upgrade them before installing the user packages
+    # if conda/mamba/pip are lower than this, upgrade them before installing the user packages
     "mamba": "0.16.0",
     "conda": "4.10",
+    "pip": "23.1.2",
     # minimum Python version (if not matched, abort to avoid big disruptive updates)
     "python": "3.9",
 }
@@ -197,18 +186,16 @@ def ensure_user_environment(user_requirements_txt_file):
 
     # Check the existing environment for what to do
     package_versions = conda.get_conda_package_versions(USER_ENV_PREFIX)
+    is_fresh_install = not package_versions
 
-    # Case 1: no existing environment
-    if not package_versions:
-        # 1a. no environment, but prefix exists.
-        # Abort to avoid clobbering something we don't recognize
+    if is_fresh_install:
+        # If no Python environment is detected but a folder exists we abort to
+        # avoid clobbering something we don't recognize.
         if os.path.exists(USER_ENV_PREFIX) and os.listdir(USER_ENV_PREFIX):
             msg = f"Found non-empty directory that is not a conda install in {USER_ENV_PREFIX}. Please remove it (or rename it to preserve files) and run tljh again."
             logger.error(msg)
             raise OSError(msg)
 
-        # 1b. No environment, directory empty or doesn't exist
-        # start fresh install
         logger.info("Downloading & setting up user environment...")
         installer_url, installer_sha256 = _mambaforge_url()
         with conda.download_miniconda_installer(
@@ -216,11 +203,12 @@ def ensure_user_environment(user_requirements_txt_file):
         ) as installer_path:
             conda.install_miniconda(installer_path, USER_ENV_PREFIX)
         package_versions = conda.get_conda_package_versions(USER_ENV_PREFIX)
+
         # quick sanity check: we should have conda and mamba!
         assert "conda" in package_versions
         assert "mamba" in package_versions
 
-    # next, check Python
+    # Check Python version
     python_version = package_versions["python"]
     logger.debug(f"Found python={python_version} in {USER_ENV_PREFIX}")
     if V(python_version) < V(MINIMUM_VERSIONS["python"]):
@@ -232,10 +220,14 @@ def ensure_user_environment(user_requirements_txt_file):
         logger.error(msg)
         raise ValueError(msg)
 
-    # at this point, we know we have an env ready with conda and are going to start installing
-    # first, check if we should upgrade/install conda and/or mamba
+    # Ensure minimum versions of the following packages by upgrading to the
+    # latest if below that version.
+    #
+    # - conda/mamba, via conda-forge
+    # - pip,         via PyPI
+    #
     to_upgrade = []
-    for pkg in ("conda", "mamba"):
+    for pkg in ("conda", "mamba", "pip"):
         version = package_versions.get(pkg)
         min_version = MINIMUM_VERSIONS[pkg]
         if not version:
@@ -249,19 +241,36 @@ def ensure_user_environment(user_requirements_txt_file):
                 )
                 to_upgrade.append(pkg)
 
-    if to_upgrade:
-        conda.ensure_conda_packages(
-            USER_ENV_PREFIX,
-            # we _could_ explicitly pin Python here,
-            # but conda already does this by default
-            to_upgrade,
-        )
+        cf_pkgs_to_upgrade = list(set(to_upgrade) & {"conda", "mamba"})
+        if cf_pkgs_to_upgrade:
+            conda.ensure_conda_packages(
+                USER_ENV_PREFIX,
+                # we _could_ explicitly pin Python here,
+                # but conda already does this by default
+                cf_pkgs_to_upgrade,
+            )
+        pypi_pkgs_to_upgrade = list(set(to_upgrade) & {"pip"})
+        if pypi_pkgs_to_upgrade:
+            conda.ensure_pip_packages(
+                USER_ENV_PREFIX,
+                pypi_pkgs_to_upgrade,
+                upgrade=True,
+            )
 
-    conda.ensure_pip_requirements(
-        USER_ENV_PREFIX,
-        os.path.join(HERE, "requirements-base.txt"),
-        upgrade=True,
-    )
+    # Install/upgrade the jupyterhub version in the user env based on the
+    # version specification used for the hub env.
+    #
+    with open(os.path.join(HERE, "requirements-hub-env.txt")) as f:
+        jh_version_spec = [l for l in f if l.startswith("jupyterhub>=")][0]
+    conda.ensure_pip_packages(USER_ENV_PREFIX, [jh_version_spec], upgrade=True)
+
+    # Install user environment extras for initial installations
+    #
+    if is_fresh_install:
+        conda.ensure_pip_requirements(
+            USER_ENV_PREFIX,
+            os.path.join(HERE, "requirements-user-env-extras.txt"),
+        )
 
     if user_requirements_txt_file:
         # FIXME: This currently fails hard, should fail soft and not abort installer
