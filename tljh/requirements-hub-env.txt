@@ -13,7 +13,7 @@ jupyterhub-systemdspawner>=0.17.0,<5
 jupyterhub-firstuseauthenticator>=1.0.0,<2
 jupyterhub-nativeauthenticator>=1.2.0,<2
 jupyterhub-ldapauthenticator>=1.3.2,<2
-jupyterhub-tmpauthenticator>=0.6.0,<0.7
+jupyterhub-tmpauthenticator>=1.0.0,<2
 oauthenticator>=15.1.0,<16
 jupyterhub-idle-culler>=1.2.1,<2
 git+https://github.com/yuvipanda/jupyterhub-configurator@996405d2a7017153d5abe592b8028fed7a1801bb
