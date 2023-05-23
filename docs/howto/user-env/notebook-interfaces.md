@@ -19,8 +19,8 @@ When you log in & start your server, by default the URL in your browser
 will be something like `/user/<username>/tree`. The `/tree` is what
 tells the notebook server to give you the classic notebook interface.
 
--   **For the JupyterLab interface**: change `/tree` to `/lab`.
--   **For the nteract interface**: change `/tree` to `/nteract`
+- **For the JupyterLab interface**: change `/tree` to `/lab`.
+- **For the nteract interface**: change `/tree` to `/nteract`
 
 You can play around with them and see what fits your use cases best.
 

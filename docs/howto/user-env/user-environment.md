@@ -10,7 +10,7 @@ can install packages easily.
 
 (howto/user-env/user-environment-pip)=
 
-## Installing pip packages 
+## Installing pip packages
 
 [pip](https://pypi.org/project/pip/) is the recommended tool for
 installing packages in Python from the [Python Packaging Index
@@ -41,7 +41,7 @@ now, so a lot of what you need is going to be there!
 
 (howto/user-env/user-environment-conda)=
 
-## Installing conda packages 
+## Installing conda packages
 
 Conda lets you install new languages (such as new versions of python,
 node, R, etc) as well as packages in those languages. For lots of
@@ -76,7 +76,7 @@ repository of conda packages.
 
 (howto/user-env/user-environment-apt)=
 
-## Installing apt packages 
+## Installing apt packages
 
 [apt](https://help.ubuntu.com/lts/serverguide/apt.html.en) is the
 official package manager for the [Ubuntu Linux
@@ -167,48 +167,48 @@ miniconda 4.5.4, which meant a Python 3.6 environment.
 
 To upgrade the Python version of the user environment, one can:
 
--   **Start fresh on a machine that doesn\'t have TLJH already
-    installed.**
+- **Start fresh on a machine that doesn\'t have TLJH already
+  installed.**
 
-    See the [](#install-installing) section about how to install TLJH.
+  See the [](#install-installing) section about how to install TLJH.
 
--   **Upgrade Python manually.**
+- **Upgrade Python manually.**
 
-    Because upgrading Python for existing installs can break packages
-    already installed under the old Python, upgrading your current TLJH
-    installation, will NOT upgrade the Python version of the user
-    environment, but you may do so manually.
+  Because upgrading Python for existing installs can break packages
+  already installed under the old Python, upgrading your current TLJH
+  installation, will NOT upgrade the Python version of the user
+  environment, but you may do so manually.
 
-    **Steps:**
+  **Steps:**
 
-    1.  Activate the user environment, if using ssh. If the terminal was
-        started with JupyterHub, this step can be skipped:
+  1.  Activate the user environment, if using ssh. If the terminal was
+      started with JupyterHub, this step can be skipped:
 
-        ```bash
-        source /opt/tljh/user/bin/activate
-        ```
+      ```bash
+      source /opt/tljh/user/bin/activate
+      ```
 
-    2.  Get the list of currently installed pip packages (so you can
-        later install them under the new Python):
+  2.  Get the list of currently installed pip packages (so you can
+      later install them under the new Python):
 
-        ```bash
-        pip freeze > pip_pkgs.txt
-        ```
+      ```bash
+      pip freeze > pip_pkgs.txt
+      ```
 
-    3.  Update all conda installed packages in the environment:
+  3.  Update all conda installed packages in the environment:
 
-        ```bash
-        sudo PATH=${PATH} conda update --all
-        ```
+      ```bash
+      sudo PATH=${PATH} conda update --all
+      ```
 
-    4.  Update Python version:
+  4.  Update Python version:
 
-        ```bash
-        sudo PATH=${PATH} conda install python=3.7
-        ```
+      ```bash
+      sudo PATH=${PATH} conda install python=3.7
+      ```
 
-    5.  Install the pip packages previously saved:
+  5.  Install the pip packages previously saved:
 
-        ```bash
-        pip install -r pip_pkgs.txt
-        ```
+      ```bash
+      pip install -r pip_pkgs.txt
+      ```
