@@ -27,4 +27,4 @@ The packages `gdal` and `there` are now available to all users in JupyterHub.
 If a user already had a python notebook running, they have to restart their notebook's
 kernel to make the new libraries available.
 
-See {ref}`howto-env-user-environment` for more information.
+See [](#howto/user-env/user-environment) for more information.

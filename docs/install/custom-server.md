@@ -79,13 +79,13 @@ for custom server installations.
 
 ## Step 2: Adding more users
 
-```{include} add_users.txt
+```{include} add-users.md
 
 ```
 
 ## Step 3: Install conda / pip packages for all users
 
-```{include} add_packages.txt
+```{include} add-packages.md
 
 ```
 
