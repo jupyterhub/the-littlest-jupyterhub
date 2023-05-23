@@ -72,6 +72,7 @@ $$
 
 ## Resizing your server
 
-Lots of cloud providers let your dynamically resize your server if you need it
+Many cloud providers let your dynamically resize your server if you need it
 to be larger or smaller. Usually this requires a restart of the whole server -
 active users will be logged out, but otherwise usually nothing bad happens.
+See [](#howto-admin-resize) for provider-specific instructions on resizing.
