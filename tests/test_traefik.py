@@ -240,3 +240,14 @@ def test_extra_config(tmpdir, tljh_dir):
     # Check that the defaults were updated by the extra config
     assert toml_cfg["log"]["level"] == "ERROR"
     assert toml_cfg["api"]["dashboard"] == True
+
+
+def test_listen_address(tmpdir, tljh_dir):
+    state_dir = config.STATE_DIR
+    config.set_config_value(config.CONFIG_FILE, "http.address", "127.0.0.1")
+    config.set_config_value(config.CONFIG_FILE, "https.address", "127.0.0.1")
+    traefik.ensure_traefik_config(str(state_dir))
+
+    cfg = _read_static_config(state_dir)
+    assert cfg["entryPoints"]['http']['address'] == "127.0.0.1:80"
+    assert cfg["entryPoints"]['https']['address'] == "127.0.0.1:443"

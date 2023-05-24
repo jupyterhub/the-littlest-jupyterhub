@@ -28,10 +28,12 @@ default = {
         "cpu": None,
     },
     "http": {
+        "address": "",
         "port": 80,
     },
     "https": {
         "enabled": False,
+        "address": "",
         "port": 443,
         "tls": {
             "cert": "",
