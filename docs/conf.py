@@ -107,4 +107,7 @@ ogp_use_first_image = True
 rediraffe_branch = "main"
 rediraffe_redirects = {
     # "old-file": "new-folder/new-file-name",
+    "howto/env/user-environment": "howto/user-env/user-environment",
+    "howto/env/notebook-interfaces": "howto/user-env/notebook-interfaces",
+    "howto/env/server-resources": "howto/user-env/server-resources",
 }

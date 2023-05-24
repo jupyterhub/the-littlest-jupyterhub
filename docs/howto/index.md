@@ -19,9 +19,9 @@ content/share-data
 :caption: The user environment
 :titlesonly: true
 
-env/user-environment
-env/notebook-interfaces
-env/server-resources
+user-env/user-environment
+user-env/notebook-interfaces
+user-env/server-resources
 ```
 
 ## Authentication
@@ -31,6 +31,7 @@ with your JupyterHub. For more information on Authentication, see
 [](/topic/authenticator-configuration)
 
 ```{toctree}
+:caption: Authentication
 :titlesonly: true
 
 auth/dummy
