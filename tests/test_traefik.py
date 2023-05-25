@@ -245,10 +245,12 @@ def test_extra_config(tmpdir, tljh_dir):
 def test_listen_address(tmpdir, tljh_dir):
     state_dir = config.STATE_DIR
     config.set_config_value(config.CONFIG_FILE, "https.enabled", True)
+    config.set_config_value(config.CONFIG_FILE, "https.tls.key", "/path/to/ssl.key")
+    config.set_config_value(config.CONFIG_FILE, "https.tls.cert", "/path/to/ssl.cert")
 
     config.set_config_value(config.CONFIG_FILE, "http.address", "127.0.0.1")
     config.set_config_value(config.CONFIG_FILE, "https.address", "127.0.0.1")
-    
+
     traefik.ensure_traefik_config(str(state_dir))
 
     cfg = _read_static_config(state_dir)
