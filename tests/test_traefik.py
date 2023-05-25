@@ -254,5 +254,5 @@ def test_listen_address(tmpdir, tljh_dir):
     traefik.ensure_traefik_config(str(state_dir))
 
     cfg = _read_static_config(state_dir)
-    assert cfg["entryPoints"]['http']['address'] == "127.0.0.1:80"
-    assert cfg["entryPoints"]['https']['address'] == "127.0.0.1:443"
+    assert cfg["entryPoints"]["http"]["address"] == "127.0.0.1:80"
+    assert cfg["entryPoints"]["https"]["address"] == "127.0.0.1:443"

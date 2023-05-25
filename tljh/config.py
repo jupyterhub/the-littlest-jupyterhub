@@ -248,8 +248,8 @@ def check_hub_ready():
     http_port = load_config()["http"]["port"]
     # The default config is an empty address, so it binds on all interfaces.
     # Test the connectivity on the local address.
-    if http_address == '':
-        http_address = '127.0.0.1'
+    if http_address == "":
+        http_address = "127.0.0.1"
     try:
         r = requests.get(
             "http://%s:%d%s/hub/api" % (http_address, http_port, base_url), verify=False
