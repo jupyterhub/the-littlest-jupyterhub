@@ -85,6 +85,19 @@ sudo tljh-config set https.port 8443
 sudo tljh-config reload proxy
 ```
 
+(tljh-set-listen-address)
+
+### Listen address
+
+Use `http.address` and `https.address` to set the addresses that TLJH will listen on,
+which is an empty address by default (it means it listens on all interfaces by default).
+
+```bash
+sudo tljh-config set http.address 127.0.0.1
+sudo tljh-config set https.address 127.0.0.1
+sudo tljh-config reload proxy
+```
+
 (tljh-set-user-lists)=
 
 ### User Lists

@@ -22,7 +22,7 @@ X-Xsrftoken = "redact"
 
 [entryPoints]
   [entryPoints.http]
-  address = ":{{ http['port'] }}"
+  address = "{{ http['address'] }}:{{ http['port'] }}"
 
   [entryPoints.http.transport.respondingTimeouts]
   idleTimeout = "10m"
@@ -33,7 +33,7 @@ X-Xsrftoken = "redact"
   scheme = "https"
 
   [entryPoints.https]
-  address = ":{{ https['port'] }}"
+  address = "{{ https['address'] }}:{{ https['port'] }}"
 
   [entryPoints.https.http.tls]
   options = "default"
