@@ -5,11 +5,12 @@ TLJH on Google Cloud, and how they have fixed them!
 
 ## Viewing VM instance logs
 
-In addition to [installer, JupyterHub, traefik, and other logs](#troubleshooting-logs) 
+In addition to [installer, JupyterHub, traefik, and other logs](#troubleshooting-logs)
 you can view VM instance logs on Google Cloud to help diagnose issues. These logs will contain
 detailed information and error stack traces and can be viewed from
-[Google Cloud Console -> Compute Engine -> VM instances](https://console.cloud.google.com/compute/instances). 
+[Google Cloud Console -> Compute Engine -> VM instances](https://console.cloud.google.com/compute/instances).
 Once you select your TLJH instance, select **Serial port 1 (console)**:
+
 ```{image} ../../images/providers/google/serial-port-console.png
 :alt: Serial port 1 (console) under Logs heading
 ```
@@ -37,10 +38,10 @@ your server is using.
 If your boot disk becomes full, this can cause your instance to become unavailable,
 among other problems. If your instance appears up and running in the console but
 you cannot access it at your configured external IP/domain name, this could be caused
-by a lack of disk space. 
+by a lack of disk space.
 
-You can explore your [VM logs in the console](#viewing-vm-instance-logs) to determine 
-if any issues you are experiencing indicate disk space issues. 
+You can explore your [VM logs in the console](#viewing-vm-instance-logs) to determine
+if any issues you are experiencing indicate disk space issues.
 
-To resolve these types of issues, you can 
+To resolve these types of issues, you can
 [increase your boot disk size](#howto-providers-google-resize-disk).
