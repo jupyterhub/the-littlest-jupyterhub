@@ -9,7 +9,7 @@
 # version release of tljh.
 #
 jupyterhub>=4.0.0,<5
-jupyterhub-systemdspawner>=0.17.0,<5
+jupyterhub-systemdspawner>=1.0.0,<2
 jupyterhub-firstuseauthenticator>=1.0.0,<2
 jupyterhub-nativeauthenticator>=1.2.0,<2
 jupyterhub-ldapauthenticator>=1.3.2,<2
