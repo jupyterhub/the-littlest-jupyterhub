@@ -15,5 +15,4 @@ tljh-config
 authenticator-configuration
 escape-hatch
 idle-culler
-jupyterhub-configurator
 ```

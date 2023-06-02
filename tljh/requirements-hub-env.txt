@@ -16,7 +16,6 @@ jupyterhub-ldapauthenticator>=1.3.2,<2
 jupyterhub-tmpauthenticator>=1.0.0,<2
 oauthenticator>=15.1.0,<16
 jupyterhub-idle-culler>=1.2.1,<2
-git+https://github.com/yuvipanda/jupyterhub-configurator@996405d2a7017153d5abe592b8028fed7a1801bb
 
 # pycurl is installed to improve reliability and performance for when JupyterHub
 # makes web requests. JupyterHub will use tornado's CurlAsyncHTTPClient when
