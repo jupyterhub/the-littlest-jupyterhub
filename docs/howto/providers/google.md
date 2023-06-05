@@ -9,6 +9,11 @@ Google Cloud virtual machine.
 
 ## Increasing your boot disk size
 
+Boot disks contain the operating system and boot loader for your TLJH instance. If you followed
+the [Google Cloud TLJH installation instructions](#install-google) then you created a virtual machine
+with one disk: a boot disk that will _also_ be used to hold user data in your hub. For various reasons
+you may need to change your boot disk size.
+
 Google Cloud Compute Engine supports _increasing_ (but not _decreasing_) the size of existing disks.
 If you selected a boot disk with a supported version of **Ubuntu** or **Debian** as the operating
 system, then your boot disk can be resized easily from the console with these steps.
