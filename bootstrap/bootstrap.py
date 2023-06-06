@@ -36,7 +36,7 @@ Command line flags, from "bootstrap.py --help":
                             logs can be accessed during installation. If this is
                             passed, it will pass --progress-page-server-pid=<pid>
                             to the tljh installer for later termination.
-    --version               TLJH version or Git reference. Default 'latest' is
+    --version VERSION       TLJH version or Git reference. Default 'latest' is
                             the most recent release. Partial versions can be
                             specified, for example '1', '1.0' or '1.0.0'. You
                             can also pass a branch name such as 'main' or a
