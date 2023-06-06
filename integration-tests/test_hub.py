@@ -36,7 +36,6 @@ def test_hub_version():
     assert V("4") <= V(info["version"]) <= V("5")
 
 
-@pytest.mark.asyncio
 async def test_user_code_execute():
     """
     User logs in, starts a server & executes code
@@ -68,7 +67,6 @@ async def test_user_code_execute():
         assert pwd.getpwnam(f"jupyter-{username}") is not None
 
 
-@pytest.mark.asyncio
 async def test_user_server_started_with_custom_base_url():
     """
     User logs in, starts a server with a custom base_url & executes code
@@ -123,7 +121,6 @@ async def test_user_server_started_with_custom_base_url():
         )
 
 
-@pytest.mark.asyncio
 async def test_user_admin_add():
     """
     User is made an admin, logs in and we check if they are in admin group
@@ -168,7 +165,6 @@ async def test_user_admin_add():
 
 
 # FIXME: Make this test pass
-@pytest.mark.asyncio
 @pytest.mark.xfail(reason="Unclear why this is failing")
 async def test_user_admin_remove():
     """
@@ -236,7 +232,6 @@ async def test_user_admin_remove():
         assert f"jupyter-{username}" not in grp.getgrnam("jupyterhub-admins").gr_mem
 
 
-@pytest.mark.asyncio
 async def test_long_username():
     """
     User with a long name logs in, and we check if their name is properly truncated.
@@ -277,7 +272,6 @@ async def test_long_username():
         raise
 
 
-@pytest.mark.asyncio
 async def test_user_group_adding():
     """
     User logs in, and we check if they are added to the specified group.
@@ -337,7 +331,6 @@ async def test_user_group_adding():
         raise
 
 
-@pytest.mark.asyncio
 async def test_idle_server_culled():
     """
     User logs in, starts a server & stays idle for 1 min.
@@ -460,7 +453,6 @@ async def test_idle_server_culled():
         )
 
 
-@pytest.mark.asyncio
 async def test_active_server_not_culled():
     """
     User logs in, starts a server & stays idle for 30s

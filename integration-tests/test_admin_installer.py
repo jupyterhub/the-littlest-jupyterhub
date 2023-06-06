@@ -5,7 +5,6 @@ from hubtraf.auth.dummy import login_dummy
 from hubtraf.user import User
 
 
-@pytest.mark.asyncio
 async def test_admin_login():
     """
     Test if the admin that was added during install can login with
@@ -21,7 +20,6 @@ async def test_admin_login():
         await u.ensure_server_simulate()
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "username, password",
     [
