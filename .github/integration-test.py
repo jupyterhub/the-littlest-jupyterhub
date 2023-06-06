@@ -187,10 +187,7 @@ def run_test(
 
     run_container_command(
         test_name,
-        # We abort pytest after two failures as a compromise between wanting to
-        # avoid a flood of logs while still understanding if multiple tests
-        # would fail.
-        "/opt/tljh/hub/bin/python3 -m pytest --verbose --maxfail=2 --color=yes --durations=10 --capture=no {}".format(
+        "/opt/tljh/hub/bin/python3 -m pytest --capture=no {}".format(
             " ".join(
                 [os.path.join("/srv/src/integration-tests/", f) for f in test_files]
             )
