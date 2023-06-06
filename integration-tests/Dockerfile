@@ -24,8 +24,6 @@ RUN find /etc/systemd/system \
     -not -name '*systemd-user-sessions*' \
     -exec rm \{} \;
 
-RUN mkdir -p /etc/sudoers.d
-
 RUN systemctl set-default multi-user.target
 
 STOPSIGNAL SIGRTMIN+3

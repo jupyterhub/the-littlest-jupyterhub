@@ -126,6 +126,7 @@ def ensure_usergroups():
     user.ensure_group("jupyterhub-users")
 
     logger.info("Granting passwordless sudo to JupyterHub admins...")
+    os.makedirs("/etc/sudoers.d/", exist_ok=True)
     with open("/etc/sudoers.d/jupyterhub-admins", "w") as f:
         # JupyterHub admins should have full passwordless sudo access
         f.write("%jupyterhub-admins ALL = (ALL) NOPASSWD: ALL\n")
