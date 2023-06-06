@@ -64,7 +64,6 @@ default = {
             "max_age": 0,
             "remove_named_servers": False,
         },
-        "configurator": {"enabled": False},
     },
 }
 
@@ -277,33 +276,11 @@ def set_cull_idle_service(config):
     return cull_service
 
 
-def set_configurator(config):
-    """
-    Set the JupyterHub Configurator service
-    """
-    HERE = os.path.abspath(os.path.dirname(__file__))
-    configurator_cmd = [
-        sys.executable,
-        "-m",
-        "jupyterhub_configurator.app",
-        f"--Configurator.config_file={HERE}/jupyterhub_configurator_config.py",
-    ]
-    configurator_service = {
-        "name": "configurator",
-        "url": "http://127.0.0.1:10101",
-        "command": configurator_cmd,
-    }
-
-    return configurator_service
-
-
 def update_services(c, config):
     c.JupyterHub.services = []
 
     if config["services"]["cull"]["enabled"]:
         c.JupyterHub.services.append(set_cull_idle_service(config))
-    if config["services"]["configurator"]["enabled"]:
-        c.JupyterHub.services.append(set_configurator(config))
 
 
 def _merge_dictionaries(a, b, path=None, update=True):

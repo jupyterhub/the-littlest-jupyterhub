@@ -1,12 +1,11 @@
-from jupyterhub_configurator.mixins import ConfiguratorSpawnerMixin
 from systemdspawner import SystemdSpawner
 from traitlets import Dict, List, Unicode
 
-from tljh import configurer, user
+from tljh import user
 from tljh.normalize import generate_system_username
 
 
-class CustomSpawner(SystemdSpawner):
+class UserCreatingSpawner(SystemdSpawner):
     """
     SystemdSpawner with user creation on spawn.
 
@@ -35,16 +34,3 @@ class CustomSpawner(SystemdSpawner):
                 if self.user.name in users:
                     user.ensure_user_group(system_username, group)
         return super().start()
-
-
-cfg = configurer.load_config()
-# Use the jupyterhub-configurator mixin only if configurator is enabled
-# otherwise, any bugs in the configurator backend will stop new user spawns!
-if cfg["services"]["configurator"]["enabled"]:
-    # Dynamically create the Spawner class using `type`(https://docs.python.org/3/library/functions.html?#type),
-    # based on whether or not it should inherit from ConfiguratorSpawnerMixin
-    UserCreatingSpawner = type(
-        "UserCreatingSpawner", (ConfiguratorSpawnerMixin, CustomSpawner), {}
-    )
-else:
-    UserCreatingSpawner = type("UserCreatingSpawner", (CustomSpawner,), {})
