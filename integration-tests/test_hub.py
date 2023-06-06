@@ -127,7 +127,6 @@ async def test_user_admin_add():
     """
     # This *must* be localhost, not an IP
     # aiohttp throws away cookies if we are connecting to an IP!
-    hub_url = "http://localhost"
     username = secrets.token_hex(8)
 
     assert (
@@ -174,7 +173,6 @@ async def test_user_admin_remove():
     """
     # This *must* be localhost, not an IP
     # aiohttp throws away cookies if we are connecting to an IP!
-    hub_url = "http://localhost"
     username = secrets.token_hex(8)
 
     assert (
@@ -236,9 +234,6 @@ async def test_long_username():
     """
     User with a long name logs in, and we check if their name is properly truncated.
     """
-    # This *must* be localhost, not an IP
-    # aiohttp throws away cookies if we are connecting to an IP!
-    hub_url = "http://localhost"
     username = secrets.token_hex(32)
 
     assert (
@@ -278,7 +273,6 @@ async def test_user_group_adding():
     """
     # This *must* be localhost, not an IP
     # aiohttp throws away cookies if we are connecting to an IP!
-    hub_url = "http://localhost"
     username = secrets.token_hex(8)
     groups = {"somegroup": [username]}
     # Create the group we want to add the user to
@@ -336,9 +330,6 @@ async def test_idle_server_culled():
     User logs in, starts a server & stays idle for 1 min.
     (the user's server should be culled during this period)
     """
-    # This *must* be localhost, not an IP
-    # aiohttp throws away cookies if we are connecting to an IP!
-    hub_url = "http://localhost"
     username = secrets.token_hex(8)
 
     assert (
@@ -460,7 +451,6 @@ async def test_active_server_not_culled():
     """
     # This *must* be localhost, not an IP
     # aiohttp throws away cookies if we are connecting to an IP!
-    hub_url = "http://localhost"
     username = secrets.token_hex(8)
 
     assert (
