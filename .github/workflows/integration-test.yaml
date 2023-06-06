@@ -101,24 +101,14 @@ jobs:
         run: |
           .github/integration-test.py show-logs basic-tests
 
-      - name: pytest integration-tests/test_admin_installer.py
+      - name: pytest integration-tests/test_simplest_plugin.py integration-tests/test_admin_installer.py
         run: |
-          .github/integration-test.py run-test admin-tests \
-              --installer-args "--admin admin:admin" \
+          .github/integration-test.py run-test admin-plugin-tests \
+              --installer-args "--admin admin:admin --plugin /srv/src/integration-tests/plugins/simplest" \
               ${{ matrix.extra_flags }} \
-              test_admin_installer.py
-        timeout-minutes: 5
-      - name: show logs
-        run: |
-          .github/integration-test.py show-logs admin-tests
-
-      - name: pytest integration-tests/test_simplest_plugin.py
-        run: |
-          .github/integration-test.py run-test plugin-tests \
-              --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
-              ${{ matrix.extra_flags }} \
+              test_admin_installer.py \
               test_simplest_plugin.py
         timeout-minutes: 5
       - name: show logs
         run: |
-          .github/integration-test.py show-logs plugin-tests
+          .github/integration-test.py show-logs admin-plugin-tests
