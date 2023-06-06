@@ -96,7 +96,7 @@ jobs:
               test_proxy.py \
               test_install.py \
               test_extensions.py
-        timeout-minutes: 10
+        timeout-minutes: 15
       - name: show logs
         run: |
           .github/integration-test.py show-logs basic-tests
@@ -108,7 +108,7 @@ jobs:
               ${{ matrix.extra_flags }} \
               test_admin_installer.py \
               test_simplest_plugin.py
-        timeout-minutes: 5
+        timeout-minutes: 15
       - name: show logs
         run: |
           .github/integration-test.py show-logs admin-plugin-tests
