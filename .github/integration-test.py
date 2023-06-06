@@ -25,7 +25,7 @@ def _cli(args, log_failure=True):
         return subprocess.check_output(cmd, text=True, stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError:
         if log_failure:
-            print(f"{cmd} failed!")
+            print(f"{cmd} failed!", flush=True)
         raise
 
 
@@ -114,7 +114,7 @@ def stop_container(container_name):
         pass
 
 
-def run_command(container_name, cmd):
+def run_command(container_name, command):
     """
     Run a bash command in a running container and error if it fails
     """
@@ -125,8 +125,9 @@ def run_command(container_name, cmd):
         container_name,
         "/bin/bash",
         "-c",
-        cmd,
+        command,
     ]
+    print(f"\nRunning: {cmd}\n----------------------------------------", flush=True)
     subprocess.run(cmd, check=True, text=True)
 
 
@@ -163,36 +164,25 @@ def run_test(
     # released version), and from a previous major-like version.
     #
     if upgrade_from:
-        run_command(
-            container_name,
-            f"python3 /srv/src/bootstrap/bootstrap.py --version={upgrade_from}",
-        )
-    run_command(
-        container_name, f"python3 /srv/src/bootstrap/bootstrap.py {installer_args}"
-    )
+        command = f"python3 /srv/src/bootstrap/bootstrap.py --version={upgrade_from}"
+        run_command(container_name, command)
+
+    command = f"python3 /srv/src/bootstrap/bootstrap.py {installer_args}"
+    run_command(container_name, command)
 
     # Install pkgs from requirements in hub's pip, where
     # the bootstrap script installed the others
-    run_command(
-        container_name,
-        "/opt/tljh/hub/bin/python3 -m pip install -r /srv/src/integration-tests/requirements.txt",
-    )
+    command = "/opt/tljh/hub/bin/python3 -m pip install -r /srv/src/integration-tests/requirements.txt"
+    run_command(container_name, command)
 
     # show environment
-    run_command(
-        container_name,
-        "/opt/tljh/hub/bin/python3 -m pip freeze",
-    )
+    command = "/opt/tljh/hub/bin/python3 -m pip freeze"
+    run_command(container_name, command)
 
     # run tests
-    run_command(
-        container_name,
-        "/opt/tljh/hub/bin/python3 -m pytest {}".format(
-            " ".join(
-                [os.path.join("/srv/src/integration-tests/", f) for f in test_files]
-            )
-        ),
-    )
+    test_files = " ".join([f"/srv/src/integration-tests/{f}" for f in test_files])
+    command = f"/opt/tljh/hub/bin/python3 -m pytest {test_files}"
+    run_command(container_name, command)
 
 
 def show_logs(container_name):
@@ -201,16 +191,9 @@ def show_logs(container_name):
 
     tljh logs ref: https://tljh.jupyter.org/en/latest/troubleshooting/logs.html
     """
-    systemctl = run_command(
-        container_name, "systemctl --no-pager status jupyterhub traefik"
-    )
-    print(systemctl)
-
-    jupyterhub_logs = run_command(container_name, "journalctl --no-pager -u jupyterhub")
-    print(jupyterhub_logs)
-
-    traefik_logs = run_command(container_name, "journalctl --no-pager -u traefik")
-    print(traefik_logs)
+    run_command(container_name, "systemctl --no-pager status jupyterhub traefik")
+    run_command(container_name, "journalctl --no-pager -u jupyterhub")
+    run_command(container_name, "journalctl --no-pager -u traefik")
 
 
 def main():

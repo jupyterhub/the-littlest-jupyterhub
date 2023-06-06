@@ -89,6 +89,7 @@ jobs:
       #     script.
       #
       - name: pytest integration-tests/
+        id: basic-tests
         run: |
           .github/integration-test.py run-test basic-tests \
               ${{ matrix.extra_flags }} \
@@ -98,10 +99,12 @@ jobs:
               test_extensions.py
         timeout-minutes: 15
       - name: show logs
+        if: always() && steps.basic-tests.outcome != 'skipped'
         run: |
           .github/integration-test.py show-logs basic-tests
 
       - name: pytest integration-tests/test_simplest_plugin.py integration-tests/test_admin_installer.py
+        id: admin-plugin-tests
         run: |
           .github/integration-test.py run-test admin-plugin-tests \
               --installer-args "--admin admin:admin --plugin /srv/src/integration-tests/plugins/simplest" \
@@ -110,5 +113,6 @@ jobs:
               test_simplest_plugin.py
         timeout-minutes: 15
       - name: show logs
+        if: always() && steps.admin-plugin-tests.outcome != 'skipped'
         run: |
           .github/integration-test.py show-logs admin-plugin-tests
