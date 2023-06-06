@@ -183,32 +183,32 @@ def run_subprocess(cmd, *args, **kwargs):
         return output
 
 
+def get_os_release_variable(key):
+    """
+    Return value for key from /etc/os-release
+
+    /etc/os-release is a bash file, so should use bash to parse it.
+
+    Returns empty string if key is not found.
+    """
+    return (
+        subprocess.check_output(
+            [
+                "/bin/bash",
+                "-c",
+                "source /etc/os-release && echo ${{{key}}}".format(key=key),
+            ]
+        )
+        .decode()
+        .strip()
+    )
+
+
 def ensure_host_system_can_install_tljh():
     """
     Check if TLJH is installable in current host system and exit with a clear
     error message otherwise.
     """
-
-    def get_os_release_variable(key):
-        """
-        Return value for key from /etc/os-release
-
-        /etc/os-release is a bash file, so should use bash to parse it.
-
-        Returns empty string if key is not found.
-        """
-        return (
-            subprocess.check_output(
-                [
-                    "/bin/bash",
-                    "-c",
-                    "source /etc/os-release && echo ${{{key}}}".format(key=key),
-                ]
-            )
-            .decode()
-            .strip()
-        )
-
     # Require Ubuntu 20.04+ or Debian 11+
     distro = get_os_release_variable("ID")
     version = get_os_release_variable("VERSION_ID")
