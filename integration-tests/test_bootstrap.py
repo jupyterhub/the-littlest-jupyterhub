@@ -4,6 +4,10 @@ This test file tests bootstrap.py ability to
 - error verbosely for old ubuntu
 - error verbosely for no systemd
 - start and provide a progress page web server
+
+FIXME: The last test stands out and could be part of the other tests, and the
+       first two could be more like unit tests. Ideally, this file is
+       significantly reduced.
 """
 import concurrent.futures
 import os

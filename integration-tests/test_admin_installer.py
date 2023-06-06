@@ -4,13 +4,14 @@ import pytest
 from hubtraf.auth.dummy import login_dummy
 from hubtraf.user import User
 
+hub_url = "http://localhost"
+
 
 async def test_admin_login():
     """
     Test if the admin that was added during install can login with
     the password provided.
     """
-    hub_url = "http://localhost"
     username = "admin"
     password = "admin"
 
@@ -32,8 +33,6 @@ async def test_unsuccessful_login(username, password):
     """
     Ensure nobody but the admin that was added during install can login
     """
-    hub_url = "http://localhost"
-
     async with User(username, hub_url, partial(login_dummy, password="")) as u:
         user_logged_in = await u.login()
 

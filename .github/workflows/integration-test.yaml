@@ -64,8 +64,8 @@ jobs:
 
       - name: Run bootstrap tests (Runs in/Builds ${{ matrix.distro_image }} derived image)
         run: |
-          pytest --capture=no integration-tests/test_bootstrap.py
-        timeout-minutes: 20
+          pytest integration-tests/test_bootstrap.py
+        timeout-minutes: 10
         env:
           # integration-tests/test_bootstrap.py will build and start containers
           # based on this environment variable. This is similar to how
@@ -73,64 +73,52 @@ jobs:
           # setting the base image via a Dockerfile ARG.
           BASE_IMAGE: ${{ matrix.distro_image }}
 
-      # We build a docker image from wherein we will work
-      - name: Build systemd image (Builds ${{ matrix.distro_image }} derived image)
+      - name: Build systemd image, derived from ${{ matrix.distro_image }}
         run: |
           .github/integration-test.py build-image \
               --build-arg "BASE_IMAGE=${{ matrix.distro_image }}"
 
-      # FIXME: Make the logic below easier to follow.
-      # - In short, setting BOOTSTRAP_PIP_SPEC here, specifies from what
-      #   location the tljh python package should be installed from. In this
-      #   GitHub Workflow's test job, we provide a remote reference to itself as
-      #   found on GitHub - this could be the HEAD of a PR branch or the default
-      #   branch on merge.
-      #
       # Overview of how this logic influences the end result.
       # - integration-test.yaml:
-      #   Runs integration-test.py by passing --bootstrap-pip-spec flag with a
-      #   reference to the pull request on GitHub.
-      # - integration-test.py:
-      #   Starts a pre-build systemd container, setting the
-      #   TLJH_BOOTSTRAP_PIP_SPEC based on its passed --bootstrap-pip-spec value.
-      # - systemd container:
-      #   Runs bootstrap.py
-      # - bootstrap.py
-      #   Makes use of TLJH_BOOTSTRAP_PIP_SPEC environment variable to install
-      #   the tljh package from a given location, which could be a local git
-      #   clone of this repo where setup.py resides, or a reference to some
-      #   GitHub branch for example.
-      - name: Set BOOTSTRAP_PIP_SPEC value
-        run: |
-          BOOTSTRAP_PIP_SPEC="git+https://github.com/$GITHUB_REPOSITORY.git@$GITHUB_REF"
-          echo "BOOTSTRAP_PIP_SPEC=$BOOTSTRAP_PIP_SPEC" >> $GITHUB_ENV
-          echo $BOOTSTRAP_PIP_SPEC
-
-      - name: Run basic tests (Runs in ${{ matrix.distro_image }} derived image)
+      #
+      #   - Runs integration-test.py build-image, to build a systemd based image
+      #     to use later.
+      #   - Runs integration-test.py run-tests, to start a systemd based
+      #     container, run the bootstrap.py script inside it, and then run
+      #     pytest from the hub python environment setup by the bootstrap
+      #     script.
+      #
+      - name: pytest integration-tests/
         run: |
           .github/integration-test.py run-test basic-tests \
-              --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
               ${{ matrix.extra_flags }} \
               test_hub.py \
               test_proxy.py \
               test_install.py \
               test_extensions.py
-        timeout-minutes: 15
+        timeout-minutes: 10
+      - name: show logs
+        run: |
+          .github/integration-test.py show-logs basic-tests
 
-      - name: Run admin tests (Runs in ${{ matrix.distro_image }} derived image)
+      - name: pytest integration-tests/test_admin_installer.py
         run: |
           .github/integration-test.py run-test admin-tests \
               --installer-args "--admin admin:admin" \
-              --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
               ${{ matrix.extra_flags }} \
               test_admin_installer.py
-        timeout-minutes: 15
+        timeout-minutes: 5
+      - name: show logs
+        run: |
+          .github/integration-test.py show-logs admin-tests
 
-      - name: Run plugin tests (Runs in ${{ matrix.distro_image }} derived image)
+      - name: pytest integration-tests/test_simplest_plugin.py
         run: |
           .github/integration-test.py run-test plugin-tests \
-              --bootstrap-pip-spec "$BOOTSTRAP_PIP_SPEC" \
               --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
               ${{ matrix.extra_flags }} \
               test_simplest_plugin.py
-        timeout-minutes: 15
+        timeout-minutes: 5
+      - name: show logs
+        run: |
+          .github/integration-test.py show-logs plugin-tests
