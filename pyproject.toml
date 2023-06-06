@@ -32,3 +32,24 @@ target_version = [
     "py310",
     "py311",
 ]
+
+
+# pytest is used for running Python based tests
+#
+# ref: https://docs.pytest.org/en/stable/
+#
+[tool.pytest.ini_options]
+addopts = "--verbose --color=yes --durations=10 --maxfail=1 --cov=tljh"
+asyncio_mode = "auto"
+
+
+# pytest-cov / coverage is used to measure code coverage of tests
+#
+# ref: https://coverage.readthedocs.io/en/stable/config.html
+#
+[tool.coverage.run]
+parallel = true
+omit = [
+  "tests/**",
+  "integration-tests/**",
+]
