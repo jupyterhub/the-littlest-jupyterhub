@@ -260,7 +260,7 @@ async def test_user_group_adding():
 
 async def test_idle_server_culled():
     """
-    User logs in, starts a server & stays idle for 1 min.
+    User logs in, starts a server & stays idle for a while.
     (the user's server should be culled during this period)
     """
     username = secrets.token_hex(8)
@@ -291,12 +291,12 @@ async def test_idle_server_culled():
             )
         ).wait()
     )
-    # Cull servers and users after 30s, regardless of activity
+    # Cull servers and users after a while, regardless of activity
     assert (
         0
         == await (
             await asyncio.create_subprocess_exec(
-                *TLJH_CONFIG_PATH, "set", "services.cull.max_age", "30"
+                *TLJH_CONFIG_PATH, "set", "services.cull.max_age", "15"
             )
         ).wait()
     )
@@ -349,7 +349,7 @@ async def test_idle_server_culled():
 
         # Wait for culling
         # step 1: check if the server is still running
-        timeout = 100
+        timeout = 30
 
         async def server_stopped():
             """Has the server been stopped?"""
@@ -365,7 +365,7 @@ async def test_idle_server_culled():
 
         # step 2. wait for user to be deleted
         async def user_removed():
-            # Check that after 60s, the user has been culled
+            # Check that after a while, the user has been culled
             r = await hub_api_request()
             print(f"{r.status} {r.url}")
             return r.status == 403
@@ -379,7 +379,7 @@ async def test_idle_server_culled():
 
 async def test_active_server_not_culled():
     """
-    User logs in, starts a server & stays idle for 30s
+    User logs in, starts a server & stays idle for a while
     (the user's server should not be culled during this period).
     """
     # This *must* be localhost, not an IP
@@ -412,12 +412,12 @@ async def test_active_server_not_culled():
             )
         ).wait()
     )
-    # Cull servers and users after 30s, regardless of activity
+    # Cull servers and users after a while, regardless of activity
     assert (
         0
         == await (
             await asyncio.create_subprocess_exec(
-                *TLJH_CONFIG_PATH, "set", "services.cull.max_age", "60"
+                *TLJH_CONFIG_PATH, "set", "services.cull.max_age", "30"
             )
         ).wait()
     )
@@ -441,7 +441,7 @@ async def test_active_server_not_culled():
         assert r.status == 200
 
         async def server_has_stopped():
-            # Check that after 30s, we can still reach the user's server
+            # Check that after a while, we can still reach the user's server
             r = await u.session.get(user_url, allow_redirects=False)
             print(f"{r.status} {r.url}")
             return r.status != 200
@@ -450,7 +450,7 @@ async def test_active_server_not_culled():
             await exponential_backoff(
                 server_has_stopped,
                 "User's server is still reachable (good!)",
-                timeout=30,
+                timeout=15,
             )
         except asyncio.TimeoutError:
             # timeout error means the test passed - the server didn't go away while we were waiting
