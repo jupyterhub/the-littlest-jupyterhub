@@ -26,8 +26,10 @@ class UserCreatingSpawner(SystemdSpawner):
         user.ensure_user(system_username)
         user.ensure_user_group(system_username, "jupyterhub-users")
         if self.user.admin:
+            self.disable_user_sudo = False
             user.ensure_user_group(system_username, "jupyterhub-admins")
         else:
+            self.disable_user_sudo = True
             user.remove_user_group(system_username, "jupyterhub-admins")
         if self.user_groups:
             for group, users in self.user_groups.items():
