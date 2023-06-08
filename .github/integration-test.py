@@ -167,7 +167,7 @@ def run_test(
         command = f"python3 /srv/src/bootstrap/bootstrap.py --version={upgrade_from}"
         run_command(container_name, command)
 
-    command = f"python3 /srv/src/bootstrap/bootstrap.py {installer_args}"
+    command = f"python3 /srv/src/bootstrap/bootstrap.py {' '.join(installer_args)}"
     run_command(container_name, command)
 
     # Install pkgs from requirements in hub's pip, where
@@ -219,7 +219,7 @@ def main():
     copy_parser.add_argument("dest")
 
     run_test_parser = subparsers.add_parser("run-test")
-    run_test_parser.add_argument("--installer-args", default="")
+    run_test_parser.add_argument("--installer-args", action="append")
     run_test_parser.add_argument("--upgrade-from", default="")
     run_test_parser.add_argument("--bootstrap-pip-spec", default="/srv/src")
     run_test_parser.add_argument("container_name")

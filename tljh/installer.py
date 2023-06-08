@@ -284,7 +284,7 @@ def ensure_user_environment(user_requirements_txt_file):
 
 def ensure_admins(admin_password_list):
     """
-    Setup given list of users as admins.
+    Setup given list of user[:password] strings as admins.
     """
     os.makedirs(STATE_DIR, mode=0o700, exist_ok=True)
 

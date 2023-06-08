@@ -12,8 +12,8 @@ async def test_admin_login():
     Test if the admin that was added during install can login with
     the password provided.
     """
-    username = "admin"
-    password = "admin"
+    username = "test-admin-username"
+    password = "test-admin-password"
 
     async with User(username, hub_url, partial(login_dummy, password=password)) as u:
         await u.login()
@@ -24,8 +24,8 @@ async def test_admin_login():
 @pytest.mark.parametrize(
     "username, password",
     [
-        ("admin", ""),
-        ("admin", "wrong_passw"),
+        ("test-admin-username", ""),
+        ("test-admin-username", "wrong_passw"),
         ("user", "password"),
     ],
 )
