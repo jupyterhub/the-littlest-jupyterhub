@@ -83,36 +83,35 @@ jobs:
       #
       #   - Runs integration-test.py build-image, to build a systemd based image
       #     to use later.
+      #
       #   - Runs integration-test.py run-tests, to start a systemd based
       #     container, run the bootstrap.py script inside it, and then run
       #     pytest from the hub python environment setup by the bootstrap
       #     script.
       #
+      # About passed --installer-args:
+      #
+      #   - --admin admin:admin
+      #     Required for test_admin_installer.py
+      #
+      #   - --plugin /srv/src/integration-tests/plugins/simplest
+      #     Required for test_simplest_plugin.py
+      #
       - name: pytest integration-tests/
-        id: basic-tests
+        id: integration-tests
         run: |
-          .github/integration-test.py run-test basic-tests \
+          .github/integration-test.py run-test integration-tests \
+              --installer-args "--admin test-admin-username:test-admin-password" \
+              --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
               ${{ matrix.extra_flags }} \
               test_hub.py \
               test_proxy.py \
               test_install.py \
-              test_extensions.py
-        timeout-minutes: 15
-      - name: show logs
-        if: always() && steps.basic-tests.outcome != 'skipped'
-        run: |
-          .github/integration-test.py show-logs basic-tests
-
-      - name: pytest integration-tests/test_simplest_plugin.py integration-tests/test_admin_installer.py
-        id: admin-plugin-tests
-        run: |
-          .github/integration-test.py run-test admin-plugin-tests \
-              --installer-args "--admin admin:admin --plugin /srv/src/integration-tests/plugins/simplest" \
-              ${{ matrix.extra_flags }} \
+              test_extensions.py \
               test_admin_installer.py \
               test_simplest_plugin.py
         timeout-minutes: 15
       - name: show logs
-        if: always() && steps.admin-plugin-tests.outcome != 'skipped'
+        if: always() && steps.integration-tests.outcome != 'skipped'
         run: |
-          .github/integration-test.py show-logs admin-plugin-tests
+          .github/integration-test.py show-logs integration-tests
