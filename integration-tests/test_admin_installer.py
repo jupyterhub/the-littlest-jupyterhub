@@ -7,33 +7,22 @@ from hubtraf.user import User
 hub_url = "http://localhost"
 
 
-async def test_admin_login():
-    """
-    Test if the admin that was added during install can login with
-    the password provided.
-    """
-    username = "test-admin-username"
-    password = "test-admin-password"
-
-    async with User(username, hub_url, partial(login_dummy, password=password)) as u:
-        await u.login()
-        # If user is not logged in, this will raise an exception
-        await u.ensure_server_simulate(timeout=60, spawn_refresh_time=5)
-
-
 @pytest.mark.parametrize(
-    "username, password",
+    "username, password, expect_successful_login",
     [
-        ("test-admin-username", ""),
-        ("test-admin-username", "wrong_passw"),
-        ("user", "password"),
+        ("test-admin-username", "wrong_passw", False),
+        ("test-admin-username", "test-admin-password", True),
+        ("test-admin-username", "", False),
+        ("user", "", False),
+        ("user", "password", False),
     ],
 )
-async def test_unsuccessful_login(username, password):
+async def test_pre_configured_admin_login(username, password, expect_successful_login):
     """
-    Ensure nobody but the admin that was added during install can login
+    Verify that the "--admin <username>:<password>" flag allows that user/pass
+    combination and no other user can login.
     """
-    async with User(username, hub_url, partial(login_dummy, password="")) as u:
+    async with User(username, hub_url, partial(login_dummy, password=password)) as u:
         user_logged_in = await u.login()
 
-    assert user_logged_in == False
+    assert user_logged_in == expect_successful_login
