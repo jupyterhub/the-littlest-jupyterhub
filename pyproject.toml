@@ -41,6 +41,9 @@ target_version = [
 [tool.pytest.ini_options]
 addopts = "--verbose --color=yes --durations=10 --maxfail=1 --cov=tljh"
 asyncio_mode = "auto"
+filterwarnings = [
+    'ignore:.*Module bootstrap was never imported.*:coverage.exceptions.CoverageWarning',
+]
 
 
 # pytest-cov / coverage is used to measure code coverage of tests
