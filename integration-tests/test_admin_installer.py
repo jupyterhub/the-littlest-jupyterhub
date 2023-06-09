@@ -4,7 +4,7 @@ import pytest
 from hubtraf.auth.dummy import login_dummy
 from hubtraf.user import User
 
-hub_url = "http://localhost"
+HUB_URL = "http://localhost"
 
 
 @pytest.mark.parametrize(
@@ -22,7 +22,7 @@ async def test_pre_configured_admin_login(username, password, expect_successful_
     Verify that the "--admin <username>:<password>" flag allows that user/pass
     combination and no other user can login.
     """
-    async with User(username, hub_url, partial(login_dummy, password=password)) as u:
+    async with User(username, HUB_URL, partial(login_dummy, password=password)) as u:
         user_logged_in = await u.login()
 
     assert user_logged_in == expect_successful_login

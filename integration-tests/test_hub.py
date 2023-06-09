@@ -21,16 +21,16 @@ TLJH_CONFIG_PATH = ["sudo", "tljh-config"]
 
 # This *must* be localhost, not an IP
 # aiohttp throws away cookies if we are connecting to an IP!
-hub_url = "http://localhost"
+HUB_URL = "http://localhost"
 
 
 def test_hub_up():
-    r = requests.get(hub_url)
+    r = requests.get(HUB_URL)
     r.raise_for_status()
 
 
 def test_hub_version():
-    r = requests.get(hub_url + "/hub/api")
+    r = requests.get(HUB_URL + "/hub/api")
     r.raise_for_status()
     info = r.json()
     assert V("4") <= V(info["version"]) <= V("5")
@@ -57,14 +57,11 @@ async def test_user_code_execute():
         ).wait()
     )
 
-    async with User(username, hub_url, partial(login_dummy, password="")) as u:
-        await u.login()
+    async with User(username, HUB_URL, partial(login_dummy, password="")) as u:
+        assert await u.login()
         await u.ensure_server_simulate(timeout=60, spawn_refresh_time=5)
         await u.start_kernel()
         await u.assert_code_output("5 * 4", "20", 5, 5)
-
-        # Assert that the user exists
-        assert pwd.getpwnam(f"jupyter-{username}") is not None
 
 
 async def test_user_server_started_with_custom_base_url():
@@ -74,7 +71,7 @@ async def test_user_server_started_with_custom_base_url():
     # This *must* be localhost, not an IP
     # aiohttp throws away cookies if we are connecting to an IP!
     base_url = "/custom-base"
-    hub_url = f"http://localhost{base_url}"
+    custom_hub_url = f"{HUB_URL}{base_url}"
     username = secrets.token_hex(8)
 
     assert (
@@ -100,8 +97,8 @@ async def test_user_server_started_with_custom_base_url():
         ).wait()
     )
 
-    async with User(username, hub_url, partial(login_dummy, password="")) as u:
-        await u.login()
+    async with User(username, custom_hub_url, partial(login_dummy, password="")) as u:
+        assert await u.login()
         await u.ensure_server_simulate(timeout=60, spawn_refresh_time=5)
 
         # unset base_url to avoid problems with other tests
@@ -152,8 +149,8 @@ async def test_user_admin_add():
         ).wait()
     )
 
-    async with User(username, hub_url, partial(login_dummy, password="")) as u:
-        await u.login()
+    async with User(username, HUB_URL, partial(login_dummy, password="")) as u:
+        assert await u.login()
         await u.ensure_server_simulate(timeout=60, spawn_refresh_time=5)
 
         # Assert that the user exists
@@ -185,8 +182,8 @@ async def test_long_username():
     )
 
     try:
-        async with User(username, hub_url, partial(login_dummy, password="")) as u:
-            await u.login()
+        async with User(username, HUB_URL, partial(login_dummy, password="")) as u:
+            assert await u.login()
             await u.ensure_server_simulate(timeout=60, spawn_refresh_time=5)
 
             # Assert that the user exists
@@ -238,8 +235,8 @@ async def test_user_group_adding():
     )
 
     try:
-        async with User(username, hub_url, partial(login_dummy, password="")) as u:
-            await u.login()
+        async with User(username, HUB_URL, partial(login_dummy, password="")) as u:
+            assert await u.login()
             await u.ensure_server_simulate(timeout=60, spawn_refresh_time=5)
 
             # Assert that the user exists
@@ -307,9 +304,9 @@ async def test_idle_server_culled():
         ).wait()
     )
 
-    async with User(username, hub_url, partial(login_dummy, password="")) as u:
+    async with User(username, HUB_URL, partial(login_dummy, password="")) as u:
         # Login the user
-        await u.login()
+        assert await u.login()
 
         # Start user's server
         await u.ensure_server_simulate(timeout=60, spawn_refresh_time=5)
@@ -428,8 +425,8 @@ async def test_active_server_not_culled():
         ).wait()
     )
 
-    async with User(username, hub_url, partial(login_dummy, password="")) as u:
-        await u.login()
+    async with User(username, HUB_URL, partial(login_dummy, password="")) as u:
+        assert await u.login()
         # Start user's server
         await u.ensure_server_simulate(timeout=60, spawn_refresh_time=5)
         # Assert that the user exists
