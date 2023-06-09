@@ -148,8 +148,8 @@ MAMBAFORGE_CHECKSUMS = {
 # minimum versions of packages
 MINIMUM_VERSIONS = {
     # if conda/mamba/pip are lower than this, upgrade them before installing the user packages
-    "mamba": "0.16.0",
-    "conda": "4.10",
+    "mamba": "1.4.2",
+    "conda": "23.3.1",
     "pip": "23.1.2",
     # minimum Python version (if not matched, abort to avoid big disruptive updates)
     "python": "3.9",
