@@ -35,7 +35,6 @@ jobs:
         include:
           - name: "Debian 11, Py 3.9"
             distro_image: "debian:11"
-            runs_on: "ubuntu-22.04"
             extra_flags: ""
           - name: "Ubuntu 20.04, Py 3.8"
             distro_image: "ubuntu:20.04"
@@ -58,27 +57,6 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"
-
-      # FIXME: The test_bootstrap.py script has duplicated logic to run build
-      #        and start images and run things in them. This makes tests slower,
-      #        and adds code to maintain. Let's try to remove it.
-      #
-      #        - bootstrap.py's failure detections, put in unit tests?
-      #        - bootstrap.py's --show-progress-page test, include as integration test?
-      #
-      - name: Install integration-tests/requirements.txt for test_bootstrap.py
-        run: pip install -r integration-tests/requirements.txt
-
-      - name: Run bootstrap tests (Runs in/Builds ${{ matrix.distro_image }} derived image)
-        run: |
-          pytest integration-tests/test_bootstrap.py
-        timeout-minutes: 10
-        env:
-          # integration-tests/test_bootstrap.py will build and start containers
-          # based on this environment variable. This is similar to how
-          # .github/integration-test.py build-image can take a --build-arg
-          # setting the base image via a Dockerfile ARG.
-          BASE_IMAGE: ${{ matrix.distro_image }}
 
       - name: Build systemd image, derived from ${{ matrix.distro_image }}
         run: |
@@ -122,3 +100,45 @@ jobs:
         if: always() && steps.integration-tests.outcome != 'skipped'
         run: |
           .github/integration-test.py show-logs integration-tests
+
+  integration-tests-bootstrap:
+    # integration tests run in a container,
+    # not in the worker, so this version is not relevant to the tests
+    # and can be the same for all tested versions
+    runs-on: ubuntu-22.04
+
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: "Ubuntu 22.04 Py 3.10 (test_bootstrap.py)"
+            distro_image: "ubuntu:22.04"
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      # FIXME: The test_bootstrap.py script has duplicated logic to run build
+      #        and start images and run things in them. This makes tests slower,
+      #        and adds code to maintain. Let's try to remove it.
+      #
+      #        - bootstrap.py's failure detections, put in unit tests?
+      #        - bootstrap.py's --show-progress-page test, include as a normal
+      #          integration test?
+      #
+      - name: Install integration-tests/requirements.txt for test_bootstrap.py
+        run: pip install -r integration-tests/requirements.txt
+
+      - name: Run bootstrap tests (Runs in/Builds ${{ matrix.distro_image }} derived image)
+        run: |
+          pytest integration-tests/test_bootstrap.py
+        timeout-minutes: 10
+        env:
+          # integration-tests/test_bootstrap.py will build and start containers
+          # based on this environment variable. This is similar to how
+          # .github/integration-test.py build-image can take a --build-arg
+          # setting the base image via a Dockerfile ARG.
+          BASE_IMAGE: ${{ matrix.distro_image }}
