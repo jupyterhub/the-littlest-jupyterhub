@@ -108,6 +108,14 @@ def _specifier(version):
 
 
 @pytest.mark.parametrize(
+    # - distro: None, mambaforge, or miniforge
+    # - distro_version: https://github.com/conda-forge/miniforge/releases
+    # - expected_versions: versions of python, conda, and mamba in user env
+    #
+    # TLJH of a specific version comes with a specific distro_version as
+    # declared in installer.py's MAMBAFORGE_VERSION variable, and it comes with
+    # python, conda, and mamba of certain versions.
+    #
     "distro, distro_version, expected_versions",
     [
         # No previous install, start fresh
@@ -135,9 +143,9 @@ def _specifier(version):
             "mambaforge",
             "4.10.3-7",
             {
+                "python": "3.9.*",
                 "conda": "4.10.3",
                 "mamba": "0.16.0",
-                "python": "3.9.*",
             },
         ),
         # simulate missing mamba
@@ -147,9 +155,9 @@ def _specifier(version):
             "miniforge",
             "4.10.3-7",
             {
+                "python": "3.9.*",
                 "conda": "4.10.3",
                 "mamba": ">=1.1.0",
-                "python": "3.9.*",
             },
         ),
         # too-old Python (3.7), abort
