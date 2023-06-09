@@ -249,6 +249,8 @@ def ensure_user_environment(user_requirements_txt_file):
                 # we _could_ explicitly pin Python here,
                 # but conda already does this by default
                 cf_pkgs_to_upgrade,
+                # use force to avoid RemoveError: 'requests' is a dependency of conda
+                force=True,
             )
         pypi_pkgs_to_upgrade = list(set(to_upgrade) & {"pip"})
         if pypi_pkgs_to_upgrade:

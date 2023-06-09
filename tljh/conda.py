@@ -98,7 +98,7 @@ def install_miniconda(installer_path, prefix):
     fix_permissions(prefix)
 
 
-def ensure_conda_packages(prefix, packages):
+def ensure_conda_packages(prefix, packages, force=False):
     """
     Ensure packages (from conda-forge) are installed in the conda prefix.
 
@@ -110,13 +110,16 @@ def ensure_conda_packages(prefix, packages):
         # fallback on conda if mamba is not present (e.g. for mamba to install itself)
         conda_executable = os.path.join(prefix, "bin", "conda")
 
+    cmd = [conda_executable, "install", "--yes"]
+
+    if force:
+        cmd += ["--force"]
+
     abspath = os.path.abspath(prefix)
 
     utils.run_subprocess(
-        [
-            conda_executable,
-            "install",
-            "-y",
+        cmd
+        + [
             "-c",
             "conda-forge",  # Make customizable if we ever need to
             "--prefix",
