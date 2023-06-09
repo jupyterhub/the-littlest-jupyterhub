@@ -113,7 +113,9 @@ def ensure_conda_packages(prefix, packages, force=False):
     cmd = [conda_executable, "install", "--yes"]
 
     if force:
-        cmd += ["--force"]
+        # use force-reinstall, e.g. for conda/mamba to ensure everything is okay
+        # avoids problems with RemoveError upgrading conda from old versions
+        cmd += ["--force-reinstall"]
 
     abspath = os.path.abspath(prefix)
 
