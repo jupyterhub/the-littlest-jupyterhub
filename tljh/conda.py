@@ -98,7 +98,7 @@ def install_miniconda(installer_path, prefix):
     fix_permissions(prefix)
 
 
-def ensure_conda_packages(prefix, packages, force=False):
+def ensure_conda_packages(prefix, packages, force_reinstall=False):
     """
     Ensure packages (from conda-forge) are installed in the conda prefix.
 
@@ -112,7 +112,7 @@ def ensure_conda_packages(prefix, packages, force=False):
 
     cmd = [conda_executable, "install", "--yes"]
 
-    if force:
+    if force_reinstall:
         # use force-reinstall, e.g. for conda/mamba to ensure everything is okay
         # avoids problems with RemoveError upgrading conda from old versions
         cmd += ["--force-reinstall"]

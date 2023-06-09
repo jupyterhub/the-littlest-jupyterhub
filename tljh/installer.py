@@ -148,8 +148,8 @@ MAMBAFORGE_CHECKSUMS = {
 # minimum versions of packages
 MINIMUM_VERSIONS = {
     # if conda/mamba/pip are lower than this, upgrade them before installing the user packages
-    "mamba": "1.4.2",
-    "conda": "23.3.1",
+    "mamba": "0.16.0",
+    "conda": "4.10",
     "pip": "23.1.2",
     # minimum Python version (if not matched, abort to avoid big disruptive updates)
     "python": "3.9",
@@ -242,23 +242,36 @@ def ensure_user_environment(user_requirements_txt_file):
                 )
                 to_upgrade.append(pkg)
 
-        cf_pkgs_to_upgrade = list(set(to_upgrade) & {"conda", "mamba"})
-        if cf_pkgs_to_upgrade:
-            conda.ensure_conda_packages(
-                USER_ENV_PREFIX,
-                # we _could_ explicitly pin Python here,
-                # but conda already does this by default
-                cf_pkgs_to_upgrade,
-                # use force to avoid RemoveError: 'requests' is a dependency of conda
-                force=True,
-            )
-        pypi_pkgs_to_upgrade = list(set(to_upgrade) & {"pip"})
-        if pypi_pkgs_to_upgrade:
-            conda.ensure_pip_packages(
-                USER_ENV_PREFIX,
-                pypi_pkgs_to_upgrade,
-                upgrade=True,
-            )
+    # force reinstall conda/mamba to ensure a basically consistent env
+    # avoids issues with RemoveError: 'requests' is a dependency of conda
+    if not is_fresh_install:
+        # force-reinstall doesn't upgrade packages
+        # it reinstalls them in-place
+        # only include packages already installed here
+        to_reinstall = {"conda", "mamba"} & set(package_versions)
+        logger.info(
+            f"Reinstalling {', '.join(to_reinstall)} to ensure a consistent environment"
+        )
+        conda.ensure_conda_packages(
+            USER_ENV_PREFIX, list(to_reinstall), force_reinstall=True
+        )
+
+    cf_pkgs_to_upgrade = list(set(to_upgrade) & {"conda", "mamba"})
+    if cf_pkgs_to_upgrade:
+        conda.ensure_conda_packages(
+            USER_ENV_PREFIX,
+            # we _could_ explicitly pin Python here,
+            # but conda already does this by default
+            cf_pkgs_to_upgrade,
+        )
+
+    pypi_pkgs_to_upgrade = list(set(to_upgrade) & {"pip"})
+    if pypi_pkgs_to_upgrade:
+        conda.ensure_pip_packages(
+            USER_ENV_PREFIX,
+            pypi_pkgs_to_upgrade,
+            upgrade=True,
+        )
 
     # Install/upgrade the jupyterhub version in the user env based on the
     # version specification used for the hub env.
