@@ -65,4 +65,5 @@ admin/systemd
 
 providers/digitalocean
 providers/azure
+providers/google
 ```
