@@ -36,7 +36,7 @@ Command line flags, from "bootstrap.py --help":
                             logs can be accessed during installation. If this is
                             passed, it will pass --progress-page-server-pid=<pid>
                             to the tljh installer for later termination.
-    --version               TLJH version or Git reference. Default 'latest' is
+    --version VERSION       TLJH version or Git reference. Default 'latest' is
                             the most recent release. Partial versions can be
                             specified, for example '1', '1.0' or '1.0.0'. You
                             can also pass a branch name such as 'main' or a
@@ -183,32 +183,32 @@ def run_subprocess(cmd, *args, **kwargs):
         return output
 
 
+def get_os_release_variable(key):
+    """
+    Return value for key from /etc/os-release
+
+    /etc/os-release is a bash file, so should use bash to parse it.
+
+    Returns empty string if key is not found.
+    """
+    return (
+        subprocess.check_output(
+            [
+                "/bin/bash",
+                "-c",
+                "source /etc/os-release && echo ${{{key}}}".format(key=key),
+            ]
+        )
+        .decode()
+        .strip()
+    )
+
+
 def ensure_host_system_can_install_tljh():
     """
     Check if TLJH is installable in current host system and exit with a clear
     error message otherwise.
     """
-
-    def get_os_release_variable(key):
-        """
-        Return value for key from /etc/os-release
-
-        /etc/os-release is a bash file, so should use bash to parse it.
-
-        Returns empty string if key is not found.
-        """
-        return (
-            subprocess.check_output(
-                [
-                    "/bin/bash",
-                    "-c",
-                    "source /etc/os-release && echo ${{{key}}}".format(key=key),
-                ]
-            )
-            .decode()
-            .strip()
-        )
-
     # Require Ubuntu 20.04+ or Debian 11+
     distro = get_os_release_variable("ID")
     version = get_os_release_variable("VERSION_ID")
@@ -364,7 +364,7 @@ def main():
     )
     parser.add_argument(
         "--version",
-        default="latest",
+        default="",
         help=(
             "TLJH version or Git reference. "
             "Default 'latest' is the most recent release. "
@@ -478,21 +478,26 @@ def main():
     logger.info("Upgrading pip...")
     run_subprocess([hub_env_pip, "install", "--upgrade", "pip"])
 
-    # Install/upgrade TLJH installer
+    # pip install TLJH installer based on
+    #
+    #   1. --version, _resolve_git_version is used
+    #   2. TLJH_BOOTSTRAP_PIP_SPEC (then also respect TLJH_BOOTSTRAP_DEV)
+    #   3. latest, _resolve_git_version is used
+    #
     tljh_install_cmd = [hub_env_pip, "install", "--upgrade"]
-    if os.environ.get("TLJH_BOOTSTRAP_DEV", "no") == "yes":
-        logger.info("Selected TLJH_BOOTSTRAP_DEV=yes...")
-        tljh_install_cmd.append("--editable")
-
     bootstrap_pip_spec = os.environ.get("TLJH_BOOTSTRAP_PIP_SPEC")
-    if not bootstrap_pip_spec:
+    if args.version or not bootstrap_pip_spec:
+        version_to_resolve = args.version or "latest"
         bootstrap_pip_spec = (
             "git+https://github.com/jupyterhub/the-littlest-jupyterhub.git@{}".format(
-                _resolve_git_version(args.version)
+                _resolve_git_version(version_to_resolve)
             )
         )
-
+    elif os.environ.get("TLJH_BOOTSTRAP_DEV", "no") == "yes":
+        logger.info("Selected TLJH_BOOTSTRAP_DEV=yes...")
+        tljh_install_cmd.append("--editable")
     tljh_install_cmd.append(bootstrap_pip_spec)
+
     if initial_setup:
         logger.info("Installing TLJH installer...")
     else:
