@@ -242,21 +242,42 @@ def ensure_user_environment(user_requirements_txt_file):
                 )
                 to_upgrade.append(pkg)
 
-        cf_pkgs_to_upgrade = list(set(to_upgrade) & {"conda", "mamba"})
-        if cf_pkgs_to_upgrade:
-            conda.ensure_conda_packages(
-                USER_ENV_PREFIX,
-                # we _could_ explicitly pin Python here,
-                # but conda already does this by default
-                cf_pkgs_to_upgrade,
-            )
-        pypi_pkgs_to_upgrade = list(set(to_upgrade) & {"pip"})
-        if pypi_pkgs_to_upgrade:
-            conda.ensure_pip_packages(
-                USER_ENV_PREFIX,
-                pypi_pkgs_to_upgrade,
-                upgrade=True,
-            )
+    # force reinstall conda/mamba to ensure a basically consistent env
+    # avoids issues with RemoveError: 'requests' is a dependency of conda
+    # only do this for 'old' conda versions known to have a problem
+    # we don't know how old, but we know 4.10 is affected and 23.1 is not
+    if not is_fresh_install and V(package_versions.get("conda", "0")) < V("23.1"):
+        # force-reinstall doesn't upgrade packages
+        # it reinstalls them in-place
+        # only reinstall packages already present
+        to_reinstall = []
+        for pkg in ["conda", "mamba"]:
+            if pkg in package_versions:
+                # add version pin to avoid upgrades
+                to_reinstall.append(f"{pkg}=={package_versions[pkg]}")
+        logger.info(
+            f"Reinstalling {', '.join(to_reinstall)} to ensure a consistent environment"
+        )
+        conda.ensure_conda_packages(
+            USER_ENV_PREFIX, list(to_reinstall), force_reinstall=True
+        )
+
+    cf_pkgs_to_upgrade = list(set(to_upgrade) & {"conda", "mamba"})
+    if cf_pkgs_to_upgrade:
+        conda.ensure_conda_packages(
+            USER_ENV_PREFIX,
+            # we _could_ explicitly pin Python here,
+            # but conda already does this by default
+            cf_pkgs_to_upgrade,
+        )
+
+    pypi_pkgs_to_upgrade = list(set(to_upgrade) & {"pip"})
+    if pypi_pkgs_to_upgrade:
+        conda.ensure_pip_packages(
+            USER_ENV_PREFIX,
+            pypi_pkgs_to_upgrade,
+            upgrade=True,
+        )
 
     # Install/upgrade the jupyterhub version in the user env based on the
     # version specification used for the hub env.
