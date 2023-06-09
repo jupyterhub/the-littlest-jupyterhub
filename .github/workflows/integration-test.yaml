@@ -59,7 +59,14 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Install integration-tests/requirements.txt
+      # FIXME: The test_bootstrap.py script has duplicated logic to run build
+      #        and start images and run things in them. This makes tests slower,
+      #        and adds code to maintain. Let's try to remove it.
+      #
+      #        - bootstrap.py's failure detections, put in unit tests?
+      #        - bootstrap.py's --show-progress-page test, include as integration test?
+      #
+      - name: Install integration-tests/requirements.txt for test_bootstrap.py
         run: pip install -r integration-tests/requirements.txt
 
       - name: Run bootstrap tests (Runs in/Builds ${{ matrix.distro_image }} derived image)
