@@ -244,11 +244,17 @@ def ensure_user_environment(user_requirements_txt_file):
 
     # force reinstall conda/mamba to ensure a basically consistent env
     # avoids issues with RemoveError: 'requests' is a dependency of conda
-    if not is_fresh_install:
+    # only do this for 'old' conda versions known to have a problem
+    # we don't know how old, but we know 4.10 is affected and 23.1 is not
+    if not is_fresh_install and V(package_versions.get("conda", "0")) < V("23.1"):
         # force-reinstall doesn't upgrade packages
         # it reinstalls them in-place
-        # only include packages already installed here
-        to_reinstall = {"conda", "mamba"} & set(package_versions)
+        # only reinstall packages already present
+        to_reinstall = []
+        for pkg in ["conda", "mamba"]:
+            if pkg in package_versions:
+                # add version pin to avoid upgrades
+                to_reinstall.append(f"{pkg}=={package_versions[pkg]}")
         logger.info(
             f"Reinstalling {', '.join(to_reinstall)} to ensure a consistent environment"
         )
