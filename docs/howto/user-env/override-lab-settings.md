@@ -1,6 +1,6 @@
 (topic-override-lab-settings)=
 
-# Overriding Default JupyterLab Settings
+# Setting New Default JupyterLab Settings
 
 If you or other users of your hub tend to use JupyterLab as your default notebook app, 
 then you may want to override some of the default settings for the users of your hub. 
