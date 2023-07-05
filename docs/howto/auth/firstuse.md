@@ -2,6 +2,18 @@
 
 # Let users choose a password when they first log in
 
+```{warning}
+This documentation is not being updated regularly and may be out of date. Due to
+that, please only use this _as a complement_ to the official
+[FirstUseAuthenticator documentation].
+
+[FirstUseAuthenticator documentation]: https://github.com/jupyterhub/firstuseauthenticator#readme
+
+Going onwards, the goal is to ensure we have good documentation in the
+FirstUseAuthenticator project and reference that instead of maintaining similar
+documentation in this project also.
+```
+
 The **First Use Authenticator** lets users choose their own password.
 Upon their first log-in attempt, whatever password they use will be stored
 as their password for subsequent log in attempts. This is

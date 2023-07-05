@@ -2,6 +2,18 @@
 
 # Authenticate using GitHub Usernames
 
+```{warning}
+This documentation has not been updated recently, and a major version of
+OAuthenticator has been released since it was. Due to that, please only use this
+_as a complement_ to the official [OAuthenticator documentation].
+
+[OAuthenticator documentation]: https://oauthenticator.readthedocs.io/en/latest/tutorials/provider-specific-setup/providers/github.html
+
+Going onwards, the goal is to ensure we have good documentation in the
+OAuthenticator project and reference that instead of maintaining similar
+documentation in this project also.
+```
+
 The **GitHub Authenticator** lets users log into your JupyterHub using their
 GitHub user ID / password. To do so, you'll first need to register an
 application with GitHub, and then provide information about this
