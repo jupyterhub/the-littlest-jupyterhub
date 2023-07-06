@@ -53,6 +53,18 @@ Topic guides provide in-depth explanations of specific topics.
 topic/index
 ```
 
+## Reference
+
+The reference documentation is meant to provide narrowly scoped technical
+descriptions that other documentation can link to for details.
+
+```{toctree}
+:maxdepth: 2
+:titlesonly: true
+
+reference/index
+```
+
 ## Troubleshooting
 
 In time, all systems have issues that need to be debugged. Troubleshooting
