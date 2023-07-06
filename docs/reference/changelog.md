@@ -2,7 +2,7 @@
 
 ## 1.0
 
-### 1.0.0b1 - 2023-07-06
+### 1.0.0b1 - 2023-07-07
 
 ````{warning}
 This is a beta release.
@@ -78,7 +78,7 @@ The changes in the respective environments between TLJH version 0.2.0 and
 | [firstuseauthenticator](https://github.com/jupyterhub/firstuseauthenticator)   | 1.\*             | >=1.0.0,<2         | [Changelog](https://oauthenticator.readthedocs.io/en/latest/reference/changelog.html)    | An optional way to authenticate users                |
 | [tmpauthenticator](https://github.com/jupyterhub/tmpauthenticator)             | 0.6.\*           | >=1.0.0,<2         | [Changelog](https://github.com/jupyterhub/tmpauthenticator/blob/HEAD/CHANGELOG.md)       | An optional way to authenticate users                |
 | [nativeauthenticator](https://github.com/jupyterhub/nativeauthenticator)       | 1.\*             | >=1.2.0,<2         | [Changelog](https://github.com/jupyterhub/nativeauthenticator/blob/HEAD/CHANGELOG.md)    | An optional way to authenticate users                |
-| [oauthenticator](https://github.com/jupyterhub/oauthenticator)                 | 14.\*            | >=16.0.1,<17       | [Changelog](https://oauthenticator.readthedocs.io/en/latest/reference/changelog.html)    | An optional way to authenticate users                |
+| [oauthenticator](https://github.com/jupyterhub/oauthenticator)                 | 14.\*            | >=16.0.2,<17       | [Changelog](https://oauthenticator.readthedocs.io/en/latest/reference/changelog.html)    | An optional way to authenticate users                |
 | [ldapauthenticator](https://github.com/jupyterhub/ldapauthenticator)           | 1.\*             | >=1.3.2,<2         | [Changelog](https://github.com/jupyterhub/ldapauthenticator/blob/HEAD/CHANGELOG.md)      | An optional way to authenticate users                |
 | [pip](https://github.com/pypa/pip)                                             | 21.3.\*          | >=23.1.2           | [Changelog](https://pip.pypa.io/en/stable/news/)                                         | -                                                    |
 
@@ -101,7 +101,7 @@ The changes in the respective environments between TLJH version 0.2.0 and
 
 #### Maintenance and upkeep improvements
 
-- breaking: update oauthenticator from 15.1.0 to >=16.0.1,<17, make tljh auth docs link out [#924](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/924) ([@consideRatio](https://github.com/consideRatio), [@manics](https://github.com/manics), [@minrk](https://github.com/minrk))
+- breaking: update oauthenticator from 15.1.0 to >=16.0.2,<17, make tljh auth docs link out [#924](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/924) ([@consideRatio](https://github.com/consideRatio), [@manics](https://github.com/manics), [@minrk](https://github.com/minrk))
 - test refactor: add comment about python/conda/mamba [#921](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/921) ([@consideRatio](https://github.com/consideRatio))
 - --force-reinstall old conda to ensure it's working before we try to install conda packages [#920](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/920) ([@minrk](https://github.com/minrk), [@consideRatio](https://github.com/consideRatio))
 - test refactor: put bootstrap tests in an isolated job, save ~3 min in each of the integration test jobs [#919](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/919) ([@consideRatio](https://github.com/consideRatio), [@minrk](https://github.com/minrk))
