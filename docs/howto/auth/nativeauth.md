@@ -2,6 +2,18 @@
 
 # Let users sign up with a username and password
 
+```{warning}
+This documentation is not being updated regularly and may be out of date. Due to
+that, please only use this _as a complement_ to the official
+[NativeAuthenticator documentation].
+
+[NativeAuthenticator documentation]: https://native-authenticator.readthedocs.io/en/latest/
+
+Going onwards, the goal is to ensure we have good documentation in the
+NativeAuthenticator project and reference that instead of maintaining similar
+documentation in this project also.
+```
+
 The **Native Authenticator** lets users signup for creating a new username
 and password.
 When they signup, they won't be able to login until they are authorized by an

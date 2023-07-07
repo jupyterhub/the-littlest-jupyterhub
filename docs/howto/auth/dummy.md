@@ -2,9 +2,11 @@
 
 # Authenticate _any_ user with a single shared password
 
+```{warning}
 The **Dummy Authenticator** lets _any_ user log in with the given password.
 This authenticator is **extremely insecure**, so do not use it if you can
 avoid it.
+```
 
 ## Enabling the authenticator
 
