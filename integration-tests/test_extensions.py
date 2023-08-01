@@ -39,9 +39,8 @@ def test_labextensions():
     ]
 
     for e in extensions:
-        assert f"{e} \x1b[32m enabled \x1b[0m" in proc.stdout.decode()
-
-    # Ensure we have 'OK' messages in our stdout, to make sure everything is importable
-    assert proc.stderr.decode() == "      - Validating: \x1b[32mOK\x1b[0m\n" * len(
-        extensions
-    )
+        # jupyter labextension lists outputs to stderr
+        out = proc.stderr.decode()
+        enabled_ok_pattern = re.compile(fr"{e}.*enabled.*OK")
+        matches = enabled_ok_pattern.search(proc.stderr.decode())
+        assert matches is not None
