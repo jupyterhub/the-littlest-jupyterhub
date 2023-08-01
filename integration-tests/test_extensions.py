@@ -13,7 +13,7 @@ def test_serverextensions():
 
     extensions = [
         "jupyterlab",
-        "nbgitpuller",
+        # "nbgitpuller",
         "jupyter_resource_usage",
     ]
 
