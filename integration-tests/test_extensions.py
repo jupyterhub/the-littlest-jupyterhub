@@ -7,7 +7,7 @@ def test_serverextensions():
     """
     # jupyter-serverextension writes to stdout and stderr weirdly
     proc = subprocess.run(
-        ["/opt/tljh/user/bin/jupyter-serverextension", "list", "--sys-prefix"],
+        ["/opt/tljh/user/bin/jupyter-server", "extension", "list", "--sys-prefix"],
         stderr=subprocess.PIPE,
     )
 
