@@ -42,5 +42,5 @@ def test_labextensions():
         # jupyter labextension lists outputs to stderr
         out = proc.stderr.decode()
         enabled_ok_pattern = re.compile(fr"{e}.*enabled.*OK")
-        matches = enabled_ok_pattern.search(proc.stderr.decode())
+        matches = enabled_ok_pattern.search(out)
         assert matches is not None
