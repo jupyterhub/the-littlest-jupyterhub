@@ -21,21 +21,21 @@ def test_serverextensions():
         assert e in proc.stderr.decode()
 
 
-def test_nbextensions():
+def test_labextensions():
     """
-    Validate nbextensions we want are installed & enabled
+    Validate JupyterLab extensions we want are installed & enabled
     """
-    # jupyter-nbextension writes to stdout and stderr weirdly
+    # jupyter-labextension writes to stdout and stderr weirdly
     proc = subprocess.run(
-        ["/opt/tljh/user/bin/jupyter-nbextension", "list", "--sys-prefix"],
+        ["/opt/tljh/user/bin/jupyter-labextension", "list"],
         stderr=subprocess.PIPE,
         stdout=subprocess.PIPE,
     )
 
     extensions = [
-        "jupyter_resource_usage/main",
-        # This is what ipywidgets nbextension is called
-        "jupyter-js-widgets/extension",
+        "@jupyter-server/resource-usage",
+        # This is what ipywidgets lab extension is called
+        "@jupyter-widgets/jupyterlab-manager",
     ]
 
     for e in extensions:
