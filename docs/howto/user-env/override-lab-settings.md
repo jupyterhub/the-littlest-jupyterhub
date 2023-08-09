@@ -73,23 +73,23 @@ setting snippet to add to the `overrides.json` file later.
    We only want to change the **Selected Theme**, so we don't need to include
    the other theme-related settings for CSS and the scrollbar.
 
-:::{note}
-To apply overrides for more than one setting, separate each setting by commas. For example,
-if you _also_ wanted to change the interval at which the notebook autosaves your content, you can use
+   :::{note}
+   To apply overrides for more than one setting, separate each setting by commas. For example,
+   if you _also_ wanted to change the interval at which the notebook autosaves your content, you can use
 
-```json
-{
-  "@jupyterlab/apputils-extension:themes": {
-    "theme": "JupyterLab Dark"
-  },
+   ```json
+   {
+     "@jupyterlab/apputils-extension:themes": {
+       "theme": "JupyterLab Dark"
+     },
 
-  "@jupyterlab/docmanager-extension:plugin": {
-    "autosaveInterval": 30
-  }
-}
-```
+     "@jupyterlab/docmanager-extension:plugin": {
+       "autosaveInterval": 30
+     }
+   }
+   ```
 
-:::
+   :::
 
 ## Step 3: Apply the Overrides to the Hub
 
