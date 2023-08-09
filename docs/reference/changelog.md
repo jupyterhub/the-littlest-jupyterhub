@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- The default user interface changed to JupyterLab, to restore previous behavior
+  see the documentation about [User interfaces](#howto/user-env/notebook-interfaces).
+
 ## 1.0
 
 ### 1.0.0b1 - 2023-07-07
