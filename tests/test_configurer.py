@@ -58,8 +58,7 @@ def test_app_default():
     Test default application with no config overrides.
     """
     c = apply_mock_config({})
-    # default_url is not set, so JupyterHub will pick default.
-    assert "default_url" not in c.Spawner
+    assert c.Spawner.default_url == "/lab"
 
 
 def test_app_classic():
