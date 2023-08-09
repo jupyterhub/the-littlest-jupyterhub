@@ -63,6 +63,7 @@ setting snippet to add to the `overrides.json` file later.
    setting of `@jupyterlab/apputils-extension:theme` as can be seen above.
 
 1. Build your `json` snippet. In this case, our snippet should look like this:
+
    ```json
    {
      "@jupyterlab/apputils-extension:themes": {
@@ -70,6 +71,7 @@ setting snippet to add to the `overrides.json` file later.
      }
    }
    ```
+
    We only want to change the **Selected Theme**, so we don't need to include
    the other theme-related settings for CSS and the scrollbar.
 
