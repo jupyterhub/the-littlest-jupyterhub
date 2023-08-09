@@ -22,6 +22,7 @@ content/share-data
 user-env/user-environment
 user-env/notebook-interfaces
 user-env/server-resources
+user-env/override-lab-settings
 ```
 
 ## Authentication
