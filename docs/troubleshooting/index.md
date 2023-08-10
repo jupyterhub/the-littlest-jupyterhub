@@ -1,3 +1,5 @@
+(troubleshooting)=
+
 # Troubleshooting
 
 In time, all systems have issues that need to be debugged. Troubleshooting
