@@ -12,6 +12,7 @@ three-environments
 security
 customizing-installer
 installer-actions
+installer-upgrade-actions
 tljh-config
 authenticator-configuration
 escape-hatch
