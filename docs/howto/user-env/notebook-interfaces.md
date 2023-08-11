@@ -5,7 +5,7 @@
 By default a user starting a server will see the JupyterLab interface. This can
 be changed with TLJH config `user_environment.default_app` or with the
 JupyterHub config
-{external:py:attribute}`jupyterhub.spawner.Spawner.default_url` directly.
+{external:py:attr}`jupyterhub.spawner.Spawner.default_url` directly.
 
 The TLJH config supports the options `jupyterlab` and `classic`, which
 translates to a `Spawner.default_url` config of `/lab` and `/tree`.

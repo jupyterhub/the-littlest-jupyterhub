@@ -20,6 +20,7 @@ author = "Project Jupyter Contributors"
 #
 extensions = [
     "sphinx_copybutton",
+    "sphinx.ext.intersphinx",
     "sphinxext.opengraph",
     "sphinxext.rediraffe",
     "myst_parser",

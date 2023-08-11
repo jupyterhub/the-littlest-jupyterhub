@@ -75,7 +75,7 @@ The changes in the respective environments between TLJH version 0.2.0 and
 
 | Dependency changes in the _hub environment_                                    | Version in 0.2.0 | Version in 1.0.0b1 | Changelog link                                                                           | Note                                                 |
 | ------------------------------------------------------------------------------ | ---------------- | ------------------ | ---------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| [jupyterhub](https://github.com/jupyterhub/jupyterhub)                         | 1.\*             | >=4.0.1,<5         | [Changelog](https://jupyterhub.readthedocs.io/en/stable/reference/changelog.html)        | Running in the `jupyterhub` systemd service          |
+| [jupyterhub](https://github.com/jupyterhub/jupyterhub)                         | 1.\*             | >=4.0.2,<5         | [Changelog](https://jupyterhub.readthedocs.io/en/stable/reference/changelog.html)        | Running in the `jupyterhub` systemd service          |
 | [traefik](https://github.com/traefik/traefik)                                  | 1.7.33           | 2.10.1             | [Changelog](https://github.com/traefik/traefik/blob/master/CHANGELOG.md)                 | Running in the `traefik` systemd service             |
 | [traefik-proxy](https://github.com/jupyterhub/traefik-proxy)                   | 0.3.\*           | >=1.1.0,<2         | [Changelog](https://jupyterhub-traefik-proxy.readthedocs.io/en/latest/changelog.html)    | Run by jupyterhub, controls `traefik`                |
 | [systemdspawner](https://github.com/jupyterhub/systemdspawner)                 | 0.16.\*          | >=1.0.1,<2         | [Changelog](https://github.com/jupyterhub/systemdspawner/blob/master/CHANGELOG.md)       | Run by jupyterhub, controls user servers via systemd |
@@ -89,7 +89,7 @@ The changes in the respective environments between TLJH version 0.2.0 and
 
 | Dependency changes in the _user environment_             | Version in 0.2.0 | Version in 1.0.0 | Changelog link                                                                    | Note                     |
 | -------------------------------------------------------- | ---------------- | ---------------- | --------------------------------------------------------------------------------- | ------------------------ |
-| [jupyterhub](https://github.com/jupyterhub/jupyterhub)   | 1.\*             | >=4.0.1,<5       | [Changelog](https://jupyterhub.readthedocs.io/en/stable/reference/changelog.html) | Always upgraded.         |
+| [jupyterhub](https://github.com/jupyterhub/jupyterhub)   | 1.\*             | >=4.0.2,<5       | [Changelog](https://jupyterhub.readthedocs.io/en/stable/reference/changelog.html) | Always upgraded.         |
 | [pip](https://github.com/pypa/pip)                       | \*               | >=23.1.2         | [Changelog](https://pip.pypa.io/en/stable/news/)                                  | Only upgraded if needed. |
 | [conda](https://docs.conda.io/projects/conda/en/stable/) | 0.16.0           | >=0.16.0         | [Changelog](https://docs.conda.io/projects/conda/en/stable/release-notes.html)    | Only upgraded if needed. |
 | [mamba](https://mamba.readthedocs.io/en/latest/)         | 4.10.3           | >=4.10.0         | [Changelog](https://github.com/mamba-org/mamba/blob/main/CHANGELOG.md)            | Only upgraded if needed. |

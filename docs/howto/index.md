@@ -56,6 +56,7 @@ admin/nbresuse
 admin/https
 admin/enable-extensions
 admin/systemd
+admin/upgrade-tljh
 ```
 
 ## Cloud provider configuration
