@@ -2,7 +2,7 @@
 
 # Upgrade TLJH
 
-An TLJH installation is supposed to be upgradable to get updates to JupyterHub
+A TLJH installation is supposed to be upgradable to get updates to JupyterHub
 itself and its dependencies in the [hub environment](hub-environment). For
 details on what is done during an upgrade, see
 [](topic-installer-upgrade-actions).
