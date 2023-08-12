@@ -1,11 +1,10 @@
 Most administration & configuration of the JupyterHub can be done from the
 web UI directly. Let's add a few users who can log in!
 
-1. Open the **Control Panel** by clicking the control panel button on the top
-   right of your JupyterHub.
+1. In the File menu select the entry for the **Hub Control Panel**.
 
-   ```{image} ../images/control-panel-button.png
-   :alt: Control panel button in notebook, top right
+   ```{image} ../images/control-panel-menu.png
+   :alt: Hub Control panel entry in lab File menu
    ```
 
 2. In the control panel, open the **Admin** link in the top left.
