@@ -98,7 +98,9 @@ def install_miniconda(installer_path, prefix):
     fix_permissions(prefix)
 
 
-def ensure_conda_packages(prefix, packages, channels=('conda-forge',), force_reinstall=False):
+def ensure_conda_packages(
+    prefix, packages, channels=("conda-forge",), force_reinstall=False
+):
     """
     Ensure packages (from channels) are installed in the conda prefix.
 
