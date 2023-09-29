@@ -4,7 +4,7 @@ Unit test  functions in installer.py
 import os
 from datetime import date
 
-from tljh import migrator, config
+from tljh import config, migrator
 
 
 def test_migrate_config(tljh_dir):

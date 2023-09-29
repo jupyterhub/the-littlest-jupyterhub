@@ -25,5 +25,5 @@ def preserve_config(request):
                 f.write(save_config)
         elif os.path.exists(CONFIG_FILE):
             os.remove(CONFIG_FILE)
-        reload_component("hub")
         reload_component("proxy")
+        reload_component("hub")

@@ -1,119 +1,82 @@
 """
-Test running bootstrap script in different circumstances
+This test file tests bootstrap.py ability to
+
+- error verbosely for old ubuntu
+- error verbosely for no systemd
+- start and provide a progress page web server
+
+FIXME: The last test stands out and could be part of the other tests, and the
+       first two could be more like unit tests. Ideally, this file is
+       significantly reduced.
 """
 import concurrent.futures
 import os
 import subprocess
 import time
 
+GIT_REPO_PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+BASE_IMAGE = os.getenv("BASE_IMAGE", "ubuntu:20.04")
 
-def install_pkgs(container_name, show_progress_page):
-    # Install python3 inside the ubuntu container
-    # There is no trusted Ubuntu+Python3 container we can use
-    pkgs = ["python3"]
-    if show_progress_page:
-        pkgs += ["systemd", "git", "curl"]
-        # Create the sudoers dir, so that the installer succesfully gets to the
-        # point of starting jupyterhub and stopping the progress page server.
-        subprocess.check_output(
-            ["docker", "exec", container_name, "mkdir", "-p", "etc/sudoers.d"]
-        )
 
-    subprocess.check_output(["docker", "exec", container_name, "apt-get", "update"])
-    subprocess.check_output(
-        ["docker", "exec", container_name, "apt-get", "install", "--yes"] + pkgs
+def _stop_container():
+    """
+    Stops a container if its already running.
+    """
+    subprocess.run(
+        ["docker", "rm", "--force", "test-bootstrap"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
     )
 
 
-def get_bootstrap_script_location(container_name, show_progress_page):
-    # Copy only the bootstrap script to container when progress page not enabled, to be faster
-    source_path = "bootstrap/"
-    bootstrap_script = "/srv/src/bootstrap.py"
-    if show_progress_page:
-        source_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), os.pardir)
-        )
-        bootstrap_script = "/srv/src/bootstrap/bootstrap.py"
-
-    subprocess.check_call(["docker", "cp", source_path, f"{container_name}:/srv/src"])
-    return bootstrap_script
-
-
-# FIXME: Refactor this function to easier to understand using the following
-#        parameters
-#
-# - param: container_apt_packages
-# - param: bootstrap_tljh_source
-#   - local: copies local tljh repo to container and configures bootstrap to
-#            install tljh from copied repo
-#   - github: configures bootstrap to install tljh from the official github repo
-#   - <pip spec>: configures bootstrap to install tljh from any given remote location
-# - param: bootstrap_flags
-#
-# FIXME: Consider stripping logic in this file to only testing if the bootstrap
-#        script successfully detects the too old Ubuntu version and the lack of
-#        systemd. The remaining test named test_progress_page could rely on
-#        running against the systemd container that cab be built by
-#        integration-test.py.
-#
-def run_bootstrap_after_preparing_container(
-    container_name, image, show_progress_page=False
-):
+def _run_bootstrap_in_container(image, complete_setup=True):
     """
-    1. Stops old container
-    2. Starts --detached container
-    3. Installs apt packages in container
-    4. Two situations
-
-        A) limited test (--show-progress-page=false)
-        - Copies ./bootstrap/ folder content to container /srv/src
-        - Runs copied bootstrap/bootstrap.py without flags
-
-        B) full test (--show-progress-page=true)
-        - Copies ./ folder content to the container /srv/src
-        - Runs copied bootstrap/bootstrap.py with environment variables
-            - TLJH_BOOTSTRAP_DEV=yes
-              This makes --editable be used when installing the tljh package
-            - TLJH_BOOTSTRAP_PIP_SPEC=/srv/src
-              This makes us install tljh from the given location instead of from
-              github.com/jupyterhub/the-littlest-jupyterhub
+    1. (Re-)starts a container named test-bootstrap based on image, mounting
+       local git repo and exposing port 8080 to the containers port 80.
+    2. Installs python3, systemd, git, and curl in container
+    3. Runs bootstrap/bootstrap.py in container to install the mounted git
+       repo's tljh package in --editable mode.
     """
-    # stop container if it is already running
-    subprocess.run(["docker", "rm", "-f", container_name])
+    _stop_container()
 
     # Start a detached container
-    subprocess.check_call(
+    subprocess.check_output(
         [
             "docker",
             "run",
             "--env=DEBIAN_FRONTEND=noninteractive",
+            "--env=TLJH_BOOTSTRAP_DEV=yes",
+            "--env=TLJH_BOOTSTRAP_PIP_SPEC=/srv/src",
+            f"--volume={GIT_REPO_PATH}:/srv/src",
+            "--publish=8080:80",
             "--detach",
-            f"--name={container_name}",
+            "--name=test-bootstrap",
             image,
-            "/bin/bash",
+            "bash",
             "-c",
-            "sleep 1000s",
+            "sleep 300s",
         ]
     )
 
-    install_pkgs(container_name, show_progress_page)
-
-    bootstrap_script = get_bootstrap_script_location(container_name, show_progress_page)
-
-    exec_flags = ["-i", container_name, "python3", bootstrap_script]
-    if show_progress_page:
-        exec_flags = (
-            ["-e", "TLJH_BOOTSTRAP_DEV=yes", "-e", "TLJH_BOOTSTRAP_PIP_SPEC=/srv/src"]
-            + exec_flags
-            + ["--show-progress-page"]
+    run = ["docker", "exec", "-i", "test-bootstrap"]
+    subprocess.check_output(run + ["apt-get", "update"])
+    subprocess.check_output(run + ["apt-get", "install", "--yes", "python3"])
+    if complete_setup:
+        subprocess.check_output(
+            run + ["apt-get", "install", "--yes", "systemd", "git", "curl"]
         )
 
-    # Run bootstrap script, return the output
+    run_bootstrap = run + [
+        "python3",
+        "/srv/src/bootstrap/bootstrap.py",
+        "--show-progress-page",
+    ]
+
+    # Run bootstrap script inside detached container, return the output
     return subprocess.run(
-        ["docker", "exec"] + exec_flags,
-        check=False,
-        stdout=subprocess.PIPE,
-        encoding="utf-8",
+        run_bootstrap,
+        text=True,
+        capture_output=True,
     )
 
 
@@ -121,61 +84,72 @@ def test_ubuntu_too_old():
     """
     Error with a useful message when running in older Ubuntu
     """
-    output = run_bootstrap_after_preparing_container("old-distro-test", "ubuntu:16.04")
-    assert output.stdout == "The Littlest JupyterHub requires Ubuntu 18.04 or higher\n"
+    output = _run_bootstrap_in_container("ubuntu:18.04", False)
+    _stop_container()
+    assert output.stdout == "The Littlest JupyterHub requires Ubuntu 20.04 or higher\n"
     assert output.returncode == 1
 
 
-def test_inside_no_systemd_docker():
-    output = run_bootstrap_after_preparing_container(
-        "plain-docker-test",
-        f"ubuntu:{os.getenv('UBUNTU_VERSION', '20.04')}",
-    )
+def test_no_systemd():
+    output = _run_bootstrap_in_container("ubuntu:22.04", False)
     assert "Systemd is required to run TLJH" in output.stdout
     assert output.returncode == 1
 
 
-def verify_progress_page(expected_status_code, timeout):
-    progress_page_status = False
+def _wait_for_progress_page_response(expected_status_code, timeout):
     start = time.time()
-    while not progress_page_status and (time.time() - start < timeout):
+    while time.time() - start < timeout:
         try:
             resp = subprocess.check_output(
                 [
-                    "docker",
-                    "exec",
-                    "progress-page",
                     "curl",
-                    "-i",
-                    "http://localhost/index.html",
-                ]
+                    "--include",
+                    "http://localhost:8080/index.html",
+                ],
+                text=True,
+                stderr=subprocess.DEVNULL,
             )
-            if b"HTTP/1.0 200 OK" in resp:
-                progress_page_status = True
-                break
-        except Exception as e:
-            time.sleep(2)
-            continue
+            if "HTTP/1.0 200 OK" in resp:
+                return True
+        except Exception:
+            pass
+        time.sleep(1)
 
-    return progress_page_status
+    return False
 
 
-def test_progress_page():
+def test_show_progress_page():
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        installer = executor.submit(
-            run_bootstrap_after_preparing_container,
-            "progress-page",
-            f"ubuntu:{os.getenv('UBUNTU_VERSION', '20.04')}",
-            True,
+        run_bootstrap_job = executor.submit(_run_bootstrap_in_container, BASE_IMAGE)
+
+        # Check that the bootstrap script started the web server reporting
+        # progress successfully responded.
+        success = _wait_for_progress_page_response(
+            expected_status_code=200, timeout=180
         )
+        if success:
+            # Let's terminate the test here and save a minute or so in test
+            # executation time, because we can know that the will be stopped
+            # successfully in other tests as otherwise traefik won't be able to
+            # start and use the same port for example.
+            return
 
-        # Check if progress page started
-        started = verify_progress_page(expected_status_code=200, timeout=120)
-        assert started
+        # Now await an expected failure to startup JupyterHub by tljh.installer,
+        # which should have taken over the work started by the bootstrap script.
+        #
+        # This failure is expected to occur in
+        # tljh.installer.ensure_jupyterhub_service calling systemd.reload_daemon
+        # like this:
+        #
+        # > System has not been booted with systemd as init system (PID 1).
+        # > Can't operate.
+        #
+        output = run_bootstrap_job.result()
+        print(output.stdout)
+        print(output.stderr)
 
-        # This will fail start tljh but should successfully get to the point
-        # Where it stops the progress page server.
-        output = installer.result()
-
-        # Check if progress page stopped
+        # At this point we should be able to see that tljh.installer
+        # intentionally stopped the web server reporting progress as the port
+        # were about to become needed by Traefik.
         assert "Progress page server stopped successfully." in output.stdout
+        assert success

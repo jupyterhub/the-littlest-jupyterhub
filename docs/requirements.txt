@@ -1,4 +1,9 @@
-sphinx>=2
-sphinx-autobuild
-sphinx_copybutton
+myst-parser>=0.19
 pydata-sphinx-theme
+# Sphix 6.0.0 breaks pydata-sphinx-theme
+# See pydata/pydata-sphinx-theme#1094
+sphinx<6
+sphinx_copybutton
+sphinx-autobuild
+sphinxext-opengraph
+sphinxext-rediraffe

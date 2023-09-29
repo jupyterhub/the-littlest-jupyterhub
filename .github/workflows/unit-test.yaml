@@ -8,14 +8,12 @@ on:
     paths-ignore:
       - "docs/**"
       - "**.md"
-      - "**.rst"
       - ".github/workflows/*"
       - "!.github/workflows/unit-test.yaml"
   push:
     paths-ignore:
       - "docs/**"
       - "**.md"
-      - "**.rst"
       - ".github/workflows/*"
       - "!.github/workflows/unit-test.yaml"
     branches-ignore:
@@ -42,25 +40,18 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: "Unit tests: Ubuntu 18.04, Py 3.6"
-            ubuntu_version: "18.04"
-            python_version: "3.6"
-          - name: "Unit tests: Ubuntu 20.04, Py 3.9"
+          - name: "Ubuntu 20.04, Py 3.9"
             ubuntu_version: "20.04"
             python_version: "3.9"
-          # Test against Ubuntu 21.10 fails as of 2021-10-18 fail with the error
-          # described in: https://github.com/jupyterhub/the-littlest-jupyterhub/issues/714#issuecomment-945154101
-          #
-          # - name: "Unit tests: Ubuntu 21.10, Py 3.9"
-          #   runs_on: "20.04"
-          #   ubuntu_version: "21.10"
-          #   python_version: "3.9"
+          - name: "Ubuntu 22.04, Py 3.10"
+            ubuntu_version: "22.04"
+            python_version: "3.10"
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python_version }}
+          python-version: "${{ matrix.python_version }}"
 
       - name: Install venv, git and setup venv
         run: |
@@ -68,6 +59,7 @@ jobs:
           apt-get update
           apt-get install --yes \
               python3-venv \
+              bzip2 \
               git
 
           python3 -m venv /srv/venv
@@ -78,7 +70,7 @@ jobs:
       #          completion. Make sure to update the key to bust the cache
       #          properly if you make a change that should influence it.
       - name: Load cached Python dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: /srv/venv/
           key: >-
@@ -89,20 +81,16 @@ jobs:
             ${{ hashFiles('setup.py', 'dev-requirements.txt', '.github/workflows/unit-test.yaml') }}
 
       - name: Install Python dependencies
-        # Keep pip version pinning in sync with the one in bootstrap.py!
-        # See changelog at https://pip.pypa.io/en/latest/news/#changelog
         run: |
-          python3 -m pip install -U "pip==21.3.*"
-          python3 -m pip install -r dev-requirements.txt
-          python3 -m pip install -e .
+          pip install -r dev-requirements.txt
+          pip install -e .
+
+      - name: List Python dependencies
+        run: |
           pip freeze
 
-      # We abort pytest after two failures as a compromise between wanting to
-      # avoid a flood of logs while still understanding if multiple tests would
-      # fail.
       - name: Run unit tests
-        run: pytest --verbose --maxfail=2 --color=yes --durations=10 --cov=tljh tests/
+        run: pytest tests
         timeout-minutes: 15
 
-      - name: Upload code coverage stats
-        run: codecov
+      - uses: codecov/codecov-action@v3

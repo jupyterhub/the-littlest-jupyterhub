@@ -2,15 +2,15 @@
 JupyterHub config for the littlest jupyterhub.
 """
 
-from glob import glob
 import os
+from glob import glob
 
 from tljh import configurer
-from tljh.config import INSTALL_PREFIX, USER_ENV_PREFIX, CONFIG_DIR
-from tljh.utils import get_plugin_manager
+from tljh.config import CONFIG_DIR, INSTALL_PREFIX, USER_ENV_PREFIX
 from tljh.user_creating_spawner import UserCreatingSpawner
-from jupyterhub_traefik_proxy import TraefikTomlProxy
+from tljh.utils import get_plugin_manager
 
+c = get_config()  # noqa
 c.JupyterHub.spawner_class = UserCreatingSpawner
 
 # leave users running when the Hub restarts
@@ -19,11 +19,11 @@ c.JupyterHub.cleanup_servers = False
 # Use a high port so users can try this on machines with a JupyterHub already present
 c.JupyterHub.hub_port = 15001
 
-c.TraefikTomlProxy.should_start = False
+c.TraefikProxy.should_start = False
 
 dynamic_conf_file_path = os.path.join(INSTALL_PREFIX, "state", "rules", "rules.toml")
-c.TraefikTomlProxy.toml_dynamic_config_file = dynamic_conf_file_path
-c.JupyterHub.proxy_class = TraefikTomlProxy
+c.TraefikFileProviderProxy.dynamic_config_file = dynamic_conf_file_path
+c.JupyterHub.proxy_class = "traefik_file"
 
 c.SystemdSpawner.extra_paths = [os.path.join(USER_ENV_PREFIX, "bin")]
 c.SystemdSpawner.default_shell = "/bin/bash"

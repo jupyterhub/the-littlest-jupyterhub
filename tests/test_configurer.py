@@ -2,9 +2,10 @@
 Test configurer
 """
 
-from traitlets.config import Config
 import os
 import sys
+
+from traitlets.config import Config
 
 from tljh import configurer
 
@@ -57,24 +58,15 @@ def test_app_default():
     Test default application with no config overrides.
     """
     c = apply_mock_config({})
-    # default_url is not set, so JupyterHub will pick default.
-    assert "default_url" not in c.Spawner
-
-
-def test_app_jupyterlab():
-    """
-    Test setting JupyterLab as default application
-    """
-    c = apply_mock_config({"user_environment": {"default_app": "jupyterlab"}})
     assert c.Spawner.default_url == "/lab"
 
 
-def test_app_nteract():
+def test_app_classic():
     """
-    Test setting nteract as default application
+    Test setting classic as default application
     """
-    c = apply_mock_config({"user_environment": {"default_app": "nteract"}})
-    assert c.Spawner.default_url == "/nteract"
+    c = apply_mock_config({"user_environment": {"default_app": "classic"}})
+    assert c.Spawner.default_url == "/tree"
 
 
 def test_auth_default():
@@ -163,8 +155,8 @@ def test_traefik_api_default():
     """
     c = apply_mock_config({})
 
-    assert c.TraefikTomlProxy.traefik_api_username == "api_admin"
-    assert len(c.TraefikTomlProxy.traefik_api_password) == 0
+    assert c.TraefikProxy.traefik_api_username == "api_admin"
+    assert len(c.TraefikProxy.traefik_api_password) == 0
 
 
 def test_set_traefik_api():
@@ -174,8 +166,8 @@ def test_set_traefik_api():
     c = apply_mock_config(
         {"traefik_api": {"username": "some_user", "password": "1234"}}
     )
-    assert c.TraefikTomlProxy.traefik_api_username == "some_user"
-    assert c.TraefikTomlProxy.traefik_api_password == "1234"
+    assert c.TraefikProxy.traefik_api_username == "some_user"
+    assert c.TraefikProxy.traefik_api_password == "1234"
 
 
 def test_cull_service_default():
@@ -228,6 +220,43 @@ def test_set_cull_service():
     ]
 
 
+def test_cull_service_named():
+    """
+    Test default cull service settings with named server removal
+    """
+    c = apply_mock_config(
+        {
+            "services": {
+                "cull": {
+                    "every": 10,
+                    "cull_users": True,
+                    "remove_named_servers": True,
+                    "max_age": 60,
+                }
+            }
+        }
+    )
+
+    cull_cmd = [
+        sys.executable,
+        "-m",
+        "jupyterhub_idle_culler",
+        "--timeout=600",
+        "--cull-every=10",
+        "--concurrency=5",
+        "--max-age=60",
+        "--cull-users",
+        "--remove-named-servers",
+    ]
+    assert c.JupyterHub.services == [
+        {
+            "name": "cull-idle",
+            "admin": True,
+            "command": cull_cmd,
+        }
+    ]
+
+
 def test_load_secrets(tljh_dir):
     """
     Test loading secret files
@@ -238,7 +267,7 @@ def test_load_secrets(tljh_dir):
     tljh_config = configurer.load_config()
     assert tljh_config["traefik_api"]["password"] == "traefik-password"
     c = apply_mock_config(tljh_config)
-    assert c.TraefikTomlProxy.traefik_api_password == "traefik-password"
+    assert c.TraefikProxy.traefik_api_password == "traefik-password"
 
 
 def test_auth_native():

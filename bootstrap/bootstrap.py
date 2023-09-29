@@ -9,11 +9,10 @@ This script is run as:
 
 Constraints:
 
-    - The entire script should be compatible with Python 3.6, which is the on
-      Ubuntu 18.04+.
-    - The script should parse in Python 3.5 as we print error messages for using
-      Ubuntu 16.04+ which comes with Python 3.5 by default. This means no
-      f-strings can be used.
+    - The entire script should be compatible with Python 3.8, which is the default on
+      Ubuntu 20.04.
+    - The script should parse in Python 3.6 as we print error messages for using
+      Ubuntu 18.04 which comes with Python 3.6 by default.
     - The script must depend only on stdlib modules, as no previous installation
       of dependencies can be assumed.
 
@@ -27,7 +26,7 @@ Environment variables:
                                 installing the tljh installer. Pass the values
                                 yes or no.
 
-Command line flags:
+Command line flags, from "bootstrap.py --help":
 
     The bootstrap.py script accept the following command line flags. All other
     flags are passed through to the tljh installer without interception by this
@@ -37,15 +36,22 @@ Command line flags:
                             logs can be accessed during installation. If this is
                             passed, it will pass --progress-page-server-pid=<pid>
                             to the tljh installer for later termination.
+    --version VERSION       TLJH version or Git reference. Default 'latest' is
+                            the most recent release. Partial versions can be
+                            specified, for example '1', '1.0' or '1.0.0'. You
+                            can also pass a branch name such as 'main' or a
+                            commit hash.
 """
-import os
-from http.server import SimpleHTTPRequestHandler, HTTPServer
+import logging
 import multiprocessing
+import os
+import re
+import shutil
 import subprocess
 import sys
-import logging
-import shutil
 import urllib.request
+from argparse import ArgumentParser
+from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 progress_page_favicon_url = "https://raw.githubusercontent.com/jupyterhub/jupyterhub/main/share/jupyterhub/static/favicon.ico"
 progress_page_html = """
@@ -57,7 +63,7 @@ progress_page_html = """
   <meta http-equiv="refresh" content="30" >
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width">
-  <img class="logo" src="https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/HEAD/docs/images/logo/logo.png">
+  <img class="logo" src="https://raw.githubusercontent.com/jupyterhub/the-littlest-jupyterhub/HEAD/docs/_static/images/logo/logo.png">
   <div class="loader center"></div>
   <div class="center main-msg">Please wait while your TLJH is setting up...</div>
   <div class="center logs-msg">Click the button below to see the logs</div>
@@ -131,6 +137,11 @@ progress_page_html = """
 logger = logging.getLogger(__name__)
 
 
+def _parse_version(vs):
+    """Parse a simple version into a tuple of ints"""
+    return tuple(int(part) for part in vs.split("."))
+
+
 # This function is needed both by the process starting this script, and by the
 # TLJH installer that this script execs in the end. Make sure its replica at
 # tljh/utils.py stays in sync with this version!
@@ -165,9 +176,32 @@ def run_subprocess(cmd, *args, **kwargs):
                 command=printable_command, code=proc.returncode
             )
         )
+        output = proc.stdout.decode()
         # This produces multi line log output, unfortunately. Not sure how to fix.
         # For now, prioritizing human readability over machine readability.
-        logger.debug(proc.stdout.decode())
+        logger.debug(output)
+        return output
+
+
+def get_os_release_variable(key):
+    """
+    Return value for key from /etc/os-release
+
+    /etc/os-release is a bash file, so should use bash to parse it.
+
+    Returns empty string if key is not found.
+    """
+    return (
+        subprocess.check_output(
+            [
+                "/bin/bash",
+                "-c",
+                "source /etc/os-release && echo ${{{key}}}".format(key=key),
+            ]
+        )
+        .decode()
+        .strip()
+    )
 
 
 def ensure_host_system_can_install_tljh():
@@ -175,40 +209,22 @@ def ensure_host_system_can_install_tljh():
     Check if TLJH is installable in current host system and exit with a clear
     error message otherwise.
     """
-
-    def get_os_release_variable(key):
-        """
-        Return value for key from /etc/os-release
-
-        /etc/os-release is a bash file, so should use bash to parse it.
-
-        Returns empty string if key is not found.
-        """
-        return (
-            subprocess.check_output(
-                [
-                    "/bin/bash",
-                    "-c",
-                    "source /etc/os-release && echo ${{{key}}}".format(key=key),
-                ]
-            )
-            .decode()
-            .strip()
-        )
-
-    # Require Ubuntu 18.04+
+    # Require Ubuntu 20.04+ or Debian 11+
     distro = get_os_release_variable("ID")
-    version = float(get_os_release_variable("VERSION_ID"))
-    if distro != "ubuntu":
-        print("The Littlest JupyterHub currently supports Ubuntu Linux only")
+    version = get_os_release_variable("VERSION_ID")
+    if distro not in ["ubuntu", "debian"]:
+        print("The Littlest JupyterHub currently supports Ubuntu or Debian Linux only")
         sys.exit(1)
-    elif float(version) < 18.04:
-        print("The Littlest JupyterHub requires Ubuntu 18.04 or higher")
+    elif distro == "ubuntu" and _parse_version(version) < (20, 4):
+        print("The Littlest JupyterHub requires Ubuntu 20.04 or higher")
+        sys.exit(1)
+    elif distro == "debian" and _parse_version(version) < (11,):
+        print("The Littlest JupyterHub requires Debian 11 or higher")
         sys.exit(1)
 
-    # Require Python 3.6+
-    if sys.version_info < (3, 6):
-        print("bootstrap.py must be run with at least Python 3.6")
+    # Require Python 3.8+
+    if sys.version_info < (3, 8):
+        print(f"bootstrap.py must be run with at least Python 3.8, found {sys.version}")
         sys.exit(1)
 
     # Require systemd (systemctl is a part of systemd)
@@ -224,6 +240,7 @@ def ensure_host_system_can_install_tljh():
                 "For local development, see http://tljh.jupyter.org/en/latest/contributing/dev-setup.html"
             )
         sys.exit(1)
+    return distro, version
 
 
 class ProgressPageRequestHandler(SimpleHTTPRequestHandler):
@@ -250,32 +267,123 @@ class ProgressPageRequestHandler(SimpleHTTPRequestHandler):
             SimpleHTTPRequestHandler.send_error(self, code=403)
 
 
+def _find_matching_version(all_versions, requested):
+    """
+    Find the latest version that is less than or equal to requested.
+    all_versions must be int-tuples.
+    requested must be an int-tuple or "latest"
+
+    Returns None if no version is found.
+    """
+    sorted_versions = sorted(all_versions, reverse=True)
+    if requested == "latest":
+        return sorted_versions[0]
+    components = len(requested)
+    for v in sorted_versions:
+        if v[:components] == requested:
+            return v
+    return None
+
+
+def _resolve_git_version(version):
+    """
+    Resolve the version argument to a git ref using git ls-remote
+    - If version looks like MAJOR.MINOR.PATCH or a partial tag then fetch all tags
+      and return the most latest tag matching MAJOR.MINOR.PATCH
+      (e.g. version=0.1 -> 0.1.PATCH). This should ignore dev tags
+    - If version='latest' then return the latest release tag
+    - Otherwise assume version is a branch or hash and return it without checking
+    """
+
+    if version != "latest" and not re.match(r"\d+(\.\d+)?(\.\d+)?$", version):
+        return version
+
+    all_versions = set()
+    out = run_subprocess(
+        [
+            "git",
+            "ls-remote",
+            "--tags",
+            "--refs",
+            "https://github.com/jupyterhub/the-littlest-jupyterhub.git",
+        ]
+    )
+
+    for line in out.splitlines():
+        m = re.match(r"(?P<sha>[a-f0-9]+)\s+refs/tags/(?P<tag>[\S]+)$", line)
+        if not m:
+            raise Exception("Unexpected git ls-remote output: {}".format(line))
+        tag = m.group("tag")
+        if tag == version:
+            return tag
+        if re.match(r"\d+\.\d+\.\d+$", tag):
+            all_versions.add(tuple(int(v) for v in tag.split(".")))
+
+    if not all_versions:
+        raise Exception("No MAJOR.MINOR.PATCH git tags found")
+
+    if version == "latest":
+        requested = "latest"
+    else:
+        requested = tuple(int(v) for v in version.split("."))
+    found = _find_matching_version(all_versions, requested)
+    if not found:
+        raise Exception(
+            "No version matching {} found {}".format(version, sorted(all_versions))
+        )
+    return ".".join(str(f) for f in found)
+
+
 def main():
     """
-    This script intercepts the --show-progress-page flag, but all other flags
-    are passed through to the TLJH installer script.
+    This bootstrap script intercepts some command line flags, everything else is
+    passed through to the TLJH installer script.
 
     The --show-progress-page flag indicates that the bootstrap script should
     start a local webserver temporarily and report its installation progress via
     a web site served locally on port 80.
     """
-    ensure_host_system_can_install_tljh()
+    distro, version = ensure_host_system_can_install_tljh()
+
+    parser = ArgumentParser(
+        description=(
+            "The bootstrap.py script accept the following command line flags. "
+            "All other flags are passed through to the tljh installer without "
+            "interception by this script."
+        )
+    )
+    parser.add_argument(
+        "--show-progress-page",
+        action="store_true",
+        help=(
+            "Starts a local web server listening on port 80 where logs can be "
+            "accessed during installation. If this is passed, it will pass "
+            "--progress-page-server-pid=<pid> to the tljh installer for later "
+            "termination."
+        ),
+    )
+    parser.add_argument(
+        "--version",
+        default="",
+        help=(
+            "TLJH version or Git reference. "
+            "Default 'latest' is the most recent release. "
+            "Partial versions can be specified, for example '1', '1.0' or '1.0.0'. "
+            "You can also pass a branch name such as 'main' or a commit hash."
+        ),
+    )
+    args, tljh_installer_flags = parser.parse_known_args()
 
     # Various related constants
     install_prefix = os.environ.get("TLJH_INSTALL_PREFIX", "/opt/tljh")
-    hub_prefix = os.path.join(install_prefix, "hub")
-    python_bin = os.path.join(hub_prefix, "bin", "python3")
-    pip_bin = os.path.join(hub_prefix, "bin", "pip")
-    initial_setup = not os.path.exists(python_bin)
+    hub_env_prefix = os.path.join(install_prefix, "hub")
+    hub_env_python = os.path.join(hub_env_prefix, "bin", "python3")
+    hub_env_pip = os.path.join(hub_env_prefix, "bin", "pip")
+    initial_setup = not os.path.exists(hub_env_python)
 
     # Attempt to start a web server to serve a progress page reporting
     # installation progress.
-    tljh_installer_flags = sys.argv[1:]
-    if "--show-progress-page" in tljh_installer_flags:
-        # Remove the bootstrap specific flag and let all other flags pass
-        # through to the installer.
-        tljh_installer_flags.remove("--show-progress-page")
-
+    if args.show_progress_page:
         # Write HTML and a favicon to be served by our webserver
         with open("/var/run/index.html", "w+") as f:
             f.write(progress_page_html)
@@ -345,7 +453,9 @@ def main():
             ["apt-get", "install", "--yes", "software-properties-common"],
             env=apt_get_adjusted_env,
         )
-        run_subprocess(["add-apt-repository", "universe", "--yes"])
+        # Section "universe" exists and is required only in ubuntu.
+        if distro == "ubuntu":
+            run_subprocess(["add-apt-repository", "universe", "--yes"])
         run_subprocess(["apt-get", "update"])
         run_subprocess(
             [
@@ -356,31 +466,38 @@ def main():
                 "python3-venv",
                 "python3-pip",
                 "git",
+                "sudo",  # sudo is missing in default debian install
             ],
             env=apt_get_adjusted_env,
         )
 
-        logger.info("Setting up virtual environment at {}".format(hub_prefix))
-        os.makedirs(hub_prefix, exist_ok=True)
-        run_subprocess(["python3", "-m", "venv", hub_prefix])
+        logger.info("Setting up virtual environment at {}".format(hub_env_prefix))
+        os.makedirs(hub_env_prefix, exist_ok=True)
+        run_subprocess(["python3", "-m", "venv", hub_env_prefix])
 
-    # Upgrade pip
-    # Keep pip version pinning in sync with the one in unit-test.yml!
-    # See changelog at https://pip.pypa.io/en/latest/news/#changelog
     logger.info("Upgrading pip...")
-    run_subprocess([pip_bin, "install", "--upgrade", "pip==21.3.*"])
+    run_subprocess([hub_env_pip, "install", "--upgrade", "pip"])
 
-    # Install/upgrade TLJH installer
-    tljh_install_cmd = [pip_bin, "install", "--upgrade"]
-    if os.environ.get("TLJH_BOOTSTRAP_DEV", "no") == "yes":
+    # pip install TLJH installer based on
+    #
+    #   1. --version, _resolve_git_version is used
+    #   2. TLJH_BOOTSTRAP_PIP_SPEC (then also respect TLJH_BOOTSTRAP_DEV)
+    #   3. latest, _resolve_git_version is used
+    #
+    tljh_install_cmd = [hub_env_pip, "install", "--upgrade"]
+    bootstrap_pip_spec = os.environ.get("TLJH_BOOTSTRAP_PIP_SPEC")
+    if args.version or not bootstrap_pip_spec:
+        version_to_resolve = args.version or "latest"
+        bootstrap_pip_spec = (
+            "git+https://github.com/jupyterhub/the-littlest-jupyterhub.git@{}".format(
+                _resolve_git_version(version_to_resolve)
+            )
+        )
+    elif os.environ.get("TLJH_BOOTSTRAP_DEV", "no") == "yes":
         logger.info("Selected TLJH_BOOTSTRAP_DEV=yes...")
         tljh_install_cmd.append("--editable")
-    tljh_install_cmd.append(
-        os.environ.get(
-            "TLJH_BOOTSTRAP_PIP_SPEC",
-            "git+https://github.com/jupyterhub/the-littlest-jupyterhub.git",
-        )
-    )
+    tljh_install_cmd.append(bootstrap_pip_spec)
+
     if initial_setup:
         logger.info("Installing TLJH installer...")
     else:
@@ -389,7 +506,9 @@ def main():
 
     # Run TLJH installer
     logger.info("Running TLJH installer...")
-    os.execv(python_bin, [python_bin, "-m", "tljh.installer"] + tljh_installer_flags)
+    os.execv(
+        hub_env_python, [hub_env_python, "-m", "tljh.installer"] + tljh_installer_flags
+    )
 
 
 if __name__ == "__main__":

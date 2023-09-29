@@ -1,74 +1,63 @@
-# traefik.toml file template
-{% if https['enabled'] %}
-defaultEntryPoints = ["http", "https"]
-{% else %}
-defaultEntryPoints = ["http"]
-{% endif %}
+# traefik.toml static config file template
+# dynamic config (e.g. TLS) goes in traefik-dynamic.toml.tpl
 
-logLevel = "INFO"
+# enable API
+[api]
+
+[log]
+level = "INFO"
+
 # log errors, which could be proxy errors
 [accessLog]
 format = "json"
+
 [accessLog.filters]
 statusCodes = ["500-999"]
 
-[accessLog.fields.headers]
 [accessLog.fields.headers.names]
 Authorization = "redact"
 Cookie = "redact"
 Set-Cookie = "redact"
 X-Xsrftoken = "redact"
 
-[respondingTimeouts]
-idleTimeout = "10m0s"
-
 [entryPoints]
   [entryPoints.http]
-  address = ":{{http['port']}}"
-  {% if https['enabled'] %}
-    [entryPoints.http.redirect]
-    entryPoint = "https"
-  {% endif %}
+  address = "{{ http['address'] }}:{{ http['port'] }}"
 
-  {% if https['enabled'] %}
+  [entryPoints.http.transport.respondingTimeouts]
+  idleTimeout = "10m"
+
+  {%- if https['enabled'] %}
+  [entryPoints.http.http.redirections.entryPoint]
+  to = "https"
+  scheme = "https"
+
   [entryPoints.https]
-  address = ":{{https['port']}}"
-  [entryPoints.https.tls]
-  minVersion = "VersionTLS12"
-  {% if https['tls']['cert'] %}
-    [[entryPoints.https.tls.certificates]]
-      certFile = "{{https['tls']['cert']}}"
-      keyFile = "{{https['tls']['key']}}"
-  {% endif %}
-  {% endif %}
+  address = "{{ https['address'] }}:{{ https['port'] }}"
+
+  [entryPoints.https.http.tls]
+  options = "default"
+
+  [entryPoints.https.transport.respondingTimeouts]
+  idleTimeout = "10m"
+  {%- endif %}
+
   [entryPoints.auth_api]
-  address = "127.0.0.1:{{traefik_api['port']}}"
-  [entryPoints.auth_api.whiteList]
-  sourceRange = ['{{traefik_api['ip']}}']
-  [entryPoints.auth_api.auth.basic]
-  users = ['{{ traefik_api['basic_auth'] }}']
+  address = "localhost:{{ traefik_api['port'] }}"
 
-[wss]
-protocol = "http"
-
-[api]
-dashboard = true
-entrypoint = "auth_api"
-
-{% if https['enabled'] and https['letsencrypt']['email'] %}
-[acme]
-email = "{{https['letsencrypt']['email']}}"
+{%- if https['enabled'] and https['letsencrypt']['email'] and https['letsencrypt']['domains'] %}
+[certificatesResolvers.letsencrypt.acme]
+email = "{{ https['letsencrypt']['email'] }}"
 storage = "acme.json"
-entryPoint = "https"
-  [acme.httpChallenge]
-  entryPoint = "http"
+{%- if https['letsencrypt']['staging'] %}
+caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
+{%- endif %}
+[certificatesResolvers.letsencrypt.acme.tlsChallenge]
+{%- endif %}
 
-{% for domain in https['letsencrypt']['domains'] %}
-[[acme.domains]]
-  main = "{{domain}}"
-{% endfor %}
-{% endif %}
+[providers]
+providersThrottleDuration = "0s"
 
-[file]
-directory = "rules"
+[providers.file]
+directory = "{{ traefik_dynamic_config_dir }}"
 watch = true

@@ -13,17 +13,16 @@ tljh-config show firstlevel.second_level
 """
 
 import argparse
-from collections.abc import Sequence, Mapping
-from copy import deepcopy
 import os
 import re
 import sys
 import time
+from collections.abc import Mapping, Sequence
+from copy import deepcopy
 
 import requests
 
 from .yaml import yaml
-
 
 INSTALL_PREFIX = os.environ.get("TLJH_INSTALL_PREFIX", "/opt/tljh")
 HUB_ENV_PREFIX = os.path.join(INSTALL_PREFIX, "hub")
@@ -245,13 +244,21 @@ def check_hub_ready():
 
     base_url = load_config()["base_url"]
     base_url = base_url[:-1] if base_url[-1] == "/" else base_url
+    http_address = load_config()["http"]["address"]
     http_port = load_config()["http"]["port"]
+    # The default config is an empty address, so it binds on all interfaces.
+    # Test the connectivity on the local address.
+    if http_address == "":
+        http_address = "127.0.0.1"
     try:
         r = requests.get(
-            "http://127.0.0.1:%d%s/hub/api" % (http_port, base_url), verify=False
+            "http://%s:%d%s/hub/api" % (http_address, http_port, base_url), verify=False
         )
+        if r.status_code != 200:
+            print(f"Hub not ready: (HTTP status {r.status_code})")
         return r.status_code == 200
-    except:
+    except Exception as e:
+        print(f"Hub not ready: {e}")
         return False
 
 

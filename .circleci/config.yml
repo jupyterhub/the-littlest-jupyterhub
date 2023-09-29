@@ -113,7 +113,7 @@ jobs:
       - run:
           name: Check upgrade testing
           command: |
-            if [ "$CIRCLE_BRANCH" == "master" ]; then
+            if [ "$CIRCLE_BRANCH" == "main" ]; then
                 echo "On master, no upgrade to test..."
                 circleci-agent step halt
             else

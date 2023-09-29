@@ -28,10 +28,12 @@ default = {
         "cpu": None,
     },
     "http": {
+        "address": "",
         "port": 80,
     },
     "https": {
         "enabled": False,
+        "address": "",
         "port": 443,
         "tls": {
             "cert": "",
@@ -40,6 +42,7 @@ default = {
         "letsencrypt": {
             "email": "",
             "domains": [],
+            "staging": False,
         },
     },
     "traefik_api": {
@@ -49,7 +52,7 @@ default = {
         "password": "",
     },
     "user_environment": {
-        "default_app": "classic",
+        "default_app": "jupyterlab",
     },
     "services": {
         "cull": {
@@ -59,8 +62,8 @@ default = {
             "concurrency": 5,
             "users": False,
             "max_age": 0,
+            "remove_named_servers": False,
         },
-        "configurator": {"enabled": False},
     },
 }
 
@@ -228,8 +231,8 @@ def update_user_environment(c, config):
     # Set default application users are launched into
     if user_env["default_app"] == "jupyterlab":
         c.Spawner.default_url = "/lab"
-    elif user_env["default_app"] == "nteract":
-        c.Spawner.default_url = "/nteract"
+    elif user_env["default_app"] == "classic":
+        c.Spawner.default_url = "/tree"
 
 
 def update_user_account_config(c, config):
@@ -240,8 +243,13 @@ def update_traefik_api(c, config):
     """
     Set traefik api endpoint credentials
     """
-    c.TraefikTomlProxy.traefik_api_username = config["traefik_api"]["username"]
-    c.TraefikTomlProxy.traefik_api_password = config["traefik_api"]["password"]
+    c.TraefikProxy.traefik_api_username = config["traefik_api"]["username"]
+    c.TraefikProxy.traefik_api_password = config["traefik_api"]["password"]
+    https = config["https"]
+    if https["enabled"]:
+        c.TraefikProxy.traefik_entrypoint = "https"
+    else:
+        c.TraefikProxy.traefik_entrypoint = "http"
 
 
 def set_cull_idle_service(config):
@@ -258,6 +266,8 @@ def set_cull_idle_service(config):
     cull_cmd += ["--max-age=%d" % cull_config["max_age"]]
     if cull_config["users"]:
         cull_cmd += ["--cull-users"]
+    if cull_config["remove_named_servers"]:
+        cull_cmd += ["--remove-named-servers"]
 
     cull_service = {
         "name": "cull-idle",
@@ -268,33 +278,11 @@ def set_cull_idle_service(config):
     return cull_service
 
 
-def set_configurator(config):
-    """
-    Set the JupyterHub Configurator service
-    """
-    HERE = os.path.abspath(os.path.dirname(__file__))
-    configurator_cmd = [
-        sys.executable,
-        "-m",
-        "jupyterhub_configurator.app",
-        f"--Configurator.config_file={HERE}/jupyterhub_configurator_config.py",
-    ]
-    configurator_service = {
-        "name": "configurator",
-        "url": "http://127.0.0.1:10101",
-        "command": configurator_cmd,
-    }
-
-    return configurator_service
-
-
 def update_services(c, config):
     c.JupyterHub.services = []
 
     if config["services"]["cull"]["enabled"]:
         c.JupyterHub.services.append(set_cull_idle_service(config))
-    if config["services"]["configurator"]["enabled"]:
-        c.JupyterHub.services.append(set_configurator(config))
 
 
 def _merge_dictionaries(a, b, path=None, update=True):

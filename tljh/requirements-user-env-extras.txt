@@ -1,0 +1,18 @@
+# When tljh.installer runs, the users' environment as typically found in
+# /opt/tljh/user, is installed with these packages.
+#
+# Whats listed here represents additional packages that the distributions
+# installs initially, but doesn't upgrade as tljh is upgraded.
+#
+# WARNING: The order of these dependencies matters, this was observed when using
+#          the requirements-txt-fixer pre-commit hook that sorted them and made
+#          our integration tests fail.
+#
+notebook==7.*
+jupyterlab==4.*
+# nbgitpuller for easily pulling in Git repositories
+nbgitpuller==1.*
+# jupyter-resource-usage to show people how much RAM they are using
+jupyter-resource-usage==1.*
+# Most people consider ipywidgets to be part of the core notebook experience
+ipywidgets==8.*

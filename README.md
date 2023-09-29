@@ -1,8 +1,8 @@
 # The Littlest JupyterHub
 
 [![Documentation build status](https://img.shields.io/readthedocs/the-littlest-jupyterhub?logo=read-the-docs)](https://tljh.jupyter.org/en/latest/?badge=latest)
-[![GitHub Workflow Status - Test](https://img.shields.io/github/workflow/status/jupyterhub/the-littlest-jupyterhub/Unit%20tests?logo=github&label=tests)](https://github.com/jupyterhub/the-littlest-jupyterhub/actions)
-[![Test coverage of code](https://codecov.io/gh/jupyterhub/the-littlest-jupyterhub/branch/master/graph/badge.svg)](https://codecov.io/gh/jupyterhub/the-littlest-jupyterhub)
+[![GitHub Workflow Status - Test](https://img.shields.io/github/actions/workflow/status/jupyterhub/the-littlest-jupyterhub/integration-test.yaml?logo=github&label=tests)](https://github.com/jupyterhub/the-littlest-jupyterhub/actions)
+[![Test coverage of code](https://codecov.io/gh/jupyterhub/the-littlest-jupyterhub/branch/main/graph/badge.svg)](https://codecov.io/gh/jupyterhub/the-littlest-jupyterhub)
 [![GitHub](https://img.shields.io/badge/issue_tracking-github-blue?logo=github)](https://github.com/jupyterhub/the-littlest-jupyterhub/issues)
 [![Discourse](https://img.shields.io/badge/help_forum-discourse-blue?logo=discourse)](https://discourse.jupyter.org/c/jupyterhub/tljh)
 [![Gitter](https://img.shields.io/badge/social_chat-gitter-blue?logo=gitter)](https://gitter.im/jupyterhub/jupyterhub)
@@ -36,7 +36,7 @@ might still make breaking changes that have no clear upgrade pathway.
 ## Installation
 
 The Littlest JupyterHub (TLJH) can run on any server that is running at least
-**Ubuntu 18.04**. Earlier versions of Ubuntu are not supported.
+**Ubuntu 20.04**. Earlier versions of Ubuntu are not supported.
 We have several tutorials to get you started.
 
 - Tutorials to create a new server from scratch on a cloud provider & run TLJH

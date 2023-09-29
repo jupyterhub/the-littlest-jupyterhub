@@ -1,8 +1,8 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="the-littlest-jupyterhub",
-    version="0.1",
+    version="1.0.1.dev",
     description="A small JupyterHub distribution",
     url="https://github.com/jupyterhub/the-littlest-jupyterhub",
     author="Jupyter Development Team",
@@ -14,11 +14,10 @@ setup(
         "ruamel.yaml==0.17.*",
         "jinja2",
         "pluggy==1.*",
-        "passlib",
         "backoff",
         "requests",
         "bcrypt",
-        "jupyterhub-traefik-proxy==0.3.*",
+        "jupyterhub-traefik-proxy==1.*",
     ],
     entry_points={
         "console_scripts": [
