@@ -19,7 +19,6 @@ def tljh_extra_user_conda_channels():
     """
     Return a list of conda channels to be used during user environment installation.
     """
-    pass
 
 
 @hookspec
