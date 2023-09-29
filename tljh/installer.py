@@ -460,7 +460,7 @@ def run_plugin_actions(plugin_manager):
             )
         )
         conda.ensure_conda_packages(
-            USER_ENV_PREFIX, conda_packages, conda_channels=conda_channels
+            USER_ENV_PREFIX, conda_packages, channels=conda_channels
         )
 
     # Install pip packages
