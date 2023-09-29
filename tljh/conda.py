@@ -117,7 +117,8 @@ def ensure_conda_packages(prefix, packages, channels=('conda-forge',), force_rei
         # avoids problems with RemoveError upgrading conda from old versions
         cmd += ["--force-reinstall"]
 
-    cmd += ["-c", channel for channel in channels]
+    for channel in channels:
+        cmd += ["-c", channel]
 
     abspath = os.path.abspath(prefix)
 
