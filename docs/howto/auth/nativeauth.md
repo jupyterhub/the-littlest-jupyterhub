@@ -42,4 +42,4 @@ tljh-config reload
 
 ## Optional features
 
-More optional features are available on the `authenticator documentation <https://native-authenticator.readthedocs.io/en/latest/>`
+More optional features are available on the [authenticator documentation](https://native-authenticator.readthedocs.io/en/latest/)
