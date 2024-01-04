@@ -14,7 +14,7 @@ jupyterhub-firstuseauthenticator>=1.0.0,<2
 jupyterhub-nativeauthenticator>=1.2.0,<2
 jupyterhub-ldapauthenticator>=1.3.2,<2
 jupyterhub-tmpauthenticator>=1.0.0,<2
-oauthenticator>=16.0.4,<17
+oauthenticator[azuread]>=16.0.4,<17
 jupyterhub-idle-culler>=1.2.1,<2
 
 # pycurl is installed to improve reliability and performance for when JupyterHub
