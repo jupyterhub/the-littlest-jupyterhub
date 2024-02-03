@@ -154,6 +154,13 @@ def remove_item_from_config(config, property_path, value):
     return config_copy
 
 
+def validate_config(config):
+    import json
+    import jsonschema
+    config_schema = json.load("config-schema.json")
+    jsonschema.validate(instance=config, schema=config_schema)
+
+
 def show_config(config_path):
     """
     Pretty print config from given config_path
@@ -180,6 +187,7 @@ def set_config_value(config_path, key_path, value):
         config = {}
 
     config = set_item_in_config(config, key_path, value)
+    validate_config(config)
 
     with open(config_path, "w") as f:
         yaml.dump(config, f)
