@@ -26,9 +26,7 @@ config_schema = {
                         "timeout": {"type": "integer"},
                         "every": {"type": "integer"},
                         "concurrency": {"type": "integer"},
-                        "users": {
-                            "type": "boolean",
-                        },
+                        "users": {"type": "boolean"},
                         "max_age": {"type": "integer"},
                         "remove_named_servers": {"type": "boolean"},
                     },
@@ -63,6 +61,7 @@ config_schema = {
                     "type": "array",
                     "items": {"type": "string", "format": "hostname"},
                 },
+                "staging": {"type": "boolean"},
             },
         },
         "TLS": {
@@ -93,12 +92,8 @@ config_schema = {
             "properties": {
                 "ip": {"type": "string", "format": "ipv4"},
                 "port": {"type": "integer"},
-                "username": {
-                    "type": "string",
-                },
-                "password": {
-                    "type": "string",
-                },
+                "username": {"type": "string"},
+                "password": {"type": "string"},
             },
         },
     },
