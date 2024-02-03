@@ -155,7 +155,9 @@ def remove_item_from_config(config, property_path, value):
 
 
 def validate_config(config):
-    import json, jsonschema
+    import json
+
+    import jsonschema
 
     pd = os.path.abspath(os.path.join(__file__, os.pardir))
     config_schema_file = os.path.join(pd, "config-schema.json")
