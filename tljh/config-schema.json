@@ -4,6 +4,7 @@
   "definitions": {
     "Users": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "extra_user_groups": {
           "type": "object",
