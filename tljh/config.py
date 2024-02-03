@@ -309,7 +309,7 @@ def parse_value(value_str):
         return float(value_str)
     elif value_str.lower() == "true":
         return True
-    elif value_str.lower() == "False":
+    elif value_str.lower() == "false":
         return False
     else:
         # it's a string
