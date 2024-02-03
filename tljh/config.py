@@ -165,7 +165,7 @@ def validate_config(config):
     try:
         jsonschema.validate(instance=config, schema=config_schema)
     except jsonschema.exceptions.ValidationError as e:
-        print(e)
+        print(e.message)
         exit()
 
 
