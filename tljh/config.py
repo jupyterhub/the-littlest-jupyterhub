@@ -156,7 +156,8 @@ def remove_item_from_config(config, property_path, value):
 
 def validate_config(config):
     import jsonschema
-    from config_schema import config_schema
+
+    from .config_schema import config_schema
 
     try:
         jsonschema.validate(instance=config, schema=config_schema)

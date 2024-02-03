@@ -2,6 +2,9 @@ config_schema = {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Littlest JupyterHub YAML config file",
     "definitions": {
+        "BaseURL": {
+            "type": "string",
+        },
         "Users": {
             "type": "object",
             "additionalProperties": False,
@@ -10,6 +13,26 @@ config_schema = {
                 "allowed": {"type": "array", "items": {"type": "string"}},
                 "banned": {"type": "array", "items": {"type": "string"}},
                 "admin": {"type": "array", "items": {"type": "string"}},
+            },
+        },
+        "Services": {
+            "type": "object",
+            "properties": {
+                "cull": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "properties": {
+                        "enabled": {"type": "boolean"},
+                        "timeout": {"type": "integer"},
+                        "every": {"type": "integer"},
+                        "concurrency": {"type": "integer"},
+                        "users": {
+                            "type": "boolean",
+                        },
+                        "max_age": {"type": "integer"},
+                        "remove_named_servers": {"type": "boolean"},
+                    },
+                }
             },
         },
         "HTTP": {
@@ -65,13 +88,30 @@ config_schema = {
                 }
             },
         },
+        "TraefikAPI": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "ip": {"type": "string", "format": "ipv4"},
+                "port": {"type": "integer"},
+                "username": {
+                    "type": "string",
+                },
+                "password": {
+                    "type": "string",
+                },
+            },
+        },
     },
     "properties": {
         "additionalProperties": False,
+        "base_url": {"$ref": "#/definitions/BaseURL"},
         "user_environment": {"$ref": "#/definitions/UserEnvironment"},
         "users": {"$ref": "#/definitions/Users"},
         "limits": {"$ref": "#/definitions/Limits"},
         "https": {"$ref": "#/definitions/HTTPS"},
         "http": {"$ref": "#/definitions/HTTP"},
+        "traefik_api": {"$ref": "#/definitions/TraefikAPI"},
+        "services": {"$ref": "#/definitions/Services"},
     },
 }
