@@ -155,10 +155,18 @@ def remove_item_from_config(config, property_path, value):
 
 
 def validate_config(config):
-    import json
-    import jsonschema
-    config_schema = json.load("config-schema.json")
-    jsonschema.validate(instance=config, schema=config_schema)
+    import json, jsonschema
+
+    cwd = os.getcwd()
+    config_schema_file = os.path.join(cwd, "config-schema.json")
+    with open(config_schema_file) as f:
+        config_schema = json.load(f)
+
+    try:
+        jsonschema.validate(instance=config, schema=config_schema)
+    except jsonschema.exceptions.ValidationError as e:
+        print(e)
+        exit()
 
 
 def show_config(config_path):
@@ -179,14 +187,13 @@ def set_config_value(config_path, key_path, value):
     Set key at key_path in config_path to value
     """
     # FIXME: Have a file lock here
-    # FIXME: Validate schema here
     try:
         with open(config_path) as f:
             config = yaml.load(f)
     except FileNotFoundError:
         config = {}
-
     config = set_item_in_config(config, key_path, value)
+
     validate_config(config)
 
     with open(config_path, "w") as f:
@@ -198,7 +205,6 @@ def unset_config_value(config_path, key_path):
     Unset key at key_path in config_path
     """
     # FIXME: Have a file lock here
-    # FIXME: Validate schema here
     try:
         with open(config_path) as f:
             config = yaml.load(f)
@@ -206,6 +212,7 @@ def unset_config_value(config_path, key_path):
         config = {}
 
     config = unset_item_from_config(config, key_path)
+    validate_config(config)
 
     with open(config_path, "w") as f:
         yaml.dump(config, f)
@@ -216,7 +223,6 @@ def add_config_value(config_path, key_path, value):
     Add value to list at key_path
     """
     # FIXME: Have a file lock here
-    # FIXME: Validate schema here
     try:
         with open(config_path) as f:
             config = yaml.load(f)
@@ -224,6 +230,7 @@ def add_config_value(config_path, key_path, value):
         config = {}
 
     config = add_item_to_config(config, key_path, value)
+    validate_config(config)
 
     with open(config_path, "w") as f:
         yaml.dump(config, f)
@@ -234,7 +241,6 @@ def remove_config_value(config_path, key_path, value):
     Remove value from list at key_path
     """
     # FIXME: Have a file lock here
-    # FIXME: Validate schema here
     try:
         with open(config_path) as f:
             config = yaml.load(f)
@@ -242,6 +248,7 @@ def remove_config_value(config_path, key_path, value):
         config = {}
 
     config = remove_item_from_config(config, key_path, value)
+    validate_config(config)
 
     with open(config_path, "w") as f:
         yaml.dump(config, f)

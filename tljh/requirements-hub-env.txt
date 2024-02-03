@@ -17,8 +17,6 @@ jupyterhub-tmpauthenticator>=1.0.0,<2
 oauthenticator[azuread]>=16.0.4,<17
 jupyterhub-idle-culler>=1.2.1,<2
 
-jsonschema
-
 # pycurl is installed to improve reliability and performance for when JupyterHub
 # makes web requests. JupyterHub will use tornado's CurlAsyncHTTPClient when
 # making requests over tornado's SimpleHTTPClient automatically if pycurl is
