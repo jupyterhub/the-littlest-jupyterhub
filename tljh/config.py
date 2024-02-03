@@ -155,14 +155,8 @@ def remove_item_from_config(config, property_path, value):
 
 
 def validate_config(config):
-    import json
-
     import jsonschema
-
-    pd = os.path.abspath(os.path.join(__file__, os.pardir))
-    config_schema_file = os.path.join(pd, "config-schema.json")
-    with open(config_schema_file) as f:
-        config_schema = json.load(f)
+    from config_schema import config_schema
 
     try:
         jsonschema.validate(instance=config, schema=config_schema)
@@ -314,7 +308,7 @@ def parse_value(value_str):
         return float(value_str)
     elif value_str.lower() == "true":
         return True
-    elif value_str.lower() == "false":
+    elif value_str.lower() == "False":
         return False
     else:
         # it's a string
