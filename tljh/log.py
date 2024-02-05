@@ -1,4 +1,5 @@
 """Setup tljh logging"""
+
 import logging
 import os
 

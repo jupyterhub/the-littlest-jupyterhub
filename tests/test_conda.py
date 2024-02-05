@@ -1,6 +1,7 @@
 """
 Test conda commandline wrappers
 """
+
 import os
 import subprocess
 import tempfile

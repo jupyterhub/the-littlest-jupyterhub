@@ -1,6 +1,7 @@
 """
 Test wrappers in tljw.user module
 """
+
 import grp
 import os
 import os.path

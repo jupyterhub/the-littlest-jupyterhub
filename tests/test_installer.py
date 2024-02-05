@@ -1,6 +1,7 @@
 """
 Unit test  functions in installer.py
 """
+
 import json
 import os
 from subprocess import PIPE, run

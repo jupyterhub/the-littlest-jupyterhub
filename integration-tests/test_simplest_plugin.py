@@ -2,6 +2,7 @@
 Test the plugin in integration-tests/plugins/simplest that makes use of all tljh
 recognized plugin hooks that are defined in tljh/hooks.py.
 """
+
 import os
 import subprocess
 

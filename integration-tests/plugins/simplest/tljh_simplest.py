@@ -1,6 +1,7 @@
 """
 Simplest plugin that exercises all the hooks defined in tljh/hooks.py.
 """
+
 from tljh.hooks import hookimpl
 
 
