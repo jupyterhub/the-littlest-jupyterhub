@@ -155,6 +155,9 @@ def remove_item_from_config(config, property_path, value):
 
 
 def validate_config(config):
+    """
+    Validate changes to the config with tljh-config against the schema
+    """
     import jsonschema
 
     from .config_schema import config_schema
