@@ -1,6 +1,7 @@
 """
 Test functions for normalizing various kinds of values
 """
+
 from tljh.normalize import generate_system_username
 
 

@@ -1,4 +1,5 @@
 """Test traefik configuration"""
+
 import os
 
 import pytest

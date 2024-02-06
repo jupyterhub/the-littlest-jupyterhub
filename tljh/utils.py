@@ -1,6 +1,7 @@
 """
 Miscellaneous functions useful in at least two places unrelated to each other
 """
+
 import logging
 import re
 import subprocess

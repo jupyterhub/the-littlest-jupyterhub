@@ -1,4 +1,5 @@
 """Traefik installation and setup"""
+
 import hashlib
 import io
 import logging
