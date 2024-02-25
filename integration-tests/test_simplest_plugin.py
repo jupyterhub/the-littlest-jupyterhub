@@ -20,7 +20,7 @@ def test_tljh_extra_user_conda_packages():
 
 
 def test_tljh_extra_user_pip_packages():
-    subprocess.check_call([f"{USER_ENV_PREFIX}/bin/python3", "-c", "import django"])
+    subprocess.check_call([f"{USER_ENV_PREFIX}/bin/python3", "-c", "import simplejson"])
 
 
 def test_tljh_extra_hub_pip_packages():
