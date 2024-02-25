@@ -1,4 +1,4 @@
 pytest
 pytest-cov
 pytest-asyncio
-git+https://github.com/yuvipanda/hubtraf.git
+git+https://github.com/consideratio/hubtraf.git
