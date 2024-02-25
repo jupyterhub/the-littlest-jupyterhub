@@ -12,7 +12,7 @@ def tljh_extra_user_conda_packages():
 
 @hookimpl
 def tljh_extra_user_pip_packages():
-    return ["django"]
+    return ["simplejson"]
 
 
 @hookimpl
