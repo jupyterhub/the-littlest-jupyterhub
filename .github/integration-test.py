@@ -167,7 +167,15 @@ def run_test(
         command = f"python3 /srv/src/bootstrap/bootstrap.py --version={upgrade_from}"
         run_command(container_name, command)
 
+        # show user environment
+        command = "/opt/tljh/user/bin/python3 -m pip freeze"
+        run_command(container_name, command)
+
     command = f"python3 /srv/src/bootstrap/bootstrap.py {' '.join(installer_args)}"
+    run_command(container_name, command)
+
+    # show user environment (again if upgrade)
+    command = "/opt/tljh/user/bin/python3 -m pip freeze"
     run_command(container_name, command)
 
     # Install pkgs from requirements in hub's pip, where
@@ -175,7 +183,7 @@ def run_test(
     command = "/opt/tljh/hub/bin/python3 -m pip install -r /srv/src/integration-tests/requirements.txt"
     run_command(container_name, command)
 
-    # show environment
+    # show hub environment
     command = "/opt/tljh/hub/bin/python3 -m pip freeze"
     run_command(container_name, command)
 
