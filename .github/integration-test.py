@@ -191,7 +191,7 @@ def show_logs(container_name):
 
     tljh logs ref: https://tljh.jupyter.org/en/latest/troubleshooting/logs.html
     """
-    run_command(container_name, "systemctl --no-pager status jupyterhub traefik")
+    run_command(container_name, "systemctl --no-pager status --full jupyterhub traefik")
     run_command(container_name, "journalctl --no-pager -u jupyterhub")
     run_command(container_name, "journalctl --no-pager -u traefik")
 

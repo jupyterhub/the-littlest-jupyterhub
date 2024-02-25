@@ -19,6 +19,15 @@ setup(
         "bcrypt",
         "jupyterhub-traefik-proxy==1.*",
     ],
+    extras_require={
+        "test": [
+            "packaging",
+            "pytest",
+            "pytest-cov",
+            "pytest-asyncio",
+            "pytest-mock",
+        ],
+    },
     entry_points={
         "console_scripts": [
             "tljh-config = tljh.config:main",

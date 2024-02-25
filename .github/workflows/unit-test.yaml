@@ -78,12 +78,11 @@ jobs:
             ${{ matrix.runs_on }}-
             ${{ matrix.ubuntu_version }}-
             ${{ matrix.python_version }}-
-            ${{ hashFiles('setup.py', 'dev-requirements.txt', '.github/workflows/unit-test.yaml') }}
+            ${{ hashFiles('setup.py', '.github/workflows/unit-test.yaml') }}
 
       - name: Install Python dependencies
         run: |
-          pip install -r dev-requirements.txt
-          pip install -e .
+          pip install -e ".[test]"
 
       - name: List Python dependencies
         run: |
