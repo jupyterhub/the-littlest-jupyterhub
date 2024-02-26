@@ -242,11 +242,10 @@ def ensure_user_environment(user_requirements_txt_file):
                 )
                 to_upgrade.append(pkg)
 
-    # force reinstall conda/mamba to ensure a basically consistent env
-    # avoids issues with RemoveError: 'requests' is a dependency of conda
-    # only do this for 'old' conda versions known to have a problem
-    # we don't know how old, but we know 4.10 is affected and 23.1 is not
-    if not is_fresh_install and V(package_versions.get("conda", "0")) < V("23.1"):
+    # force reinstall conda/mamba to ensure conda doesn't raise error
+    # "RemoveError: 'requests' is a dependency of conda" later on when
+    # conda/mamba is used to install/upgrade something
+    if not is_fresh_install:
         # force-reinstall doesn't upgrade packages
         # it reinstalls them in-place
         # only reinstall packages already present
