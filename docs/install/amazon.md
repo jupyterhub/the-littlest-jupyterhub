@@ -139,7 +139,7 @@ Let's create the server on which we can run JupyterHub.
     SSH to connect (port 22).
 
     If you have never used your Amazon account before, you'll have to select
-    **Create a new security group**. You should give it a disitnguishing name
+    **Create a new security group**. You should give it a distinctive name
     under **Security group name**
     such as `ssh_web` for future reference. If you already have a security group,
     you can select it and adjust it to have the rules you need, if you prefer.
