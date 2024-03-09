@@ -141,8 +141,8 @@ Let's create the server on which we can run JupyterHub.
     If you have never used your Amazon account before, you'll have to select
     **Create a new security group**. You should give it a disitnguishing name
     under **Security group name**
-    such as `ssh_web` for future reference. If you have, one from before you can
-    select it and adjust it to have the rules you need, if you prefer.
+    such as `ssh_web` for future reference. If you already have a security group,
+    you can select it and adjust it to have the rules you need, if you prefer.
 
     The rules will default to include `SSH`. Leave that there, and then click on
     the **Add Rule** button. Under **Type** for the new rule, change the field
