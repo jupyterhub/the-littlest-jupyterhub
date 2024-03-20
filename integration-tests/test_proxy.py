@@ -63,9 +63,9 @@ def test_manual_https(preserve_config):
             "/CN=tljh.jupyer.org",
         ]
     )
-    set_config_value(CONFIG_FILE, "https.enabled", True)
-    set_config_value(CONFIG_FILE, "https.tls.key", key)
-    set_config_value(CONFIG_FILE, "https.tls.cert", cert)
+    set_config_value(CONFIG_FILE, "https.enabled", True, True)
+    set_config_value(CONFIG_FILE, "https.tls.key", key, True)
+    set_config_value(CONFIG_FILE, "https.tls.cert", cert, True)
     reload_component("proxy")
     for i in range(10):
         time.sleep(i)
@@ -89,7 +89,7 @@ def test_manual_https(preserve_config):
 
     # cleanup
     shutil.rmtree(ssl_dir)
-    set_config_value(CONFIG_FILE, "https.enabled", False)
+    set_config_value(CONFIG_FILE, "https.enabled", False, True)
 
     reload_component("proxy")
 
