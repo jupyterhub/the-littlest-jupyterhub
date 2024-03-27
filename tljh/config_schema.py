@@ -1,3 +1,9 @@
+"""
+The schema against which the TLJH config file can be validated.
+
+Validation occurs when changing values with tljh-config.
+"""
+
 config_schema = {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Littlest JupyterHub YAML config file",
