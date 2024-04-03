@@ -223,7 +223,7 @@ def unset_config_value(config_path, key_path, validate):
         yaml.dump(config, f)
 
 
-def add_config_value(config_path, key_path, value, validate):
+def add_config_value(config_path, key_path, value, validate=True):
     """
     Add value to list at key_path
     """
