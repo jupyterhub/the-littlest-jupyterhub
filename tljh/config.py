@@ -205,7 +205,7 @@ def set_config_value(config_path, key_path, value, validate=True):
         yaml.dump(config, f)
 
 
-def unset_config_value(config_path, key_path, validate):
+def unset_config_value(config_path, key_path, validate=True):
     """
     Unset key at key_path in config_path
     """
