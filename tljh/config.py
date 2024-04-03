@@ -356,11 +356,17 @@ def main(argv=None):
     argparser.add_argument(
         "--config-path", default=CONFIG_FILE, help="Path to TLJH config.yaml file"
     )
+
     argparser.add_argument(
-        "--validate",
-        action=argparse.BooleanOptionalAction,
-        help="Validate the TLJH config",
+        "--validate", action="store_true", help="Validate the TLJH config"
     )
+    argparser.add_argument(
+        "--no-validate",
+        dest="validate",
+        action="store_false",
+        help="Do not validate the TLJH config",
+    )
+    argparser.set_defaults(validate=True)
 
     subparsers = argparser.add_subparsers(dest="action")
 
