@@ -187,7 +187,7 @@ def show_config(config_path):
     yaml.dump(config, sys.stdout)
 
 
-def set_config_value(config_path, key_path, value, validate):
+def set_config_value(config_path, key_path, value, validate=True):
     """
     Set key at key_path in config_path to value
     """
