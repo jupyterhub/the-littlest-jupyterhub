@@ -64,7 +64,7 @@ def test_default_config(tmpdir, tljh_dir):
 
 def test_letsencrypt_config(tljh_dir):
     state_dir = config.STATE_DIR
-    config.set_config_value(config.CONFIG_FILE, "https.enabled")
+    config.set_config_value(config.CONFIG_FILE, "https.enabled", True)
     config.set_config_value(
         config.CONFIG_FILE, "https.letsencrypt.email", "fake@jupyter.org"
     )
