@@ -241,7 +241,7 @@ def add_config_value(config_path, key_path, value, validate=True):
         yaml.dump(config, f)
 
 
-def remove_config_value(config_path, key_path, value, validate):
+def remove_config_value(config_path, key_path, value, validate=True):
     """
     Remove value from list at key_path
     """
