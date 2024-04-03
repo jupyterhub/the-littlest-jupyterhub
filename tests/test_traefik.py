@@ -64,12 +64,12 @@ def test_default_config(tmpdir, tljh_dir):
 
 def test_letsencrypt_config(tljh_dir):
     state_dir = config.STATE_DIR
-    config.set_config_value(config.CONFIG_FILE, "https.enabled", True, True)
+    config.set_config_value(config.CONFIG_FILE, "https.enabled")
     config.set_config_value(
-        config.CONFIG_FILE, "https.letsencrypt.email", "fake@jupyter.org", True
+        config.CONFIG_FILE, "https.letsencrypt.email", "fake@jupyter.org"
     )
     config.set_config_value(
-        config.CONFIG_FILE, "https.letsencrypt.domains", ["testing.jovyan.org"], True
+        config.CONFIG_FILE, "https.letsencrypt.domains", ["testing.jovyan.org"]
     )
     traefik.ensure_traefik_config(str(state_dir))
 
@@ -138,13 +138,9 @@ def test_letsencrypt_config(tljh_dir):
 
 def test_manual_ssl_config(tljh_dir):
     state_dir = config.STATE_DIR
-    config.set_config_value(config.CONFIG_FILE, "https.enabled", True, True)
-    config.set_config_value(
-        config.CONFIG_FILE, "https.tls.key", "/path/to/ssl.key", True
-    )
-    config.set_config_value(
-        config.CONFIG_FILE, "https.tls.cert", "/path/to/ssl.cert", True
-    )
+    config.set_config_value(config.CONFIG_FILE, "https.enabled", True)
+    config.set_config_value(config.CONFIG_FILE, "https.tls.key", "/path/to/ssl.key")
+    config.set_config_value(config.CONFIG_FILE, "https.tls.cert", "/path/to/ssl.cert")
     traefik.ensure_traefik_config(str(state_dir))
 
     cfg = _read_static_config(state_dir)
@@ -248,16 +244,12 @@ def test_extra_config(tmpdir, tljh_dir):
 
 def test_listen_address(tmpdir, tljh_dir):
     state_dir = config.STATE_DIR
-    config.set_config_value(config.CONFIG_FILE, "https.enabled", True, True)
-    config.set_config_value(
-        config.CONFIG_FILE, "https.tls.key", "/path/to/ssl.key", True
-    )
-    config.set_config_value(
-        config.CONFIG_FILE, "https.tls.cert", "/path/to/ssl.cert", True
-    )
+    config.set_config_value(config.CONFIG_FILE, "https.enabled", True)
+    config.set_config_value(config.CONFIG_FILE, "https.tls.key", "/path/to/ssl.key")
+    config.set_config_value(config.CONFIG_FILE, "https.tls.cert", "/path/to/ssl.cert")
 
-    config.set_config_value(config.CONFIG_FILE, "http.address", "127.0.0.1", True)
-    config.set_config_value(config.CONFIG_FILE, "https.address", "127.0.0.1", True)
+    config.set_config_value(config.CONFIG_FILE, "http.address", "127.0.0.1")
+    config.set_config_value(config.CONFIG_FILE, "https.address", "127.0.0.1")
 
     traefik.ensure_traefik_config(str(state_dir))
 
