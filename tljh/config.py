@@ -412,9 +412,6 @@ def main(argv=None):
 
     args = argparser.parse_args(argv)
 
-    if args.validate == None:
-        args.validate = True
-
     if args.action == "show":
         show_config(args.config_path)
     elif args.action == "set":
