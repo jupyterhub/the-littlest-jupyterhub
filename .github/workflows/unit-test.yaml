@@ -53,12 +53,13 @@ jobs:
         with:
           python-version: "${{ matrix.python_version }}"
 
-      - name: Install venv, git and setup venv
+      - name: Install venv, git, pip and setup venv
         run: |
           export DEBIAN_FRONTEND=noninteractive
           apt-get update
           apt-get install --yes \
               python3-venv \
+              python3-pip \
               bzip2 \
               git
 
