@@ -1,3 +1,4 @@
+filelock
 pytest
 pytest-cov
 pytest-asyncio
