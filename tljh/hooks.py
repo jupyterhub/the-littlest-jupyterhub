@@ -16,6 +16,13 @@ def tljh_extra_user_conda_packages():
 
 
 @hookspec
+def tljh_extra_user_conda_channels():
+    """
+    Return a list of conda channels to be used during user environment installation.
+    """
+
+
+@hookspec
 def tljh_extra_user_pip_packages():
     """
     Return list of extra pip packages to install in user environment.
