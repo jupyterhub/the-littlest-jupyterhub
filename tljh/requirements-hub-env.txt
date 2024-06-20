@@ -26,3 +26,5 @@ jupyterhub-idle-culler>=1.2.1,<2
 # ref: https://github.com/jupyterhub/the-littlest-jupyterhub/issues/289
 #
 pycurl>=7.45.2,<8
+
+filelock>=3.13.3,<4

@@ -178,12 +178,7 @@ def show_config(config_path):
     """
     Pretty print config from given config_path
     """
-    try:
-        with open(config_path) as f:
-            config = yaml.load(f)
-    except FileNotFoundError:
-        config = {}
-
+    config = get_current_config(config_path)
     yaml.dump(config, sys.stdout)
 
 
@@ -191,75 +186,105 @@ def set_config_value(config_path, key_path, value, validate=True):
     """
     Set key at key_path in config_path to value
     """
-    # FIXME: Have a file lock here
+    from filelock import FileLock, Timeout
+
+    lock_file = f"{config_path}.lock"
+    lock = FileLock(lock_file)
     try:
-        with open(config_path) as f:
-            config = yaml.load(f)
-    except FileNotFoundError:
-        config = {}
-    config = set_item_in_config(config, key_path, value)
+        with lock.acquire(timeout=1):
+            config = get_current_config(config_path)
+            config = set_item_in_config(config, key_path, value)
+            validate_config(config, validate)
 
-    validate_config(config, validate)
+            with open(config_path, "w") as f:
+                yaml.dump(config, f)
 
-    with open(config_path, "w") as f:
-        yaml.dump(config, f)
+    except Timeout:
+        print(f"Another instance of tljh-config holds the lock {lock_file}")
+        exit(1)
 
 
 def unset_config_value(config_path, key_path, validate=True):
     """
     Unset key at key_path in config_path
     """
-    # FIXME: Have a file lock here
+    from filelock import FileLock, Timeout
+
+    lock_file = f"{config_path}.lock"
+    lock = FileLock(lock_file)
     try:
-        with open(config_path) as f:
-            config = yaml.load(f)
-    except FileNotFoundError:
-        config = {}
+        with lock.acquire(timeout=1):
+            config = get_current_config(config_path)
+            config = unset_item_from_config(config, key_path)
+            validate_config(config, validate)
 
-    config = unset_item_from_config(config, key_path)
-    validate_config(config, validate)
+            with open(config_path, "w") as f:
+                yaml.dump(config, f)
 
-    with open(config_path, "w") as f:
-        yaml.dump(config, f)
+    except Timeout:
+        print(f"Another instance of tljh-config holds the lock {lock_file}")
+        exit(1)
 
 
 def add_config_value(config_path, key_path, value, validate=True):
     """
     Add value to list at key_path
     """
-    # FIXME: Have a file lock here
+    from filelock import FileLock, Timeout
+
+    lock_file = f"{config_path}.lock"
+    lock = FileLock(lock_file)
     try:
-        with open(config_path) as f:
-            config = yaml.load(f)
-    except FileNotFoundError:
-        config = {}
+        with lock.acquire(timeout=1):
+            config = get_current_config(config_path)
+            config = add_item_to_config(config, key_path, value)
+            validate_config(config, validate)
 
-    config = add_item_to_config(config, key_path, value)
-    validate_config(config, validate)
+            with open(config_path, "w") as f:
+                yaml.dump(config, f)
 
-    with open(config_path, "w") as f:
-        yaml.dump(config, f)
+    except Timeout:
+        print(f"Another instance of tljh-config holds the lock {lock_file}")
+        exit(1)
 
 
 def remove_config_value(config_path, key_path, value, validate=True):
     """
     Remove value from list at key_path
     """
-    # FIXME: Have a file lock here
+    from filelock import FileLock, Timeout
+
+    lock_file = f"{config_path}.lock"
+    lock = FileLock(lock_file)
+    try:
+        with lock.acquire(timeout=1):
+            config = get_current_config(config_path)
+            config = remove_item_from_config(config, key_path, value)
+            validate_config(config, validate)
+
+            with open(config_path, "w") as f:
+                yaml.dump(config, f)
+
+    except Timeout:
+        print(f"Another instance of tljh-config holds the lock {lock_file}")
+        exit(1)
+
+
+def get_current_config(config_path):
+    """
+    Retrieve the current config at config_path
+    """
     try:
         with open(config_path) as f:
-            config = yaml.load(f)
+            return yaml.load(f)
     except FileNotFoundError:
-        config = {}
-
-    config = remove_item_from_config(config, key_path, value)
-    validate_config(config, validate)
-
-    with open(config_path, "w") as f:
-        yaml.dump(config, f)
+        return {}
 
 
 def check_hub_ready():
+    """
+    Checks that hub is running.
+    """
     from .configurer import load_config
 
     base_url = load_config()["base_url"]
