@@ -27,6 +27,14 @@ def test_tljh_extra_hub_pip_packages():
     subprocess.check_call([f"{HUB_ENV_PREFIX}/bin/python3", "-c", "import there"])
 
 
+def test_conda_packages():
+    """
+    Test extra user conda packages are installed
+    """
+    subprocess.check_call([f"{USER_ENV_PREFIX}/bin/python3", "-c", "import hypothesis"])
+    subprocess.check_call([f"{USER_ENV_PREFIX}/bin/csvtk", "cat", "--help"])
+
+
 def test_tljh_extra_apt_packages():
     assert os.path.exists("/usr/games/sl")
 
