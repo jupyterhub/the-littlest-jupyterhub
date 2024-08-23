@@ -91,10 +91,16 @@ For more information on `tljh-config`, see [](/topic/tljh-config).
 4. Tell your JupyterHub to _use_ the GitHub OAuthenticator for authentication:
 
    ```
-   sudo tljh-config set auth.type oauthenticator.github.GitHubOAuthenticator
+   sudo tljh-config set auth.type github
    ```
 
-5. Restart your JupyterHub so that new users see these changes:
+5. Tell JupyterHub which users to allow, if you haven't already:
+
+   ```
+   sudo tljh-config add-item users.allowed good-user_1
+   ```
+
+6. Restart your JupyterHub so that new users see these changes:
 
    ```
    sudo tljh-config reload
