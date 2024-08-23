@@ -8,7 +8,7 @@
 # If a dependency is bumped to a new major version, we should make a major
 # version release of tljh.
 #
-jupyterhub>=4.0.2,<5
+jupyterhub>=5.1.0,<6
 jupyterhub-systemdspawner>=1.0.1,<2
 jupyterhub-firstuseauthenticator>=1.0.0,<2
 jupyterhub-nativeauthenticator>=1.2.0,<2

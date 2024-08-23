@@ -33,7 +33,7 @@ def test_hub_version():
     r = requests.get(HUB_URL + "/hub/api")
     r.raise_for_status()
     info = r.json()
-    assert V("4") <= V(info["version"]) <= V("5")
+    assert V("5.1") <= V(info["version"]) <= V("6")
 
 
 async def test_user_code_execute():
