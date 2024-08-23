@@ -199,6 +199,14 @@ def update_userlists(c, config):
     """
     users = config["users"]
 
+    if (
+        not users["allowed"]
+        and config["auth"]["type"] == default["auth"]["type"]
+        and "allow_all" not in c.FirstUseAuthenticator
+    ):
+        # _default_ authenticator, enable allow_all if no users specified
+        c.FirstUseAuthenticator.allow_all = True
+
     c.Authenticator.allowed_users = set(users["allowed"])
     c.Authenticator.blocked_users = set(users["banned"])
     c.Authenticator.admin_users = set(users["admin"])
