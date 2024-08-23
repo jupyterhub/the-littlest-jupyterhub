@@ -136,13 +136,13 @@ def ensure_usergroups():
         f.write("Defaults exempt_group = jupyterhub-admins\n")
 
 
-# Install mambaforge using an installer from
+# Install miniforge using an installer from
 # https://github.com/conda-forge/miniforge/releases
-MAMBAFORGE_VERSION = "23.1.0-1"
+MINIFORGE_VERSION = "24.5.0-0"
 # sha256 checksums
-MAMBAFORGE_CHECKSUMS = {
-    "aarch64": "d9d89c9e349369702171008d9ee7c5ce80ed420e5af60bd150a3db4bf674443a",
-    "x86_64": "cfb16c47dc2d115c8b114280aa605e322173f029fdb847a45348bf4bd23c62ab",
+MINIFORGE_CHECKSUMS = {
+    "aarch64": "848f2d6917c473b1091e31a51241a7626d4dac4b90809a9b2ed937e0cea18d87",
+    "x86_64": "a754b435830e1c038dada434873ad69a99970a4ea17a68d3bbcade0a37c8c8fb",
 }
 
 # minimum versions of packages
@@ -156,22 +156,22 @@ MINIMUM_VERSIONS = {
 }
 
 
-def _mambaforge_url(version=MAMBAFORGE_VERSION, arch=None):
-    """Return (URL, checksum) for mambaforge download for a given version and arch
+def _miniforge_url(version=MINIFORGE_VERSION, arch=None):
+    """Return (URL, checksum) for miniforge download for a given version and arch
 
     Default values provided for both version and arch
     """
     if arch is None:
         arch = os.uname().machine
-    installer_url = "https://github.com/conda-forge/miniforge/releases/download/{v}/Mambaforge-{v}-Linux-{arch}.sh".format(
+    installer_url = "https://github.com/conda-forge/miniforge/releases/download/{v}/Miniforge3-{v}-Linux-{arch}.sh".format(
         v=version,
         arch=arch,
     )
     # Check system architecture, set appropriate installer checksum
-    checksum = MAMBAFORGE_CHECKSUMS.get(arch)
+    checksum = MINIFORGE_CHECKSUMS.get(arch)
     if not checksum:
         raise ValueError(
-            f"Unsupported architecture: {arch}. TLJH only supports {','.join(MAMBAFORGE_CHECKSUMS.keys())}"
+            f"Unsupported architecture: {arch}. TLJH only supports {','.join(MINIFORGE_CHECKSUMS.keys())}"
         )
     return installer_url, checksum
 
@@ -198,7 +198,7 @@ def ensure_user_environment(user_requirements_txt_file):
             raise OSError(msg)
 
         logger.info("Downloading & setting up user environment...")
-        installer_url, installer_sha256 = _mambaforge_url()
+        installer_url, installer_sha256 = _miniforge_url()
         with conda.download_miniconda_installer(
             installer_url, installer_sha256
         ) as installer_path:
