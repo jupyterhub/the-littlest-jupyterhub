@@ -26,3 +26,6 @@ jupyterhub-idle-culler>=1.2.1,<2
 # ref: https://github.com/jupyterhub/the-littlest-jupyterhub/issues/289
 #
 pycurl>=7.45.2,<8
+
+# filelock is used to help us do atomic operations on config file(s)
+filelock>=3.15.4,<4

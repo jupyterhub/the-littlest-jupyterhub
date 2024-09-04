@@ -1,3 +1,4 @@
+filelock
 packaging
 pytest
 pytest-cov
