@@ -125,8 +125,8 @@ def _specifier(version):
             None,
             {
                 "python": "3.12.*",
-                "conda": "24.5.0",
-                "mamba": "1.5.8",
+                "conda": "24.7.1",
+                "mamba": "1.5.9",
             },
         ),
         # previous install, 1.0
