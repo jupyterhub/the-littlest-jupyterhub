@@ -27,6 +27,17 @@ def test_tljh_extra_hub_pip_packages():
     subprocess.check_call([f"{HUB_ENV_PREFIX}/bin/python3", "-c", "import there"])
 
 
+def test_conda_packages():
+    """
+    Test extra user conda packages are installed from multiple channels.
+
+    - tqdm installs from the conda-forge channel (https://conda-forge.org/packages/)
+    - csvtk installs from the bioconda channel (https://bioconda.github.io/conda-package_index.html)
+    """
+    subprocess.check_call([f"{USER_ENV_PREFIX}/bin/python3", "-c", "import tqdm"])
+    subprocess.check_call([f"{USER_ENV_PREFIX}/bin/csvtk", "cat", "--help"])
+
+
 def test_tljh_extra_apt_packages():
     assert os.path.exists("/usr/games/sl")
 

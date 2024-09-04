@@ -99,9 +99,11 @@ def install_miniconda(installer_path, prefix):
     fix_permissions(prefix)
 
 
-def ensure_conda_packages(prefix, packages, force_reinstall=False):
+def ensure_conda_packages(
+    prefix, packages, channels=("conda-forge",), force_reinstall=False
+):
     """
-    Ensure packages (from conda-forge) are installed in the conda prefix.
+    Ensure packages (from channels) are installed in the conda prefix.
 
     Note that conda seem to update dependencies by default, so there is probably
     no need to have a update parameter exposed for this function.
@@ -118,13 +120,14 @@ def ensure_conda_packages(prefix, packages, force_reinstall=False):
         # avoids problems with RemoveError upgrading conda from old versions
         cmd += ["--force-reinstall"]
 
+    for channel in channels:
+        cmd += ["-c", channel]
+
     abspath = os.path.abspath(prefix)
 
     utils.run_subprocess(
         cmd
         + [
-            "-c",
-            "conda-forge",  # Make customizable if we ever need to
             "--prefix",
             abspath,
         ]

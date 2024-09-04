@@ -7,7 +7,14 @@ from tljh.hooks import hookimpl
 
 @hookimpl
 def tljh_extra_user_conda_packages():
-    return ["tqdm"]
+    # tqdm installs from the conda-forge channel (https://conda-forge.org/packages/)
+    # csvtk installs from the bioconda channel (https://bioconda.github.io/conda-package_index.html)
+    return ["tqdm", "csvtk"]
+
+
+@hookimpl
+def tljh_extra_user_conda_channels():
+    return ["conda-forge", "bioconda"]
 
 
 @hookimpl
