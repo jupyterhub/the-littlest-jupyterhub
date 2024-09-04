@@ -36,11 +36,17 @@ jobs:
           - name: "Debian 11, Py 3.9"
             distro_image: "debian:11"
             extra_flags: ""
+          - name: "Debian 12, Py 3.11"
+            distro_image: "debian:12"
+            extra_flags: ""
           - name: "Ubuntu 20.04, Py 3.8"
             distro_image: "ubuntu:20.04"
             extra_flags: ""
           - name: "Ubuntu 22.04 Py 3.10"
             distro_image: "ubuntu:22.04"
+            extra_flags: ""
+          - name: "Ubuntu 24.04 Py 3.12"
+            distro_image: "ubuntu:24.04"
             extra_flags: ""
           - name: "Ubuntu 22.04, Py 3.10, from main"
             distro_image: "ubuntu:22.04"
@@ -53,8 +59,8 @@ jobs:
             extra_flags: --upgrade-from=0.2.0
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
@@ -116,8 +122,8 @@ jobs:
             distro_image: "ubuntu:22.04"
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 

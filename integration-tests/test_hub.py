@@ -33,7 +33,7 @@ def test_hub_version():
     r = requests.get(HUB_URL + "/hub/api")
     r.raise_for_status()
     info = r.json()
-    assert V("4") <= V(info["version"]) <= V("5")
+    assert V("5.1") <= V(info["version"]) <= V("6")
 
 
 async def test_user_code_execute():
@@ -59,9 +59,9 @@ async def test_user_code_execute():
 
     async with User(username, HUB_URL, partial(login_dummy, password="")) as u:
         assert await u.login()
-        await u.ensure_server_simulate(timeout=60, spawn_refresh_time=5)
-        await u.start_kernel()
-        await u.assert_code_output("5 * 4", "20", 5, 5)
+        assert await u.ensure_server_simulate(timeout=60, spawn_refresh_time=5)
+        assert await u.start_kernel()
+        assert await u.assert_code_output("5 * 4", "20", 5, 5)
 
 
 async def test_user_server_started_with_custom_base_url():

@@ -136,13 +136,13 @@ def ensure_usergroups():
         f.write("Defaults exempt_group = jupyterhub-admins\n")
 
 
-# Install mambaforge using an installer from
+# Install miniforge using an installer from
 # https://github.com/conda-forge/miniforge/releases
-MAMBAFORGE_VERSION = "23.1.0-1"
+MINIFORGE_VERSION = "24.7.1-0"
 # sha256 checksums
-MAMBAFORGE_CHECKSUMS = {
-    "aarch64": "d9d89c9e349369702171008d9ee7c5ce80ed420e5af60bd150a3db4bf674443a",
-    "x86_64": "cfb16c47dc2d115c8b114280aa605e322173f029fdb847a45348bf4bd23c62ab",
+MINIFORGE_CHECKSUMS = {
+    "aarch64": "7a3372268b45679584043b4ba1e0318ee5027384a8d330f2d991b14d815d6a6d",
+    "x86_64": "b64f77042cf8eafd31ced64f9253a74fb85db63545fe167ba5756aea0e8125be",
 }
 
 # minimum versions of packages
@@ -156,22 +156,22 @@ MINIMUM_VERSIONS = {
 }
 
 
-def _mambaforge_url(version=MAMBAFORGE_VERSION, arch=None):
-    """Return (URL, checksum) for mambaforge download for a given version and arch
+def _miniforge_url(version=MINIFORGE_VERSION, arch=None):
+    """Return (URL, checksum) for miniforge download for a given version and arch
 
     Default values provided for both version and arch
     """
     if arch is None:
         arch = os.uname().machine
-    installer_url = "https://github.com/conda-forge/miniforge/releases/download/{v}/Mambaforge-{v}-Linux-{arch}.sh".format(
+    installer_url = "https://github.com/conda-forge/miniforge/releases/download/{v}/Miniforge3-{v}-Linux-{arch}.sh".format(
         v=version,
         arch=arch,
     )
     # Check system architecture, set appropriate installer checksum
-    checksum = MAMBAFORGE_CHECKSUMS.get(arch)
+    checksum = MINIFORGE_CHECKSUMS.get(arch)
     if not checksum:
         raise ValueError(
-            f"Unsupported architecture: {arch}. TLJH only supports {','.join(MAMBAFORGE_CHECKSUMS.keys())}"
+            f"Unsupported architecture: {arch}. TLJH only supports {','.join(MINIFORGE_CHECKSUMS.keys())}"
         )
     return installer_url, checksum
 
@@ -198,7 +198,7 @@ def ensure_user_environment(user_requirements_txt_file):
             raise OSError(msg)
 
         logger.info("Downloading & setting up user environment...")
-        installer_url, installer_sha256 = _mambaforge_url()
+        installer_url, installer_sha256 = _miniforge_url()
         with conda.download_miniconda_installer(
             installer_url, installer_sha256
         ) as installer_path:
@@ -242,11 +242,10 @@ def ensure_user_environment(user_requirements_txt_file):
                 )
                 to_upgrade.append(pkg)
 
-    # force reinstall conda/mamba to ensure a basically consistent env
-    # avoids issues with RemoveError: 'requests' is a dependency of conda
-    # only do this for 'old' conda versions known to have a problem
-    # we don't know how old, but we know 4.10 is affected and 23.1 is not
-    if not is_fresh_install and V(package_versions.get("conda", "0")) < V("23.1"):
+    # force reinstall conda/mamba to ensure conda doesn't raise error
+    # "RemoveError: 'requests' is a dependency of conda" later on when
+    # conda/mamba is used to install/upgrade something
+    if not is_fresh_install:
         # force-reinstall doesn't upgrade packages
         # it reinstalls them in-place
         # only reinstall packages already present

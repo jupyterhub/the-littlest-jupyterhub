@@ -26,7 +26,7 @@ sudo rm -rf /opt/tljh/hub
 
 ## User environment
 
-By default, a `mambaforge` conda environment is installed in `/opt/tljh/user`. This contains
+By default, a `miniforge` conda environment is installed in `/opt/tljh/user`. This contains
 the notebook interface used to launch all users, and the various packages available to all
 users. The environment is owned by the `root` user. JupyterHub admins may use
 to `sudo -E conda install` or `sudo -E pip install` packages into this environment.

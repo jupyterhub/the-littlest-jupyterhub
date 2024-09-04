@@ -23,7 +23,7 @@ PrivateDevices=yes
 ProtectKernelTunables=yes
 ProtectKernelModules=yes
 Environment=TLJH_INSTALL_PREFIX=/opt/tljh
-ExecStart=/opt/tljh/hub/bin/python3 -m jupyterhub.app -f jupyterhub_config.py --upgrade-db
+ExecStart=/opt/tljh/hub/bin/python3 -m jupyterhub -f jupyterhub_config.py --upgrade-db
 
 [Install]
 WantedBy=multi-user.target

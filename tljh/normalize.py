@@ -1,6 +1,7 @@
 """
 Functions to normalize various inputs
 """
+
 import hashlib
 
 

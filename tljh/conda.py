@@ -1,6 +1,7 @@
 """
 Wrap conda commandline program
 """
+
 import contextlib
 import hashlib
 import json

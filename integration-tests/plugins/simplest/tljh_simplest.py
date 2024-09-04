@@ -1,6 +1,7 @@
 """
 Simplest plugin that exercises all the hooks defined in tljh/hooks.py.
 """
+
 from tljh.hooks import hookimpl
 
 
@@ -16,7 +17,7 @@ def tljh_extra_user_conda_channels():
 
 @hookimpl
 def tljh_extra_user_pip_packages():
-    return ["django"]
+    return ["simplejson"]
 
 
 @hookimpl

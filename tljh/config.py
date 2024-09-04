@@ -154,92 +154,137 @@ def remove_item_from_config(config, property_path, value):
     return config_copy
 
 
+def validate_config(config, validate):
+    """
+    Validate changes to the config with tljh-config against the schema
+    """
+    import jsonschema
+
+    from .config_schema import config_schema
+
+    try:
+        jsonschema.validate(instance=config, schema=config_schema)
+    except jsonschema.exceptions.ValidationError as e:
+        if validate:
+            print(
+                f"Config validation error: {e.message}.\n"
+                "You can still apply this change without validation by re-running your command with the --no-validate flag.\n"
+                "If you think this validation error is incorrect, please report it to https://github.com/jupyterhub/the-littlest-jupyterhub/issues."
+            )
+            exit()
+
+
 def show_config(config_path):
     """
     Pretty print config from given config_path
     """
-    try:
-        with open(config_path) as f:
-            config = yaml.load(f)
-    except FileNotFoundError:
-        config = {}
-
+    config = get_current_config(config_path)
     yaml.dump(config, sys.stdout)
 
 
-def set_config_value(config_path, key_path, value):
+def set_config_value(config_path, key_path, value, validate=True):
     """
     Set key at key_path in config_path to value
     """
-    # FIXME: Have a file lock here
-    # FIXME: Validate schema here
+    from filelock import FileLock, Timeout
+
+    lock_file = f"{config_path}.lock"
+    lock = FileLock(lock_file)
     try:
-        with open(config_path) as f:
-            config = yaml.load(f)
-    except FileNotFoundError:
-        config = {}
+        with lock.acquire(timeout=1):
+            config = get_current_config(config_path)
+            config = set_item_in_config(config, key_path, value)
+            validate_config(config, validate)
 
-    config = set_item_in_config(config, key_path, value)
+            with open(config_path, "w") as f:
+                yaml.dump(config, f)
 
-    with open(config_path, "w") as f:
-        yaml.dump(config, f)
+    except Timeout:
+        print(f"Another instance of tljh-config holds the lock {lock_file}")
+        exit(1)
 
 
-def unset_config_value(config_path, key_path):
+def unset_config_value(config_path, key_path, validate=True):
     """
     Unset key at key_path in config_path
     """
-    # FIXME: Have a file lock here
-    # FIXME: Validate schema here
+    from filelock import FileLock, Timeout
+
+    lock_file = f"{config_path}.lock"
+    lock = FileLock(lock_file)
     try:
-        with open(config_path) as f:
-            config = yaml.load(f)
-    except FileNotFoundError:
-        config = {}
+        with lock.acquire(timeout=1):
+            config = get_current_config(config_path)
+            config = unset_item_from_config(config, key_path)
+            validate_config(config, validate)
 
-    config = unset_item_from_config(config, key_path)
+            with open(config_path, "w") as f:
+                yaml.dump(config, f)
 
-    with open(config_path, "w") as f:
-        yaml.dump(config, f)
+    except Timeout:
+        print(f"Another instance of tljh-config holds the lock {lock_file}")
+        exit(1)
 
 
-def add_config_value(config_path, key_path, value):
+def add_config_value(config_path, key_path, value, validate=True):
     """
     Add value to list at key_path
     """
-    # FIXME: Have a file lock here
-    # FIXME: Validate schema here
+    from filelock import FileLock, Timeout
+
+    lock_file = f"{config_path}.lock"
+    lock = FileLock(lock_file)
     try:
-        with open(config_path) as f:
-            config = yaml.load(f)
-    except FileNotFoundError:
-        config = {}
+        with lock.acquire(timeout=1):
+            config = get_current_config(config_path)
+            config = add_item_to_config(config, key_path, value)
+            validate_config(config, validate)
 
-    config = add_item_to_config(config, key_path, value)
+            with open(config_path, "w") as f:
+                yaml.dump(config, f)
 
-    with open(config_path, "w") as f:
-        yaml.dump(config, f)
+    except Timeout:
+        print(f"Another instance of tljh-config holds the lock {lock_file}")
+        exit(1)
 
 
-def remove_config_value(config_path, key_path, value):
+def remove_config_value(config_path, key_path, value, validate=True):
     """
     Remove value from list at key_path
     """
-    # FIXME: Have a file lock here
-    # FIXME: Validate schema here
+    from filelock import FileLock, Timeout
+
+    lock_file = f"{config_path}.lock"
+    lock = FileLock(lock_file)
+    try:
+        with lock.acquire(timeout=1):
+            config = get_current_config(config_path)
+            config = remove_item_from_config(config, key_path, value)
+            validate_config(config, validate)
+
+            with open(config_path, "w") as f:
+                yaml.dump(config, f)
+
+    except Timeout:
+        print(f"Another instance of tljh-config holds the lock {lock_file}")
+        exit(1)
+
+
+def get_current_config(config_path):
+    """
+    Retrieve the current config at config_path
+    """
     try:
         with open(config_path) as f:
-            config = yaml.load(f)
+            return yaml.load(f)
     except FileNotFoundError:
-        config = {}
-
-    config = remove_item_from_config(config, key_path, value)
-
-    with open(config_path, "w") as f:
-        yaml.dump(config, f)
+        return {}
 
 
 def check_hub_ready():
+    """
+    Checks that hub is running.
+    """
     from .configurer import load_config
 
     base_url = load_config()["base_url"]
@@ -336,6 +381,18 @@ def main(argv=None):
     argparser.add_argument(
         "--config-path", default=CONFIG_FILE, help="Path to TLJH config.yaml file"
     )
+
+    argparser.add_argument(
+        "--validate", action="store_true", help="Validate the TLJH config"
+    )
+    argparser.add_argument(
+        "--no-validate",
+        dest="validate",
+        action="store_false",
+        help="Do not validate the TLJH config",
+    )
+    argparser.set_defaults(validate=True)
+
     subparsers = argparser.add_subparsers(dest="action")
 
     show_parser = subparsers.add_parser("show", help="Show current configuration")
@@ -383,13 +440,19 @@ def main(argv=None):
     if args.action == "show":
         show_config(args.config_path)
     elif args.action == "set":
-        set_config_value(args.config_path, args.key_path, parse_value(args.value))
+        set_config_value(
+            args.config_path, args.key_path, parse_value(args.value), args.validate
+        )
     elif args.action == "unset":
-        unset_config_value(args.config_path, args.key_path)
+        unset_config_value(args.config_path, args.key_path, args.validate)
     elif args.action == "add-item":
-        add_config_value(args.config_path, args.key_path, parse_value(args.value))
+        add_config_value(
+            args.config_path, args.key_path, parse_value(args.value), args.validate
+        )
     elif args.action == "remove-item":
-        remove_config_value(args.config_path, args.key_path, parse_value(args.value))
+        remove_config_value(
+            args.config_path, args.key_path, parse_value(args.value), args.validate
+        )
     elif args.action == "reload":
         reload_component(args.component)
     else:

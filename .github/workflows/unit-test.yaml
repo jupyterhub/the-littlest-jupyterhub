@@ -48,17 +48,18 @@ jobs:
             python_version: "3.10"
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "${{ matrix.python_version }}"
 
-      - name: Install venv, git and setup venv
+      - name: Install venv, git, pip and setup venv
         run: |
           export DEBIAN_FRONTEND=noninteractive
           apt-get update
           apt-get install --yes \
               python3-venv \
+              python3-pip \
               bzip2 \
               git
 
@@ -70,7 +71,7 @@ jobs:
       #          completion. Make sure to update the key to bust the cache
       #          properly if you make a change that should influence it.
       - name: Load cached Python dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: /srv/venv/
           key: >-
@@ -93,4 +94,4 @@ jobs:
         run: pytest tests
         timeout-minutes: 15
 
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4

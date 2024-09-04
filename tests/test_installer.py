@@ -1,6 +1,7 @@
 """
 Unit test  functions in installer.py
 """
+
 import json
 import os
 from subprocess import PIPE, run
@@ -45,12 +46,12 @@ def test_ensure_admins(tljh_dir, admins, expected_config):
 
 
 def setup_conda(distro, version, prefix):
-    """Install mambaforge or miniconda in a prefix"""
+    """Install miniforge or miniconda in a prefix"""
     if distro == "mambaforge":
-        installer_url, _ = installer._mambaforge_url(version)
+        installer_url, _ = installer._miniforge_url(version)
+        installer_url = installer_url.replace("Miniforge3", "Mambaforge")
     elif distro == "miniforge":
-        installer_url, _ = installer._mambaforge_url(version)
-        installer_url = installer_url.replace("Mambaforge", "Miniforge3")
+        installer_url, _ = installer._miniforge_url(version)
     elif distro == "miniconda":
         arch = os.uname().machine
         installer_url = (
@@ -123,9 +124,9 @@ def _specifier(version):
             None,
             None,
             {
-                "python": "3.10.*",
-                "conda": "23.1.0",
-                "mamba": "1.4.1",
+                "python": "3.12.*",
+                "conda": "24.7.1",
+                "mamba": "1.5.9",
             },
         ),
         # previous install, 1.0

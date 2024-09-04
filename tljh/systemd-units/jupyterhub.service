@@ -18,7 +18,7 @@ Environment=TLJH_INSTALL_PREFIX={install_prefix}
 Environment=PATH={install_prefix}/hub/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 # Run upgrade-db before starting, in case Hub version has changed
 # This is a no-op when no db exists or no upgrades are needed
-ExecStart={python_interpreter_path} -m jupyterhub.app -f {jupyterhub_config_path} --upgrade-db
+ExecStart={python_interpreter_path} -m jupyterhub -f {jupyterhub_config_path} --upgrade-db
 
 [Install]
 # Start service when system boots
