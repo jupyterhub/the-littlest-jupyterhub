@@ -149,9 +149,10 @@ If it is not provided as array, there is an easy fix. Just add these lines to
 your `awscognito.py`:
 
 ```python
-def claim_groups_key_func(user_data_resp_json):
-    return [user_data_resp_json['custom:department']]
+def groups_key_func(auth_state):
+    return [auth_state['oauth_user']['custom:department']]
 
-c.GenericOAuthenticator.claim_groups_key = claim_groups_key_func
+c.GenericOAuthenticator.manage_groups = True
+c.GenericOAuthenticator.auth_state_groups_key = groups_key_func
 c.GenericOAuthenticator.allowed_groups = ["AA BB CC", "AA BB DD"]
 ```
