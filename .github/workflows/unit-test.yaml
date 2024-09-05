@@ -46,6 +46,9 @@ jobs:
           - name: "Ubuntu 22.04, Py 3.10"
             ubuntu_version: "22.04"
             python_version: "3.10"
+          - name: "Ubuntu 24.04, Py 3.12"
+            ubuntu_version: "24.04"
+            python_version: "3.12"
 
     steps:
       - uses: actions/checkout@v4

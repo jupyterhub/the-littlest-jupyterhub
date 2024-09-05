@@ -147,8 +147,8 @@ def test_reload_hub():
         "tljh.systemd.check_service_active"
     ) as check_active, mock.patch("tljh.config.check_hub_ready") as check_ready:
         config.reload_component("hub")
-    assert restart_service.called_with("jupyterhub")
-    assert check_active.called_with("jupyterhub")
+    restart_service.assert_called_with("jupyterhub")
+    check_active.assert_called_with("jupyterhub")
 
 
 def test_reload_proxy(tljh_dir):
@@ -156,8 +156,8 @@ def test_reload_proxy(tljh_dir):
         "tljh.systemd.check_service_active"
     ) as check_active:
         config.reload_component("proxy")
-    assert restart_service.called_with("traefik")
-    assert check_active.called_with("traefik")
+    restart_service.assert_called_with("traefik")
+    check_active.assert_called_with("traefik")
     assert os.path.exists(os.path.join(config.STATE_DIR, "traefik.toml"))
 
 
