@@ -15,6 +15,7 @@ setup(
         "jinja2",
         "pluggy==1.*",
         "backoff",
+        "filelock",
         "requests",
         "bcrypt",
         "jupyterhub-traefik-proxy==1.*",
