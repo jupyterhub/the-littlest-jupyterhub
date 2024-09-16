@@ -18,9 +18,11 @@ import re
 import sys
 import time
 from collections.abc import Mapping, Sequence
+from contextlib import contextmanager
 from copy import deepcopy
 
 import requests
+from filelock import FileLock, Timeout
 
 from .yaml import yaml
 
@@ -30,6 +32,22 @@ USER_ENV_PREFIX = os.path.join(INSTALL_PREFIX, "user")
 STATE_DIR = os.path.join(INSTALL_PREFIX, "state")
 CONFIG_DIR = os.path.join(INSTALL_PREFIX, "config")
 CONFIG_FILE = os.path.join(CONFIG_DIR, "config.yaml")
+
+
+@contextmanager
+def config_file_lock(config_path, timeout=1):
+    """Context manager to acquire the config file lock"""
+    lock_file = f"{config_path}.lock"
+    try:
+        with FileLock(lock_file).acquire(timeout=timeout):
+            yield
+
+    except Timeout:
+        print(
+            f"Another instance of tljh-config holds the lock {lock_file}.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
 
 def set_item_in_config(config, property_path, value):
@@ -169,9 +187,10 @@ def validate_config(config, validate):
             print(
                 f"Config validation error: {e.message}.\n"
                 "You can still apply this change without validation by re-running your command with the --no-validate flag.\n"
-                "If you think this validation error is incorrect, please report it to https://github.com/jupyterhub/the-littlest-jupyterhub/issues."
+                "If you think this validation error is incorrect, please report it to https://github.com/jupyterhub/the-littlest-jupyterhub/issues.",
+                file=sys.stderr,
             )
-            exit()
+            sys.exit(1)
 
 
 def show_config(config_path):
@@ -186,88 +205,52 @@ def set_config_value(config_path, key_path, value, validate=True):
     """
     Set key at key_path in config_path to value
     """
-    from filelock import FileLock, Timeout
+    with config_file_lock(config_path):
+        config = get_current_config(config_path)
+        config = set_item_in_config(config, key_path, value)
+        validate_config(config, validate)
 
-    lock_file = f"{config_path}.lock"
-    lock = FileLock(lock_file)
-    try:
-        with lock.acquire(timeout=1):
-            config = get_current_config(config_path)
-            config = set_item_in_config(config, key_path, value)
-            validate_config(config, validate)
-
-            with open(config_path, "w") as f:
-                yaml.dump(config, f)
-
-    except Timeout:
-        print(f"Another instance of tljh-config holds the lock {lock_file}")
-        exit(1)
+        with open(config_path, "w") as f:
+            yaml.dump(config, f)
 
 
 def unset_config_value(config_path, key_path, validate=True):
     """
     Unset key at key_path in config_path
     """
-    from filelock import FileLock, Timeout
+    with config_file_lock(config_path):
+        config = get_current_config(config_path)
+        config = unset_item_from_config(config, key_path)
+        validate_config(config, validate)
 
-    lock_file = f"{config_path}.lock"
-    lock = FileLock(lock_file)
-    try:
-        with lock.acquire(timeout=1):
-            config = get_current_config(config_path)
-            config = unset_item_from_config(config, key_path)
-            validate_config(config, validate)
-
-            with open(config_path, "w") as f:
-                yaml.dump(config, f)
-
-    except Timeout:
-        print(f"Another instance of tljh-config holds the lock {lock_file}")
-        exit(1)
+        with open(config_path, "w") as f:
+            yaml.dump(config, f)
 
 
 def add_config_value(config_path, key_path, value, validate=True):
     """
     Add value to list at key_path
     """
-    from filelock import FileLock, Timeout
+    with config_file_lock(config_path):
+        config = get_current_config(config_path)
+        config = add_item_to_config(config, key_path, value)
+        validate_config(config, validate)
 
-    lock_file = f"{config_path}.lock"
-    lock = FileLock(lock_file)
-    try:
-        with lock.acquire(timeout=1):
-            config = get_current_config(config_path)
-            config = add_item_to_config(config, key_path, value)
-            validate_config(config, validate)
-
-            with open(config_path, "w") as f:
-                yaml.dump(config, f)
-
-    except Timeout:
-        print(f"Another instance of tljh-config holds the lock {lock_file}")
-        exit(1)
+        with open(config_path, "w") as f:
+            yaml.dump(config, f)
 
 
 def remove_config_value(config_path, key_path, value, validate=True):
     """
     Remove value from list at key_path
     """
-    from filelock import FileLock, Timeout
+    with config_file_lock(config_path):
+        config = get_current_config(config_path)
+        config = remove_item_from_config(config, key_path, value)
+        validate_config(config, validate)
 
-    lock_file = f"{config_path}.lock"
-    lock = FileLock(lock_file)
-    try:
-        with lock.acquire(timeout=1):
-            config = get_current_config(config_path)
-            config = remove_item_from_config(config, key_path, value)
-            validate_config(config, validate)
-
-            with open(config_path, "w") as f:
-                yaml.dump(config, f)
-
-    except Timeout:
-        print(f"Another instance of tljh-config holds the lock {lock_file}")
-        exit(1)
+        with open(config_path, "w") as f:
+            yaml.dump(config, f)
 
 
 def get_current_config(config_path):
