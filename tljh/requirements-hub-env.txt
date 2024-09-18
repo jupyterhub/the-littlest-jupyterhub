@@ -10,12 +10,12 @@
 #
 jupyterhub>=5.1.0,<6
 jupyterhub-systemdspawner>=1.0.1,<2
-jupyterhub-firstuseauthenticator>=1.0.0,<2
-jupyterhub-nativeauthenticator>=1.2.0,<2
-jupyterhub-ldapauthenticator>=1.3.2,<2
+jupyterhub-firstuseauthenticator>=1.1.0,<2
+jupyterhub-nativeauthenticator>=1.3.0,<2
+jupyterhub-ldapauthenticator==2.0.0b2  # FIXME: update to >=2.0.0,<3
 jupyterhub-tmpauthenticator>=1.0.0,<2
 oauthenticator>=17,<18
-jupyterhub-idle-culler>=1.2.1,<2
+jupyterhub-idle-culler>=1.4.0,<2
 
 # pycurl is installed to improve reliability and performance for when JupyterHub
 # makes web requests. JupyterHub will use tornado's CurlAsyncHTTPClient when
@@ -25,4 +25,4 @@ jupyterhub-idle-culler>=1.2.1,<2
 # ref: https://www.tornadoweb.org/en/stable/httpclient.html#module-tornado.simple_httpclient
 # ref: https://github.com/jupyterhub/the-littlest-jupyterhub/issues/289
 #
-pycurl>=7.45.2,<8
+pycurl>=7.45.3,<8
