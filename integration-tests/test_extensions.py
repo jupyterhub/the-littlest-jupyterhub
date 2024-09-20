@@ -29,8 +29,7 @@ def test_labextensions():
     # jupyter-labextension writes to stdout and stderr weirdly
     proc = subprocess.run(
         ["/opt/tljh/user/bin/jupyter-labextension", "list"],
-        stderr=subprocess.PIPE,
-        stdout=subprocess.PIPE,
+        capture_output=True,
     )
 
     extensions = [
