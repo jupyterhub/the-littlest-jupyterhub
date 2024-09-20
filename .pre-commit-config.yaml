@@ -15,8 +15,8 @@ repos:
     hooks:
       - id: pyupgrade
         args:
-          - --py36-plus
-        # We need the bootstrap.py script to be parsable with Python 3.5, so we
+          - --py39-plus
+        # We need the bootstrap.py script to be parsable with Python 3.8, so we
         # exclude it from the pyupgrade hook that will apply f-strings etc.
         exclude: bootstrap/bootstrap.py
 

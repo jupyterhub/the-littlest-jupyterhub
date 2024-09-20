@@ -10,6 +10,7 @@ setup(
     license="3 Clause BSD",
     packages=find_packages(),
     include_package_data=True,
+    python_requires=">=3.9",
     install_requires=[
         "ruamel.yaml==0.18.*",
         "jinja2",
