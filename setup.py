@@ -18,7 +18,7 @@ setup(
         "filelock",
         "requests",
         "bcrypt",
-        "jupyterhub-traefik-proxy==1.*",
+        "jupyterhub-traefik-proxy==2.*",
     ],
     entry_points={
         "console_scripts": [
