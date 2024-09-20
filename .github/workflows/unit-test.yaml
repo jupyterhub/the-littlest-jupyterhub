@@ -69,21 +69,6 @@ jobs:
           python3 -m venv /srv/venv
           echo '/srv/venv/bin' >> $GITHUB_PATH
 
-      # WARNING: This action loads a cache of pip dependencies based on the
-      #          declared key, and it will save a cache for that key on job
-      #          completion. Make sure to update the key to bust the cache
-      #          properly if you make a change that should influence it.
-      - name: Load cached Python dependencies
-        uses: actions/cache@v4
-        with:
-          path: /srv/venv/
-          key: >-
-            pip-
-            ${{ matrix.runs_on }}-
-            ${{ matrix.ubuntu_version }}-
-            ${{ matrix.python_version }}-
-            ${{ hashFiles('setup.py', 'dev-requirements.txt', '.github/workflows/unit-test.yaml') }}
-
       - name: Install Python dependencies
         run: |
           pip install -r dev-requirements.txt
