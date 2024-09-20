@@ -9,10 +9,10 @@ This script is run as:
 
 Constraints:
 
-    - The entire script should be compatible with Python 3.8, which is the default on
-      Ubuntu 20.04.
-    - The script should parse in Python 3.6 as we print error messages for using
-      Ubuntu 18.04 which comes with Python 3.6 by default.
+    - The entire script should be compatible with Python 3.9, which is the default on
+      Debian 11.
+    - The script should parse in Python 3.8 as we print error messages for using
+      Ubuntu 20.04 which comes with Python 3.8 by default.
     - The script must depend only on stdlib modules, as no previous installation
       of dependencies can be assumed.
 
@@ -210,22 +210,22 @@ def ensure_host_system_can_install_tljh():
     Check if TLJH is installable in current host system and exit with a clear
     error message otherwise.
     """
-    # Require Ubuntu 20.04+ or Debian 11+
+    # Require Ubuntu 22.04+ or Debian 11+
     distro = get_os_release_variable("ID")
     version = get_os_release_variable("VERSION_ID")
     if distro not in ["ubuntu", "debian"]:
         print("The Littlest JupyterHub currently supports Ubuntu or Debian Linux only")
         sys.exit(1)
-    elif distro == "ubuntu" and _parse_version(version) < (20, 4):
-        print("The Littlest JupyterHub requires Ubuntu 20.04 or higher")
+    elif distro == "ubuntu" and _parse_version(version) < (22, 4):
+        print("The Littlest JupyterHub requires Ubuntu 22.04 or higher")
         sys.exit(1)
     elif distro == "debian" and _parse_version(version) < (11,):
         print("The Littlest JupyterHub requires Debian 11 or higher")
         sys.exit(1)
 
-    # Require Python 3.8+
-    if sys.version_info < (3, 8):
-        print(f"bootstrap.py must be run with at least Python 3.8, found {sys.version}")
+    # Require Python 3.9+
+    if sys.version_info < (3, 9):
+        print(f"bootstrap.py must be run with at least Python 3.9, found {sys.version}")
         sys.exit(1)
 
     # Require systemd (systemctl is a part of systemd)
