@@ -63,6 +63,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
+          cache: pip
+          cache-dependency-path: |
+            dev-requirements.txt
+            setup.py
+            .github/workflows/unit-tests.yaml
 
       - name: Build systemd image, derived from ${{ matrix.distro_image }}
         run: |
@@ -126,6 +131,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
+          cache: pip
+          cache-dependency-path: |
+            integration-tests/requirements.txt
 
       # FIXME: The test_bootstrap.py script has duplicated logic to run build
       #        and start images and run things in them. This makes tests slower,
