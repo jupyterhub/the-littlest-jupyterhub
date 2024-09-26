@@ -138,11 +138,11 @@ def ensure_usergroups():
 
 # Install miniforge using an installer from
 # https://github.com/conda-forge/miniforge/releases
-MINIFORGE_VERSION = "24.7.1-0"
+MINIFORGE_VERSION = "24.7.1-2"
 # sha256 checksums
 MINIFORGE_CHECKSUMS = {
-    "aarch64": "7a3372268b45679584043b4ba1e0318ee5027384a8d330f2d991b14d815d6a6d",
-    "x86_64": "b64f77042cf8eafd31ced64f9253a74fb85db63545fe167ba5756aea0e8125be",
+    "aarch64": "7bf60bce50f57af7ea4500b45eeb401d9350011ab34c9c45f736647d8dba9021",
+    "x86_64": "636f7faca2d51ee42b4640ce160c751a46d57621ef4bf14378704c87c5db4fe3",
 }
 
 # minimum versions of packages
