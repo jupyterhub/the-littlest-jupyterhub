@@ -25,12 +25,10 @@ profile = "black"
 # target-version should be all supported versions, see
 # https://github.com/psf/black/issues/751#issuecomment-473066811
 target_version = [
-    "py36",
-    "py37",
-    "py38",
     "py39",
     "py310",
     "py311",
+    "py312",
 ]
 
 
@@ -67,7 +65,7 @@ omit = [
 github_url = "https://github.com/jupyterhub/the-littlest-jupyterhub"
 
 [tool.tbump.version]
-current = "1.0.1.dev"
+current = "2.0.0.dev"
 regex = '''
     (?P<major>\d+)
     \.

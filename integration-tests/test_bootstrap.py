@@ -85,9 +85,9 @@ def test_ubuntu_too_old():
     """
     Error with a useful message when running in older Ubuntu
     """
-    output = _run_bootstrap_in_container("ubuntu:18.04", False)
+    output = _run_bootstrap_in_container("ubuntu:20.04", False)
     _stop_container()
-    assert output.stdout == "The Littlest JupyterHub requires Ubuntu 20.04 or higher\n"
+    assert output.stdout == "The Littlest JupyterHub requires Ubuntu 22.04 or higher\n"
     assert output.returncode == 1
 
 

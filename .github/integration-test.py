@@ -10,7 +10,7 @@ GIT_REPO_PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 TEST_IMAGE_NAME = "test-systemd"
 
 
-@functools.lru_cache()
+@functools.lru_cache
 def _get_container_runtime_cli():
     runtimes = ["docker", "podman"]
     for runtime in runtimes:

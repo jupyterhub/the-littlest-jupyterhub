@@ -143,18 +143,21 @@ def test_remove_from_config_error():
 
 
 def test_reload_hub():
-    with mock.patch("tljh.systemd.restart_service") as restart_service, mock.patch(
-        "tljh.systemd.check_service_active"
-    ) as check_active, mock.patch("tljh.config.check_hub_ready") as check_ready:
+    with (
+        mock.patch("tljh.systemd.restart_service") as restart_service,
+        mock.patch("tljh.systemd.check_service_active") as check_active,
+        mock.patch("tljh.config.check_hub_ready") as check_ready,
+    ):
         config.reload_component("hub")
     restart_service.assert_called_with("jupyterhub")
     check_active.assert_called_with("jupyterhub")
 
 
 def test_reload_proxy(tljh_dir):
-    with mock.patch("tljh.systemd.restart_service") as restart_service, mock.patch(
-        "tljh.systemd.check_service_active"
-    ) as check_active:
+    with (
+        mock.patch("tljh.systemd.restart_service") as restart_service,
+        mock.patch("tljh.systemd.check_service_active") as check_active,
+    ):
         config.reload_component("proxy")
     restart_service.assert_called_with("traefik")
     check_active.assert_called_with("traefik")
