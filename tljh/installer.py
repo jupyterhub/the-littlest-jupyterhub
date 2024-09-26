@@ -115,7 +115,6 @@ def ensure_jupyterhub_package(prefix):
         os.path.join(HERE, "requirements-hub-env.txt"),
         upgrade=True,
     )
-    traefik.ensure_traefik_binary(prefix)
 
 
 def ensure_usergroups():
@@ -536,6 +535,7 @@ def main():
 
     logger.info("Setting up JupyterHub...")
     ensure_jupyterhub_package(HUB_ENV_PREFIX)
+    traefik.ensure_traefik_binary(HUB_ENV_PREFIX)
 
     # Stop the http server with the progress page before traefik starts
     if args.progress_page_server_pid:

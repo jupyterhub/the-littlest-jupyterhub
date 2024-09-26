@@ -91,7 +91,10 @@ def check_traefik_version(traefik_bin):
 
 @backoff.on_exception(backoff.expo, Exception, max_tries=2, giveup=fatal_error)
 def ensure_traefik_binary(prefix):
-    """Download and install the traefik binary to a location identified by a prefix path such as '/opt/tljh/hub/'"""
+    """
+    Ensure that a traefik binary of a hardcoded version is made available at a
+    prefix path such as '/opt/tljh/hub/'.
+    """
     if plat is None:
         raise OSError(
             f"Error. Platform: {os.uname().sysname} / {machine} Not supported."
