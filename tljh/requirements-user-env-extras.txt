@@ -8,11 +8,20 @@
 #          the requirements-txt-fixer pre-commit hook that sorted them and made
 #          our integration tests fail.
 #
-notebook==7.*
-jupyterlab==4.*
+# ref: https://github.com/jupyter/notebook
+notebook>=7.2.2,<8
+
+# ref: https://github.com/jupyterlab/jupyterlab
+jupyterlab>=4.2.5,<5
+
 # nbgitpuller for easily pulling in Git repositories
-nbgitpuller==1.*
+# ref: https://github.com/jupyterhub/nbgitpuller
+nbgitpuller>=1.2.1,<2
+
 # jupyter-resource-usage to show people how much RAM they are using
-jupyter-resource-usage==1.*
+# ref: https://github.com/jupyter-server/jupyter-resource-usage
+jupyter-resource-usage>=1.1.0,<2
+
 # Most people consider ipywidgets to be part of the core notebook experience
-ipywidgets==8.*
+# ref: https://github.com/jupyter-widgets/ipywidgets
+ipywidgets>=8.1.5,<9
