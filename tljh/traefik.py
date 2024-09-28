@@ -29,13 +29,13 @@ else:
     plat = None
 
 # Traefik releases: https://github.com/traefik/traefik/releases
-traefik_version = "2.10.1"
+traefik_version = "3.1.4"
 
 # record sha256 hashes for supported platforms here
 # checksums are published in the checksums.txt of each release
 checksums = {
-    "linux_amd64": "8d9bce0e6a5bf40b5399dbb1d5e3e5c57b9f9f04dd56a2dd57cb0713130bc824",
-    "linux_arm64": "260a574105e44901f8c9c562055936d81fbd9c96a21daaa575502dc69bfe390a",
+    "linux_amd64": "eb7227b1b235195355904839c514a9ed6a0aecdcf5dab02ad48db21b05c5e700",
+    "linux_arm64": "e5d970a7f11267b70a8e308cb80f859bba4f420f24789f7393fdf3f4cd031631",
 }
 
 _tljh_path = Path(__file__).parent.resolve()
@@ -91,7 +91,10 @@ def check_traefik_version(traefik_bin):
 
 @backoff.on_exception(backoff.expo, Exception, max_tries=2, giveup=fatal_error)
 def ensure_traefik_binary(prefix):
-    """Download and install the traefik binary to a location identified by a prefix path such as '/opt/tljh/hub/'"""
+    """
+    Ensure that a traefik binary of a hardcoded version is made available at a
+    prefix path such as '/opt/tljh/hub/'.
+    """
     if plat is None:
         raise OSError(
             f"Error. Platform: {os.uname().sysname} / {machine} Not supported."
