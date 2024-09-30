@@ -2,6 +2,129 @@
 
 # Changelog
 
+## 2.0
+
+### 2.0.0b1 - 2024-09-30
+
+This release bundles with the latest available software from the JupyterHub
+ecosystem.
+
+For instructions on how to make an upgrade, see [](howto-admin-upgrade-tljh).
+
+#### Breaking changes
+
+- JupyterHub 4.\* has been upgraded to >=5.1.0,<6
+  - Refer to the [JupyterHub changelog] for details and pay attention to the
+    entries for JupyterHub version 5.0.0.
+- OAuthenticator 16.0.4 has been upgraded to >=17.0.0,<18
+  - If you are using an OAuthenticator based authenticator class
+    (GitHubOAuthenticator, GoogleOAuthenticator, ...), refer to the
+    [OAuthenticator changelog] for details and pay attention to the entries for
+    JupyterHub version 17.0.0.
+- LDAPAuthenticator 1.3.2 has been upgraded to >=2.0.0,<3
+  - If you are using this authenticator class, refer to the [LDAPAuthenticator
+    changelog] for details and pay attention to the entries for
+    LDAPAuthenticator version 2.0.0.
+- The configured JupyterHub Proxy class `traefik-proxy` and the `traefik` server
+  controlled by JupyterHub via the proxy class has been upgraded to a new major
+  version, but no breaking change are expected to be noticed for users.
+
+[oauthenticator changelog]: https://oauthenticator.readthedocs.io/en/latest/reference/changelog.html
+[ldapauthenticator changelog]: https://github.com/jupyterhub/ldapauthenticator/blob/HEAD/CHANGELOG.md
+
+#### Notable dependencies updated
+
+A TLJH installation provides a Python environment where the software for
+JupyterHub itself runs - _the hub environment_, and a Python environment where
+the software of users runs - _the user environment_.
+
+If you are installing TLJH for the first time, the user environment will be
+setup initially with Python 3.12 and some other packages described in
+[tljh/requirements-user-env-extras.txt].
+
+If you are upgrading to this version of TLJH, the bare minimum is changed in the
+user environment. The hub environment's dependencies are on the other hand
+always upgraded to the latest version within the specified version range defined
+in [tljh/requirements-hub-env.txt] and seen below.
+
+[tljh/requirements-user-env-extras.txt]: https://github.com/jupyterhub/the-littlest-jupyterhub/blob/2.0.0b1/tljh/requirements-user-env-extras.txt
+[tljh/requirements-hub-env.txt]: https://github.com/jupyterhub/the-littlest-jupyterhub/blob/2.0.0b1/tljh/requirements-hub-env.txt
+
+The changes in the respective environments between TLJH version 1.0.0 and 2.0.0b1
+are summarized below.
+
+| Dependency changes in the _hub environment_                                    | Version in 1.0.0 | Version in 2.0.0b1 | Changelog link                                                                           | Note                                                 |
+| ------------------------------------------------------------------------------ | ---------------- | ------------------ | ---------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| [jupyterhub](https://github.com/jupyterhub/jupyterhub)                         | >=4.0.2,<5       | >=5.1.0,<6         | [Changelog](https://jupyterhub.readthedocs.io/en/stable/reference/changelog.html)        | Running in the `jupyterhub` systemd service          |
+| [traefik](https://github.com/traefik/traefik)                                  | 2.10.1           | 3.1.4              | [Changelog](https://github.com/traefik/traefik/blob/master/CHANGELOG.md)                 | Running in the `traefik` systemd service             |
+| [traefik-proxy](https://github.com/jupyterhub/traefik-proxy)                   | >=1.1.0,<2       | 2.\*               | [Changelog](https://jupyterhub-traefik-proxy.readthedocs.io/en/latest/changelog.html)    | Run by jupyterhub, controls `traefik`                |
+| [systemdspawner](https://github.com/jupyterhub/systemdspawner)                 | >=1.0.1,<2       | >=1.0.1,<2         | [Changelog](https://github.com/jupyterhub/systemdspawner/blob/master/CHANGELOG.md)       | Run by jupyterhub, controls user servers via systemd |
+| [jupyterhub-idle-culler](https://github.com/jupyterhub/jupyterhub-idle-culler) | >=1.2.1,<2       | >=1.4.0,<2         | [Changelog](https://github.com/jupyterhub/jupyterhub-idle-culler/blob/main/CHANGELOG.md) | Run by jupyterhub, stops inactivate servers etc.     |
+| [firstuseauthenticator](https://github.com/jupyterhub/firstuseauthenticator)   | >=1.0.0,<2       | 1.1.0,<2           | [Changelog](https://oauthenticator.readthedocs.io/en/latest/reference/changelog.html)    | An optional way to authenticate users                |
+| [tmpauthenticator](https://github.com/jupyterhub/tmpauthenticator)             | >=1.0.0,<2       | 1.0.0,<2           | [Changelog](https://github.com/jupyterhub/tmpauthenticator/blob/HEAD/CHANGELOG.md)       | An optional way to authenticate users                |
+| [nativeauthenticator](https://github.com/jupyterhub/nativeauthenticator)       | >=1.2.0,<2       | >=1.3.0,<2         | [Changelog](https://github.com/jupyterhub/nativeauthenticator/blob/HEAD/CHANGELOG.md)    | An optional way to authenticate users                |
+| [oauthenticator](https://github.com/jupyterhub/oauthenticator)                 | >=16.0.4,<17     | >=17.0.0,<18       | [Changelog](https://oauthenticator.readthedocs.io/en/latest/reference/changelog.html)    | An optional way to authenticate users                |
+| [ldapauthenticator](https://github.com/jupyterhub/ldapauthenticator)           | >=1.3.2,<2       | ==2.0.0b2          | [Changelog](https://github.com/jupyterhub/ldapauthenticator/blob/HEAD/CHANGELOG.md)      | An optional way to authenticate users                |
+| [pip](https://github.com/pypa/pip)                                             | >=23.1.2         | >=23.1.2           | [Changelog](https://pip.pypa.io/en/stable/news/)                                         | -                                                    |
+
+| Dependency changes in the _user environment_             | Version in 1.0.0 | Version in upgrade to 2.0.0b1 | Version in fresh install of 2.0.0b1 | Changelog link                                                                    | Note                     |
+| -------------------------------------------------------- | ---------------- | ----------------------------- | ----------------------------------- | --------------------------------------------------------------------------------- | ------------------------ |
+| [jupyterhub](https://github.com/jupyterhub/jupyterhub)   | >=4.0.2,<5       | >=5.1.0,<6                    | >=5.1.0,<6                          | [Changelog](https://jupyterhub.readthedocs.io/en/stable/reference/changelog.html) | Always upgraded.         |
+| [pip](https://github.com/pypa/pip)                       | >=23.1.2         | >=23.1.2                      | >=24.2                              | [Changelog](https://pip.pypa.io/en/stable/news/)                                  | Only upgraded if needed. |
+| [conda](https://docs.conda.io/projects/conda/en/stable/) | >=4.10.0         | >=4.10.0                      | ==24.7.1                            | [Changelog](https://docs.conda.io/projects/conda/en/stable/release-notes.html)    | Only upgraded if needed. |
+| [mamba](https://mamba.readthedocs.io/en/latest/)         | >=0.16.0         | >=0.16.0                      | ==1.5.9                             | [Changelog](https://github.com/mamba-org/mamba/blob/main/CHANGELOG.md)            | Only upgraded if needed. |
+
+#### New features added
+
+- jupyterhub 5 [#989](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/989) ([@minrk](https://github.com/minrk), [@manics](https://github.com/manics))
+- Validate tljh specific config [#962](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/962) ([@jrdnbradford](https://github.com/jrdnbradford), [@consideRatio](https://github.com/consideRatio), [@minrk](https://github.com/minrk))
+- Add the ability to define conda channels in plugins via `tljh_extra_user_conda_channels` [#942](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/942) ([@yuvipanda](https://github.com/yuvipanda), [@consideRatio](https://github.com/consideRatio))
+
+#### Bugs fixed
+
+- fix `-m` invocation of jupyterhub [#988](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/988) ([@minrk](https://github.com/minrk), [@manics](https://github.com/manics))
+- Re-install conda/mamba for every tljh upgrade (doesn't imply upgrade) [#968](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/968) ([@consideRatio](https://github.com/consideRatio), [@minrk](https://github.com/minrk))
+- Add missing oauthenticator dependency for AzureADOAuthenticator [#959](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/959) ([@consideRatio](https://github.com/consideRatio))
+
+#### Maintenance and upkeep improvements
+
+- Bump the requirements-user-env-extras.txt lower version bounds [#1002](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/1002) ([@consideRatio](https://github.com/consideRatio))
+- Update traefik from 2.10.1 to 3.1.4 [#1001](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/1001) ([@consideRatio](https://github.com/consideRatio))
+- Update to install miniforge 24.7.1-2 from 24.7.1-0 [#999](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/999) ([@consideRatio](https://github.com/consideRatio))
+- Drop ubuntu 20.04, require py39, traefik-proxy v2, and ldapauthenticator v2 [#998](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/998) ([@consideRatio](https://github.com/consideRatio), [@minrk](https://github.com/minrk))
+- consolidate lock file handling [#994](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/994) ([@minrk](https://github.com/minrk), [@consideRatio](https://github.com/consideRatio), [@jrdnbradford](https://github.com/jrdnbradford))
+- update oauthenticator to 17 [#992](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/992) ([@minrk](https://github.com/minrk), [@consideRatio](https://github.com/consideRatio))
+- Update base user environment to miniforge 24.7.1-0 (Python 3.12) [#990](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/990) ([@minrk](https://github.com/minrk), [@consideRatio](https://github.com/consideRatio))
+- Add TLJH config lockfile [#976](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/976) ([@jrdnbradford](https://github.com/jrdnbradford), [@minrk](https://github.com/minrk), [@consideRatio](https://github.com/consideRatio))
+- tests: fix to catch test failure earlier when they really happen [#975](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/975) ([@consideRatio](https://github.com/consideRatio), [@minrk](https://github.com/minrk))
+
+#### Documentation improvements
+
+- Added missing details on how to add custom domain from manual HTTPS configuration [#983](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/983) ([@josedaudi](https://github.com/josedaudi), [@yuvipanda](https://github.com/yuvipanda))
+- Reword documentation sentence [#970](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/970) ([@davidalber](https://github.com/davidalber), [@consideRatio](https://github.com/consideRatio))
+- Fix typo and replace word [#969](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/969) ([@davidalber](https://github.com/davidalber), [@consideRatio](https://github.com/consideRatio))
+- Fix URL syntax in nativeauth.md [#949](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/949) ([@pdebuyl](https://github.com/pdebuyl), [@minrk](https://github.com/minrk))
+- adapt install documentation for new /lab default interface [#935](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/935) ([@schwebke](https://github.com/schwebke), [@minrk](https://github.com/minrk))
+
+#### Continuous integration improvements
+
+- ci: cache pip only when no container is used [#997](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/997) ([@consideRatio](https://github.com/consideRatio))
+- ci: run unit tests in ubuntu-24.04 github actions environment as well [#993](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/993) ([@consideRatio](https://github.com/consideRatio))
+- ci: add tests for debian 12 and ubuntu 24.04 [#967](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/967) ([@consideRatio](https://github.com/consideRatio))
+- build(deps): bump actions/cache from 3 to 4 [#961](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/961) ([@consideRatio](https://github.com/consideRatio))
+- build(deps): bump codecov/codecov-action from 3 to 4 [#960](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/960) ([@consideRatio](https://github.com/consideRatio))
+- build(deps): bump actions/setup-python from 4 to 5 [#958](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/958) ([@consideRatio](https://github.com/consideRatio))
+- build(deps): bump actions/checkout from 3 to 4 [#943](https://github.com/jupyterhub/the-littlest-jupyterhub/pull/943) ([@consideRatio](https://github.com/consideRatio))
+
+#### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupyterhub/the-littlest-jupyterhub/graphs/contributors?from=2023-08-11&to=2024-09-30&type=c))
+
+@consideRatio ([activity](https://github.com/search?q=repo%3Ajupyterhub%2Fthe-littlest-jupyterhub+involves%3AconsideRatio+updated%3A2023-08-11..2024-09-30&type=Issues)) | @davidalber ([activity](https://github.com/search?q=repo%3Ajupyterhub%2Fthe-littlest-jupyterhub+involves%3Adavidalber+updated%3A2023-08-11..2024-09-30&type=Issues)) | @josedaudi ([activity](https://github.com/search?q=repo%3Ajupyterhub%2Fthe-littlest-jupyterhub+involves%3Ajosedaudi+updated%3A2023-08-11..2024-09-30&type=Issues)) | @jrdnbradford ([activity](https://github.com/search?q=repo%3Ajupyterhub%2Fthe-littlest-jupyterhub+involves%3Ajrdnbradford+updated%3A2023-08-11..2024-09-30&type=Issues)) | @kiliansinger ([activity](https://github.com/search?q=repo%3Ajupyterhub%2Fthe-littlest-jupyterhub+involves%3Akiliansinger+updated%3A2023-08-11..2024-09-30&type=Issues)) | @manics ([activity](https://github.com/search?q=repo%3Ajupyterhub%2Fthe-littlest-jupyterhub+involves%3Amanics+updated%3A2023-08-11..2024-09-30&type=Issues)) | @minrk ([activity](https://github.com/search?q=repo%3Ajupyterhub%2Fthe-littlest-jupyterhub+involves%3Aminrk+updated%3A2023-08-11..2024-09-30&type=Issues)) | @MridulS ([activity](https://github.com/search?q=repo%3Ajupyterhub%2Fthe-littlest-jupyterhub+involves%3AMridulS+updated%3A2023-08-11..2024-09-30&type=Issues)) | @pdebuyl ([activity](https://github.com/search?q=repo%3Ajupyterhub%2Fthe-littlest-jupyterhub+involves%3Apdebuyl+updated%3A2023-08-11..2024-09-30&type=Issues)) | @schwebke ([activity](https://github.com/search?q=repo%3Ajupyterhub%2Fthe-littlest-jupyterhub+involves%3Aschwebke+updated%3A2023-08-11..2024-09-30&type=Issues)) | @yuvipanda ([activity](https://github.com/search?q=repo%3Ajupyterhub%2Fthe-littlest-jupyterhub+involves%3Ayuvipanda+updated%3A2023-08-11..2024-09-30&type=Issues))
+
 ## 1.0
 
 ### 1.0.0 - 2023-08-11
