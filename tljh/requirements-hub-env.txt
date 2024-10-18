@@ -8,13 +8,13 @@
 # If a dependency is bumped to a new major version, we should make a major
 # version release of tljh.
 #
-jupyterhub>=5.1.0,<6
+jupyterhub>=5.2.0,<6
 jupyterhub-systemdspawner>=1.0.1,<2
 jupyterhub-firstuseauthenticator>=1.1.0,<2
 jupyterhub-nativeauthenticator>=1.3.0,<2
-jupyterhub-ldapauthenticator==2.0.0b2  # FIXME: update to >=2.0.0,<3
+jupyterhub-ldapauthenticator>=2.0.0,<3
 jupyterhub-tmpauthenticator>=1.0.0,<2
-oauthenticator>=17,<18
+oauthenticator>=17.1.0,<18
 jupyterhub-idle-culler>=1.4.0,<2
 
 # pycurl is installed to improve reliability and performance for when JupyterHub
