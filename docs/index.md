@@ -4,12 +4,6 @@ A simple [JupyterHub](https://github.com/jupyterhub/jupyterhub) distribution for
 a small (0-100) number of users on a single server. We recommend reading
 [](/topic/whentouse) to determine if this is the right tool for you.
 
-## Development Status
-
-This project is currently in **beta** state. Folks have been using installations
-of TLJH for more than a year now to great success. While we try hard not to, we
-might still make breaking changes that have no clear upgrade pathway.
-
 ## Installation
 
 The Littlest JupyterHub (TLJH) can run on any server that is running **Debian 11** or **Ubuntu 20.04** or **22.04** on an amd64 or arm64 CPU architecture.
