@@ -27,12 +27,6 @@ for information on the different ways of contributing to The Littlest JupyterHub
 See [this blog post](http://words.yuvi.in/post/the-littlest-jupyterhub/) for
 more information.
 
-## Development Status
-
-This project is currently in **beta** state. Folks have been using installations
-of TLJH for more than a year now to great success. While we try hard not to, we
-might still make breaking changes that have no clear upgrade pathway.
-
 ## Installation
 
 The Littlest JupyterHub (TLJH) can run on any server that is running at least
