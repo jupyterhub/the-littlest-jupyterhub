@@ -79,23 +79,16 @@ config_schema = {
             "description": "User CPU and memory limits.",
             "type": "object",
             "additionalProperties": False,
-            "properties": {"memory": {"type": "string"}, "cpu": {
-            "oneOf": [
-                {
-                  "type": "integer",
-                  "minimum": 0
+            "properties": {
+                "memory": {"type": "string"},
+                "cpu": {
+                    "anyOf": [
+                        {"type": "integer", "minimum": 0},
+                        {"type": "number", "minimum": 0},
+                        {"type": "string", "enum": ["None"]},
+                    ]
                 },
-                {
-                  "type": "number",
-                  "minimum": 0
-                },
-                {
-                  "type": "string",
-                  "enum": ["None"]
-                }
-            ]
-          }
-        },
+            },
         },
         "UserEnvironment": {
             "type": "object",
