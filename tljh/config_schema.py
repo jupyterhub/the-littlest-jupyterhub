@@ -84,7 +84,7 @@ config_schema = {
                 "cpu": {
                     "anyOf": [
                         {"type": "number", "minimum": 0},
-                        {"type": "string", "enum": ["None"]},
+                        {"type": "null"},
                     ]
                 },
             },
