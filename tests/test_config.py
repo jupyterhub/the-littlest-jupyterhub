@@ -220,7 +220,8 @@ def test_cli_remove_int(tljh_dir):
         ("x", "x"),
         ("1x", "1x"),
         ("1.2x", "1.2x"),
-        (None, None),
+        ("None", None),
+        ("none", None),
         ("", ""),
     ],
 )
