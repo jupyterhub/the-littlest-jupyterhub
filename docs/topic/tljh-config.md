@@ -227,7 +227,7 @@ it after an argument like `remove-item` gives information about this specific co
 ```bash
 sudo tljh-config --help
 
-usage: tljh-config [-h] [--config-path CONFIG_PATH] {show,unset,set,add-item,remove-item,reload} ...
+usage: tljh-config [-h] [--config-path CONFIG_PATH] [--validate] [--no-validate] {show,unset,set,add-item,remove-item,reload} ...
 
 positional arguments:
   {show,unset,set,add-item,remove-item,reload}
@@ -238,10 +238,12 @@ positional arguments:
     remove-item         Remove a value from a list for a configuration property
     reload              Reload a component to apply configuration change
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   --config-path CONFIG_PATH
                         Path to TLJH config.yaml file
+  --validate            Validate the TLJH config
+  --no-validate         Do not validate the TLJH config
 ```
 
 ```bash
