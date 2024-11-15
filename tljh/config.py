@@ -317,8 +317,8 @@ def reload_component(component):
 
 def parse_value(value_str):
     """Parse a value string"""
-    if value_str is None:
-        return value_str
+    if value_str.lower() == "none":
+        return None
     if re.match(r"^\d+$", value_str):
         return int(value_str)
     elif re.match(r"^\d+\.\d*$", value_str):
