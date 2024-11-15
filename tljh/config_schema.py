@@ -80,7 +80,12 @@ config_schema = {
             "type": "object",
             "additionalProperties": False,
             "properties": {
-                "memory": {"type": "string"},
+                "memory": {
+                    "anyOf": [
+                        {"type": "string"},
+                        {"type": "null"},
+                    ]
+                },
                 "cpu": {
                     "anyOf": [
                         {"type": "number", "minimum": 0},
