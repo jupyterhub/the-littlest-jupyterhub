@@ -82,4 +82,4 @@ jobs:
         run: pytest tests
         timeout-minutes: 15
 
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
