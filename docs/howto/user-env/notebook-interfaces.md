@@ -7,7 +7,8 @@ be changed with TLJH config `user_environment.default_app` or with the
 JupyterHub config
 {external:py:attr}`jupyterhub.spawner.Spawner.default_url` directly.
 
-The TLJH config supports the options `jupyterlab` and `classic`, which
+The TLJH config supports the options [`jupyterlab`](https://github.com/jupyterlab/jupyterlab/)
+and [`classic`](https://github.com/jupyter/notebook), which
 translates to a `Spawner.default_url` config of `/lab` and `/tree`.
 
 Both these interfaces are also shipped with TLJH by default. You can try them
