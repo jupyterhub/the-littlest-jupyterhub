@@ -1,4 +1,4 @@
-# Systemd inside a Docker container, for CI only
+# Systemd inside a Docker container, for CI and local development
 ARG BASE_IMAGE=ubuntu:22.04
 FROM $BASE_IMAGE
 
@@ -27,10 +27,5 @@ RUN find /etc/systemd/system \
 RUN systemctl set-default multi-user.target
 
 STOPSIGNAL SIGRTMIN+3
-
-# Uncomment these lines for a development install
-# ENV TLJH_BOOTSTRAP_DEV=yes
-# ENV TLJH_BOOTSTRAP_PIP_SPEC=/srv/src
-# ENV PATH=/opt/tljh/hub/bin:${PATH}
 
 CMD ["/bin/bash", "-c", "exec /lib/systemd/systemd --log-target=journal 3>&1"]
