@@ -88,7 +88,7 @@ Let's create the server on which we can run JupyterHub.
 
 8.  Under **Execution Strategy Type**, select **Run script on first boot**.
 
-9. Under **Deployment Type**, select **Wait for script to complete**.
+9.  Under **Deployment Type**, select **Wait for script to complete**.
 
 10. Click the **Save and Add Script** button on the bottom right. This should hide
     the dialog box.
