@@ -24,6 +24,9 @@ The easiest & safest way to develop & test TLJH is with [Docker](https://www.doc
      --detach \
      --name=tljh-dev \
      --publish 12000:80 \
+     --env TLJH_BOOTSTRAP_DEV=yes \
+     --env TLJH_BOOTSTRAP_PIP_SPEC=/srv/src \
+     --env PATH=/opt/tljh/hub/bin:${PATH} \
      --mount type=bind,source="$(pwd)",target=/srv/src \
      tljh-systemd
    ```
