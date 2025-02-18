@@ -30,7 +30,7 @@ more information.
 ## Installation
 
 The Littlest JupyterHub (TLJH) can run on any server that is running at least
-**Ubuntu 20.04**. Earlier versions of Ubuntu are not supported.
+**Ubuntu 22.04**. Earlier versions of Ubuntu are not supported.
 We have several tutorials to get you started.
 
 - Tutorials to create a new server from scratch on a cloud provider & run TLJH
