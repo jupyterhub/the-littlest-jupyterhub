@@ -71,9 +71,24 @@ config_schema = {
             },
         },
         "TLS": {
+            "description": "Configuration for enabling HTTPS using a custom SSL key and certificate.",
             "type": "object",
             "additionalProperties": False,
-            "properties": {"key": {"type": "string"}, "cert": {"type": "string"}},
+            "properties": {
+                "key": {
+                    "type": "string",
+                    "description": "Path to the SSL private key file (e.g., '/etc/mycerts/mydomain.key').",
+                },
+                "cert": {
+                    "type": "string",
+                    "description": "Path to the SSL certificate file (e.g., '/etc/mycerts/mydomain.cert').",
+                },
+                "domains": {
+                    "type": "array",
+                    "description": "List of domain names that should be secured with HTTPS.",
+                    "items": {"type": "string", "format": "hostname"},
+                },
+            },
         },
         "Limits": {
             "description": "User CPU and memory limits.",
