@@ -74,6 +74,7 @@ config_schema = {
             "type": "object",
             "additionalProperties": False,
             "properties": {"key": {"type": "string"}, "cert": {"type": "string"}},
+            "required": ["key", "cert"],
         },
         "Limits": {
             "description": "User CPU and memory limits.",
