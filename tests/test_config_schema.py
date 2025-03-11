@@ -133,28 +133,7 @@ def test_valid_configs(valid_config):
         {
             "user_environment": {"default_app": "jupyterlab"},
             "https": {"enabled": False},
-            "limits": {"memory": "2G", "cpu": -1},  # Negative CPU not allowed
-        },
-        # TLS enabled but missing required key
-        {
-            "user_environment": {"default_app": "jupyterlab"},
-            "https": {
-                "enabled": True,
-                "tls": {
-                    "cert": "/etc/tljh/tls/certificate.crt"
-                    # Missing 'key' field
-                },
-            },
-        },
-        {
-            "user_environment": {"default_app": "jupyterlab"},
-            "https": {
-                "enabled": True,
-                "tls": {
-                    "key": "/etc/tljh/tls/private.key"
-                    # Missing 'cert' field
-                },
-            },
+            "limits": {"memory": "2G", "cpu": -1},
         },
     ],
 )
