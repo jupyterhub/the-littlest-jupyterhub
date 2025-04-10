@@ -36,6 +36,7 @@ with your JupyterHub. For more information on Authentication, see
 :titlesonly: true
 
 auth/dummy
+auth/tmpauth
 auth/github
 auth/google
 auth/awscognito
