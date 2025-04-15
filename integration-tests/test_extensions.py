@@ -9,11 +9,11 @@ def test_serverextensions():
     # jupyter-serverextension writes to stdout and stderr weirdly
     proc = subprocess.run(
         ["/opt/tljh/user/bin/jupyter-server", "extension", "list", "--sys-prefix"],
-        capture_output=True,
-        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
     )
 
-    output = proc.stdout + proc.stderr
+    output = proc.stdout.decode()
 
     extensions = [
         "jupyterlab",
