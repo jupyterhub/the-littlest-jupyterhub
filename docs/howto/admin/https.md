@@ -82,14 +82,13 @@ renew them for you before they expire.
 
 ## Manual HTTPS with existing key and certificate
 
-You may already have an SSL key and certificate.
+You may already have an SSL key and certificate for your domain.
 If so, you can tell your deployment to use these files:
 
 ```
 sudo tljh-config set https.enabled true
 sudo tljh-config set https.tls.key /etc/mycerts/mydomain.key
 sudo tljh-config set https.tls.cert /etc/mycerts/mydomain.cert
-sudo tljh-config add-item https.tls.domains yourhub.yourdomain.edu
 ```
 
 Once you have loaded this, your config should look like:
@@ -104,8 +103,6 @@ https:
   tls:
     key: /etc/mycerts/mydomain.key
     cert: /etc/mycerts/mydomain.cert
-    domains:
-      - yourhub.yourdomain.edu
 ```
 
 Finally, you can reload the proxy to load the new configuration:
@@ -114,7 +111,7 @@ Finally, you can reload the proxy to load the new configuration:
 sudo tljh-config reload proxy
 ```
 
-and now access your Hub securely at <https://yourhub.yourdomain.edu>.
+and now access your Hub securely at the domain associated with your certificate.
 
 ## Troubleshooting
 
