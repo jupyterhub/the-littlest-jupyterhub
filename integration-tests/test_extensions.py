@@ -9,8 +9,11 @@ def test_serverextensions():
     # jupyter-serverextension writes to stdout and stderr weirdly
     proc = subprocess.run(
         ["/opt/tljh/user/bin/jupyter-server", "extension", "list", "--sys-prefix"],
-        stderr=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
     )
+
+    output = proc.stdout.decode()
 
     extensions = [
         "jupyterlab",
@@ -19,7 +22,7 @@ def test_serverextensions():
     ]
 
     for e in extensions:
-        assert e in proc.stderr.decode()
+        assert e in output, f"'{e}' not found in server extensions: {output}"
 
 
 def test_labextensions():
