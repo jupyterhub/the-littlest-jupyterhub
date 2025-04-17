@@ -5,7 +5,6 @@ Config should never append or mutate, only set. Functions here could
 be called many times per lifetime of a jupyterhub.
 
 Traitlets that modify the startup of JupyterHub should not be here.
-FIXME: A strong feeling that JSON Schema should be involved somehow.
 """
 
 import os
