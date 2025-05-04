@@ -205,14 +205,6 @@ def get_os_release_variable(key):
     )
 
 
-def host_has_systemd() -> bool:
-    if shutil.which("systemd"):
-        return True
-    if shutil.which("systemctl"):
-        return True
-    return False
-
-
 def ensure_host_system_can_install_tljh():
     """
     Check if TLJH is installable in current host system and exit with a clear
