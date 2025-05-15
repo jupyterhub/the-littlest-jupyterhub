@@ -18,12 +18,12 @@ the idle culler configuration can be extended beyond tljh-config options, using 
 
 ## Default settings
 
-By default, JupyterHub will ping the user notebook servers every 60s to check their
-status. Every server found to be idle for more than 10 minutes will be culled.
+By default, JupyterHub will ping the user notebook servers every 10 min to check their
+status. Every server found to be idle for more than 1 hour will be culled.
 
 ```python
-services.cull.every = 60
-services.cull.timeout = 600
+services.cull.every = 600
+services.cull.timeout = 3600
 ```
 
 Because the servers don't have a maximum age set, an active server will not be shut down
