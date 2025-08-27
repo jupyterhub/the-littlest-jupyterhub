@@ -24,7 +24,6 @@ application to your `tljh` configuration.
 1. Create a user pool [Getting Started with User Pool](https://docs.aws.amazon.com/cognito/latest/developerguide/getting-started-with-cognito-user-pools.html).
 
    When you have completed creating a user pool, app, and domain you should have the following settings available to you:
-
    - **App client id**: From the App client page
 
    - **App client secret** From the App client page
