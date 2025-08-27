@@ -51,7 +51,6 @@ We start by creating the Virtual Machine in which we can run TLJH (The Littlest 
     ```
 
 5.  **Choose an Ubuntu server for your VM**:
-
     - Click `Ubuntu Server 22.04 LTS.`
 
     - Make sure `Resource Manager` is selected in the next screen and click **Create**
@@ -61,7 +60,6 @@ We start by creating the Virtual Machine in which we can run TLJH (The Littlest 
     ```
 
 6.  Customise the Virtual Machine basics:
-
     - **Subscription**. Choose the "Free Trial" if this is what you're using. Otherwise, choose a different plan. This is the billing account that will be charged.
     - **Resource group**. Resource groups let you keep your Azure tools/resources together in an availability region (e.g. WestEurope). If you already have one you'd like to use it select that resource.
 
@@ -89,7 +87,6 @@ We start by creating the Virtual Machine in which we can run TLJH (The Littlest 
     - **Inbound port rules**. Leave the defaults for now, and we will update these later on in the Network configuration step.
 
 7.  Before clicking on "Next" we need to select the RAM size for the image.
-
     - For this we need to make sure we have enough RAM to accommodate your users. For example, if each user needs 2GB of RAM, and you have 10 total users, you need at least 20GB of RAM on the machine. It's also good to have a few GB of "buffer" RAM beyond what you think you'll need.
 
     - Click on **Change size** (see image below)
@@ -105,7 +102,6 @@ We start by creating the Virtual Machine in which we can run TLJH (The Littlest 
     - Select a suitable image (to check available images and prices in your region [click on this link](https://azuremarketplace.microsoft.com/en-gb/marketplace/apps/Canonical.UbuntuServer?tab=PlansAndPrice/?wt.mc_id=TLJH-github-taallard)).
 
 8.  Disks (Storage):
-
     - **Disk options**: select the OS disk type there are options for SDD and HDD. **SSD persistent disk** gives you a faster but more expensive disk than HDD.
 
     - **Data disk**. Click on create and attach a new disk. Select an appropriate type and size and click ok.
@@ -120,7 +116,6 @@ We start by creating the Virtual Machine in which we can run TLJH (The Littlest 
     ```
 
 9.  Networking
-
     - **Virtual network**. Leave the default values selected.
     - **Subnet**. Leave the default values selected.
     - **Public IP address**.Leave the default values selected. This will make your server accessible from a browser.
@@ -132,9 +127,7 @@ We start by creating the Virtual Machine in which we can run TLJH (The Littlest 
     ```
 
 10. Management
-
     - Monitoring
-
       - **Boot diagnostics**. Choose "On".
       - **OS guest diagnostics**. Choose "Off".
       - **Diagnostics storage account**. Leave as the default.
@@ -150,7 +143,6 @@ We start by creating the Virtual Machine in which we can run TLJH (The Littlest 
     ```
 
 11. Advanced settings
-
     - **Extensions**. Make sure there are no extensions listed
     - **Cloud init**. We are going to use this section to install TLJH directly into our Virtual Machine.
 
@@ -177,7 +169,6 @@ We start by creating the Virtual Machine in which we can run TLJH (The Littlest 
 12. Check the summary and confirm the creation of your Virtual Machine.
 
 13. Check that the creation of your Virtual Machine worked.
-
     - Wait for the virtual machine to be created. This might take about 5-10 minutes.
 
     - After completion, you should see a similar screen to the one below:

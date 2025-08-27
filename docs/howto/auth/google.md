@@ -51,7 +51,6 @@ and create a new project:
   ```
 
 - You will have to fill a form with:
-
   - **Application type**: Choose _Web application_
 
   - **Name**: A descriptive name for your OAuth client ID (e.g. `tljh-client`)

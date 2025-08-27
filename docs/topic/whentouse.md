@@ -22,11 +22,9 @@ container technology in administering user sessions.
 The choice between TLJH and Z2JH ultimately comes down to only a few questions:
 
 1. Do you want your hub and all users to live on a **single, larger machine** vs. spreading users on a **cluster of smaller machines** that are scaled up or down?
-
    - If you can use a single machine, we recommend **The Littlest JupyterHub**.
    - If you wish to use multiple machines, we recommend **Zero to JupyterHub for Kubernetes**.
 
 2. Do you **need to use container technology**?
-
    - If no, we recommend **The Littlest JupyterHub**.
    - If yes, we recommend **Zero to JupyterHub for Kubernetes**.

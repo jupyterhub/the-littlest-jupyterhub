@@ -180,7 +180,6 @@ To upgrade the Python version of the user environment, one can:
   environment, but you may do so manually.
 
   **Steps:**
-
   1.  Activate the user environment, if using ssh. If the terminal was
       started with JupyterHub, this step can be skipped:
 
