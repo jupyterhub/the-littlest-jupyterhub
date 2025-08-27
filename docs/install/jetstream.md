@@ -38,13 +38,13 @@ We'll create a new Jetstream2 instance:
    ssh exouser@yourinstancename.xxx0000000.projects.jetstream-cloud.org
    ```
 
-4. Run the TLJH bootstrap script:
+4. Run the TLJH bootstrap script, replace <admin-user-name> with the name of the first admin user for this JupyterHub. Choose any name you like (don’t forget to remove the brackets!). This admin user can log in after the JupyterHub is set up, and can configure it to their needs.
 
    ```bash
    curl -L https://tljh.jupyter.org/bootstrap.py | sudo -E python3 - --admin <admin-user-name>
    ```
 
-5. Open the Hostname in a web browser (http on port 80). You should see the JupyterHub login page. Your browser will warn about the site not being secure (no HTTPS)—we'll enable HTTPS in the next step. Do not login yet, first setup HTTPS, so we avoid transmitting the password in clear text.
+5.  Open the Hostname in a web browser (http on port 80). You should see the JupyterHub login page. Your browser will warn about the site not being secure (no HTTPS)—we'll enable HTTPS in the next step. Do not login yet, first setup HTTPS, so we avoid transmitting the password in clear text.
 
 ## Step 2: Enable HTTPS
 
