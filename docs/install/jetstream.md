@@ -44,7 +44,7 @@ We'll create a new Jetstream2 instance:
    curl -L https://tljh.jupyter.org/bootstrap.py | sudo -E python3 - --admin <admin-user-name>
    ```
 
-5.  Open the Hostname in a web browser (http on port 80). You should see the JupyterHub login page. Your browser will warn about the site not being secure (no HTTPS)—we'll enable HTTPS in the next step. Do not login yet, first setup HTTPS, so we avoid transmitting the password in clear text.
+5. Open the Hostname in a web browser (http on port 80). You should see the JupyterHub login page. Your browser will warn about the site not being secure (no HTTPS)—we'll enable HTTPS in the next step. Do not login yet, first setup HTTPS, so we avoid transmitting the password in clear text.
 
 ## Step 2: Enable HTTPS
 
