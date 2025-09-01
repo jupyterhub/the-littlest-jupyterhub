@@ -36,7 +36,6 @@ We have several tutorials to get you started.
 - Tutorials to create a new server from scratch on a cloud provider & run TLJH
   on it. These are **recommended** if you do not have much experience setting up
   servers.
-
   - [Digital Ocean](https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/digitalocean.html)
   - [OVH](https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/ovh.html)
   - [Google Cloud](https://the-littlest-jupyterhub.readthedocs.io/en/latest/install/google.html)

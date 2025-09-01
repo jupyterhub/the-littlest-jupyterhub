@@ -26,7 +26,6 @@ You'll need a GitHub account in order to complete these steps.
 ## Step 1: Create a GitHub application
 
 1. Go to the [GitHub OAuth app creation page](https://github.com/settings/applications/new).
-
    - **Application name**: Choose a descriptive application name (e.g. `tljh`)
 
    - **Homepage URL**: Use the IP address or URL of your JupyterHub. e.g. `` http(s)://<my-tljh-url>` ``.
