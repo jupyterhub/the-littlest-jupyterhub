@@ -61,7 +61,6 @@ The easiest & safest way to develop & test TLJH is with [Docker](https://www.doc
 
 8. Make some changes to the repository. You can test easily depending on what
    you changed.
-
    - If you changed the `bootstrap/bootstrap.py` script or any of its dependencies,
      you can test it by running `python3 /srv/src/bootstrap/bootstrap.py`.
    - If you changed the `tljh/installer.py` code (or any of its dependencies),

@@ -81,7 +81,6 @@ easier. Here are some very basic tips on effective `journalctl` usage.
    [less](<https://en.wikipedia.org/wiki/Less_(Unix)>). This allows you to
    scroll up / down, search for specific words, etc. Some common keyboard shortcuts
    are:
-
    - Arrow keys to move up / down / left / right
    - `G` to navigate to the end of the logs
    - `g` to navigate to the start of the logs
