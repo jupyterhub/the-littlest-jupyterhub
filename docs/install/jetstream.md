@@ -38,6 +38,11 @@ We'll create a new Jetstream2 instance:
    ssh exouser@yourinstancename.xxx0000000.projects.jetstream-cloud.org
    ```
 
+   Need the passphrase? In Exosphere, open **Instances**, select your
+   JupyterHub instance, and expand **Credentials**. Click **Show Passphrase**
+   next to the `exouser` entry to reveal or copy it before running the
+   `ssh` command.
+
 4. Run the TLJH bootstrap script, replace <admin-user-name> with the name of the first admin user for this JupyterHub. Choose any name you like (don’t forget to remove the brackets!). This admin user can log in after the JupyterHub is set up, and can configure it to their needs.
 
    ```bash
