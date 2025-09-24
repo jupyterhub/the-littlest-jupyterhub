@@ -52,7 +52,7 @@ Encrypted (HTTPS) access is strongly recommended before inviting users.
 
 See the full guide: [Enable HTTPS](/howto/admin/https). Below is a quick recipe for using the default Jetstream-provided hostname.
 
-1. In the terminal inside the instance, configure Let's Encrypt (replace with a real email you control):
+1. In the terminal inside the instance, configure Let's Encrypt (replace with a real email you control, and the correct hostname):
    ```bash
    sudo tljh-config set https.enabled true
    sudo tljh-config set https.letsencrypt.email you@example.com
