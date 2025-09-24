@@ -88,7 +88,7 @@ Need a hand?
 
 - For Jetstream2 specific questions (allocations, quotas, instance lifecycle, networking, etc.), use the [Jetstream support resources](https://docs.jetstream-cloud.org/overview/support/).
 - For The Littlest JupyterHub usage, configuration, or upgrade questions, search or post in the [Jupyter forum TLJH category](https://discourse.jupyter.org/c/jupyterhub/tljh).
-- If you believe you have found a TLJH bug or have a clear documentation improvement, open an issue (or pull request if you have a proposed fix) in the TLJH GitHub repository: <https://github.com/jupyterhub/the-littlest-jupyterhub>
+- If you believe you have found a TLJH bug or have a clear documentation improvement, open an issue (or pull request if you have a proposed fix) in the [TLJH GitHub repository](https://github.com/jupyterhub/the-littlest-jupyterhub).
 
 When asking for help about TLJH, it is often useful to provide:
 
