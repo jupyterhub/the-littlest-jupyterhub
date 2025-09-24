@@ -72,6 +72,12 @@ Tips:
 ## Step 3: Customize your JupyterHub deployment
 
 1. Now log in with the `<admin-user-name>` at https://yourinstancename.xxx000000.projects.jetstream-cloud.org. Since this is the first login, you'll be prompted to set a password. Choose a strong password and store it safely. This password is now the credential for that admin user.
+2. Congratulations, you have a running working JupyterHub!
+
+## Step 4: Adding more users
+
+```{include} add-users.md
+
 
 Next common tasks:
 
