@@ -69,7 +69,7 @@ Tips:
 - Make sure ports 80 and 443 are open in your Jetstream security group (they are open by default for new projects; adjust only if you customized network policies).
 - If you later attach a custom domain, add it with another `add-item` command and reload the proxy again.
 
-## Step 3: Customize your JupyterHub deployment
+## Step 3: Log in as the administrative user and set a password
 
 1. Now log in with the `<admin-user-name>` at https://yourinstancename.xxx000000.projects.jetstream-cloud.org. Since this is the first login, you'll be prompted to set a password. Choose a strong password and store it safely. This password is now the credential for that admin user.
 2. Congratulations, you have a running working JupyterHub!
