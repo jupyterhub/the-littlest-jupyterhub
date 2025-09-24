@@ -75,20 +75,19 @@ Tips:
 
 Next common tasks:
 
-- Add additional users or admins: [User management](/howto/admin/add-users)
-- Install Python / conda packages for all users: [Customize user environment](/howto/user-env)
-- Install optional system packages: `sudo apt install <package>` (restart user servers afterwards)
-- Pre-install JupyterLab extensions: see [Enable extensions](/howto/admin/enable-extensions)
-- Update TLJH itself: [Upgrading TLJH](/topic/installer-upgrade-actions)
+- [](howto-admin-admin-users)
+- [](howto-user-env-user-environment-apt)
+- [](howto-admin-enable-extensions)
+- [][topic-installer-upgrade-actions)
 
-Browse the full How-To index for more: [/howto/index](/howto/index)
+Browse the full [How-To index](/howto/index) for more.
 
 ## Ask for help
 
 Need a hand?
 
-- For Jetstream2 specific questions (allocations, quotas, instance lifecycle, networking, etc.), use the Jetstream support resources: <https://docs.jetstream-cloud.org/overview/support/>
-- For The Littlest JupyterHub usage, configuration, or upgrade questions, search or post in the Jupyter forum TLJH category: <https://discourse.jupyter.org/c/jupyterhub/tljh>
+- For Jetstream2 specific questions (allocations, quotas, instance lifecycle, networking, etc.), use the [Jetstream support resources](https://docs.jetstream-cloud.org/overview/support/).
+- For The Littlest JupyterHub usage, configuration, or upgrade questions, search or post in the [Jupyter forum TLJH category](https://discourse.jupyter.org/c/jupyterhub/tljh).
 - If you believe you have found a TLJH bug or have a clear documentation improvement, open an issue (or pull request if you have a proposed fix) in the TLJH GitHub repository: <https://github.com/jupyterhub/the-littlest-jupyterhub>
 
 When asking for help about TLJH, it is often useful to provide:
