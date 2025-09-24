@@ -25,7 +25,7 @@ We'll create a new Jetstream2 instance:
     2. Choose an **Instance Size**. We suggest `m3.small` (2 vCPUs / 6 GiB RAM) or larger for more than a couple of users. The absolute minimum TLJH can start with is about **1 GiB** RAM, but you'll quickly run out with real workloads.
        - See the resource estimation guide: [Choosing resources](/howto/admin/resource-estimation) for help picking CPU, RAM, and disk.
     3. (Optional) Increase the **Volume Size** if you expect many users or large datasets. You can not easily shrink later.
-5.  Launch the instance (click **Create Instance** / **Launch**).
+5.  Launch the instance (click **Create** button at the bottom of the form).
 
 ## Step 2: Install The Littlest JupyterHub
 
