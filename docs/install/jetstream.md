@@ -104,3 +104,4 @@ When asking for help about TLJH, it is often useful to provide:
 - Any custom installer flags or `tljh-config` changes you have applied
 
 This information helps others debug and answer more quickly.
+```
