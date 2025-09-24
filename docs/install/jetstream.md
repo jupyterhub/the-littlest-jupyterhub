@@ -78,7 +78,7 @@ Next common tasks:
 - [](howto-admin-admin-users)
 - [](howto-user-env-user-environment-apt)
 - [](howto-admin-enable-extensions)
-- [][topic-installer-upgrade-actions)
+- []topic-installer-upgrade-actions)
 
 Browse the full [How-To index](/howto/index) for more.
 
