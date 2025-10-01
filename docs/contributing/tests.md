@@ -28,35 +28,43 @@ against the same installation of TLJH.
 
 ### Running integration tests locally
 
-You need `docker` installed and callable by the user running
-the integration tests without needing sudo.
+You need `docker` or `podman` installed and callable by the user
+running the integration tests without needing sudo.
 
-You can then run the tests with:
+First build the container with a Ubuntu-based image:
 
 ```bash
-.github/integration-test.py run-test <name-of-run> <test-file-names>
+.github/integration-test.py build-image \
+  --build-arg "BASE_IMAGE=ubuntu:22.04"
 ```
 
-- `<name-of-run>` is an identifier for the tests - you can choose anything you want
-- `<test-file-names>>` is list of test files (under `integration-tests`) that should be run in one go.
+Then you can then run the tests with the `run-test` function. For usage run:
+
+```bash
+.github/integration-test.py run-test --help
+```
 
 For example, to run all the basic tests, you would write:
 
 ```bash
 .github/integration-test.py run-test basic-tests \
-   test_hub.py \
-   test_proxy.py \
-   test_install.py \
-   test_extensions.py
+  test_hub.py \
+  test_proxy.py \
+  test_install.py \
+  test_extensions.py
 ```
 
-This will run the tests in the three files against the same installation
+This will run the tests in the four files against the same installation
 of TLJH and report errors.
 
-If you would like to run the tests with a custom pip spec for the bootstrap script, you can use the `--bootstrap-pip-spec`
+If you would like to run the tests with a custom `pip` spec for the bootstrap script, you can use the `--bootstrap-pip-spec`
 parameter:
 
 ```bash
-.github/integration-test.py run-test <name-of-run> <test-file-names> \
-   --bootstrap-pip-spec="git+https://github.com/your-username/the-littlest-jupyterhub.git@branch-name"
+.github/integration-test.py run-test custom-pip-spec \
+  test_hub.py \
+  test_proxy.py \
+  test_install.py \
+  test_extensions.py \
+  --bootstrap-pip-spec="git+https://github.com/your-username/the-littlest-jupyterhub.git@branch-name"
 ```

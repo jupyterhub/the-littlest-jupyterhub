@@ -226,12 +226,35 @@ def main():
     copy_parser.add_argument("src")
     copy_parser.add_argument("dest")
 
-    run_test_parser = subparsers.add_parser("run-test")
-    run_test_parser.add_argument("--installer-args", action="append")
-    run_test_parser.add_argument("--upgrade-from", default="")
-    run_test_parser.add_argument("--bootstrap-pip-spec", default="/srv/src")
-    run_test_parser.add_argument("container_name")
-    run_test_parser.add_argument("test_files", nargs="+")
+    run_test_parser = subparsers.add_parser(
+        "run-test",
+        help="Runs the bootstrap script in a container, then executes specified integration tests.",
+    )
+    run_test_parser.add_argument(
+        "--installer-args",
+        action="append",
+        default=[],
+        help="Additional arguments to pass to bootstrap.py during the main installation. Can be used multiple times.",
+    )
+    run_test_parser.add_argument(
+        "--upgrade-from",
+        default="",
+        help="A version/tag (e.g., 'main', 'v0.1.0') to install first, simulating an upgrade to the current source code.",
+    )
+    run_test_parser.add_argument(
+        "--bootstrap-pip-spec",
+        default="/srv/src",
+        help="The pip specification used by the bootstrap script to install TLJH (for example: '--bootstrap-pip-spec=git+https://github.com/your-username/the-littlest-jupyterhub.git@branch-name'). Defaults to the local source code path.",
+    )
+    run_test_parser.add_argument(
+        "container_name",
+        help="An identifier for the container/test run (for example: 'basic-tests').",
+    )
+    run_test_parser.add_argument(
+        "test_files",
+        nargs="+",
+        help="A list of one or more test files under 'integration-tests/' to be executed.",
+    )
 
     show_logs_parser = subparsers.add_parser("show-logs")
     show_logs_parser.add_argument("container_name")
