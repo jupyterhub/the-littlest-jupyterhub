@@ -293,12 +293,16 @@ def ensure_user_environment(user_requirements_txt_file):
         )
 
     if user_requirements_txt_file:
-        # FIXME: This currently fails hard, should fail soft and not abort installer
-        conda.ensure_pip_requirements(
-            USER_ENV_PREFIX,
-            user_requirements_txt_file,
-            upgrade=True,
-        )
+        try:
+            conda.ensure_pip_requirements(
+                USER_ENV_PREFIX,
+                user_requirements_txt_file,
+                upgrade=True,
+            )
+        except Exception as e:
+            logger.warning(
+                f"Failed to install requirements for user env from {user_requirements_txt_file}: {e}"
+            )
 
 
 def ensure_admins(admin_password_list):
@@ -530,7 +534,7 @@ def main():
     ensure_admins(args.admin)
     ensure_usergroups()
     if args.user_requirements_txt_url:
-        logger.info("installing packages from user_requirements_txt_url")
+        logger.info("Installing packages from user_requirements_txt_url")
     ensure_user_environment(args.user_requirements_txt_url)
 
     logger.info("Setting up JupyterHub...")
