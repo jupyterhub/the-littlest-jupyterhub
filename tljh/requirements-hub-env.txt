@@ -25,7 +25,4 @@ jupyterhub-idle-culler>=1.4.0,<2
 # ref: https://www.tornadoweb.org/en/stable/httpclient.html#module-tornado.simple_httpclient
 # ref: https://github.com/jupyterhub/the-littlest-jupyterhub/issues/289
 #
-# FIXME: pycurl is installed from source without its wheel for 7.45.3 has an
-#        issue reported in https://github.com/pycurl/pycurl/issues/834.
-#
-pycurl>=7.45.3,<8 --no-binary=pycurl
+pycurl>=7.45.7,<8
