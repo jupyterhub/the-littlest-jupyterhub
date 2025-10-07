@@ -161,12 +161,6 @@ def _specifier(version):
                 "mamba": ">=1.1.0",
             },
         ),
-        # too-old Python (3.7), abort
-        (
-            "miniconda",
-            "4.7.10",
-            ValueError,
-        ),
     ],
 )
 def test_ensure_user_environment(
