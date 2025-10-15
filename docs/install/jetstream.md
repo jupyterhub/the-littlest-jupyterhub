@@ -10,8 +10,8 @@ users and a user environment with packages you want installed running on
 
 ## Prerequisites
 
-1. A Jetstream account with an XSEDE allocation; for more information,
-   see the [Jetstream Allocations help page](https://jetstream-cloud.org/allocations/).
+1. An ACCESS ID, and membership in an allocation with access to Jetstream2 resources; for more information,
+   see the [Jetstream2 Allocations Overview page](https://docs.jetstream-cloud.org/alloc/overview/) and the [Get started with Jetstream2 guide](https://jetstream-cloud.org/get-started/).
 
 ## Step 1: Launch a Jetstream2 instance
 
