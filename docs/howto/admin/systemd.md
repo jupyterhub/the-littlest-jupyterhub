@@ -38,6 +38,8 @@ these namespacing settings might be a bit too strict and prevent users from acce
 
 To override the `jupyterhub` settings, it is possible to provide a custom `/etc/systemd/system/jupyterhub.service.d/override.conf` file.
 
+You can create this file with `sudo systemctl edit jupyterhub.service`
+
 Here is an example for the content of the file:
 
 ```bash
@@ -72,7 +74,7 @@ The output should look like the following:
 ```
 
 To override the `traefik` settings, create a new file under `/etc/systemd/system/traefik.service.d/override.conf`
-and follow the same steps.
+(or use `sudo systemctl edit traefik.service`) and follow the same steps.
 
 ## References
 
