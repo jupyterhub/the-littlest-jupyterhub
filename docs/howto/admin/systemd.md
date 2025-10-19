@@ -73,7 +73,7 @@ The output should look like the following:
 :alt: Checking the status of the JupyterHub systemd service
 ```
 
-To override the `traefik` settings, create a new file under `/etc/systemd/system/traefik.service.d/override.conf` 
+To override the `traefik` settings, create a new file under `/etc/systemd/system/traefik.service.d/override.conf`
 (or use `sudo systemctl edit traefik.service`) and follow the same steps.
 
 ## References
