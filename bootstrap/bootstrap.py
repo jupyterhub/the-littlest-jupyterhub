@@ -229,7 +229,7 @@ def ensure_host_system_can_install_tljh():
         sys.exit(1)
 
     # Require systemd (systemctl is a part of systemd)
-    if not shutil.which("systemd") or not shutil.which("systemctl"):
+    if not any([shutil.which("systemctl"), shutil.which("systemd")]):
         print("Systemd is required to run TLJH")
         # Provide additional information about running in docker containers
         if os.path.exists("/.dockerenv"):
