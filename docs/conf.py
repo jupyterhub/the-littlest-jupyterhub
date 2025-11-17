@@ -138,3 +138,11 @@ rediraffe_redirects = {
     "howto/env/notebook-interfaces": "howto/user-env/notebook-interfaces",
     "howto/env/server-resources": "howto/user-env/server-resources",
 }
+
+def setup(app):
+    # Enable Plausible.io stats
+    app.add_js_file("https://plausible.io/js/pa-B75UO5--FNXYQSG7GBWkf.js", loading_method="async")
+    app.add_js_file(
+        filename=None,
+        body="window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};plausible.init({hashBasedRouting:true})",
+    )
