@@ -1,5 +1,5 @@
 # Systemd inside a Docker container, for CI and local development
-ARG BASE_IMAGE=ubuntu:22.04
+ARG BASE_IMAGE=ubuntu:24.04
 FROM $BASE_IMAGE
 
 # DEBIAN_FRONTEND is set to avoid being asked for input and hang during build:
