@@ -28,4 +28,4 @@ RUN systemctl set-default multi-user.target
 
 STOPSIGNAL SIGRTMIN+3
 
-CMD ["/bin/bash", "-c", "exec /lib/systemd/systemd --log-target=journal 3>&1"]
+CMD ["/lib/systemd/systemd"]
