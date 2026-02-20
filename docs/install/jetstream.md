@@ -61,10 +61,22 @@ See the full guide: [Enable HTTPS](/howto/admin/https). Below is a quick recipe 
    ```bash
    sudo tljh-config set https.enabled true
    sudo tljh-config set https.letsencrypt.email you@example.com
-   sudo tljh-config add-item https.letsencrypt.domains yourinstancename.xxx0000000.projects.jetstream-cloud.org
+   sudo tljh-config add-item https.letsencrypt.domains yourinstancename.<allocation-id>.projects.jetstream-cloud.org
+   sudo tljh-config show
    sudo tljh-config reload proxy
    ```
-2. Wait ~30–60 seconds, then reload the site using https://. If certificate issuance fails, check the logs:
+   Confirm `https.letsencrypt.domains` appears in `sudo tljh-config show` output before continuing.
+2. Wait ~30–60 seconds, then reload the site using https://.
+
+   Quick terminal checks (faster than refreshing the browser repeatedly):
+
+   ```bash
+   sudo ss -ltnp | grep -E ':80|:443'
+   curl -Ik https://yourinstancename.<allocation-id>.projects.jetstream-cloud.org
+   ```
+
+   If certificate issuance fails, check the logs:
+
    ```bash
    sudo journalctl -u traefik --since "10 minutes ago" | grep -i acme
    ```
@@ -73,6 +85,7 @@ Tips:
 
 - Make sure ports 80 and 443 are open in your Jetstream security group (they are open by default for new projects; adjust only if you customized network policies).
 - If you later attach a custom domain, add it with another `add-item` command and reload the proxy again.
+- If `https.letsencrypt.domains` is missing from `sudo tljh-config show`, run the `add-item` command again, verify it appears, then reload the proxy.
 
 ## Step 4: Log in as the administrative user and set a password
 
