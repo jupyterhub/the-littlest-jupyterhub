@@ -19,7 +19,7 @@ We'll create a new Jetstream2 instance:
 
 1.  Log in to the [Jetstream2 portal](https://use.jetstream-cloud.org/). You must have (and select) an allocation in order to launch instances. Click the allocation you want to charge.
 2.  Click **Create** ➜ **Instance**.
-3.  From the list of images, select **Ubuntu 24.04** (Jammy or newer is required for current TLJH releases).
+3.  From the list of images, select **Ubuntu 22.04 (Jammy)** or newer (for example, Ubuntu 24.04).
 4.  In the **Create Instance** dialog:
     1. Set a descriptive **Instance Name** (this is used in the default hostname and helps users recognize it).
     2. Choose an **Instance Size**. We suggest `m3.small` (2 vCPUs / 6 GiB RAM) or larger for more than a couple of users. The absolute minimum TLJH can start with is about **1 GiB** RAM, but you'll quickly run out with real workloads.
@@ -30,12 +30,12 @@ We'll create a new Jetstream2 instance:
 ## Step 2: Install The Littlest JupyterHub
 
 1. Wait a few minutes for the instance to show the status "Ready"
-2. Copy the **Hostname** under **Credentials**, it will be of the form: `yourinstancename.xxx0000000.projects.jetstream-cloud.org`, where `xxx000000` is the allocation ID. Keep it handy, we will use it multiple times in the next steps.
+2. Copy the **Hostname** under **Credentials**. It will look like `yourinstancename.<allocation-id>.projects.jetstream-cloud.org`. Keep it handy, we will use it multiple times in the next steps.
 
 3. SSH into the instance with the `exouser` user:
 
    ```bash
-   ssh exouser@yourinstancename.xxx0000000.projects.jetstream-cloud.org
+   ssh exouser@yourinstancename.<allocation-id>.projects.jetstream-cloud.org
    ```
 
    Need the passphrase? In Exosphere, open **Instances**, select your
@@ -43,13 +43,13 @@ We'll create a new Jetstream2 instance:
    next to the `exouser` entry to reveal or copy it before running the
    `ssh` command.
 
-4. Run the TLJH bootstrap script, replace <admin-user-name> with the name of the first admin user for this JupyterHub. Choose any name you like (don’t forget to remove the brackets!). This admin user can log in after the JupyterHub is set up, and can configure it to their needs.
+4. Run the TLJH bootstrap script. Replace `<admin-user-name>` with the Linux username you want to use for the first JupyterHub admin account (for example, your GitHub username). Do not include `<` or `>` in the command. This user will be able to log in after setup and administer the hub.
 
    ```bash
    curl -L https://tljh.jupyter.org/bootstrap.py | sudo -E python3 - --admin <admin-user-name>
    ```
 
-5. Open the Hostname in a web browser (http on port 80). You should see the JupyterHub login page. Your browser will warn about the site not being secure (no HTTPS)—we'll enable HTTPS in the next step. Do not login yet, first setup HTTPS, so we avoid transmitting the password in clear text.
+5. Open the Hostname in a web browser (http on port 80). You should see the JupyterHub login page (typically titled `JupyterHub` with a `Sign in` button). Your browser will warn about the site not being secure (no HTTPS)—we'll enable HTTPS in the next step. Do not login yet, first setup HTTPS, so we avoid transmitting the password in clear text.
 
 ## Step 3: Enable HTTPS
 
@@ -76,7 +76,7 @@ Tips:
 
 ## Step 4: Log in as the administrative user and set a password
 
-1. Now log in with the `<admin-user-name>` at https://yourinstancename.xxx000000.projects.jetstream-cloud.org. Since this is the first login, you'll be prompted to set a password. Choose a strong password and store it safely. This password is now the credential for that admin user.
+1. Now log in with the `<admin-user-name>` at https://yourinstancename.<allocation-id>.projects.jetstream-cloud.org. Since this is the first login, you'll be prompted to set a password. Choose a strong password and store it safely. This password is now the credential for that admin user.
 2. Congratulations, you have a running working JupyterHub!
 
 ## Step 5: Adding more users
