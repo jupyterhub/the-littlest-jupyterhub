@@ -75,10 +75,12 @@ See the full guide: [Enable HTTPS](/howto/admin/https). Below is a quick recipe 
    curl -Ik https://yourinstancename.<allocation-id>.projects.jetstream-cloud.org
    ```
 
+   The `curl -Ik` check can return `200`, `302`, or `405`, and all of these indicate the HTTPS endpoint is reachable.
+
    If certificate issuance fails, check the logs:
 
    ```bash
-   sudo journalctl -u traefik --since "10 minutes ago" | grep -i acme
+   sudo journalctl -u traefik --since "15 minutes ago" | grep -iE "acme|error|443|certificate|challenge"
    ```
 
 Tips:
