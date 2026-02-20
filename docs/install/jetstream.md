@@ -49,7 +49,13 @@ We'll create a new Jetstream2 instance:
    curl -L https://tljh.jupyter.org/bootstrap.py | sudo -E python3 - --admin <admin-user-name>
    ```
 
-5. Open the Hostname in a web browser (http on port 80). You should see the JupyterHub login page (typically titled `JupyterHub` with a `Sign in` button). Your browser will warn about the site not being secure (no HTTPS)—we'll enable HTTPS in the next step. Do not login yet, first setup HTTPS, so we avoid transmitting the password in clear text.
+   Optional quick sanity check:
+
+   ```bash
+   sudo systemctl is-active jupyterhub traefik
+   ```
+
+5. Open the Hostname in a web browser (http on port 80). You should see the JupyterHub login page (typically titled `JupyterHub` with a `Sign in` button). Your browser will warn about the site not being secure (no HTTPS)—we'll enable HTTPS in the next step. Do not log in yet; first set up HTTPS, so we avoid transmitting the password in clear text.
 
 ## Step 3: Enable HTTPS
 
@@ -92,7 +98,7 @@ Tips:
 ## Step 4: Log in as the administrative user and set a password
 
 1. Now log in with the `<admin-user-name>` at https://yourinstancename.<allocation-id>.projects.jetstream-cloud.org. Since this is the first login, you'll be prompted to set a password. Choose a strong password and store it safely. This password is now the credential for that admin user.
-2. Congratulations, you have a running working JupyterHub!
+2. Congratulations, you have a running JupyterHub!
 
 ## Step 5: Adding more users
 
