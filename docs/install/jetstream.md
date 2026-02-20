@@ -51,7 +51,7 @@ We'll create a new Jetstream2 instance:
 
 5. Open the Hostname in a web browser (http on port 80). You should see the JupyterHub login page. Your browser will warn about the site not being secure (no HTTPS)—we'll enable HTTPS in the next step. Do not login yet, first setup HTTPS, so we avoid transmitting the password in clear text.
 
-## Step 2: Enable HTTPS
+## Step 3: Enable HTTPS
 
 Encrypted (HTTPS) access is strongly recommended before inviting users.
 
@@ -74,22 +74,22 @@ Tips:
 - Make sure ports 80 and 443 are open in your Jetstream security group (they are open by default for new projects; adjust only if you customized network policies).
 - If you later attach a custom domain, add it with another `add-item` command and reload the proxy again.
 
-## Step 3: Log in as the administrative user and set a password
+## Step 4: Log in as the administrative user and set a password
 
 1. Now log in with the `<admin-user-name>` at https://yourinstancename.xxx000000.projects.jetstream-cloud.org. Since this is the first login, you'll be prompted to set a password. Choose a strong password and store it safely. This password is now the credential for that admin user.
 2. Congratulations, you have a running working JupyterHub!
 
-## Step 4: Adding more users
+## Step 5: Adding more users
 
 ```{include} add-users.md
-
+```
 
 Next common tasks:
 
 - [](howto-admin-admin-users)
 - [](howto-user-env-user-environment-apt)
 - [](howto-admin-enable-extensions)
-- []topic-installer-upgrade-actions)
+- [](topic-installer-upgrade-actions)
 
 Browse the full [How-To index](/howto/index) for more.
 
@@ -109,4 +109,3 @@ When asking for help about TLJH, it is often useful to provide:
 - Any custom installer flags or `tljh-config` changes you have applied
 
 This information helps others debug and answer more quickly.
-```
