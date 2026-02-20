@@ -19,7 +19,7 @@ We'll create a new Jetstream2 instance:
 
 1.  Log in to the [Jetstream2 portal](https://use.jetstream-cloud.org/). You must have (and select) an allocation in order to launch instances. Click the allocation you want to charge.
 2.  Click **Create** ➜ **Instance**.
-3.  From the list of images, select **Ubuntu 22.04 (Jammy)** or newer (for example, Ubuntu 24.04).
+3.  From the list of images, select **Ubuntu 24.04** (Ubuntu 22.04/Jammy or newer is supported).
 4.  In the **Create Instance** dialog:
     1. Set a descriptive **Instance Name** (this is used in the default hostname and helps users recognize it).
     2. Choose an **Instance Size**. We suggest `m3.small` (2 vCPUs / 6 GiB RAM) or larger for more than a couple of users. The absolute minimum TLJH can start with is about **1 GiB** RAM, but you'll quickly run out with real workloads.
