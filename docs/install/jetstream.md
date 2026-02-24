@@ -97,7 +97,7 @@ Tips:
 
 ## Step 4: Log in as the administrative user and set a password
 
-1. Now log in with the `<admin-user-name>` at https://yourinstancename.<allocation-id>.projects.jetstream-cloud.org. Since this is the first login, you'll be prompted to set a password. Choose a strong password and store it safely. This password is now the credential for that admin user.
+1. Now log in with the `<admin-user-name>` at `https://yourinstancename.<allocation-id>.projects.jetstream-cloud.org`. Since this is the first login, you'll be prompted to set a password. Choose a strong password and store it safely. This password is now the credential for that admin user.
 2. Congratulations, you have a running JupyterHub!
 
 ## Step 5: Adding more users
