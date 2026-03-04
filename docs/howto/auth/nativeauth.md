@@ -40,6 +40,11 @@ tljh-config set auth.NativeAuthenticator.open_signup true
 tljh-config reload
 ```
 
+## Users changing their own password
+
+Users can change their password after logging in by visiting:
+`<your_server_ip>/hub/auth/change-password`.
+
 ## Optional features
 
 More optional features are available on the [authenticator documentation](https://native-authenticator.readthedocs.io/en/latest/)
