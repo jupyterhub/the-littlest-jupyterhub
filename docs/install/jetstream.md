@@ -19,7 +19,7 @@ We'll create a new Jetstream2 instance:
 
 1.  Log in to the [Jetstream2 portal](https://use.jetstream-cloud.org/). You must have (and select) an allocation in order to launch instances. Click the allocation you want to charge.
 2.  Click **Create** ➜ **Instance**.
-3.  From the list of images, select **Ubuntu 24.04** (Jammy or newer is required for current TLJH releases).
+3.  From the list of images, select **Ubuntu 24.04** (Ubuntu 22.04/Jammy or newer is supported).
 4.  In the **Create Instance** dialog:
     1. Set a descriptive **Instance Name** (this is used in the default hostname and helps users recognize it).
     2. Choose an **Instance Size**. We suggest `m3.small` (2 vCPUs / 6 GiB RAM) or larger for more than a couple of users. The absolute minimum TLJH can start with is about **1 GiB** RAM, but you'll quickly run out with real workloads.
@@ -30,12 +30,12 @@ We'll create a new Jetstream2 instance:
 ## Step 2: Install The Littlest JupyterHub
 
 1. Wait a few minutes for the instance to show the status "Ready"
-2. Copy the **Hostname** under **Credentials**, it will be of the form: `yourinstancename.xxx0000000.projects.jetstream-cloud.org`, where `xxx000000` is the allocation ID. Keep it handy, we will use it multiple times in the next steps.
+2. Copy the **Hostname** under **Credentials**. It will look like `yourinstancename.<allocation-id>.projects.jetstream-cloud.org`. Keep it handy, we will use it multiple times in the next steps.
 
 3. SSH into the instance with the `exouser` user:
 
    ```bash
-   ssh exouser@yourinstancename.xxx0000000.projects.jetstream-cloud.org
+   ssh exouser@yourinstancename.<allocation-id>.projects.jetstream-cloud.org
    ```
 
    Need the passphrase? In Exosphere, open **Instances**, select your
@@ -43,15 +43,21 @@ We'll create a new Jetstream2 instance:
    next to the `exouser` entry to reveal or copy it before running the
    `ssh` command.
 
-4. Run the TLJH bootstrap script, replace <admin-user-name> with the name of the first admin user for this JupyterHub. Choose any name you like (don’t forget to remove the brackets!). This admin user can log in after the JupyterHub is set up, and can configure it to their needs.
+4. Run the TLJH bootstrap script. Replace `<admin-user-name>` with the Linux username you want to use for the first JupyterHub admin account (for example, your GitHub username). Do not include `<` or `>` in the command. This user will be able to log in after setup and administer the hub.
 
    ```bash
    curl -L https://tljh.jupyter.org/bootstrap.py | sudo -E python3 - --admin <admin-user-name>
    ```
 
-5. Open the Hostname in a web browser (http on port 80). You should see the JupyterHub login page. Your browser will warn about the site not being secure (no HTTPS)—we'll enable HTTPS in the next step. Do not login yet, first setup HTTPS, so we avoid transmitting the password in clear text.
+   Optional quick sanity check:
 
-## Step 2: Enable HTTPS
+   ```bash
+   sudo systemctl is-active jupyterhub traefik
+   ```
+
+5. Open the Hostname in a web browser (http on port 80). You should see the JupyterHub login page (typically titled `JupyterHub` with a `Sign in` button). Your browser will warn about the site not being secure (no HTTPS)—we'll enable HTTPS in the next step. Do not log in yet; first set up HTTPS, so we avoid transmitting the password in clear text.
+
+## Step 3: Enable HTTPS
 
 Encrypted (HTTPS) access is strongly recommended before inviting users.
 
@@ -61,35 +67,51 @@ See the full guide: [Enable HTTPS](/howto/admin/https). Below is a quick recipe 
    ```bash
    sudo tljh-config set https.enabled true
    sudo tljh-config set https.letsencrypt.email you@example.com
-   sudo tljh-config add-item https.letsencrypt.domains yourinstancename.xxx0000000.projects.jetstream-cloud.org
+   sudo tljh-config add-item https.letsencrypt.domains yourinstancename.<allocation-id>.projects.jetstream-cloud.org
+   sudo tljh-config show
    sudo tljh-config reload proxy
    ```
-2. Wait ~30–60 seconds, then reload the site using https://. If certificate issuance fails, check the logs:
+   Confirm `https.letsencrypt.domains` appears in `sudo tljh-config show` output before continuing.
+2. Wait ~30–60 seconds, then reload the site using https://.
+
+   Quick terminal checks (faster than refreshing the browser repeatedly):
+
    ```bash
-   sudo journalctl -u traefik --since "10 minutes ago" | grep -i acme
+   sudo ss -ltnp | grep -E ':80|:443'
+   curl -Ik https://yourinstancename.<allocation-id>.projects.jetstream-cloud.org
+   ```
+
+   The `curl -Ik` check can return `200`, `302`, or `405`, and all of these indicate the HTTPS endpoint is reachable.
+
+   If certificate issuance fails, check the logs:
+
+   ```bash
+   sudo journalctl -u traefik --since "15 minutes ago" | grep -iE "acme|error|443|certificate|challenge"
    ```
 
 Tips:
 
 - Make sure ports 80 and 443 are open in your Jetstream security group (they are open by default for new projects; adjust only if you customized network policies).
 - If you later attach a custom domain, add it with another `add-item` command and reload the proxy again.
+- If `https.letsencrypt.domains` is missing from `sudo tljh-config show`, run the `add-item` command again, verify it appears, then reload the proxy.
 
-## Step 3: Log in as the administrative user and set a password
+## Step 4: Log in as the administrative user and set a password
 
-1. Now log in with the `<admin-user-name>` at https://yourinstancename.xxx000000.projects.jetstream-cloud.org. Since this is the first login, you'll be prompted to set a password. Choose a strong password and store it safely. This password is now the credential for that admin user.
-2. Congratulations, you have a running working JupyterHub!
+1. Now log in with the `<admin-user-name>` at `https://yourinstancename.<allocation-id>.projects.jetstream-cloud.org`. Since this is the first login, you'll be prompted to set a password. Choose a strong password and store it safely. This password is now the credential for that admin user.
+2. Congratulations, you have a running JupyterHub!
 
-## Step 4: Adding more users
+## Step 5: Adding more users
 
 ```{include} add-users.md
 
+```
 
 Next common tasks:
 
 - [](howto-admin-admin-users)
 - [](howto-user-env-user-environment-apt)
 - [](howto-admin-enable-extensions)
-- []topic-installer-upgrade-actions)
+- [](topic-installer-upgrade-actions)
 
 Browse the full [How-To index](/howto/index) for more.
 
@@ -109,4 +131,3 @@ When asking for help about TLJH, it is often useful to provide:
 - Any custom installer flags or `tljh-config` changes you have applied
 
 This information helps others debug and answer more quickly.
-```
