@@ -2,25 +2,28 @@
 
 # Setting up Development Environment
 
-The easiest & safest way to develop & test TLJH is with [Docker](https://www.docker.com/).
+The easiest and safest way to develop and test TLJH is with [Podman](https://podman.io/).
 
-1. Install Docker Community Edition by following the instructions on
-   [their website](https://www.docker.com/community-edition).
+:::{note}
+It is possible to use [Docker Engine](https://docs.docker.com/engine/) but it requires [escalate container privileges](https://docs.docker.com/reference/cli/docker/container/run/#privileged).
+:::
+
+1. Install Podman Desktop by following the instructions on
+   [their website](https://podman-desktop.io/).
 
 2. Clone the [git repo](https://github.com/jupyterhub/the-littlest-jupyterhub) (or your fork of it).
 
-3. Build a docker image that has a functional systemd in it.
+3. Build a container image that has a functional systemd in it.
 
    ```bash
-   docker build -t tljh-systemd . -f integration-tests/Dockerfile
+   podman build -t tljh-systemd . -f integration-tests/Dockerfile
    ```
 
-4. Run a docker container with the image in the background, while bind mounting
+4. Run a container in the background, while bind mounting
    your TLJH repository under `/srv/src`.
 
    ```bash
-   docker run \
-     --privileged \
+   podman run \
      --detach \
      --name=tljh-dev \
      --publish 12000:80 \
@@ -34,7 +37,7 @@ The easiest & safest way to develop & test TLJH is with [Docker](https://www.doc
 5. Get a shell inside the running docker container.
 
    ```bash
-   docker exec -it tljh-dev /bin/bash
+   podman exec -it tljh-dev /bin/bash
    ```
 
 6. Run the bootstrapper from inside the container (see step above):

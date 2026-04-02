@@ -1,5 +1,5 @@
 # Systemd inside a Docker container, for CI and local development
-ARG BASE_IMAGE=ubuntu:22.04
+ARG BASE_IMAGE=ubuntu:24.04
 FROM $BASE_IMAGE
 
 # DEBIAN_FRONTEND is set to avoid being asked for input and hang during build:
@@ -28,4 +28,4 @@ RUN systemctl set-default multi-user.target
 
 STOPSIGNAL SIGRTMIN+3
 
-CMD ["/bin/bash", "-c", "exec /lib/systemd/systemd --log-target=journal 3>&1"]
+CMD ["/lib/systemd/systemd"]
