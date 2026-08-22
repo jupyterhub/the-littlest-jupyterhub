@@ -26,7 +26,7 @@ jobs:
     # integration tests run in a container,
     # not in the worker, so this version is not relevant to the tests
     # and can be the same for all tested versions
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     name: ${{ matrix.name }}
     strategy:
@@ -47,6 +47,9 @@ jobs:
             extra_flags: ""
           - name: "Ubuntu 24.04 Py 3.12"
             distro_image: "ubuntu:24.04"
+            extra_flags: ""
+          - name: "Ubuntu 26.04 Py 3.14"
+            distro_image: "ubuntu:26.04"
             extra_flags: ""
           - name: "Ubuntu 22.04, Py 3.10, from main"
             distro_image: "ubuntu:22.04"
