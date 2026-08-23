@@ -46,7 +46,6 @@ would end up installing something in the hub environment, and that would not be
 available in the system's Python environment or the user environment.
 
 [virtual Python environment]: https://docs.python.org/3/library/venv.html
-
 [tljh/requirements-hub-env.txt]: https://github.com/jupyterhub/the-littlest-jupyterhub/blob/HEAD/tljh/requirements-hub-env.txt
 
 (user-environment)=
