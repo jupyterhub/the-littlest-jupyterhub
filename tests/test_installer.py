@@ -139,17 +139,14 @@ def _specifier(version):
                 "mamba": "1.4.1",
             },
         ),
-        # simulate missing mamba
-        # will be installed but not pinned
-        # to avoid conflicts
         (
             "miniforge",
-            "4.10.3-7",
+            "26.5.3-0",
             {
-                "python": "3.10.*",
-                "conda": "4.10.3",
-                "mamba": ">=1.1.0",
-            },
+              "python": "3.14.*",
+              "conda": "26.5.3",
+              "mamba": "2.5.0",
+          },
         ),
     ],
 )
