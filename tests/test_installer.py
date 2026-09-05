@@ -139,16 +139,6 @@ def _specifier(version):
                 "mamba": "1.4.1",
             },
         ),
-        # 0.2 install, no upgrade needed
-        (
-            "mambaforge",
-            "4.10.3-7",
-            {
-                "python": "3.9.*",
-                "conda": "4.10.3",
-                "mamba": "0.16.0",
-            },
-        ),
         # simulate missing mamba
         # will be installed but not pinned
         # to avoid conflicts
@@ -156,7 +146,7 @@ def _specifier(version):
             "miniforge",
             "4.10.3-7",
             {
-                "python": "3.9.*",
+                "python": "3.10.*",
                 "conda": "4.10.3",
                 "mamba": ">=1.1.0",
             },
