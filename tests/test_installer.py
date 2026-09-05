@@ -143,10 +143,10 @@ def _specifier(version):
             "miniforge",
             "26.5.3-0",
             {
-              "python": "3.14.*",
-              "conda": "26.5.3",
-              "mamba": "2.5.0",
-          },
+                "python": "3.14.*",
+                "conda": "26.5.3",
+                "mamba": "2.5.0",
+            },
         ),
     ],
 )
