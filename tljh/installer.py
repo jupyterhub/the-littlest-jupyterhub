@@ -151,7 +151,7 @@ MINIMUM_VERSIONS = {
     "conda": "4.10",
     "pip": "23.1.2",
     # minimum Python version (if not matched, abort to avoid big disruptive updates)
-    "python": "3.9",
+    "python": "3.10",
 }
 
 
