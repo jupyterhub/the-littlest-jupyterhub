@@ -2,6 +2,8 @@
 ARG BASE_IMAGE=ubuntu:22.04
 FROM $BASE_IMAGE
 
+ENV PATH="/opt/tljh/hub/bin:$PATH"
+
 # DEBIAN_FRONTEND is set to avoid being asked for input and hang during build:
 # https://anonoz.github.io/tech/2020/04/24/docker-build-stuck-tzdata.html
 RUN export DEBIAN_FRONTEND=noninteractive \
