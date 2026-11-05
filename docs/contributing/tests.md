@@ -68,3 +68,11 @@ parameter:
   test_extensions.py \
   --bootstrap-pip-spec="git+https://github.com/your-username/the-littlest-jupyterhub.git@branch-name"
 ```
+
+If you are running the `test_simplest_plugin.py` tests, you must pass a flag to the `integration-test.py` script that tells the bootstrap script to install the `tljh_simplest` testing plugin as follows:
+
+```bash
+.github/integration-test.py run-test plugin-tests \
+  --installer-args "--plugin /srv/src/integration-tests/plugins/simplest" \
+  test_simplest_plugin.py
+```
