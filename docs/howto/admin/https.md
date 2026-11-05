@@ -5,12 +5,11 @@
 Every JupyterHub deployment should enable HTTPS!
 
 HTTPS encrypts traffic so that usernames, passwords and your data are
-communicated securely. sensitive bits of information are communicated
-securely. The Littlest JupyterHub supports automatically configuring HTTPS
-via [Let's Encrypt](https://letsencrypt.org), or setting it up
-[manually](#howto-admin-https-manual) with your own TLS key and
-certificate. Unless you have a strong reason to use the manual method,
-you should use the [Let's Encrypt](#howto-admin-https-letsencrypt)
+communicated securely. The Littlest JupyterHub supports automatically
+configuring HTTPS via [Let's Encrypt](https://letsencrypt.org), or
+setting it up [manually](#howto-admin-https-manual) with your own TLS
+key and certificate. Unless you have a strong reason to use the manual
+method, you should use the [Let's Encrypt](#howto-admin-https-letsencrypt)
 method.
 
 :::{note}
