@@ -3,6 +3,7 @@ Test the plugin in integration-tests/plugins/simplest that makes use of all tljh
 recognized plugin hooks that are defined in tljh/hooks.py.
 """
 
+import asyncio
 import os
 import subprocess
 
@@ -95,3 +96,51 @@ def test_tljh_new_user_create():
         content = f.read()
     assert "file_written_by_simplest_plugin" in content
     assert username in content
+
+
+async def test_tljh_pre_user_spawn():
+    """
+    Test that the provided tljh_pre_user_spawn hook has been executed by looking for a specific file written after login.
+    """
+    from functools import partial
+
+    from hubtraf.auth.dummy import login_dummy
+    from hubtraf.user import User
+
+    from tljh.normalize import generate_system_username
+
+    username = "test_tljh_pre_user_spawn"
+    system_username = generate_system_username("jupyter-" + username)
+
+    # Set auth type to dummy with no password, allowing our test user to login
+    TLJH_CONFIG_PATH = ["sudo", "tljh-config"]
+    assert (
+        0
+        == await (
+            await asyncio.create_subprocess_exec(
+                *TLJH_CONFIG_PATH, "set", "auth.type", "dummy"
+            )
+        ).wait()
+    )
+    assert (
+        0
+        == await (
+            await asyncio.create_subprocess_exec(*TLJH_CONFIG_PATH, "reload")
+        ).wait()
+    )
+
+    BASE_PATH = "/opt/tljh/state/"
+    FILE = BASE_PATH + "test_tljh_pre_user_spawn"
+    HUB_URL = "http://localhost"
+    async with User(username, HUB_URL, partial(login_dummy, password="")) as u:
+        # Login and spawn
+        assert await u.login()
+        await u.ensure_server_simulate(timeout=60, spawn_refresh_time=5)
+
+        with open(FILE) as f:
+            content = f.read()
+            assert "file_written_by_simplest_plugin" in content
+            assert username in content
+            assert system_username in content
+
+        await u.stop_server()

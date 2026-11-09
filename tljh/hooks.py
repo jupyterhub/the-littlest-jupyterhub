@@ -83,3 +83,11 @@ def tljh_new_user_create(username):
     Script to be executed after a new user has been added.
     This can be arbitrary Python code.
     """
+
+
+@hookspec
+def tljh_pre_user_spawn(username, system_username):
+    """
+    Script to be executed immediately prior to spawning a single user server
+    This can be arbitrary Python code.
+    """

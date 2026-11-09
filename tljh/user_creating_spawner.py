@@ -4,6 +4,9 @@ from traitlets import Dict, List, Unicode
 from tljh import user
 from tljh.normalize import generate_system_username
 
+# Set up plugin infrastructure
+from tljh.utils import get_plugin_manager
+
 
 class UserCreatingSpawner(SystemdSpawner):
     """
@@ -35,4 +38,12 @@ class UserCreatingSpawner(SystemdSpawner):
             for group, users in self.user_groups.items():
                 if self.user.name in users:
                     user.ensure_user_group(system_username, group)
+
+        self.log.debug("Running tljh_pre_user_spawn hooks")
+
+        pm = get_plugin_manager()
+        pm.hook.tljh_pre_user_spawn(
+            username=self.user.name, system_username=system_username
+        )
+
         return super().start()
