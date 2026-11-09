@@ -54,6 +54,7 @@ def tljh_new_user_create(username):
         f.write("file_written_by_simplest_plugin")
         f.write(username)
 
+
 @hookimpl
 def tljh_pre_user_spawn(username, system_username):
     FILE = "test_tljh_pre_user_spawn"

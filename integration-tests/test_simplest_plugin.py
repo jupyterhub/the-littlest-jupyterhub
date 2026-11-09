@@ -97,13 +97,16 @@ def test_tljh_new_user_create():
     assert "file_written_by_simplest_plugin" in content
     assert username in content
 
+
 async def test_tljh_pre_user_spawn():
     """
     Test that the provided tljh_pre_user_spawn hook has been executed by looking for a specific file written after login.
     """
     from functools import partial
+
     from hubtraf.auth.dummy import login_dummy
     from hubtraf.user import User
+
     from tljh.normalize import generate_system_username
 
     username = "test_tljh_pre_user_spawn"

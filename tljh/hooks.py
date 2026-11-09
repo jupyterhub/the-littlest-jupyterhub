@@ -84,6 +84,7 @@ def tljh_new_user_create(username):
     This can be arbitrary Python code.
     """
 
+
 @hookspec
 def tljh_pre_user_spawn(username, system_username):
     """
